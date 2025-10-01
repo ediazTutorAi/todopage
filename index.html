@@ -5,137 +5,129 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MathAgora — Lecture Hub</title>
 
-  <!-- Reuse your base styles; hub uses inline vars for a light "sunset" palette -->
-  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/base.css">
   <style>
     /* ===== Sunset palette (light theme) ===== */
     :root{
-      --bg:#ffffff;          /* page background */
-      --panel:#fef6e4;       /* header/footer band */
-      --paper:#ffffff;       /* cards */
-      --ink:#222222;         /* primary text */
-      --muted:#666666;       /* secondary text */
-      --line:#eeeeee;        /* dividers/borders */
-      --ring:#f7b538;        /* focus ring (gold) */
-      --accent:#f77f00;      /* primary (coral/orange) */
-      --accent-2:#d62828;    /* hover/active (warm red) */
-      --tag:#6a4c93;         /* pill tags (violet) */
+      --bg:#ffffff; --panel:#fef6e4; --paper:#ffffff;
+      --ink:#222222; --muted:#666666; --line:#eeeeee;
+      --ring:#f7b538; --accent:#f77f00; --accent-2:#d62828; --tag:#6a4c93;
+
+      /* density knobs */
+      --pad-xs:.35rem;         /* micro padding */
+      --pad-sm:.55rem;         /* small padding */
+      --pad-md:.85rem;         /* medium padding */
+      --radius:12px;           /* smaller radius for compact feel */
+      --gap:.6rem;             /* tighter gaps */
+      --grid-gap:.6rem;        /* tighter grid gaps */
+      --title-size:clamp(22px,2.2vw,30px);  /* smaller header title */
+      --card-min-h:136px;      /* shorter cards */
     }
 
-    /* Base */
     html,body{height:100%}
     body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font:16px/1.5 system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin:0;background:var(--bg);color:var(--ink);
+      font:15px/1.45 system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; /* slightly smaller base */
     }
-    .container{max-width:1100px;margin:0 auto;padding:1.25rem}
+    .container{max-width:1100px;margin:0 auto;padding:var(--pad-md)}
 
-    /* Header */
+    /* Header — compact */
     header.site{
       background:var(--panel);
       border-bottom:1px solid var(--line);
-      padding:1.25rem 1.25rem;
+      padding:var(--pad-sm) var(--pad-md);
     }
-    header.site h1{margin:.2rem 0;font-size:clamp(28px,3vw,40px); color:var(--ink)}
-    header.site .sub{color:var(--muted);margin:0}
+    header.site h1{
+      margin:.1rem 0;font-size:var(--title-size);color:var(--ink);line-height:1.15;
+    }
+    header.site .sub{color:var(--muted);margin:.1rem 0 .2rem;font-size:.9rem}
 
-    /* Controls (sticky filter bar) */
+    /* Controls (sticky) — compact */
     .controls{
       position:sticky; top:0; z-index:5;
-      background:rgba(254,246,228,.95); /* soft beige */
-      backdrop-filter:saturate(1.1) blur(4px);
+      background:rgba(254,246,228,.95);
+      backdrop-filter:saturate(1.05) blur(3px);
       border-bottom:1px solid var(--line);
     }
-    .row{display:flex;gap:.75rem;align-items:end;padding:.75rem 0;flex-wrap:wrap}
-    .lbl{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+    .row{
+      display:flex; gap:var(--gap); align-items:center;
+      padding:var(--pad-xs) 0; flex-wrap:wrap;
+    }
+    .lbl{
+      display:block;font-size:.78rem;color:var(--muted);
+      margin-bottom:.15rem; line-height:1;
+    }
+    label{display:flex;flex-direction:column}
     select,input[type=search]{
-      appearance:none;
-      background:var(--bg);
-      border:1px solid #dddddd;
-      color:var(--ink);
-      padding:.6rem .7rem;
-      border-radius:.6rem;
+      appearance:none;background:var(--bg);
+      border:1px solid #ddd;color:var(--ink);
+      padding:.45rem .55rem;border-radius:8px;font-size:.95rem;
+      height:2.1rem; /* compact control height */
     }
     select:focus, input[type=search]:focus{
-      outline:2px solid var(--ring);
-      outline-offset:2px;
-      border-color:var(--ring);
+      outline:2px solid var(--ring); outline-offset:2px; border-color:var(--ring);
     }
-    input[type=search]{flex:1;min-width:240px}
+    input[type=search]{flex:1;min-width:220px}
+    /* checkbox labels inline and compact */
+    .row > label[style*="align-self"]{font-size:.92rem;color:var(--muted)}
 
-    /* Groups & cards */
-    .groups{display:grid;gap:1rem;margin-top:1rem}
+    /* Groups & cards — compact */
+    .groups{display:grid;gap:var(--gap);margin-top:var(--gap)}
     .group{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:1rem;
+      background:#fff;border:1px solid var(--line);
+      border-radius:var(--radius); padding:var(--pad-sm);
     }
-    .group-title{margin:0 0 .6rem;color:var(--muted);font-weight:600}
-    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.8rem}
+    .group-title{margin:0 0 .4rem;color:var(--muted);font-weight:600;font-size:.95rem}
+    .cards{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:var(--grid-gap);
+    }
     .card{
-      position:relative;
-      background:var(--paper);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:1rem;
-      min-height:160px;
-      display:flex;flex-direction:column;gap:.5rem;
-      box-shadow:0 6px 18px rgba(0,0,0,.05);
+      position:relative;background:var(--paper);border:1px solid var(--line);
+      border-radius:var(--radius); padding:var(--pad-sm);
+      min-height:var(--card-min-h);
+      display:flex;flex-direction:column;gap:.4rem;
+      box-shadow:0 4px 12px rgba(0,0,0,.04);
     }
     @media (prefers-reduced-motion:no-preference){
-      .card{transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease}
-      .card:hover{transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.08)}
+      .card{transition:transform .12s ease, box-shadow .12s ease}
+      .card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(0,0,0,.06)}
     }
 
-    /* Favorite star */
+    /* Favorite star — compact placement */
     .fav{
-      position:absolute;right:.5rem;top:.5rem;
-      border:0;background:transparent;color:var(--muted);
-      font-size:1.2rem;cursor:pointer;line-height:1;
+      position:absolute;right:.4rem;top:.35rem;border:0;background:transparent;
+      color:var(--muted);font-size:1.05rem;cursor:pointer;line-height:1;
     }
     .fav.active{color:var(--accent)}
 
     /* Card text */
-    .eyebrow{font-size:.8rem;color:var(--muted)}
-    .title{margin:.1rem 0;font-size:1.05rem;color:var(--ink)}
-    .meta{font-size:.9rem;color:var(--muted)}
-    .desc{margin:.2rem 0 .4rem;color:#444}
+    .eyebrow{font-size:.78rem;color:var(--muted);line-height:1.1}
+    .title{margin:.05rem 0;font-size:1rem;color:var(--ink);line-height:1.2}
+    .meta{font-size:.88rem;color:var(--muted)}
+    .desc{margin:.1rem 0 .2rem;color:#444}
 
-    /* Tags */
-    .tags{display:flex;flex-wrap:wrap;gap:.35rem}
+    /* Tags — small pills */
+    .tags{display:flex;flex-wrap:wrap;gap:.3rem}
     .tag{
-      font-size:.72rem;
-      color:#ffffff;
-      background:var(--tag);
-      padding:.2rem .45rem;
-      border-radius:999px;
+      font-size:.7rem;color:#fff;background:var(--tag);
+      padding:.15rem .4rem;border-radius:999px;line-height:1;
     }
 
-    /* Buttons */
+    /* Buttons — smaller */
     .btn{
-      display:inline-block;
-      text-decoration:none;
-      background:var(--accent);
-      color:#ffffff;
-      border-radius:10px;
-      padding:.45rem .7rem;
-      border:1px solid var(--accent);
-      font-weight:600;
+      display:inline-block;text-decoration:none;background:var(--accent);color:#fff;
+      border-radius:8px;padding:.35rem .55rem;border:1px solid var(--accent);
+      font-weight:600;font-size:.92rem;line-height:1.1
     }
     .btn:hover{background:var(--accent-2); border-color:var(--accent-2)}
     .btn:focus{outline:2px solid var(--ring); outline-offset:2px}
 
-    /* Footer */
+    /* Footer — compact */
     footer.container{
-      color:var(--muted);
-      padding:2rem 1.25rem;
-      text-align:center;
-      border-top:1px solid var(--line);
-      background:var(--panel);
-      border-radius:16px 16px 0 0;
+      color:var(--muted);padding:var(--pad-sm) var(--pad-md);
+      text-align:center;border-top:1px solid var(--line);
+      background:var(--panel); border-radius:10px 10px 0 0; font-size:.9rem;
     }
   </style>
 </head>
@@ -190,7 +182,7 @@
     <small>MathAgora · Dr. Esteban Díaz</small>
   </footer>
 
-  <script type="module" src="/js/hub.js"></script>
+  <script type="module" src="/todopage/js/hub.js"></script>
   <noscript>
     <p class="container">JavaScript is off. You can still open <a href="/data/lectures.json">the manifest</a> and navigate manually.</p>
   </noscript>

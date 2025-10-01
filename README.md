@@ -1,1 +1,1 @@
-just for todo stuff
+Lecture presentation stuff

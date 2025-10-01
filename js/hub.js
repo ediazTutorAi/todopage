@@ -19,7 +19,7 @@ function inferSemester(iso){
 }
 
 async function load(){
-  const res = await fetch('/data/lectures.json');
+  const res = await fetch('/todopage/data/lectures.json');
   const json = await res.json();
 
   DATA = json.map(x=>({
