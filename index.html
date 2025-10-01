@@ -5,21 +5,23 @@
   <title>MATH 2326 — Maxima/Minima Problems</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- KaTeX (CSS + JS) -->
+  <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{
-            delimiters:[
-              {left:'$$', right:'$$', display:true},
-              {left:'\\[', right:'\\]', display:true},
-              {left:'\\(', right:'\\)', display:false},
-              {left:'$',  right:'$',  display:false}
-            ],
-            throwOnError:false
-          });"></script>
+          onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
 
-  <link rel="stylesheet" href="style.css">
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/steps.css">
+  <link rel="stylesheet" href="css/ggb-float.css">
+  <link rel="stylesheet" href="css/drawer.css">
+  <link rel="stylesheet" href="css/map.css">
 </head>
 <body>
 
@@ -29,91 +31,64 @@
 </header>
 
 <main class="container">
-  <!-- Single column: left card uses full width/height -->
   <section class="single-col">
     <div class="card" id="left-card">
 
-      <!-- STEPS: each step is ONE unit with Title + Subtitle + Body -->
+      <!-- STEPS -->
       <div class="step is-visible" data-step="1">
         <div class="step-title">Critical Points</div>
         <div class="step-subtitle">Definition</div>
         <div class="step-body">
-          Let \(z=f(x,y)\) be a function of two variables that is defined on an open set containing the point \((x_0,y_0)\). The point \((x_0,y_0)\) is called a <b>critical point</b> of \(f\) if one of the two following conditions holds:<br>
-          1. \(f_x(x_0,y_0)=0\) and \(f_y(x_0,y_0)=0\)<br>
-          2. At least one of the partial derivatives \(f_x\) and \(f_y\) does not exist at \((x_0,y_0)\).
+          Let \(z=f(x,y)\) be a function…(same content you already have)…
         </div>
       </div>
 
       <div class="step" data-step="2">
         <div class="step-title">Local maximum</div>
         <div class="step-subtitle">Definition</div>
-        <div class="step-body">
-          Let \(z=f(x,y)\) be a function of two variables that is defined and continuous on an open set containing the point \((x_0,y_0)\). Then f has a <b>local maximum</b> at \((x_0,y_0)\) if:
-          \[f(x,y) \leq f(x_0,y_0)\] for all points \((x,y)\) in some open disk centered at \((x_0,y_0)\). The number \(f(x_0,y_0)\) is called the <b>local maximum value</b> of \(f\). If the preceding inequality holds for all points \((x,y)\) in the domain of \(f\), then \(f\) has an <b>absolute maximum</b> at \((x_0,y_0)\) and \(f(x_0,y_0)\) is called the <b>absolute maximum value</b> of \(f\).
-        </div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="3" data-ggb-id="npeqnccv">
         <div class="step-title">Local Minimum</div>
         <div class="step-subtitle">Definition</div>
-        <div class="step-body">
-          Similarly, \(f\) has a <b>local minimum</b> at \((x_0,y_0)\) if:
-          \[f(x,y) \geq f(x_0,y_0)\] for all points \((x,y)\) in some open disk centered at \((x_0,y_0)\). The number \(f(x_0,y_0)\) is called the <b>local minimum value</b> of \(f\). If the preceding inequality holds for all points \((x,y)\) in the domain of \(f\), then \(f\) has an <b>absolute minimum</b> at \((x_0,y_0)\) and \(f(x_0,y_0)\) is called the <b>absolute minimum value</b> of \(f\).<br>
-          We refer to local maxima and minima collectively as <b>local extrema</b>.
-        </div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="4" data-ggb-id="yszvamx6">
         <div class="step-title">Theorem 4.16</div>
-        <div class="step-subtitle">Fermat's Theorem for Functions of Two Variables</div>
-        <div class="step-body">
-          Let \(z=f(x,y)\) be a function of two variables that is defined and continuous on an open set containing the point \((x_0,y_0)\). Suppose that \(f_x\) and \(f_y\) exist at \((x_0,y_0)\). If \(f\) has a local maximum or local minimum at \((x_0,y_0)\), then \(f_x(x_0,y_0)=0\) and \(f_y(x_0,y_0)=0\); that is, the point \((x_0,y_0)\) is a critical point of \(f\).
-        </div>
+        <div class="step-subtitle">Fermat's…</div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="5" data-ggb-id="uqjjtssm">
         <div class="step-title">Families → Families</div>
         <div class="step-subtitle">Curves & Tangents</div>
-        <div class="step-body">
-          Consider all possible plane curves and their lifts. In the applet, different curves are shown in green.
-        </div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="6" data-ggb-id="zu5hxpc4">
         <div class="step-title">What Do They Form?</div>
-        <div class="step-subtitle">Envelope of Tangent Lines</div>
-        <div class="step-body">
-          Consider all the tangent vectors and their corresponding tangent lines. What do they form?
-        </div>
+        <div class="step-subtitle">Envelope…</div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="7">
         <div class="step-title">Tangent Plane</div>
         <div class="step-subtitle">At the Point \(A\)</div>
-        <div class="step-body">
-          They form a plane called the tangent plane to the surface at \(A\).
-        </div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="8" data-ggb-id="jvnqay7a">
         <div class="step-title">Equation of the Tangent Plane</div>
         <div class="step-subtitle">Using the Gradient</div>
-        <div class="step-body">
-          \[
-            z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).
-          \]
-          Here \( f_x \) and \( f_y \) are partials at \( (x_0,y_0) \).
-        </div>
+        <div class="step-body">…</div>
       </div>
 
       <div class="step" data-step="9">
         <div class="step-title">Linear Approximation</div>
         <div class="step-subtitle">Tangent Plane as \(L(x,y)\)</div>
-        <div class="step-body">
-          \[
-            L(x,y) = z_0 + f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).
-          \]
-        </div>
+        <div class="step-body">…</div>
       </div>
 
       <!-- Controls -->
@@ -126,26 +101,61 @@
   </section>
 </main>
 
-<!-- FLOATING GEO GEBRA WINDOW (hidden until used) -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="Interactive GeoGebra">
+<!-- FLOATING GEO GEBRA WINDOW -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
   <div class="ggb-float-header" id="ggb-float-drag">
     <span class="ggb-float-title">GeoGebra Applet</span>
     <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false" title="Expand (↗) / Collapse (↙)">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button" title="Hide applet (Esc)">× Close</button>
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button">× Close</button>
     </div>
   </div>
   <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder">
-      <p class="muted">Applet not loaded.</p>
-      <p class="muted small">Click a <b>▶</b> next to a step title to load/swap the applet.</p>
-    </div>
+    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
   </div>
 </div>
-
-<!-- Backdrop (only visible when expanded) -->
 <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
-<script src="main.js"></script>
+<!-- LEFT DRAWER (vocab/concepts + preview) -->
+<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+  <div class="drawer-header">
+    <strong>Key terms & concepts</strong>
+    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+  </div>
+  <div class="drawer-body">
+    <section>
+      <h3 class="drawer-h3">Vocabulary</h3>
+      <ul id="vocab-list" class="vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Concepts</h3>
+      <ul id="concepts-list" class="vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Connections (preview)</h3>
+      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+      <button id="map-open" class="btn" type="button">Open Mind Map</button>
+    </section>
+  </div>
+</aside>
+<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+
+<!-- FLOATING MIND-MAP -->
+<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+  <div class="map-float-header">
+    <span class="map-title">Concept Connections</span>
+    <div class="map-actions">
+      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+      <button id="map-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="map-host" class="map-host">
+    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+  </div>
+</div>
+<div id="map-backdrop" class="map-backdrop" hidden></div>
+
+<!-- JS entry (ES modules) -->
+<script type="module" src="js/boot.js"></script>
 </body>
 </html>
