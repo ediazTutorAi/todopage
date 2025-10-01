@@ -1,0 +1,32 @@
+{
+  "vocabulary": [
+    "critical point",
+    "local maximum",
+    "local minimum",
+    "absolute extremum",
+    "gradient",
+    "Hessian",
+    "tangent plane",
+    "linear approximation",
+    "Lagrange multiplier",
+    "saddle point"
+  ],
+  "concepts": [
+    { "id": "crit",   "label": "Critical Points" },
+    { "id": "fermat", "label": "Fermat’s Theorem" },
+    { "id": "grad",   "label": "Gradient ∇f" },
+    { "id": "hess",   "label": "Hessian Hf" },
+    { "id": "class",  "label": "Second Derivative Test" },
+    { "id": "tp",     "label": "Tangent Plane" },
+    { "id": "lin",    "label": "Linear Approximation" },
+    { "id": "lag",    "label": "Lagrange Multipliers" }
+  ],
+  "links": [
+    { "from": "grad",  "to": "tp",   "label": "normal vector" },
+    { "from": "grad",  "to": "lin",  "label": "coefficients" },
+    { "from": "hess",  "to": "class","label": "definiteness" },
+    { "from": "crit",  "to": "class","label": "classify" },
+    { "from": "fermat","to": "crit", "label": "necessary cond." },
+    { "from": "lag",   "to": "crit", "label": "constrained" }
+  ]
+}

@@ -1,173 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My To-Do + Reminders</title>
+  <meta charset="utf-8" />
+  <title>MATH 2326 — Maxima/Minima Problems</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --pad: 18px; --radius: 14px; }
-    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem;
-           font-size: 1.25rem; line-height: 1.6; background: #fafafa; color: #222; }
-    header { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; justify-content: space-between; }
-    h1 { font-size: 1.8rem; margin: 0; }
-    .row { display: flex; gap: .8rem; margin: 1rem 0; flex-wrap: wrap; }
-    input, button, select {
-      padding: 0.9rem 1.1rem; border-radius: 12px; border: 2px solid #ccc;
-      font-size: 1.1rem;
-    }
-    input[type="text"] { flex: 1 1 320px; }
-    button { cursor: pointer; background: #f0f0f0; }
-    button:hover { background: #e2e2e2; }
-    .pill { border-radius: 999px; font-weight: bold; }
-    ul { list-style: none; padding: 0; margin: 1.5rem 0; }
-    li { display: grid; grid-template-columns: 1fr auto; gap: .6rem; align-items: center;
-         padding: 1rem; border: 2px solid #ddd; border-radius: var(--radius); margin-bottom: .8rem;
-         background: #fff; }
-    .title { display: flex; gap: 1rem; align-items: center; }
-    .title input[type="checkbox"] { width: 1.4rem; height: 1.4rem; }
-    .done .label { text-decoration: line-through; color: #777; }
-    .meta { font-size: 1rem; color: #555; margin-top: .4rem; }
-    .overdue { border-color: #e66; background: #ffecec; }
-    .soon { border-color: #f6a500; background: #fff6e6; }
-    .controls button { margin-left: .4rem; font-size: 1.1rem; }
-    .footer { display:flex; justify-content: space-between; align-items:center;
-              margin-top: 1rem; font-size: 1.1rem; }
-    .chip { padding: .4rem .9rem; border: 2px solid #ccc; border-radius: 999px; cursor: pointer; }
-    .chip.active { background: #222; color: #fff; border-color:#222; }
-    .hint { font-size: 1.1rem; color: #333; font-weight: bold; }
-  </style>
+
+  <!-- KaTeX (CSS + JS) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body,{
+            delimiters:[
+              {left:'$$', right:'$$', display:true},
+              {left:'\\[', right:'\\]', display:true},
+              {left:'\\(', right:'\\)', display:false},
+              {left:'$',  right:'$',  display:false}
+            ],
+            throwOnError:false
+          });"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>✅ My To-Do + Reminders</h1>
-    <div class="row" style="margin:0">
-      <button id="notifyBtn" class="pill">🔔 Notifications</button>
-      <button id="hardResetBtn" class="pill">♻️ Hard Reset</button>
-    </div>
-  </header>
 
-  <div class="row">
-    <input id="taskText" type="text" placeholder="New task (press Enter to add)" />
-    <input id="taskDue" type="datetime-local" />
-    <select id="taskTag" title="Tag">
-      <option value="">tag…</option>
-      <option>work</option>
-      <option>home</option>
-      <option>teaching</option>
-      <option>research</option>
-    </select>
-    <button id="addBtn">Add</button>
-  </div>
+<header class="site-header">
+  <h1>Maxima/Minima Problems</h1>
+  <div class="meta">MATH 2326 · Dr. Esteban Díaz</div>
+</header>
 
-  <div class="row" style="align-items:center">
-    <span class="hint">Filter:</span>
-    <span class="chip active" data-filter="all">All</span>
-    <span class="chip" data-filter="open">Open</span>
-    <span class="chip" data-filter="done">Done</span>
-    <span class="chip" data-filter="overdue">Overdue</span>
-    <span class="chip" data-filter="soon">Due in 24h</span>
-  </div>
+<main class="container">
+  <!-- Single column: left card uses full width/height -->
+  <section class="single-col">
+    <div class="card" id="left-card">
 
-  <ul id="list"></ul>
-
-  <div class="footer">
-    <span id="count"></span>
-    <div>
-      <button id="exportBtn">Export</button>
-      <input id="importFile" type="file" accept="application/json" style="display:none" />
-      <button id="importBtn">Import</button>
-    </div>
-  </div>
-
-<script>
-(() => {
-  const STORAGE_KEY = "todo.bigfont";
-  let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  const list = document.getElementById("list");
-  const taskText = document.getElementById("taskText");
-  const taskDue = document.getElementById("taskDue");
-  const taskTag = document.getElementById("taskTag");
-  const count = document.getElementById("count");
-  const addBtn = document.getElementById("addBtn");
-  const chips = [...document.querySelectorAll(".chip")];
-  let filter = "all";
-
-  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
-  function fmt(dt) { return new Date(dt).toLocaleString(); }
-  function isOverdue(t) { return t.due && !t.done && new Date(t.due) < new Date(); }
-  function isSoon(t) {
-    if (!t.due || t.done) return false;
-    const d = new Date(t.due) - new Date();
-    return d > 0 && d <= 24*60*60*1000;
-  }
-
-  function render() {
-    list.innerHTML = "";
-    let shown = tasks.filter(t => {
-      switch (filter) {
-        case "open": return !t.done;
-        case "done": return t.done;
-        case "overdue": return isOverdue(t);
-        case "soon": return isSoon(t);
-        default: return true;
-      }
-    });
-
-    shown.forEach((t, i) => {
-      const li = document.createElement("li");
-      li.className = (t.done ? "done " : "") + (isOverdue(t) ? "overdue " : isSoon(t) ? "soon " : "");
-      li.innerHTML = `
-        <div class="title">
-          <input type="checkbox" ${t.done ? "checked": ""} data-action="toggle" data-idx="${i}">
-          <span class="label">${t.text}</span>
+      <!-- STEPS: each step is ONE unit with Title + Subtitle + Body -->
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">Critical Points</div>
+        <div class="step-subtitle">Definition</div>
+        <div class="step-body">
+          Let \(z=f(x,y)\) be a function of two variables that is defined on an open set containing the point \((x_0,y_0)\). The point \((x_0,y_0)\) is called a <b>critical point</b> of \(f\) if one of the two following conditions holds:<br>
+          1. \(f_x(x_0,y_0)=0\) and \(f_y(x_0,y_0)=0\)<br>
+          2. At least one of the partial derivatives \(f_x\) and \(f_y\) does not exist at \((x_0,y_0)\).
         </div>
-        <div class="controls">
-          <button data-action="edit" data-idx="${i}">✏️</button>
-          <button data-action="delete" data-idx="${i}">🗑</button>
-          <div class="meta">${t.due ? "⏰ " + fmt(t.due) : ""}</div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-title">Local maximum</div>
+        <div class="step-subtitle">Definition</div>
+        <div class="step-body">
+          Let \(z=f(x,y)\) be a function of two variables that is defined and continuous on an open set containing the point \((x_0,y_0)\). Then f has a <b>local maximum</b> at \((x_0,y_0)\) if:
+          \[f(x,y) \leq f(x_0,y_0)\] for all points \((x,y)\) in some open disk centered at \((x_0,y_0)\). The number \(f(x_0,y_0)\) is called the <b>local maximum value</b> of \(f\). If the preceding inequality holds for all points \((x,y)\) in the domain of \(f\), then \(f\) has an <b>absolute maximum</b> at \((x_0,y_0)\) and \(f(x_0,y_0)\) is called the <b>absolute maximum value</b> of \(f\).
         </div>
-      `;
-      list.appendChild(li);
-    });
+      </div>
 
-    const open = tasks.filter(t=>!t.done).length;
-    count.textContent = `${tasks.length} tasks · ${open} open`;
-    save();
-  }
+      <div class="step" data-step="3" data-ggb-id="npeqnccv">
+        <div class="step-title">Local Minimum</div>
+        <div class="step-subtitle">Definition</div>
+        <div class="step-body">
+          Similarly, \(f\) has a <b>local minimum</b> at \((x_0,y_0)\) if:
+          \[f(x,y) \geq f(x_0,y_0)\] for all points \((x,y)\) in some open disk centered at \((x_0,y_0)\). The number \(f(x_0,y_0)\) is called the <b>local minimum value</b> of \(f\). If the preceding inequality holds for all points \((x,y)\) in the domain of \(f\), then \(f\) has an <b>absolute minimum</b> at \((x_0,y_0)\) and \(f(x_0,y_0)\) is called the <b>absolute minimum value</b> of \(f\).<br>
+          We refer to local maxima and minima collectively as <b>local extrema</b>.
+        </div>
+      </div>
 
-  function add() {
-    const text = taskText.value.trim();
-    if (!text) return;
-    tasks.unshift({ text, due: taskDue.value || "", done: false, tag: (taskTag.value||"") });
-    taskText.value = ""; taskDue.value = "";
-    render();
-  }
+      <div class="step" data-step="4" data-ggb-id="yszvamx6">
+        <div class="step-title">Theorem 4.16</div>
+        <div class="step-subtitle">Fermat's Theorem for Functions of Two Variables</div>
+        <div class="step-body">
+          Let \(z=f(x,y)\) be a function of two variables that is defined and continuous on an open set containing the point \((x_0,y_0)\). Suppose that \(f_x\) and \(f_y\) exist at \((x_0,y_0)\). If \(f\) has a local maximum or local minimum at \((x_0,y_0)\), then \(f_x(x_0,y_0)=0\) and \(f_y(x_0,y_0)=0\); that is, the point \((x_0,y_0)\) is a critical point of \(f\).
+        </div>
+      </div>
 
-  addBtn.addEventListener("click", add);
-  taskText.addEventListener("keydown", e => { if (e.key === "Enter") add(); });
-  list.addEventListener("click", e => {
-    const btn = e.target.closest("[data-action]");
-    if (!btn) return;
-    const idx = +btn.dataset.idx;
-    const action = btn.dataset.action;
-    if (action === "toggle") tasks[idx].done = !tasks[idx].done;
-    if (action === "delete") tasks.splice(idx,1);
-    if (action === "edit") {
-      const newText = prompt("Edit task:", tasks[idx].text);
-      if (newText !== null) tasks[idx].text = newText;
-    }
-    render();
-  });
+      <div class="step" data-step="5" data-ggb-id="uqjjtssm">
+        <div class="step-title">Families → Families</div>
+        <div class="step-subtitle">Curves & Tangents</div>
+        <div class="step-body">
+          Consider all possible plane curves and their lifts. In the applet, different curves are shown in green.
+        </div>
+      </div>
 
-  chips.forEach(chip => chip.addEventListener("click", () => {
-    chips.forEach(c=>c.classList.remove("active"));
-    chip.classList.add("active");
-    filter = chip.dataset.filter;
-    render();
-  }));
+      <div class="step" data-step="6" data-ggb-id="zu5hxpc4">
+        <div class="step-title">What Do They Form?</div>
+        <div class="step-subtitle">Envelope of Tangent Lines</div>
+        <div class="step-body">
+          Consider all the tangent vectors and their corresponding tangent lines. What do they form?
+        </div>
+      </div>
 
-  render();
-})();
-</script>
+      <div class="step" data-step="7">
+        <div class="step-title">Tangent Plane</div>
+        <div class="step-subtitle">At the Point \(A\)</div>
+        <div class="step-body">
+          They form a plane called the tangent plane to the surface at \(A\).
+        </div>
+      </div>
+
+      <div class="step" data-step="8" data-ggb-id="jvnqay7a">
+        <div class="step-title">Equation of the Tangent Plane</div>
+        <div class="step-subtitle">Using the Gradient</div>
+        <div class="step-body">
+          \[
+            z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).
+          \]
+          Here \( f_x \) and \( f_y \) are partials at \( (x_0,y_0) \).
+        </div>
+      </div>
+
+      <div class="step" data-step="9">
+        <div class="step-title">Linear Approximation</div>
+        <div class="step-subtitle">Tangent Plane as \(L(x,y)\)</div>
+        <div class="step-body">
+          \[
+            L(x,y) = z_0 + f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).
+          \]
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="reveal-controls" role="group" aria-label="Slide controls">
+        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING GEO GEBRA WINDOW (hidden until used) -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="Interactive GeoGebra">
+  <div class="ggb-float-header" id="ggb-float-drag">
+    <span class="ggb-float-title">GeoGebra Applet</span>
+    <div class="ggb-actions">
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false" title="Expand (↗) / Collapse (↙)">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button" title="Hide applet (Esc)">× Close</button>
+    </div>
+  </div>
+  <div id="ggb-host" class="ggb-float-host">
+    <div class="ggb-placeholder">
+      <p class="muted">Applet not loaded.</p>
+      <p class="muted small">Click a <b>▶</b> next to a step title to load/swap the applet.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop (only visible when expanded) -->
+<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+<script src="main.js"></script>
 </body>
 </html>
