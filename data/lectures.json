@@ -2,11 +2,11 @@
   {
     "course": "Calculus III",
     "semester": "Fall 2025",
-    "date": "2025-09-29",
-    "title": "Maxima/Minima Problems",
-    "subtitle": "Critical points, Fermat, tangent plane",
-    "description": "Definitions and classification of extrema; linear approximation.",
-    "tags": ["critical points", "Fermat", "tangent plane", "Hessian"],
+    "date": "2025-10-01",
+    "title": "Lagrange Multiplies",
+    "subtitle": "One and two constraints",
+    "description": "",
+    "tags": ["multipliers"],
     "url": "calculus3/fall2025/2025-10-01-Lagrange-multipliers/index.html"
   },
   {
