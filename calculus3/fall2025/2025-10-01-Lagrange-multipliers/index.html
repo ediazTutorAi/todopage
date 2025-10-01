@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 2326 — Maxima/Minima Problems</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/steps.css">
+  <link rel="stylesheet" href="/css/ggb-float.css">
+  <link rel="stylesheet" href="/css/drawer.css">
+  <link rel="stylesheet" href="/css/map.css">
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Maxima/Minima Problems</h1>
+  <div class="meta">MATH 2326 · Dr. Esteban Díaz</div>
+</header>
+
+<main class="container">
+  <section class="single-col">
+    <div class="card" id="left-card">
+
+      <!-- STEPS -->
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">Critical Points</div>
+        <div class="step-subtitle">Definition</div>
+        <div class="step-body">
+          Let \(z=f(x,y)\) be a function…(same content you already have)…
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-title">Local maximum</div>
+        <div class="step-subtitle">Definition</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="3" data-ggb-id="npeqnccv">
+        <div class="step-title">Local Minimum</div>
+        <div class="step-subtitle">Definition</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="4" data-ggb-id="yszvamx6">
+        <div class="step-title">Theorem 4.16</div>
+        <div class="step-subtitle">Fermat's…</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="5" data-ggb-id="uqjjtssm">
+        <div class="step-title">Families → Families</div>
+        <div class="step-subtitle">Curves & Tangents</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="6" data-ggb-id="zu5hxpc4">
+        <div class="step-title">What Do They Form?</div>
+        <div class="step-subtitle">Envelope…</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="7">
+        <div class="step-title">Tangent Plane</div>
+        <div class="step-subtitle">At the Point \(A\)</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="8" data-ggb-id="jvnqay7a">
+        <div class="step-title">Equation of the Tangent Plane</div>
+        <div class="step-subtitle">Using the Gradient</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <div class="step" data-step="9">
+        <div class="step-title">Linear Approximation</div>
+        <div class="step-subtitle">Tangent Plane as \(L(x,y)\)</div>
+        <div class="step-body">…</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="reveal-controls" role="group" aria-label="Slide controls">
+        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING GEO GEBRA WINDOW -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+  <div class="ggb-float-header" id="ggb-float-drag">
+    <span class="ggb-float-title">GeoGebra Applet</span>
+    <div class="ggb-actions">
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="ggb-host" class="ggb-float-host">
+    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+  </div>
+</div>
+<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+<!-- LEFT DRAWER (vocab/concepts + preview) -->
+<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+  <div class="drawer-header">
+    <strong>Key terms & concepts</strong>
+    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+  </div>
+  <div class="drawer-body">
+    <section>
+      <h3 class="drawer-h3">Vocabulary</h3>
+      <ul id="vocab-list" class="vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Concepts</h3>
+      <ul id="concepts-list" class="vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Connections (preview)</h3>
+      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+      <button id="map-open" class="btn" type="button">Open Mind Map</button>
+    </section>
+  </div>
+</aside>
+<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+
+<!-- FLOATING MIND-MAP -->
+<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+  <div class="map-float-header">
+    <span class="map-title">Concept Connections</span>
+    <div class="map-actions">
+      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+      <button id="map-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="map-host" class="map-host">
+    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+  </div>
+</div>
+<div id="map-backdrop" class="map-backdrop" hidden></div>
+
+<!-- JS entry (ES modules) -->
+<script type="module" src="/js/boot.js"></script>
+</body>
+</html>
