@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MathAgora — Lecture Hub</title>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    /* ===== Sunset palette (light theme) ===== */
+    :root{
+      --bg:#ffffff; --panel:#fef6e4; --paper:#ffffff;
+      --ink:#222222; --muted:#666666; --line:#eeeeee;
+      --ring:#f7b538; --accent:#f77f00; --accent-2:#d62828; --tag:#6a4c93;
+
+      /* density knobs */
+      --pad-xs:.35rem;         /* micro padding */
+      --pad-sm:.55rem;         /* small padding */
+      --pad-md:.85rem;         /* medium padding */
+      --radius:12px;           /* smaller radius for compact feel */
+      --gap:.6rem;             /* tighter gaps */
+      --grid-gap:.6rem;        /* tighter grid gaps */
+      --title-size:clamp(22px,2.2vw,30px);  /* smaller header title */
+      --card-min-h:136px;      /* shorter cards */
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;background:var(--bg);color:var(--ink);
+      font:15px/1.45 system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; /* slightly smaller base */
+    }
+    .container{max-width:1100px;margin:0 auto;padding:var(--pad-md)}
+
+    /* Header — compact */
+    header.site{
+      background:var(--panel);
+      border-bottom:1px solid var(--line);
+      padding:var(--pad-sm) var(--pad-md);
+    }
+    header.site h1{
+      margin:.1rem 0;font-size:var(--title-size);color:var(--ink);line-height:1.15;
+    }
+    header.site .sub{color:var(--muted);margin:.1rem 0 .2rem;font-size:.9rem}
+
+    /* Controls (sticky) — compact */
+    .controls{
+      position:sticky; top:0; z-index:5;
+      background:rgba(254,246,228,.95);
+      backdrop-filter:saturate(1.05) blur(3px);
+      border-bottom:1px solid var(--line);
+    }
+    .row{
+      display:flex; gap:var(--gap); align-items:center;
+      padding:var(--pad-xs) 0; flex-wrap:wrap;
+    }
+    .lbl{
+      display:block;font-size:.78rem;color:var(--muted);
+      margin-bottom:.15rem; line-height:1;
+    }
+    label{display:flex;flex-direction:column}
+    select,input[type=search]{
+      appearance:none;background:var(--bg);
+      border:1px solid #ddd;color:var(--ink);
+      padding:.45rem .55rem;border-radius:8px;font-size:.95rem;
+      height:2.1rem; /* compact control height */
+    }
+    select:focus, input[type=search]:focus{
+      outline:2px solid var(--ring); outline-offset:2px; border-color:var(--ring);
+    }
+    input[type=search]{flex:1;min-width:220px}
+    /* checkbox labels inline and compact */
+    .row > label[style*="align-self"]{font-size:.92rem;color:var(--muted)}
+
+    /* Groups & cards — compact */
+    .groups{display:grid;gap:var(--gap);margin-top:var(--gap)}
+    .group{
+      background:#fff;border:1px solid var(--line);
+      border-radius:var(--radius); padding:var(--pad-sm);
+    }
+    .group-title{margin:0 0 .4rem;color:var(--muted);font-weight:600;font-size:.95rem}
+    .cards{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:var(--grid-gap);
+    }
+    .card{
+      position:relative;background:var(--paper);border:1px solid var(--line);
+      border-radius:var(--radius); padding:var(--pad-sm);
+      min-height:var(--card-min-h);
+      display:flex;flex-direction:column;gap:.4rem;
+      box-shadow:0 4px 12px rgba(0,0,0,.04);
+    }
+    @media (prefers-reduced-motion:no-preference){
+      .card{transition:transform .12s ease, box-shadow .12s ease}
+      .card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(0,0,0,.06)}
+    }
+
+    /* Favorite star — compact placement */
+    .fav{
+      position:absolute;right:.4rem;top:.35rem;border:0;background:transparent;
+      color:var(--muted);font-size:1.05rem;cursor:pointer;line-height:1;
+    }
+    .fav.active{color:var(--accent)}
+
+    /* Card text */
+    .eyebrow{font-size:.78rem;color:var(--muted);line-height:1.1}
+    .title{margin:.05rem 0;font-size:1rem;color:var(--ink);line-height:1.2}
+    .meta{font-size:.88rem;color:var(--muted)}
+    .desc{margin:.1rem 0 .2rem;color:#444}
+
+    /* Tags — small pills */
+    .tags{display:flex;flex-wrap:wrap;gap:.3rem}
+    .tag{
+      font-size:.7rem;color:#fff;background:var(--tag);
+      padding:.15rem .4rem;border-radius:999px;line-height:1;
+    }
+
+    /* Buttons — smaller */
+    .btn{
+      display:inline-block;text-decoration:none;background:var(--accent);color:#fff;
+      border-radius:8px;padding:.35rem .55rem;border:1px solid var(--accent);
+      font-weight:600;font-size:.92rem;line-height:1.1
+    }
+    .btn:hover{background:var(--accent-2); border-color:var(--accent-2)}
+    .btn:focus{outline:2px solid var(--ring); outline-offset:2px}
+
+    /* Footer — compact */
+    footer.container{
+      color:var(--muted);padding:var(--pad-sm) var(--pad-md);
+      text-align:center;border-top:1px solid var(--line);
+      background:var(--panel); border-radius:10px 10px 0 0; font-size:.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site">
+    <h1>Lecture Hub</h1>
+    <p class="sub">Calculus III · Linear Algebra</p>
+  </header>
+
+  <main class="container">
+    <section class="controls" aria-label="Filters and search">
+      <div class="row">
+        <label><span class="lbl">Course</span>
+          <select id="filter-course"><option value="">All courses</option></select>
+        </label>
+        <label><span class="lbl">Semester</span>
+          <select id="filter-semester"><option value="">All</option></select>
+        </label>
+        <label style="flex:1"><span class="lbl">Search</span>
+          <input id="search" type="search" placeholder="topic, tag, date (YYYY-MM-DD), theorem…">
+        </label>
+        <label style="align-self:center"><input id="toggle-favorites" type="checkbox"> Favorites</label>
+        <label style="align-self:center"><input id="toggle-recent" type="checkbox"> Recent first</label>
+      </div>
+    </section>
+
+    <section id="groups" class="groups" aria-live="polite"></section>
+
+    <template id="tpl-group">
+      <div class="group">
+        <h2 class="group-title"></h2>
+        <div class="cards" role="list"></div>
+      </div>
+    </template>
+
+    <template id="tpl-card">
+      <article class="card" role="listitem">
+        <button class="fav" title="Toggle favorite" aria-label="Toggle favorite">☆</button>
+        <header>
+          <div class="eyebrow"></div>
+          <h3 class="title"></h3>
+          <div class="meta"></div>
+        </header>
+        <p class="desc"></p>
+        <div class="tags"></div>
+        <footer><a class="btn" target="_blank" rel="noopener" href="#">Open</a></footer>
+      </article>
+    </template>
+  </main>
+
+  <footer class="container">
+    <small>MathAgora · Dr. Esteban Díaz</small>
+  </footer>
+
+  <script type="module" src="/js/hub.js"></script>
+  <noscript>
+    <p class="container">JavaScript is off. You can still open <a href="/data/lectures.json">the manifest</a> and navigate manually.</p>
+  </noscript>
+</body>
+</html>
