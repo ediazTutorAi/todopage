@@ -62,46 +62,16 @@
         <div class="step-subtitle"></div>
         <div class="step-body">
           The method of Lagrange multipliers can be applied to problems with more than one constraint. In this case the optimization function, w is a function of three variables:
-          $$w=f(x,y,z)$$
+          $$w=f(x,y,z)$$ and it is subject to two constraints:
+          $$g(x,y,z)=0\text{ and } h(x,y,z)=0$$
+          There are two Lagrange multipliers, $\lambda_1$ and $\lambda_2$, and the system of equations becomes
+          $$\nabla f(x_0,y_0,z_0)=\lambda_1\nabla g(x_0,y_0,z_0)+\lambda_2\nabla h(x_0,y_0,z_0)$$
+          $$g(x_0,y_0,z_0)=0$$
+          $$h(x_0,y_0,z_0)=0$$
         </div>
       </div>
 
-      <div class="step" data-step="4" data-ggb-id="yszvamx6">
-        <div class="step-title">Theorem 4.16</div>
-        <div class="step-subtitle">Fermat's…</div>
-        <div class="step-body">…</div>
-      </div>
-
-      <div class="step" data-step="5" data-ggb-id="uqjjtssm">
-        <div class="step-title">Families → Families</div>
-        <div class="step-subtitle">Curves & Tangents</div>
-        <div class="step-body">…</div>
-      </div>
-
-      <div class="step" data-step="6" data-ggb-id="zu5hxpc4">
-        <div class="step-title">What Do They Form?</div>
-        <div class="step-subtitle">Envelope…</div>
-        <div class="step-body">…</div>
-      </div>
-
-      <div class="step" data-step="7">
-        <div class="step-title">Tangent Plane</div>
-        <div class="step-subtitle">At the Point \(A\)</div>
-        <div class="step-body">…</div>
-      </div>
-
-      <div class="step" data-step="8" data-ggb-id="jvnqay7a">
-        <div class="step-title">Equation of the Tangent Plane</div>
-        <div class="step-subtitle">Using the Gradient</div>
-        <div class="step-body">…</div>
-      </div>
-
-      <div class="step" data-step="9">
-        <div class="step-title">Linear Approximation</div>
-        <div class="step-subtitle">Tangent Plane as \(L(x,y)\)</div>
-        <div class="step-body">…</div>
-      </div>
-
+      
       <!-- Controls -->
       <div class="reveal-controls" role="group" aria-label="Slide controls">
         <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
