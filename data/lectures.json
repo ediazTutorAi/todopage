@@ -1,0 +1,22 @@
+[
+  {
+    "course": "Calculus III",
+    "semester": "Fall 2025",
+    "date": "2025-09-29",
+    "title": "Maxima/Minima Problems",
+    "subtitle": "Critical points, Fermat, tangent plane",
+    "description": "Definitions and classification of extrema; linear approximation.",
+    "tags": ["critical points", "Fermat", "tangent plane", "Hessian"],
+    "url": "/calc3/fall2025/2025-10-01-Lagrange-multipliers/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-09-22",
+    "title": "Eigenvalues & Diagonalization (Intro)",
+    "subtitle": "Eigenvectors, geometric vs algebraic multiplicity",
+    "description": "Warm-up on characteristic polynomials and eigenspaces.",
+    "tags": ["eigenvalues", "eigenvectors", "diagonalization"],
+    "url": "/linear-algebra/fall2025/2025-09-22-eigenvalues-intro/index.html"
+  }
+]
