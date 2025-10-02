@@ -38,11 +38,11 @@
 }
 
 /* ✅ Scoped vocabulary lists — no longer affect KaTeX */
-.left-drawer .vlist {
+.left-drawer .drawer-vlist {
   margin: 0 0 0.7rem 0;
   padding-left: 1rem;
 }
-.left-drawer .vlist li {
+.left-drawer .drawer-vlist li {
   margin: 0.12rem 0;
 }
 
