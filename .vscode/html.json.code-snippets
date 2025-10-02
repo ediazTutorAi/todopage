@@ -1,0 +1,132 @@
+{
+	// Place your todopage workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+
+
+  // ---------- Core math ----------
+  "Inline math \\( ... \\)": { "prefix": "mk", "body": ["\\\\(${1}\\)"] },
+  "Display math $$ ... $$": { "prefix": "md", "body": ["$$", "${1}", "$$"] },
+  "Aligned equations": {
+    "prefix": "malign",
+    "body": ["\\\\[","\\\\begin{aligned}","  ${1:a} \\\\ &= ${2:b} \\\\","\\\\end{aligned}","\\\\]"]
+  },
+  "Cases (piecewise)": {
+    "prefix": "mcases",
+    "body": ["\\\\begin{cases}","  ${1:expr_1}, & ${2:cond_1} \\\\","  ${3:expr_2}, & ${4:cond_2}","\\\\end{cases}"]
+  },
+
+  // ---------- Calculus ----------
+  "Derivative d/dx": { "prefix": "ddx", "body": ["\\\\frac{d ${1:f}}{d ${2:x}}"] },
+  "Partial derivative": { "prefix": "pd", "body": ["\\\\frac{\\\\partial ${1:f}}{\\\\partial ${2:x}}"] },
+  "Mixed partial": { "prefix": "pdxdy", "body": ["\\\\frac{\\\\partial^2 ${1:f}}{\\\\partial ${2:x} \\\\partial ${3:y}}"] },
+  "Gradient": { "prefix": "grad", "body": ["\\\\nabla ${1:f}"] },
+  "Divergence": { "prefix": "div", "body": ["\\\\nabla \\\\cdot ${1:{\\\\bf F}}"] },
+  "Curl": { "prefix": "curl", "body": ["\\\\nabla \\\\times ${1:{\\\\bf F}}"] },
+  "Laplacian": { "prefix": "lap", "body": ["\\\\nabla^2 ${1:f}"] },
+  "Integral": { "prefix": "int", "body": ["\\\\int_{${1:a}}^{${2:b}} ${3:f(${4:x})} \\\\, d${4}"] },
+  "Double integral": { "prefix": "iint", "body": ["\\\\iint_{${1:D}} ${2:f(x,y)} \\\\, dA"] },
+  "Triple integral": { "prefix": "iiint", "body": ["\\\\iiint_{${1:V}} ${2:f(x,y,z)} \\\\, dV"] },
+  "Line integral": { "prefix": "lint", "body": ["\\\\int_{${1:C}} ${2:\\\\mathbf{F}} \\\\cdot d\\\\mathbf{r}"] },
+  "Surface integral": { "prefix": "sint", "body": ["\\\\iint_{${1:S}} ${2:\\\\mathbf{F}} \\\\cdot d\\\\mathbf{S}"] },
+  "Limit": { "prefix": "lim", "body": ["\\\\lim_{${1:x} \\\\to ${2:a}} ${3:}"] },
+
+  
+
+  // ---------- Sets & notation ----------
+  "Reals R^n": { "prefix": "rnn", "body": ["\\\\mathbb{R}^{${1:n}}"] },
+  "Integers Z": { "prefix": "zz", "body": ["\\\\mathbb{Z}"] },
+  "Complex C": { "prefix": "cc", "body": ["\\\\mathbb{C}"] },
+  "Set builder": { "prefix": "set", "body": ["\\\\{ ${1:x} \\\\in ${2:S} : ${3:condition} \\\\}"] },
+  "Span": { "prefix": "span", "body": ["\\\\operatorname{span}\\\\{${1:v_1,\\\\dots,v_k}\\\\}"] },
+  "Ker/Null": { "prefix": "ker", "body": ["\\\\ker(${1:T})"] },
+  "Im/Range": { "prefix": "im", "body": ["\\\\operatorname{im}(${1:T})"] },
+
+  // ---------- Linear Algebra: matrices & vectors ----------
+  "Vector with arrow": {
+    "prefix": "vec",
+    "body": ["\\\\vec{${1:v}}"],
+    "description": "Insert a vector with arrow, e.g. \\vec{v}"
+  },
+  "Vector bold": { "prefix": "vb", "body": ["\\\\mathbf{${1:v}}"] },
+  "Unit vector hat": { "prefix": "uhat", "body": ["\\\\hat{\\\\mathbf{${1{e}}}}"] },
+  "Transpose": { "prefix": "T", "body": ["${1:A}^{\\\\mathsf{T}}"] },
+  "Inverse": { "prefix": "inv", "body": ["${1:A}^{-1}"] },
+  "Determinant": { "prefix": "det", "body": ["\\\\det(${1:A})"] },
+  "Trace": { "prefix": "tr", "body": ["\\\\operatorname{tr}(${1:A})"] },
+  "Rank": { "prefix": "rank", "body": ["\\\\operatorname{rank}(${1:A})"] },
+  "Norm (2-norm)": { "prefix": "norm", "body": ["\\\\lVert ${1:x} \\\\rVert_2"] },
+  "Inner product": { "prefix": "ip", "body": ["\\\\langle ${1:u}, ${2:v} \\\\rangle"] },
+  "Outer product": { "prefix": "outer", "body": ["${1:u} ${2:v}^{\\\\mathsf{T}}"] },
+
+  // Matrices
+  "bmatrix 2x2": {
+    "prefix": "m22",
+    "body": ["\\\\begin{bmatrix}"," ${1:a} & ${2:b} \\\\"," ${3:c} & ${4:d} ","\\\\end{bmatrix}"]
+  },
+  "bmatrix 3x3": {
+    "prefix": "m33",
+    "body": ["\\\\begin{bmatrix}"," ${1:a} & ${2:b} & ${3:c} \\\\"," ${4:d} & ${5:e} & ${6:f} \\\\"," ${7:g} & ${8:h} & ${9:i} ","\\\\end{bmatrix}"]
+  },
+  "diag(...)": { "prefix": "diag", "body": ["\\\\operatorname{diag}(${1:\\\\lambda_1,\\\\dots,\\\\lambda_n})"] },
+  "Block matrix 2x2": {
+    "prefix": "bblock",
+    "body": ["\\\\begin{bmatrix}"," ${1:A} & ${2:B} \\\\"," ${3:C} & ${4:D} ","\\\\end{bmatrix}"]
+  },
+
+  // ---------- Eigen / similarity / decomposition ----------
+  "Eigen equation": { "prefix": "eig", "body": ["${1:A} \\\\mathbf{v} = \\\\lambda \\\\mathbf{v}"] },
+  "Characteristic polynomial": { "prefix": "charpoly", "body": ["p_${1:A}(\\\\lambda) = \\\\det(${1} - \\\\lambda I)"] },
+  "Diagonalization": {
+    "prefix": "diagA",
+    "body": ["${1:A} = ${2:P} ${3:D} ${2:P}^{-1},\\\\quad ${3:D}=\\\\operatorname{diag}(${4:\\\\lambda_1,\\\\dots,\\\\lambda_n})"]
+  },
+  "Similarity transform": { "prefix": "sim", "body": ["${1:B} = ${2:S}^{-1} ${3:A} ${2:S}"] },
+  "Jordan block": { "prefix": "jblock", "body": ["J_k(\\\\lambda) = \\\\begin{bmatrix} \\\\lambda & 1 & & \\\\cr & \\\\lambda & \\\\ddots & \\\\cr && \\\\ddots & 1 \\\\cr &&& \\\\lambda \\\\end{bmatrix}"] },
+  "SVD": {
+    "prefix": "svd",
+    "body": ["${1:A} = ${2:U} ${3:\\\\Sigma} ${4:V}^{\\\\mathsf{T}},\\\\quad ${2:U},{${4:V}} \\\\text{ orthogonal}"]
+  },
+  "QR decomposition": { "prefix": "qr", "body": ["${1:A} = ${2:Q} ${3:R},\\\\quad ${2:Q}^{\\\\mathsf{T}} ${2:Q} = I,\\\\ ${3:R} \\\\text{ upper triangular}"] },
+  "Gram–Schmidt (one step)": {
+    "prefix": "gs",
+    "body": [
+      "\\\\tilde v_1 = v_1,\\\\quad \\\\tilde v_k = v_k - \\\\sum_{i=1}^{k-1} \\\\frac{\\\\langle v_k, \\\\tilde v_i \\\\rangle}{\\\\langle \\\\tilde v_i, \\\\tilde v_i \\\\rangle} \\\\tilde v_i"
+    ]
+  },
+  "Projection onto span(u)": {
+    "prefix": "proj",
+    "body": ["\\\\operatorname{proj}_{${1:u}}(${2:v}) = \\\\frac{\\\\langle ${2}, ${1} \\\\rangle}{\\\\langle ${1}, ${1} \\\\rangle} ${1}"]
+  },
+
+  // ---------- Linear systems ----------
+  "Augmented matrix": {
+    "prefix": "aug",
+    "body": ["\\\\left[ \\\\begin{array}{cccc|c}"," ${1:a_{11}} & ${2:a_{12}} & \\\\dots & ${3:a_{1n}} & ${4:b_1} \\\\"," \\\\vdots & \\\\vdots & \\\\ddots & \\\\vdots & \\\\vdots \\\\"," ${5:a_{m1}} & ${6:a_{m2}} & \\\\dots & ${7:a_{mn}} & ${8:b_m} \\\\","\\\\end{array} \\\\right]"]
+  },
+  "Row operation arrow": { "prefix": "rref", "body": ["\\\\xrightarrow{R_i \\\\leftrightarrow R_j}"] },
+  // ---------- Fraktur ----------
+  "Fraktur letter": {
+    "prefix": "frak",
+    "body": ["\\\\mathfrak{${1:B}}"]
+  },
+  // ---------- Probability / stats ----------
+  "Expectation": { "prefix": "E", "body": ["\\\\mathbb{E}[${1:X}]"] },
+  "Variance": { "prefix": "Var", "body": ["\\\\operatorname{Var}(${1:X})"] },
+  "Covariance": { "prefix": "Cov", "body": ["\\\\operatorname{Cov}(${1:X},${2:Y})"] },
+  "Gaussian N(mu, Sigma)": { "prefix": "N", "body": ["\\\\mathcal{N}(${1:\\\\mu}, ${2:\\\\Sigma})"] },
+
+}
