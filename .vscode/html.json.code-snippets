@@ -19,7 +19,7 @@
 
   // ---------- Core math ----------
   "Inline math \\( ... \\)": { "prefix": "mk", "body": ["\\\\(${1}\\)"] },
-  "Display math $$ ... $$": { "prefix": "md", "body": ["$$", "${1}", "$$"] },
+  "Display math $$ ... $$": { "prefix": "md", "body": ["$$${1}$$"] },
   "Aligned equations": {
     "prefix": "malign",
     "body": ["\\\\[","\\\\begin{aligned}","  ${1:a} \\\\ &= ${2:b} \\\\","\\\\end{aligned}","\\\\]"]
