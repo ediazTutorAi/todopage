@@ -1,22 +1,105 @@
-.step { display: none; margin: 0.95rem 0 0.55rem; border: 1px solid var(--line); border-radius: 10px;
-  padding: 0.95rem 1.05rem; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: relative; }
-.step.is-visible { display: block; animation: fade 180ms ease-in; }
-@keyframes fade { from{opacity:0; transform:translateY(3px);} to{opacity:1; transform:none;} }
-.step::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; border-radius: 10px 0 0 10px; background: var(--accent); opacity: 0.9; }
+.step {
+  display: none;
+  margin: 0.95rem 0 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.95rem 1.05rem;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  position: relative;
+}
 
-.step-title { display: inline-flex; align-items: center; gap: 8px; font-size: 1.35em; font-weight: 800; line-height: 1.2; margin-bottom: 0.25rem; }
-.step-subtitle { font-size: 1.05em; font-weight: 600; color: var(--muted); margin-bottom: 0.5rem; }
-.step-body { font-size: 1em; line-height: 1.65; }
+.step.is-visible {
+  display: block;
+  animation: fade 180ms ease-in;
+}
 
-.step .step-icon { display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center;
-  border: 1px solid var(--line); border-radius: 50%; color: var(--accent); background: #fff; cursor: pointer; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.step::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+  border-radius: 10px 0 0 10px;
+  background: var(--accent);
+  opacity: 0.9;
+}
+
+.step-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.35em;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.step-subtitle {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.step-body {
+  font-size: 1em;
+}
+
+/* Relaxed line-height only for paragraphs/lists */
+.step-body p,
+.step-body li {
+  line-height: 1.65;
+}
+
+.step .step-icon {
+  display: inline-flex;
+  width: 26px; height: 26px;
+  align-items: center; justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent);
+  background: #fff;
+  cursor: pointer;
+}
 .step .step-icon:hover { background: #f3f4f6; }
-.reveal-controls { display: flex; gap: 8px; margin-top: 0.9rem; align-items: center; }
+
+.reveal-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 0.9rem;
+  align-items: center;
+}
 
 /* Slide Mode */
 body.slide-mode { overflow: hidden; }
-body.slide-mode .card { display: grid; grid-template-rows: 1fr auto; padding: 0; overflow: hidden; place-items: center; }
-body.slide-mode .card .step { display: none !important; margin: 0; width: min(900px, 88%); font-size: 1.42rem; line-height: 1.78; box-shadow: 0 14px 48px rgba(0,0,0,0.18); }
-body.slide-mode .card .step.is-current { display: block !important; }
-body.slide-mode .card .katex { font-size: 1.06em; }
-.card { scroll-padding-block: 12vh; } .step { scroll-margin-block: 12vh; }
+body.slide-mode .card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 0;
+  overflow: hidden;
+  place-items: center;
+}
+body.slide-mode .card .step {
+  display: none !important;
+  margin: 0;
+  width: min(900px, 88%);
+  font-size: 1.42rem;
+  line-height: 1.78;
+  box-shadow: 0 14px 48px rgba(0,0,0,0.18);
+}
+body.slide-mode .card .step.is-current {
+  display: block !important;
+}
+body.slide-mode .card .katex {
+  font-size: 1.06em;
+  line-height: 1.2 !important;
+}
+
+/* Smooth scrolling offsets */
+.card { scroll-padding-block: 12vh; }
+.step { scroll-margin-block: 12vh; }
