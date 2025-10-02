@@ -12,11 +12,11 @@
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
-    "date": "2025-09-22",
-    "title": "Eigenvalues & Diagonalization (Intro)",
-    "subtitle": "Eigenvectors, geometric vs algebraic multiplicity",
-    "description": "Warm-up on characteristic polynomials and eigenspaces.",
-    "tags": ["eigenvalues", "eigenvectors", "diagonalization"],
-    "url": "/linear-algebra/fall2025/2025-09-22-eigenvalues-intro/index.html"
+    "date": "2025-10-02",
+    "title": "Coordinates (continuation)",
+    "subtitle": "",
+    "description": "Continue talking about Coordinates",
+    "tags": ["basis","similar"],
+    "url": "/linear-algebra/fall2025/2025-10-02-coordinates/index.html"
   }
 ]

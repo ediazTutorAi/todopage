@@ -32,21 +32,3 @@ html, body { margin: 0; height: 100vh; background: var(--bg); color: var(--ink);
 .btn.small { padding: 4px 8px; font-size: 13px; }
 .btn:hover { background: #eef2f7; }
 .muted { color: var(--muted); } .small { font-size: 0.9em; }
-
-/* Protect KaTeX from global typography overrides */
-.katex,
-.katex * {
-  letter-spacing: normal !important;
-  word-spacing: normal !important;
-  text-transform: none !important;
-  font-variant-ligatures: normal !important;
-  font-variant-numeric: normal !important;
-  font-feature-settings: normal !important;
-  font-kerning: auto !important;
-}
-
-/* Keep math line-height comfortable */
-.katex { line-height: 1.2; }
-
-/* If you’ve justified body text anywhere, ensure math isn't justified */
-.katex-display { text-align: left; } /* or center, if you prefer */
