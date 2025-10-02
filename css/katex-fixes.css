@@ -1,0 +1,21 @@
+/* Keep KaTeX immune to justification/tracking */
+.card .step .step-body .katex,
+.card .step .step-body .katex * {
+  text-align: left !important;
+  text-justify: auto !important;
+  letter-spacing: 0 !important;
+  word-spacing: 0 !important;
+  font-variant-ligatures: normal !important;
+  font-kerning: normal !important;
+  font-feature-settings: normal !important;
+  white-space: normal !important;
+}
+.katex { display:inline-block !important; line-height:1.2 !important; }
+
+/* Guard the parent text too */
+.step-body, .step-body * {
+  text-align: left !important;
+  text-justify: auto !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
