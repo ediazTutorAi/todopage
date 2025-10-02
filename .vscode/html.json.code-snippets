@@ -128,5 +128,34 @@
   "Variance": { "prefix": "Var", "body": ["\\\\operatorname{Var}(${1:X})"] },
   "Covariance": { "prefix": "Cov", "body": ["\\\\operatorname{Cov}(${1:X},${2:Y})"] },
   "Gaussian N(mu, Sigma)": { "prefix": "N", "body": ["\\\\mathcal{N}(${1:\\\\mu}, ${2:\\\\Sigma})"] },
-
+"Step Block": {
+  "prefix": "step",
+  "body": [
+    "<div class=\"step\" data-step=\"${1:1}\">",
+    "  <div class=\"step-title\">${2:Step Title}</div>",
+    "  <div class=\"step-subtitle\">${3:Step Subtitle}</div>",
+    "  <div class=\"step-body\">",
+    "    ${4:Step body text here.}",
+    "  </div>",
+    "</div>"
+  ],
+  "description": "Create a lecture step block with title, subtitle, and body"
+},
+"Step Block with GeoGebra": {
+  "prefix": "stepggb",
+  "body": [
+    "<div class=\"step\" data-step=\"${1:1}\">",
+    "  <div class=\"step-title\">${2:Step Title}</div>",
+    "  <div class=\"step-subtitle\">${3:Step Subtitle}</div>",
+    "  <div class=\"step-body\">",
+    "    ${4:Step body text here.}<br>",
+    "    <iframe ",
+    "      src=\"https://www.geogebra.org/material/iframe/id/${5:abcd}/width/600/height/400/border/888888/sri/true\"",
+    "      width=\"600\" height=\"400\" style=\"border:0px;\" allowfullscreen>",
+    "    </iframe>",
+    "  </div>",
+    "</div>"
+  ],
+  "description": "Create a lecture step block with title, subtitle, body, and embedded GeoGebra applet"
+}
 }
