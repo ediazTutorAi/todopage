@@ -1,32 +1,35 @@
 {
   "vocabulary": [
-    "critical point",
-    "local maximum",
-    "local minimum",
-    "absolute extremum",
-    "gradient",
-    "Hessian",
-    "tangent plane",
-    "linear approximation",
-    "Lagrange multiplier",
-    "saddle point"
+    "linear transformation",
+    "basis",
+    "standard matrix",
+    "B-matrix",
+    "invertible matrix",
+    "similar matrices",
+    "equivalence relation",
+    "diagonal matrix",
+    "scalars",
+    "parallel"
   ],
   "concepts": [
-    { "id": "crit",   "label": "Critical Points" },
-    { "id": "fermat", "label": "Fermat’s Theorem" },
-    { "id": "grad",   "label": "Gradient ∇f" },
-    { "id": "hess",   "label": "Hessian Hf" },
-    { "id": "class",  "label": "Second Derivative Test" },
-    { "id": "tp",     "label": "Tangent Plane" },
-    { "id": "lin",    "label": "Linear Approximation" },
-    { "id": "lag",    "label": "Lagrange Multipliers" }
+    { "id": "lt",   "label": "Linear Transformation" },
+    { "id": "basis","label": "Basis" },
+    { "id": "std",  "label": "Standard Matrix" },
+    { "id": "bmat", "label": "B-Matrix (Basis Matrix)" },
+    { "id": "inv",  "label": "Invertible Matrix" },
+    { "id": "sim",  "label": "Similar Matrices" },
+    { "id": "eqrel","label": "Equivalence Relation" },
+    { "id": "diag", "label": "Diagonal Matrix" },
+    { "id": "scal", "label": "Scalars" },
+    { "id": "par",  "label": "Parallel Vectors" }
   ],
   "links": [
-    { "from": "grad",  "to": "tp",   "label": "normal vector" },
-    { "from": "grad",  "to": "lin",  "label": "coefficients" },
-    { "from": "hess",  "to": "class","label": "definiteness" },
-    { "from": "crit",  "to": "class","label": "classify" },
-    { "from": "fermat","to": "crit", "label": "necessary cond." },
-    { "from": "lag",   "to": "crit", "label": "constrained" }
+    { "from": "lt",   "to": "std",  "label": "represented by" },
+    { "from": "lt",   "to": "bmat", "label": "basis-dependent" },
+    { "from": "inv",  "to": "sim",  "label": "definition uses" },
+    { "from": "sim",  "to": "eqrel","label": "is an" },
+    { "from": "diag", "to": "lt",   "label": "eigenbasis needed" },
+    { "from": "scal", "to": "diag", "label": "entries" },
+    { "from": "par",  "to": "lt",   "label": "geometric condition" }
   ]
 }
