@@ -77,6 +77,7 @@
 
 /* Slide Mode */
 body.slide-mode { overflow: hidden; }
+
 body.slide-mode .card {
   display: grid;
   grid-template-rows: 1fr auto;
@@ -84,17 +85,26 @@ body.slide-mode .card {
   overflow: hidden;
   place-items: center;
 }
+
 body.slide-mode .card .step {
   display: none !important;
   margin: 0;
   width: min(900px, 88%);
   font-size: 1.42rem;
-  line-height: 1.78;
+  /* 🚫 removed line-height: 1.78 here */
   box-shadow: 0 14px 48px rgba(0,0,0,0.18);
 }
+
+/* ✅ apply roomy line-height only to text in slide mode */
+body.slide-mode .card .step p,
+body.slide-mode .card .step li {
+  line-height: 1.78;
+}
+
 body.slide-mode .card .step.is-current {
   display: block !important;
 }
+
 body.slide-mode .card .katex {
   font-size: 1.06em;
   line-height: 1.2 !important;
