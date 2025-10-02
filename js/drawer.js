@@ -8,7 +8,7 @@ export function toggleDrawer(){ const d=leftDrawer(); if(!d) return; d.classList
 
 export async function loadKnowledgeAndRender() {
   try {
-    const res = await fetch('data/knowledge.json', { cache: 'no-cache' });
+    const res = await fetch('/todopage/data/knowledge.json', { cache: 'no-cache' });
     const data = await res.json();
     const vocab = data.vocabulary || [];
     const concepts = data.concepts || [];
