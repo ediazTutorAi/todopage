@@ -130,6 +130,18 @@
   ],
   "description": "Insert the real numbers symbol ℝ"
 },
+
+"Column Vector": {
+  "prefix": "mvec",
+  "body": [
+    "\\begin{bmatrix}",
+    "  ${1:x} \\\\",
+    "  ${2:y} \\\\",
+    "  ${3:z}",
+    "\\end{bmatrix}"
+  ],
+  "description": "Insert a column vector using bmatrix"
+},
   // ---------- Probability / stats ----------
   "Expectation": { "prefix": "E", "body": ["\\\\mathbb{E}[${1:X}]"] },
   "Variance": { "prefix": "Var", "body": ["\\\\operatorname{Var}(${1:X})"] },
