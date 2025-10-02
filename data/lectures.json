@@ -18,5 +18,15 @@
     "description": "Continue talking about Coordinates",
     "tags": ["basis","similar"],
     "url": "linear-algebra/fall2025/2025-10-02-coordinates/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-10-02",
+    "title": "Linear Spaces",
+    "subtitle": "",
+    "description": "Linear Spaces",
+    "tags": ["eight rules"],
+    "url": "linear-algebra/fall2025/2025-10-02-linear-spaces/index.html"
   }
 ]
