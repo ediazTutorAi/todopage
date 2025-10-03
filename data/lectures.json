@@ -9,6 +9,15 @@
     "tags": ["multipliers"],
     "url": "calculus3/fall2025/2025-10-01-Lagrange-multipliers/index.html"
   },
+  {"course": "Calculus III",
+    "semester": "Fall 2025",
+    "date": "2025-10-06",
+    "title": "Double Integrals",
+    "subtitle": "Over rectangular regions",
+    "description": "",
+    "tags": ["Integral over rectangular regions"],
+    "url": "calculus3/fall2025/2025-10-06-double-integrals/index.html"
+  },
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
