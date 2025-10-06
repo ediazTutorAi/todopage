@@ -41,14 +41,17 @@
         <div class="step-subtitle">Definition</div>
         <div class="step-body">
           The double integral of the function $f(x,y)$ over the rectangular region R in the xy-plane is defined
-          $$\iint_{R} f(x,y,z) \, dV \, dA=\lim_{m,n \to \infty}\sum_{i=1}^m\sum_{j=1}^n f(x_i^*,y_j^*)\delta A $$
+          $$\iint_{R} f(x,y) \, dV \, dA=\lim_{m,n \to \infty}\sum_{i=1}^m\sum_{j=1}^n f(x_i^*,y_j^*)\delta A $$
+          But what these all mean? 
         </div>
       </div>
       <div class="step" data-step="1" data-ggb-id="g8xftbbf">
         <div class="step-title">Rectangular Division</div>
         <div class="step-subtitle"></div>
         <div class="step-body">
-          Observe that our domain is a rectangle and have divided the rectangles in different subdivisions. For each of those divisions we are going to select a point $(x_j,y_j)$ and we are going to use the function to lift a "box" and we are going to compute the volument of that box.
+          Observe that our domain is a rectangle in the xy-plane. We have divided this rectangle into several smaller sub-rectangles, each representing a small portion of the total area.For each of these sub-rectangles, we select a representative point, which we’ll denote by $(x_j, y_j)$. At that point, we evaluate our function $f(x, y)$. The value $f(x_j, y_j)$ gives us the height of a rectangular “box” built above that small region.
+          By multiplying this height $f(x_j, y_j)$ by the area of the base sub-rectangle, we obtain the volume of that small box.
+          If we repeat this process for every sub-rectangle and then add up all those small volumes, we get an approximation for the total volume under the surface $z = f(x, y)$ and above the rectangular region in the plane. As we make the subdivisions finer and finer, this approximation becomes more accurate and in the limit, it becomes the double integral of $f(x, y)$ over the region.
         </div>
       </div>
 
