@@ -37,5 +37,15 @@
     "description": "Linear Spaces",
     "tags": ["eight rules"],
     "url": "linear-algebra/fall2025/2025-10-02-linear-space/index.html"
+  },
+  {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-10-02",
+    "title": "Linear Transformations and isomorphism",
+    "subtitle": "",
+    "description": "Section 4.2",
+    "tags": ["Linear Transformations and isomorphisms","similar"],
+    "url": "linear-algebra/fall2025/2025-10-02-linear-transformations and isomorphisms/index.html"
   }
 ]

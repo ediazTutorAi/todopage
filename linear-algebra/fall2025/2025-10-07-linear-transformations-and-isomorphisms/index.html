@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Linear transformations and Isomorphisms</h1>
+  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+</header>
+
+<main class="container">
+  <section class="single-col">
+    <div class="card" id="left-card">
+
+      <!-- STEPS -->
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">Definition 4.2.1</div>
+        <div class="step-subtitle">Linear transformations, image, kernel, rank, nullity</div>
+        <div class="step-body">
+          Consider two linear spaces V and W. A function T from V to W is called a <strong>linear transformation</strong> if<br>
+          $$T(f+g)=T(f)+T(g)\text{ and } T(kf)=kT(f)$$
+          for all elements $f \text{ and } g$ of V and for all scalars k. These two rules are referred to as the sum rule and the constant-multiple rule, respectively.<br>
+          For a linear transformation T from V to W, we let <br>
+          $$im(T)=\{T(f):f \in V\}$$ and 
+          $$ker(T)=\{f \in V:T(f)=0\}$$
+          Note that $im(T)$ is a subspace of targe space W and the \(ker(T)\) is a subspace of domain V.
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-title">Linear transformations, image, kernel, rank, nullity</div>
+        <div class="step-subtitle">continued</div>
+        <div class="step-body">
+         If the image of T is finite dimensional, then $dim(imT)$ is called the rank of T, and if the kernel of T is finite dimensional, then dim(kerT) is the nullity of T.<br>
+         If V is finite dimensional, then the rank-nullity theorem holds.<br>
+         $$dim(V)=rank(T)+nullity(T)=dim(im(T))+dim(ker(T))$$
+        </div>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="step-title">Examples</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          <ul>
+            <li>$D(f)=f'$ from $C^{\infty}$ to $C^{\infty}$</li>
+            <li>$I(f)=\int_0^1 f(x)dx$ from $C[0,1]$ to $\mathbb{R}$</li>
+            <li>$T(x_0,x_1,x_2,\cdots)=(x_1,x_2,x_3,\cdots)$</li>
+            <li>$$L\left(\begin{bmatrix}
+             a & b \\
+             c & d 
+            \end{bmatrix}\right)=\begin{bmatrix}
+             a\\
+             b\\
+             c\\
+             d 
+            \end{bmatrix}$$ from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$</li>        
+          </ul>
+          Observe that L is an isomorphism from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$
+        </div>
+      </div>
+      <div class="step" data-step="4">
+        <div class="step-title">Definition 4.1.2</div>
+        <div class="step-subtitle">Subspaces</div>
+        <div class="step-body">
+          A subset W of a linear space W is called a subspace of V if:
+          <ul>
+            <li>W contains the neutral element 0 of V</li>
+            <li>W is closed under addition (if f and g are in W, then so is \(f+g\))</li>
+            <li>W is closed under scalar multiplication (if f is in W and k is a scalar, then kf is in W) </li>
+          </ul>
+          We can summarize parts b and c by saying that W is closed under linear combinations. Also notice that a linear subspace is also a linear space on its own, why we didn't prove that the eight properties hold?
+        </div>
+      </div>
+      <div class="step" data-step="5">
+        <div class="step-title">Examples of subspaces</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          <ul>
+            <li>Show that the polynomials of degree \(\leq 2\), of the form \(f(x)=a+bx+cx^2\), are a subspace W of the space \(F(\mathbb{R},\mathbb{R})\) of all functions from \(\mathbb{R}\) to \(\mathbb{R}\)</li>
+            <li>Show that the differential functions form a subspace W of \(F(\mathbb{R},\mathbb{R}) \)</li>
+            <li>\(C^{\infty}(\mathbb{R})\) The smooth functions</li>
+            <li>P, the set of all polynomials</li>
+            <li>\(P_n\) the set of all polynomials of degree \(\leq n\)</li>
+            </ul>
+        </div>
+      </div>
+      <div class="step" data-step="6">
+        <div class="step-title">Definition 4.1.3</div>
+        <div class="step-subtitle">Span, linear independence, basis, coordinates</div>
+        <div class="step-body">
+          Consider the elements \(f_1,\cdots,f_n\) in a linear space V.
+          <ul>
+            <li>a. We say that \(f_1,\cdots,f_n\) span V if every \(f\) in V can be expressed as a linear combination of \(f_1,\cdots,f_n\)</li>
+            <li>b. We say \(f_i\) is redundant if it is a linear combination of \(f_1,\cdots,f_{i-1}\). The elements \(f_1,\cdots,f_n\) are called linearly independent if none of them is redundant. This is the case if the equation<br>
+            $$c_1f_1+\cdots+c_nf_n=0$$
+            has only the trivial solution
+            $$c_1=\cdots=c_n=0$$
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="step" data-step="7">
+        <div class="step-title">Span, linear independence, basis, coordinates (continued)</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          We say that elements \(f_1,\cdots,f_n\) are a basis of V is they span V and are linearly independent. This means that every f in V can be written uniquely as a linear combination $f=c_1f_1+\cdots+c_nf_n$. The coefficients \(c_1,\cdots,c_n\) are called the coordinates of f with respect to the basis \(\mathfrak{B}=(f_1,\cdots,f_n)\). The vector
+          $$\begin{bmatrix}
+            c_1 \\
+            \vdots \\
+            c_n
+          \end{bmatrix}$$
+          in \(\mathbb{R}^{n}\) is called the \(\mathfrak{B}\)-coordinate vector of f, denoted by \([f]_{\mathfrak{B}}\)<br>
+          The transformation
+          $$L(f)=[f]_\mathfrak{B}=\begin{bmatrix}
+            c_1 \\
+            \vdots \\
+            c_n
+          \end{bmatrix} $$ from V to \(\mathbb{R}^{n}\) is called the \(\mathfrak{B}\)-coordinate transformation, sometimes denoted by \(L_{\mathfrak{B}}\)
+        </div>
+      </div>
+      <div class="step" data-step="8">
+        <div class="step-title">Theorem 4.1.4</div>
+        <div class="step-subtitle">Linearity of the coordinate transformation \(L_{\mathfrak{B}}\)</div>
+        <div class="step-body">
+          If \(\mathfrak{B}\) is a basis of a linear space V, then:
+          <ul>
+            <li>\([f+g]_{\mathfrak{B}}=[f]_{\mathfrak{B}}+[g]_{\mathfrak{B}}\) for all elements f and g of V, and</li>
+            <li>\([kf]_{\mathfrak{B}}=k[f]_{\mathfrak{B}}\) for all f and V and for all scalars k</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step" data-step="9">
+        <div class="step-title">Theorem 4.1.5</div>
+        <div class="step-subtitle">Dimension</div>
+        <div class="step-body">
+          If a linear space V has a basis with n elements, then all other bases of V consist of n elements as well. We say that n is dimension of V:
+          $$dim(V)=n$$
+        </div>
+      </div>
+      <div class="step" data-step="10">
+        <div class="step-title">Examples from Dimension</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          1. Find a basis of \(\mathbb{R}^{2\times 2}\).<br>
+          2. Find a basis of \(P_2\) the space of all polynomials of degree \(\leq 2\), and thus determine the dimension of \(P_2\).
+        </div>
+      </div>
+      <div class="step" data-step="11">
+        <div class="step-title">Summary 4.1.6</div>
+        <div class="step-subtitle">Finding a basis of a linear space V</div>
+        <div class="step-body">
+          a. Write down a typical element of V, in terms of some arbitrary constants.<br>
+          b. Using the arbitrary constants as coefficients, express your typical elements as a linear combination of some elements of V.<br>
+          c. Verify that the elements of V in this linear combination are linearly independent, then they will form a basis of V.
+        </div>
+      </div>
+      <div class="step" data-step="12">
+        <div class="step-title">Examples</div>
+        <div class="step-subtitle">Basis</div>
+        <div class="step-body">
+          Find a basis of the space V of all matrices B that commute with \(A=\begin{bmatrix}
+           0 & 1 \\
+           2 & 3 
+          \end{bmatrix}\)
+        </div>
+      </div>
+      <div class="step" data-step="13">
+        <div class="step-title">Theorem 4.1.7</div>
+        <div class="step-subtitle">Linear differential equations</div>
+        <div class="step-body">
+          The solutions of the differential equation.
+          $$f''(x)+af'(x)+bf(x)=0$$ where a, b are constants, form a two-dimensional subspace of the space \(C^{\infty}\) of smooth functions. More generally, the solutions of the differential equation
+          $$f^{(n)}(x)+a_{n-1}f^{(n-1)}+\cdots+a_1f'(x)+a_0f(x)=0$$
+          where \(a_0,\cdots,a_{n-1}\) are constants form an n-dimensional subspace of \(C^{\infty}\). A differential equation of this form is called an nth-order differential equation with constant coefficients.
+        </div>
+      </div>
+      <div class="step" data-step="14">
+        <div class="step-title">Definition 4.1.8</div>
+        <div class="step-subtitle">Finite dimensional linear spaces</div>
+        <div class="step-body">
+          A linear space V is called finite dimensional if it has a (finite) basis \(f_1,\cdots,f_n\). Otherwise, the space is called infinite dimensional. These ideas are from 1888.
+        </div>
+      </div>
+
+      
+      <!-- Controls -->
+      <div class="reveal-controls" role="group" aria-label="Slide controls">
+        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING GEO GEBRA WINDOW -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+  <div class="ggb-float-header" id="ggb-float-drag">
+    <span class="ggb-float-title">GeoGebra Applet</span>
+    <div class="ggb-actions">
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="ggb-host" class="ggb-float-host">
+    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+  </div>
+</div>
+<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+<!-- LEFT DRAWER (vocab/concepts + preview) -->
+<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+  <div class="drawer-header">
+    <strong>Key terms & concepts</strong>
+    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+  </div>
+  <div class="drawer-body">
+    <section>
+      <h3 class="drawer-h3">Vocabulary</h3>
+      <ul id="vocab-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Concepts</h3>
+      <ul id="concepts-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Connections (preview)</h3>
+      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+      <button id="map-open" class="btn" type="button">Open Mind Map</button>
+    </section>
+  </div>
+</aside>
+<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+
+<!-- FLOATING MIND-MAP -->
+<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+  <div class="map-float-header">
+    <span class="map-title">Concept Connections</span>
+    <div class="map-actions">
+      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+      <button id="map-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="map-host" class="map-host">
+    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+  </div>
+</div>
+<div id="map-backdrop" class="map-backdrop" hidden></div>
+
+<!-- JS entry (ES modules) -->
+<script type="module" src="/todopage/js/boot.js"></script>
+</body>
+</html>
