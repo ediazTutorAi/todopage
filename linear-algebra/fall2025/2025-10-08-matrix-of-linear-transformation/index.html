@@ -40,8 +40,8 @@
         <div class="step-title">Definition 4.3.1</div>
         <div class="step-subtitle">The $\mathfrak{B}$-matrix of a linear transformation</div>
         <div class="step-body">
-          Consider a linear transformation T from V to V, where V is an n-dimensional linear space. Let $\mathfrak{B}$ be a basis of V. Consider the linear transformation $L_{\mathfrak{B}}\circ T \circ L_{\mathfrak{B}}^{-1}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$, with standard matrix B, meaning $B\vec{x}=L_{\\mathfrak{B}(T(L_{\\mathfrak{B}}^{-1})(\\vec{x}))}$ for all $\\vec{x}$ in $\mathbb{R}^{n}$. This matrix B is called the $\mathfrak{B}$-matrix transformation T. See the accompanying diagrams. Letting $f=L_{\mathfrak{B}}(\vec{x})$ and $\vec{x}=[f]_{\m}$ we find that
-          $$[T(f)]_{\mathfrak{B}}=B[f]_{\\mathfrak{B}}$$ for all f in v.
+          Consider a linear transformation T from V to V, where V is an n-dimensional linear space. Let $\mathfrak{B}$ be a basis of V. Consider the linear transformation $L_{\mathfrak{B}}\circ T \circ L_{\mathfrak{B}}^{-1}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$, with standard matrix B, meaning $B\vec{x}=L_{\mathfrak{B}}(T(L_{\mathfrak{B}}^{-1})(\vec{x}))$ for all $\vec{x}$ in $\mathbb{R}^{n}$. This matrix B is called the $\mathfrak{B}$-matrix transformation T. See the accompanying diagrams. Letting $f=L_{\mathfrak{B}}(\vec{x})$ and $\vec{x}=[f]_{\mathfrak{B}}$ we find that
+          $$[T(f)]_{\mathfrak{B}}=B[f]_{\mathfrak{B}}$$ for all f in v.
           
         </div>
       </div>
@@ -51,36 +51,28 @@
         <div class="step-subtitle">The columns of the B-matrix of a linear transformation</div>
         <div class="step-body">
          Consider a linear transformation T from V to V, and let B be the matrix of T with respect to a basis $\mathfrak{B}=(f_1,f_2,..,f_n)$ of V. Then
-         $$\begin{bmatrix}\end{bmatrix}$$
+         $$\begin{bmatrix}|&&|\\T(f_1)]_{\mathfrak{B}}&\cdots&[T(f_n)]_{\mathfrak{B}}\\|&&|\end{bmatrix}$$
+         The columns of B are the $\mathfrak{B}$-coordinates vectors of the transforms of the basis elements $f_1,\cdots,f_n$ of V.
         </div>
       </div>
 
       <div class="step" data-step="3">
-        <div class="step-title">Examples</div>
-        <div class="step-subtitle"></div>
+        <div class="step-title">Definition 4.3.3</div>
+        <div class="step-subtitle">Change of basis matrix</div>
         <div class="step-body">
-          <ul>
-            <li>$D(f)=f'$ from $C^{\infty}$ to $C^{\infty}$</li>
-            <li>$I(f)=\int_0^1 f(x)dx$ from $C[0,1]$ to $\mathbb{R}$</li>
-            <li>$T(x_0,x_1,x_2,\cdots)=(x_1,x_2,x_3,\cdots)$</li>
-            <li>$$L\left(\begin{bmatrix}
-             a & b \\
-             c & d 
-            \end{bmatrix}\right)=\begin{bmatrix}
-             a\\
-             b\\
-             c\\
-             d 
-            \end{bmatrix}$$ from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$</li>        
-          </ul>
-          Observe that L is an isomorphism from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$
+          Consider two bases $\mathfrak{U}$ and $\mathfrak{B}$ of an n-dimentional linear space V. Consider the linear transformation $L_{\mathfrak{U}}\circ L_{\mathfrak{B}}^{-1}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$, with standard matrix S, meaning that $S\\vec{x}=L_{\mathfrak{U}}(L_{\mathfrak{B}}^{-1}(\vec{x}))$ for all $\vec{x}$ in $\mathbb{R}^{n}$. This invertible matrix S is called the change of basis matrix from $\mathfrak{B}$ to $\mathfrak{U}$, sometimes denonted by $S_{\mathfrak{B}\to \mathfrak{U}}$. Letting $f=L_{\mathfrak{B}}^{-1}(\vec{x})$ and $\vec{x}=[f]_{\mathfrak{B}}$, we find that 
+          $$[f]_{\mathfrak{U}}=S[f]_{\mathfrak{B}}$$ for all f in V.
+          If $\mathfrak{B}=(b_1,\cdots,b_i,\cdots,b_n)$, then:
+          $$[b_i]_{\mathfrak{U}}=S[b_i]_{\mathfrak{B}}=S \vec{e_i}$$ which is the i-th column of S, so that
+          $$S_{\mathfrak{B}\to \mathfrak{U}}=\begin{bmatrix}|&&|\\ [b_1]_{\mathfrak{U}}&\cdots&[b_n]_{\mathfrak{U}}\\|&&|\end{bmatrix}$$
         </div>
       </div>
       <div class="step" data-step="4">
-        <div class="step-title">Definition 4.2.2</div>
-        <div class="step-subtitle">Isomorphisms and isomorphic spaces</div>
+        <div class="step-title">Theorem 4.3.4</div>
+        <div class="step-subtitle">Change of basis in a subspace of $\mathbb{R}^{n}$</div>
         <div class="step-body">
-          An invertible linear transformation T is called an isomorphism. We say that the linear space V is isomorphic to the linear space W if there exists an isomorphism T from V to W.
+          Consider a subspace V or $\mathbb{R}^{n}$ with two bases $\mathfrak{U}=(\vec{a_1},\cdots,\vec{a_m})$ and $\mathfrak{B}=(\vec{b_1},\cdots,\vec{b_n})$. Let S be the change of basis matrix from $\mathfrak{B}$ to $\mathfrak{U}$. Then the following equation holds:
+          $$$$
         </div>
       </div>
       <div class="step" data-step="5">
