@@ -47,5 +47,15 @@
     "description": "Section 4.2",
     "tags": ["Linear Transformations and isomorphisms","similar"],
     "url": "linear-algebra/fall2025/2025-10-07-linear-transformations-and-isomorphisms/index.html"
+  },
+    {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-10-09",
+    "title": "Matrix of Linear Transformations",
+    "subtitle": "",
+    "description": "Section 4.3",
+    "tags": ["Linear Transformations","matrix","basis"],
+    "url": "linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation/index.html"
   }
 ]

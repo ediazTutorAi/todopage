@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Matrix of a Linear Transformation</h1>
+  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+</header>
+
+<main class="container">
+  <section class="single-col">
+    <div class="card" id="left-card">
+
+      <!-- STEPS -->
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">Definition 4.3.1</div>
+        <div class="step-subtitle">The $\mathfrak{B}$-matrix of a linear transformation</div>
+        <div class="step-body">
+          Consider a linear transformation T from V to V, where V is an n-dimensional linear space. Let $\mathfrak{B}$ be a basis of V. Consider the linear transformation $L_{\mathfrak{B}}\circ T \circ L_{\mathfrak{B}}^{-1}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$, with standard matrix B, meaning $B\vec{x}=L_{\\mathfrak{B}(T(L_{\\mathfrak{B}}^{-1})(\\vec{x}))}$ for all $\\vec{x}$ in $\mathbb{R}^{n}$. This matrix B is called the $\mathfrak{B}$-matrix transformation T. See the accompanying diagrams. Letting $f=L_{\mathfrak{B}}(\vec{x})$ and $\vec{x}=[f]_{\m}$ we find that
+          $$[T(f)]_{\mathfrak{B}}=B[f]_{\\mathfrak{B}}$$ for all f in v.
+          
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-title">Theorem 4.3.2</div>
+        <div class="step-subtitle">The columns of the B-matrix of a linear transformation</div>
+        <div class="step-body">
+         Consider a linear transformation T from V to V, and let B be the matrix of T with respect to a basis $\mathfrak{B}=(f_1,f_2,..,f_n)$ of V. Then
+         $$\begin{bmatrix}\end{bmatrix}$$
+        </div>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="step-title">Examples</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          <ul>
+            <li>$D(f)=f'$ from $C^{\infty}$ to $C^{\infty}$</li>
+            <li>$I(f)=\int_0^1 f(x)dx$ from $C[0,1]$ to $\mathbb{R}$</li>
+            <li>$T(x_0,x_1,x_2,\cdots)=(x_1,x_2,x_3,\cdots)$</li>
+            <li>$$L\left(\begin{bmatrix}
+             a & b \\
+             c & d 
+            \end{bmatrix}\right)=\begin{bmatrix}
+             a\\
+             b\\
+             c\\
+             d 
+            \end{bmatrix}$$ from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$</li>        
+          </ul>
+          Observe that L is an isomorphism from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$
+        </div>
+      </div>
+      <div class="step" data-step="4">
+        <div class="step-title">Definition 4.2.2</div>
+        <div class="step-subtitle">Isomorphisms and isomorphic spaces</div>
+        <div class="step-body">
+          An invertible linear transformation T is called an isomorphism. We say that the linear space V is isomorphic to the linear space W if there exists an isomorphism T from V to W.
+        </div>
+      </div>
+      <div class="step" data-step="5">
+        <div class="step-title">Theorem 4.2.3</div>
+        <div class="step-subtitle">Coordinate transformations are isomorphism</div>
+        <div class="step-body">
+          If $\mathfrak{B}=(f_1,f_2,\cdots,f_n)$ is a basis of a linear space V, then the coordinate transformation $L_{\mathfrak{B}}(f)=[f]_{\mathfrak{B}}$ from V to $\mathbb{R}^{n}$ is an isomorphism. Thus, V is isomorphic to $\mathbb{R}^{n}$; the linear spaces V and $\mathbb{R}^{n}$ have the same structure.
+        </div>
+      </div>
+      <div class="step" data-step="6">
+        <div class="step-title">Example 5</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          Show that the transformation<br>
+          $$T(A)=S^{-1}AS$$
+          from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{2\times 2}$ is an isomorphism, where
+          $$S=\begin{bmatrix}
+           1 & 2 \\
+           3 & 4 
+          \end{bmatrix}$$
+        </div>
+      </div>
+      <div class="step" data-step="7">
+        <div class="step-title">Theorem 4.2.4</div>
+        <div class="step-subtitle">Properties of isomorphisms</div>
+        <div class="step-body">
+          a. A linear transformation T from V to W is an isomorphism if and only if ker(T)={0} and im(T)=W.<br>
+          In parts (b) through (d), the linear spaces V and W are assumed to be finite dimensional.<br>
+          b. The linear space V is isomorphic to W if and only if dim(V)=dim(W)<br>
+          c. Suppose T is a linear transformation from V to W with Ker(T)={0}. If dim(V)=dim(W), then T is an isomorphism.<br>
+          d. Suppose T is a linear transformation from V to W with im(T)=W. If dim(V)=dim(W), then T is an isomorphism.
+        </div>
+      </div>
+      <div class="step" data-step="8">
+        <div class="step-title">Example</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          Is the linear transformation:
+          $$L(f(x))=\begin{bmatrix}f(1)\\f(2)\\f(3)\end{bmatrix}$$ from $P_3$ to $\mathbb{R}^{3}$ an isomorphism?<br>
+          Is the same transformation as before but from $P_2$ to $\mathbb{R}^{3}$ an isomorphism?
+        </div>
+      </div>
+      
+      <!-- Controls -->
+      <div class="reveal-controls" role="group" aria-label="Slide controls">
+        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING GEO GEBRA WINDOW -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+  <div class="ggb-float-header" id="ggb-float-drag">
+    <span class="ggb-float-title">GeoGebra Applet</span>
+    <div class="ggb-actions">
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="ggb-host" class="ggb-float-host">
+    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+  </div>
+</div>
+<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+<!-- LEFT DRAWER (vocab/concepts + preview) -->
+<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+  <div class="drawer-header">
+    <strong>Key terms & concepts</strong>
+    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+  </div>
+  <div class="drawer-body">
+    <section>
+      <h3 class="drawer-h3">Vocabulary</h3>
+      <ul id="vocab-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Concepts</h3>
+      <ul id="concepts-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Connections (preview)</h3>
+      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+      <button id="map-open" class="btn" type="button">Open Mind Map</button>
+    </section>
+  </div>
+</aside>
+<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+
+<!-- FLOATING MIND-MAP -->
+<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+  <div class="map-float-header">
+    <span class="map-title">Concept Connections</span>
+    <div class="map-actions">
+      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+      <button id="map-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="map-host" class="map-host">
+    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+  </div>
+</div>
+<div id="map-backdrop" class="map-backdrop" hidden></div>
+
+<!-- JS entry (ES modules) -->
+<script type="module" src="/todopage/js/boot.js"></script>
+</body>
+</html>
