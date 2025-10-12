@@ -18,6 +18,15 @@
     "tags": ["Integral over rectangular regions"],
     "url": "calculus3/fall2025/2025-10-06-double-integrals/index.html"
   },
+    {"course": "Calculus III",
+    "semester": "Fall 2025",
+    "date": "2025-10-13",
+    "title": "Triple Integrals",
+    "subtitle": "",
+    "description": "",
+    "tags": ["Triple Integrals"],
+    "url": "calculus3/fall2025/2025-10-13-triple-integrals/index.html"
+  },
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
