@@ -27,6 +27,15 @@
     "tags": ["Triple Integrals"],
     "url": "calculus3/fall2025/2025-10-13-triple-integrals/index.html"
   },
+      {"course": "Calculus III",
+    "semester": "Fall 2025",
+    "date": "2025-10-15",
+    "title": "Cylindrical and Spherical coordinates",
+    "subtitle": "",
+    "description": "",
+    "tags": ["Cylindrical","spherical","coordinates"],
+    "url": "calculus3/fall2025/2025-10-15-cylindrical-spherical-coordinates/index.html"
+  },
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
