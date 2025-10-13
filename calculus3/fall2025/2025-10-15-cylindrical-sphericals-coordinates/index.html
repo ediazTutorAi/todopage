@@ -62,10 +62,13 @@
         </div>
       </div>
       <div class="step" data-step="4">
-        <div class="step-title">Changing the limit of Integration</div>
+        <div class="step-title">Integration in Cylindrical coordinates</div>
         <div class="step-subtitle"></div>
         <div class="step-body">
-          Changing the limit of integration.
+          If the cylindrical region over which we have to integrate is a general solid, we look at the projections onto the coordinate planes. Hence the triple integral of a continuous function $f(r,\theta,z)$ over a general solid region $E=\{(r,\theta,z)|(r,\theta)\in D, u_1(r,\theta)\leq z \leq u_2(r,\theta)\}$ in $\mathbb{R}^3$, where D is the projection of E onto the $r\theta$-plane, is given by:
+          $$\iiint_E f(r,\theta,z)rdrd\theta dz=\iint_D\left[\int_{u_1(r,\theta)}^{u_2(r,\theta)} f(r,\theta,z)dz\right]\,rdr\,d\theta$$
+          In particular, if $D=\{(r,\theta)|g_1(\theta)\leq r \leq g_2(\theta),\alpha\leq\theta\leq\beta\}$, then we have:
+          $$\iiint_E f(r,\theta,z)r dr d\theta=\int_{\theta=\alpha}^{\theta=\beta}\int_{r=g_1(\theta)}^{r=g_2(\theta)}\int_{z=u_1(r,\theta)}^{z=u_2(r,\theta)} f(r,\theta,z)r dz dr d\theta$$
         </div>
       </div>
 
