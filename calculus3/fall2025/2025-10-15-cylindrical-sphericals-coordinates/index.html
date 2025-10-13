@@ -27,7 +27,7 @@
 <body>
 
 <header class="site-header">
-  <h1>Triple Integrals</h1>
+  <h1>Cylindrical and Spherical coordinates</h1>
   <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
 </header>
 
@@ -36,33 +36,29 @@
     <div class="card" id="left-card">
 
       <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">5.4 Triple Integrals</div>
+      <div class="step is-visible" data-step="1" data-ggb-id="dbhs3q8t">
+        <div class="step-title">Cylindrical Coordinates</div>
         <div class="step-subtitle">Definition</div>
         <div class="step-body">
-          The triple integral of a function $f(x,y,z)$ over a rectangular box B is defined as
-          $$\lim_{l,m,n\to\infty}\sum_{i=1}^l\sum_{j=1}^m\sum_{k=1}^n f(x_{ijk},y_{ijk},z_{ijk})\Delta x\Delta y\Delta z$$ which is equivalent to say
-          $$\iiint_B f(x,y,z)dV$$ if this limit exists.
+          To convert from rectangular to cylindrical coordinates, we use the conversion $x=r\cos(\theta)$, $y=r\sin(\theta)$ and $z=z$. To convert from cylindrical to rectangular coordinates, we use $r^2=x^2+y^2$,$\tan(\theta)=\frac{y}{x}$ and $z=z$. 
         </div>
       </div>
-      <div class="step" data-step="2">
-        <div class="step-title">Theorem 5.9</div>
-        <div class="step-subtitle">Fubini's Theorem for Triple Integrals</div>
+      <div class="step" data-step="2" data-ggb-id="p5kthve3">
+        <div class="step-title">Special surfaces in cylindrical coordinates</div>
+        <div class="step-subtitle"></div>
         <div class="step-body">
-          If $f(x,y,z)$ is continuous on a rectangular box $B=[a,b]\times[c,d]\times[e,f]$, then:
-          $$\iiint_B f(x,y,z)dV=\int_e^f\int_c^d\int_a^b f(x,y,z)dxdydz$$
-          This integral is also equal to any of the other five possible orderings for the triple integral.
+           By fixing one of the variables in cylindrical coordinates, we can obtain some special surfaces. Can you guess what surfaces we obtain by fixing each of the variables?
         </div>
       </div>
-      <div class="step" data-step="3">
-        <div class="step-title">Theorem 5.10</div>
-        <div class="step-subtitle">Triple Integral over a General Region</div>
+      <div class="step" data-step="3" data-ggb-id="bvp8sg2n">
+        <div class="step-title">Review of Spherical Coordinates</div>
+        <div class="step-subtitle"></div>
         <div class="step-body">
-           The triple integral of a continuous function $f(x,y,z)$ over a general three-dimensional region
-           $$E=\{(x,y,z)|(x,y)\in D,u_1(x,y)\leq z\leq u_2(x,y)\}$$
-           in $\mathbb{R}^3$, where D is the projection of E onto the xy-plane, typo in the textbook, is:
-           $$\iiint_E f(x,y,z)dV=\iint_D \left[\int_{u_1(x,y)}^{u_2(x,y)} f(x,y,z)dz\right]dA$$
-           Similarly we can consider other possible projections onto the other axis planes.
+         To convert from spherical coordinates to rectangular coordinates:
+          $$x=\rho\sin(\phi)\cos(\theta),\quad y=\rho\sin(\phi)\sin(\theta),\quad z=\rho\cos(\phi)$$
+          To convert from rectangular coordinates to spherical coordinates:
+          $$\rho=\sqrt{x^2+y^2+z^2},\quad \theta=\tan^{-1}\left(\frac{y}{x}\right),\quad \phi=\cos^{-1}\left(\frac{z}{\sqrt{x^2+y^2 +z^2}}\right)$$
+          Look at the applet to see how the coordinates change as we move the point.
         </div>
       </div>
       <div class="step" data-step="4">
