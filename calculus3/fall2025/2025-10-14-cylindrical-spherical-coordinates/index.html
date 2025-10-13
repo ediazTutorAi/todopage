@@ -27,7 +27,7 @@
 <body>
 
 <header class="site-header">
-  <h1>Cylindrical and Spherical coordinates</h1>
+  <h1>Triple Integrals</h1>
   <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
 </header>
 
@@ -36,18 +36,22 @@
     <div class="card" id="left-card">
 
       <!-- STEPS -->
-      <div class="step is-visible" data-step="1" data-ggb-id="dbhs3q8t">
-        <div class="step-title">Cylindrical Coordinates</div>
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">5.4 Triple Integrals</div>
         <div class="step-subtitle">Definition</div>
         <div class="step-body">
-          To convert from rectangular to cylindrical coordinates, we use the conversion $x=r\cos(\theta)$, $y=r\sin(\theta)$ and $z=z$. To convert from cylindrical to rectangular coordinates, we use $r^2=x^2+y^2$,$\tan(\theta)=\frac{y}{x}$ and $z=z$. 
+          The triple integral of a function $f(x,y,z)$ over a rectangular box B is defined as
+          $$\lim_{l,m,n\to\infty}\sum_{i=1}^l\sum_{j=1}^m\sum_{k=1}^n f(x_{ijk},y_{ijk},z_{ijk})\Delta x\Delta y\Delta z$$ which is equivalent to say
+          $$\iiint_B f(x,y,z)dV$$ if this limit exists.
         </div>
       </div>
-      <div class="step" data-step="2" data-ggb-id="p5kthve3">
-        <div class="step-title">Special surfaces in cylindrical coordinates</div>
-        <div class="step-subtitle"></div>
+      <div class="step" data-step="2">
+        <div class="step-title">Theorem 5.9</div>
+        <div class="step-subtitle">Fubini's Theorem for Triple Integrals</div>
         <div class="step-body">
-           By fixing one of the variables in cylindrical coordinates, we can obtain some special surfaces. Can you guess what surfaces we obtain by fixing each of the variables?
+          If $f(x,y,z)$ is continuous on a rectangular box $B=[a,b]\times[c,d]\times[e,f]$, then:
+          $$\iiint_B f(x,y,z)dV=\int_e^f\int_c^d\int_a^b f(x,y,z)dxdydz$$
+          This integral is also equal to any of the other five possible orderings for the triple integral.
         </div>
       </div>
       <div class="step" data-step="3">
