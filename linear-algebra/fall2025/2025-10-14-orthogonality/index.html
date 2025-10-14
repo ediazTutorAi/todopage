@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Orthogonality</h1>
+  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+</header>
+
+<main class="container">
+  <section class="single-col">
+    <div class="card" id="left-card">
+
+      <!-- STEPS -->
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">Definition 5.1.1</div>
+        <div class="step-subtitle">Orthogonality, length, unit vectors</div>
+        <div class="step-body">
+          a. Two vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$ are orthogonal if their dot product is zero, that is, if $\vec{u}\cdot \vec{v}=0$. We write $\vec{u}\perp \vec{v}$ to indicate that $\vec{u}$ and $\vec{v}$ are orthogonal.<br><br>
+          b. The length or norm of a vector $\vec{v}$ in $\mathbb{R}^{n}$ is the non-negative number $\|\vec{v}\|=\sqrt{\vec{v}\cdot \vec{v}}=\sqrt{v_1^2+\cdots+v_n^2}$.<br><br>
+          c. A vector $\vec{u}$ in $\mathbb{R}^{n}$ is a unit vector if its length is 1, that is, if $\|\vec{u}\|=1$.
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-title">Definition 5.1.2</div>
+        <div class="step-subtitle">Orthonormal vectors</div>
+        <div class="step-body">
+          A set of vectors $\{\vec{u_1},\cdots,\vec{u_m}\}$ in $\mathbb{R}^{n}$ is orthonormal if the vectors are unit vectors and pairwise orthogonal, that is, if $\|\vec{u_i}\|=1$ for all i from 1 to m, and if $\vec{u_i}\cdot \vec{u_j}=0$ whenever $i\ne j$.
+        </div>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="step-title">Theorem 5.1.3</div>
+        <div class="step-subtitle">Properties of orthonormal vectors</div>
+        <div class="step-body">
+          Let $\{\vec{u_1},\cdots,\vec{u_m}\}$ be an orthonormal set of vectors in $\mathbb{R}^{n}$. Then:<br><br>
+          a. The set $\{\vec{u_1},\cdots,\vec{u_m}\}$ is linearly independent.<br><br>
+          b. Orthonormal vectors form a basis of their span. In particular, if m=n, then $\{\vec{u_1},\cdots,\vec{u_m}\}$ is a basis of $\mathbb{R}^{n}$.<br><br>
+        </div>
+      </div>
+      <div class="step" data-step="4">
+        <div class="step-title">Theorem 5.1.4</div>
+        <div class="step-subtitle">Orthogonal Projection</div>
+        <div class="step-body">
+          Consider a vector $\vec{x}$ in $\mathbb{R}^{n}$ and a subspace V of $\mathbb{R}^{n}$. Then we can write
+          $$\vec{x}=\vec{x}^{||}+\vec{x}^{\perp}$$ 
+          where $\vec{x}^{||}$ is in V and $\vec{x}^{\perp}$ is perpendicular to V, and this representation is unique. The vector $\vec{x}^{||}$ is called the orthogonal projection of $\vec{x}$ onto V, denoted by $proj_V(\vec{x})$. The transformation $proj_V:\mathbb{R}^{n}\to V$ is a linear transformation.
+        </div>
+      </div>
+      <div class="step" data-step="5">
+        <div class="step-title">Theorem 5.1.5</div>
+        <div class="step-subtitle">Formula for the orthogonal projection</div>
+        <div class="step-body">
+         If V is subspace of $\mathbb{R}^{n}$ with an orthonormal basis $\{\vec{u_1},\cdots,\vec{u_m}\}$, then for any vector $\vec{x}$ in $\mathbb{R}^{n}$, the orthogonal projection of $\vec{x}$ onto V is given by
+         $$proj_V(\vec{x})=(\vec{x}\cdot \vec{u_1})\vec{u_1}+\cdots+(\vec{x}\cdot \vec{u_m})\vec{u_m}$$
+         for all $\vec{x}$ in $\mathbb{R}^{n}$.
+        </div>
+      </div>
+      <div class="step" data-step="6">
+        <div class="step-title">Theorem 5.1.6</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          Consider an orthonormal basis $\{\vec{u_1},\cdots,\vec{u_n}\}$ of $\mathbb{R}^{n}$. Then any vector $\vec{x}$ in $\mathbb{R}^{n}$ can be expressed as
+          $$\vec{x}=(\vec{x}\cdot \vec{u_1})\vec{u_1}+\cdots+(\vec{x}\cdot \vec{u_n})\vec{u_n}$$
+          for all $\vec{x}$ in $\mathbb{R}^{n}$.
+        </div>
+      </div>
+      <div class="step" data-step="7">
+        <div class="step-title">Definition 5.1.7</div>
+        <div class="step-subtitle">Orthogonal Complement</div>
+        <div class="step-body">
+          Consider a subspace V of $\mathbb{R}^{n}$. The orthogonal complement of V, denoted by $V^{\perp}$, is the set of all vectors in $\mathbb{R}^{n}$ that are orthogonal to every vector in V, that is,
+          $$V^{\perp}=\{\vec{x}\in \mathbb{R}^{n}:\vec{x}\cdot \vec{v}=0\text{ for all }\vec{v}\in V\}$$
+          Note that $V^{\perp}$ is the kernel of the orthogonal projection $proj_V:\mathbb{R}^{n}\to V$.
+        </div>
+      </div>
+      <div class="step" data-step="8">
+        <div class="step-title">Theorem 5.1.8</div>
+        <div class="step-subtitle">Properties of the orthogonal complement</div>
+        <div class="step-body">
+          Consider a subspace V of $\mathbb{R}^{n}$. Then:<br><br>
+          a. The orthogonal complement $V^{\perp}$ is a subspace of $\mathbb{R}^{n}$.<br><br>
+          b. The intersection of V and $V^{\perp}$ is $\{\vec{0}\}$.<br><br>
+          c. The dimensions of V and $V^{\perp}$ add up to n, that is, $dim(V)+dim(V^{\perp})=n$.<br><br>
+          d. The orthogonal complement of $V^{\perp}$ is V, that is, $(V^{\perp})^{\perp}=V$.
+        </div>
+      </div>
+      <div class="step" data-step="9">
+        <div class="step-title">Theorem 5.1.9</div>
+        <div class="step-subtitle">Pythagorean Theorem</div>
+        <div class="step-body">
+          Consider two vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. The equation $\|\vec{u}+\vec{v}\|^2=\|\vec{u}\|^2+\|\vec{v}\|^2$ holds if and only if $\vec{u}$ and $\vec{v}$ are orthogonal.
+        </div>
+      </div>
+      <div class="step" data-step="10">
+        <div class="step-title">Theorem 5.1.10</div>
+        <div class="step-subtitle">An inequality for the magnitude of the projection</div>
+        <div class="step-body">
+          Consider a subspace V of $\mathbb{R}^{n}$ and a vector $\vec{x}$ in $\mathbb{R}^{n}$. Then $\|proj_V(\vec{x})\|\le \|\vec{x}\|$, with equality if and only if $\vec{x}$ is in V.
+        </div>
+      </div>
+      <div class="step" data-step="11">
+        <div class="step-title">Cauchy-Schwarz</div>
+        <div class="step-subtitle">inequality</div>
+        <div class="step-body">
+          If $\vec{u}$ and $\vec{v}$ are vectors in $\mathbb{R}^{n}$, then
+          $$|\vec{u}\cdot \vec{v}|\le \|\vec{u}\|\|\vec{v}\|$$
+          with equality if and only if $\vec{u}$ and $\vec{v}$ are parallel.
+        </div>
+      </div>
+      <div class="step" data-step="12">
+        <div class="step-title">Definition 5.1.12</div>
+        <div class="step-subtitle">Angle between two vectors</div>
+        <div class="step-body">
+          Consider two non-zero vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. The angle $\theta$ between $\vec{u}$ and $\vec{v}$ is defined by
+          $$\cos(\theta)=\frac{\vec{u}\cdot \vec{v}}{\|\vec{u}\|\|\vec{v}\|}$$
+          where $0\le \theta \le \pi$.
+        </div>
+      </div>
+      <!-- Controls -->
+      <div class="reveal-controls" role="group" aria-label="Slide controls">
+        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING GEO GEBRA WINDOW -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+  <div class="ggb-float-header" id="ggb-float-drag">
+    <span class="ggb-float-title">GeoGebra Applet</span>
+    <div class="ggb-actions">
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="ggb-host" class="ggb-float-host">
+    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+  </div>
+</div>
+<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+<!-- LEFT DRAWER (vocab/concepts + preview) -->
+<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+  <div class="drawer-header">
+    <strong>Key terms & concepts</strong>
+    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+  </div>
+  <div class="drawer-body">
+    <section>
+      <h3 class="drawer-h3">Vocabulary</h3>
+      <ul id="vocab-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Concepts</h3>
+      <ul id="concepts-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Connections (preview)</h3>
+      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+      <button id="map-open" class="btn" type="button">Open Mind Map</button>
+    </section>
+  </div>
+</aside>
+<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+
+<!-- FLOATING MIND-MAP -->
+<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+  <div class="map-float-header">
+    <span class="map-title">Concept Connections</span>
+    <div class="map-actions">
+      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+      <button id="map-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="map-host" class="map-host">
+    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+  </div>
+</div>
+<div id="map-backdrop" class="map-backdrop" hidden></div>
+
+<!-- JS entry (ES modules) -->
+<script type="module" src="/todopage/js/boot.js"></script>
+</body>
+</html>

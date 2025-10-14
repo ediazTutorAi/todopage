@@ -75,5 +75,15 @@
     "description": "Section 4.3",
     "tags": ["Linear Transformations","matrix","basis"],
     "url": "linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation/index.html"
+  },
+      {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-10-14",
+    "title": "Orthogonal Projections and Orthonormal Bases",
+    "subtitle": "",
+    "description": "Section 5.1",
+    "tags": ["orthogonal","projections","orthonormal"],
+    "url": "linear-algebra/fall2025/2025-10-14-orthogonality/index.html"
   }
 ]
