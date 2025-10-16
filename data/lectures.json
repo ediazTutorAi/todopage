@@ -85,5 +85,15 @@
     "description": "Section 5.1",
     "tags": ["orthogonal","projections","orthonormal"],
     "url": "linear-algebra/fall2025/2025-10-14-orthogonality/index.html"
+  },
+      {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-10-16",
+    "title": "Gram-Schmidt Process and QR Factorization",
+    "subtitle": "",
+    "description": "Section 5.2",
+    "tags": ["orthogonal","projections","orthonormal","qr factorization"],
+    "url": "linear-algebra/fall2025/2025-10-16-qr-factorization/index.html"
   }
 ]
