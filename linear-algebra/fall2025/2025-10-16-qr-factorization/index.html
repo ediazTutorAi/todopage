@@ -75,12 +75,19 @@
         </div>
       </div>
       <div class="step" data-step="4">
-        <div class="step-title">Theorem 5.1.4</div>
-        <div class="step-subtitle">Orthogonal Projection</div>
+        <div class="step-title">Theorem 5.2.3</div>
+        <div class="step-subtitle">QR factorization (continued)</div>
         <div class="step-body">
-          Consider a vector $\vec{x}$ in $\mathbb{R}^{n}$ and a subspace V of $\mathbb{R}^{n}$. Then we can write
-          $$\vec{x}=\vec{x}^{||}+\vec{x}^{\perp}$$ 
-          where $\vec{x}^{||}$ is in V and $\vec{x}^{\perp}$ is perpendicular to V, and this representation is unique. The vector $\vec{x}^{||}$ is called the orthogonal projection of $\vec{x}$ onto V, denoted by $proj_V(\vec{x})$. The transformation $proj_V:\mathbb{R}^{n}\to V$ is a linear transformation.
+          Consider an $n\times m$ matrix M with linearly independent columns $\{\vec{v_1},\cdots,\vec{v_m}\}$. Then the columns $\{\vec{u_1},\cdots,\vec{u_m}\}$ of Q and the entries $r_{ij}$ of R can be computed in the following order:<br><br>
+          1) first column of R, first column of Q;<br>
+          2) second column of R, second column of Q;<br>
+          3) third column of R, third column of Q;<br>
+          and so on<br>
+          More specifically<br>
+          $$r_{11}=\|\vec{v_1}\|,\quad \vec{u_1}=\frac{\vec{v_1}}{r_{11}}$$
+          $$r_{12}=\vec{v_2}\cdot \vec{u_1},\quad r_{22}=\|\vec{v_2}-r_{12}\vec{u_1}\|,\quad \vec{u_2}=\frac{\vec{v_2}-r_{12}\vec{u_1}}{r_{22}}$$
+          $$r_{13}=\vec{v_3}\cdot \vec{u_1},\quad r_{23}=\vec{v_3}\cdot \vec{u_2},\quad r_{33}=\|\vec{v_3}-r_{13}\vec{u_1}-r_{23}\vec{u_2}\|  ,\quad \vec{u_3}=\frac{\vec{v_3}-r_{13}\vec{u_1}-r_{23}\vec{u_2}}{r_{33}}$$
+          and so on.
         </div>
       </div>
       <div class="step" data-step="5">
