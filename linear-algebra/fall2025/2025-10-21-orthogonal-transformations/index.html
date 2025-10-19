@@ -36,130 +36,76 @@
     <div class="card" id="left-card">
 
       <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">Ideas</div>
-        <div class="step-subtitle">About creating an orthonormal basis</div>
-        <div class="step-body">
-          Consider two linearly independent vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. Let us use them to make an orthonormal basis of the plane they span.<br><br>
-          First, we can make $\vec{u}$ into a unit vector by dividing it by its magnitude, that is, we define
-          $$\vec{u_1}=\frac{\vec{u}}{\|\vec{u}\|}$$
-          Next, we need to make $\vec{v}$ orthogonal to $\vec{u_1}$. We can do this by subtracting from $\vec{v}$ its projection onto $\vec{u_1}$, that is, we define
-          $$\vec{v_1}=\vec{v}-proj_{\vec{u_1}}(\vec{v})=\vec{v}-(\vec{v}\cdot \vec{u_1})\vec{u_1}$$
-          Finally, we can make $\vec{v_1}$ into a unit vector by dividing it by its magnitude, that is, we define
-          $$\vec{u_2}=\frac{\vec{v_1}}{\|\vec{v_1}\|}$$
-          The set $\{\vec{u_1},\vec{u_2}\}$ is an orthonormal basis of the plane spanned by $\vec{u}$ and $\vec{v}$.<br>
-          The Gram-Schmidt process generalizes this idea to any finite set of linearly independent vectors in $\mathbb{R}^{n}$.
-        </div>
-      </div>
-
-      <div class="step" data-step="2">
-        <div class="step-title">Theorem 5.2.2</div>
-        <div class="step-subtitle">The Gram-Schmidt process</div>
-        <div class="step-body">
-          Consider a basis $\{\vec{v_1},\cdots,\vec{v_m}\}$ of a subspace V of $\mathbb{R}^{n}$. For $j=2,\cdots,m$, we resolve the vector $\vec{v_j}$ into its components parallel and perpendicular to the span of the preceding vectors $\{\vec{v_1},\cdots,\vec{v_{j-1}}\}$,
-          $$\vec{v_j}=\vec{v_j}^{||}+\vec{v_j}^{\perp}$$
-          with respect to span$\{\vec{v_1},\cdots,\vec{v_{j-1}}\}$.<br>
-          Then:
-          $$\vec{u_1}=\frac{\vec{v_1}}{\|\vec{v_1}\|},\quad \vec{u_j}=\frac{\vec{v_j}^{\perp}}{\|\vec{v_j}^{\perp}\|}\text{ for }j=2,\cdots,m$$
-          is an orthonormal basis of V. By Theorem 5.1.7, we have
-          $$\vec{v_j}^{\perp}=\vec{v_j}-proj_{span\{\vec{v_1},\cdots,\vec{v_{j-1}}\}}(\vec{v_j})=\vec{v_j}-(\vec{v_j}\cdot \vec{u_1})\vec{u_1}-\cdots-(\vec{v_j}\cdot \vec{u_{j-1}})\vec{u_{j-1}}$$
-        </div>
-      </div>
-
-      <div class="step" data-step="3">
-        <div class="step-title">Theorem 5.2.2</div>
-        <div class="step-subtitle">QR factorization</div>
-        <div class="step-body">
-          Consider an $n\times m$ matrix M with linearly independent columns $\{\vec{v_1},\cdots,\vec{v_m}\}$. Then there exists an $n\times m$ matrix Q with orthonormal columns $\{\vec{u_1},\cdots,\vec{u_m}\}$ are orthonormal and an upper triangular matrix R with positive diagonal entries such that $$M=QR$$
-          This representation is unique. Furthermore, $r_{11}=\|\vec{v_1}\|,r_{jj}=\|\vec{v_j}^{\perp}\|$ (for $j=2,\cdots,m$), and for $i<j$, $r_{ij}=\vec{v_j}\cdot \vec{u_i}$, and $r_{ij}=0$ for $i>j$.
-        </div>
-      </div>
-      <div class="step" data-step="4">
-        <div class="step-title">Theorem 5.2.3</div>
-        <div class="step-subtitle">QR factorization (continued)</div>
-        <div class="step-body">
-          Consider an $n\times m$ matrix M with linearly independent columns $\{\vec{v_1},\cdots,\vec{v_m}\}$. Then the columns $\{\vec{u_1},\cdots,\vec{u_m}\}$ of Q and the entries $r_{ij}$ of R can be computed in the following order:<br><br>
-          1) first column of R, first column of Q;<br>
-          2) second column of R, second column of Q;<br>
-          3) third column of R, third column of Q;<br>
-          and so on<br>
-          More specifically<br>
-          $$r_{11}=\|\vec{v_1}\|,\quad \vec{u_1}=\frac{\vec{v_1}}{r_{11}}$$
-          $$r_{12}=\vec{v_2}\cdot \vec{u_1},\quad r_{22}=\|\vec{v_2}-r_{12}\vec{u_1}\|,\quad \vec{u_2}=\frac{\vec{v_2}-r_{12}\vec{u_1}}{r_{22}}$$
-          $$r_{13}=\vec{v_3}\cdot \vec{u_1},\quad r_{23}=\vec{v_3}\cdot \vec{u_2},\quad r_{33}=\|\vec{v_3}-r_{13}\vec{u_1}-r_{23}\vec{u_2}\|  ,\quad \vec{u_3}=\frac{\vec{v_3}-r_{13}\vec{u_1}-r_{23}\vec{u_2}}{r_{33}}$$
-          and so on.
-        </div>
-      </div>
-      <div class="step" data-step="5">
-        <div class="step-title">Theorem 5.1.5</div>
-        <div class="step-subtitle">Formula for the orthogonal projection</div>
-        <div class="step-body">
-         If V is subspace of $\mathbb{R}^{n}$ with an orthonormal basis $\{\vec{u_1},\cdots,\vec{u_m}\}$, then for any vector $\vec{x}$ in $\mathbb{R}^{n}$, the orthogonal projection of $\vec{x}$ onto V is given by
-         $$proj_V(\vec{x})=(\vec{x}\cdot \vec{u_1})\vec{u_1}+\cdots+(\vec{x}\cdot \vec{u_m})\vec{u_m}$$
-         for all $\vec{x}$ in $\mathbb{R}^{n}$.
-        </div>
-      </div>
-      <div class="step" data-step="6">
-        <div class="step-title">Theorem 5.1.6</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          Consider an orthonormal basis $\{\vec{u_1},\cdots,\vec{u_n}\}$ of $\mathbb{R}^{n}$. Then any vector $\vec{x}$ in $\mathbb{R}^{n}$ can be expressed as
-          $$\vec{x}=(\vec{x}\cdot \vec{u_1})\vec{u_1}+\cdots+(\vec{x}\cdot \vec{u_n})\vec{u_n}$$
-          for all $\vec{x}$ in $\mathbb{R}^{n}$.
-        </div>
-      </div>
-      <div class="step" data-step="7">
-        <div class="step-title">Definition 5.1.7</div>
-        <div class="step-subtitle">Orthogonal Complement</div>
-        <div class="step-body">
-          Consider a subspace V of $\mathbb{R}^{n}$. The orthogonal complement of V, denoted by $V^{\perp}$, is the set of all vectors in $\mathbb{R}^{n}$ that are orthogonal to every vector in V, that is,
-          $$V^{\perp}=\{\vec{x}\in \mathbb{R}^{n}:\vec{x}\cdot \vec{v}=0\text{ for all }\vec{v}\in V\}$$
-          Note that $V^{\perp}$ is the kernel of the orthogonal projection $proj_V:\mathbb{R}^{n}\to V$.
-        </div>
-      </div>
-      <div class="step" data-step="8">
-        <div class="step-title">Theorem 5.1.8</div>
-        <div class="step-subtitle">Properties of the orthogonal complement</div>
-        <div class="step-body">
-          Consider a subspace V of $\mathbb{R}^{n}$. Then:<br><br>
-          a. The orthogonal complement $V^{\perp}$ is a subspace of $\mathbb{R}^{n}$.<br><br>
-          b. The intersection of V and $V^{\perp}$ is $\{\vec{0}\}$.<br><br>
-          c. The dimensions of V and $V^{\perp}$ add up to n, that is, $dim(V)+dim(V^{\perp})=n$.<br><br>
-          d. The orthogonal complement of $V^{\perp}$ is V, that is, $(V^{\perp})^{\perp}=V$.
-        </div>
-      </div>
-      <div class="step" data-step="9">
-        <div class="step-title">Theorem 5.1.9</div>
-        <div class="step-subtitle">Pythagorean Theorem</div>
-        <div class="step-body">
-          Consider two vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. The equation $\|\vec{u}+\vec{v}\|^2=\|\vec{u}\|^2+\|\vec{v}\|^2$ holds if and only if $\vec{u}$ and $\vec{v}$ are orthogonal.
-        </div>
-      </div>
-      <div class="step" data-step="10">
-        <div class="step-title">Theorem 5.1.10</div>
-        <div class="step-subtitle">An inequality for the magnitude of the projection</div>
-        <div class="step-body">
-          Consider a subspace V of $\mathbb{R}^{n}$ and a vector $\vec{x}$ in $\mathbb{R}^{n}$. Then $\|proj_V(\vec{x})\|\le \|\vec{x}\|$, with equality if and only if $\vec{x}$ is in V.
-        </div>
-      </div>
-      <div class="step" data-step="11">
-        <div class="step-title">Cauchy-Schwarz</div>
-        <div class="step-subtitle">inequality</div>
-        <div class="step-body">
-          If $\vec{u}$ and $\vec{v}$ are vectors in $\mathbb{R}^{n}$, then
-          $$|\vec{u}\cdot \vec{v}|\le \|\vec{u}\|\|\vec{v}\|$$
-          with equality if and only if $\vec{u}$ and $\vec{v}$ are parallel.
-        </div>
-      </div>
-      <div class="step" data-step="12">
-        <div class="step-title">Definition 5.1.12</div>
-        <div class="step-subtitle">Angle between two vectors</div>
-        <div class="step-body">
-          Consider two non-zero vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. The angle $\theta$ between $\vec{u}$ and $\vec{v}$ is defined by
-          $$\cos(\theta)=\frac{\vec{u}\cdot \vec{v}}{\|\vec{u}\|\|\vec{v}\|}$$
-          where $0\le \theta \le \pi$.
-        </div>
-      </div>
+       <div class="step" data-step="1">
+         <div class="step-title">Definition 5.3.1</div>
+         <div class="step-subtitle">Orthogonal Transformations and orthogonal matrices</div>
+         <div class="step-body">
+           A linear transformation $T$ from $\mathbb{R}^n$ to $\mathbb{R}^n$ is called <em>orthogonal</em> if it preserves the length of vectors:<br>
+            $$\|T(\mathbf{x})\| = \|\mathbf{x}\|$$
+            If $T(\vec{x})=A\vec{x}$ is an orthogonal transformation, we say that A is an orthogonal matrix.
+         </div>
+       </div>
+       <div class="step" data-step="2">
+         <div class="step-title">Theorem 5.3.2</div>
+         <div class="step-subtitle">Orthogonal transformations preserve orthogonality</div>
+         <div class="step-body">
+           Consider an orthogonal transformation T from $$\mathbb{R}^n$$ to $$\mathbb{R}^n$$. If two vectors $$\vec{u}$$ and $$\vec{v}$$ in $$\mathbb{R}^n$$ are orthogonal, then their images $$T(\vec{u})$$ and $$T(\vec{v})$$ are also orthogonal.
+         </div>
+       </div>
+       <div class="step" data-step="3">
+         <div class="step-title">Theorem 5.3.3</div>
+         <div class="step-subtitle">Orthogonal transformations and orthonormal bases</div>
+         <div class="step-body">
+           a) A linear transformation T from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$ is orthogonal if (and only if) the vectors $T(e_1),T(e_2),\cdots,T(e_n)$ form an orthonormal basis of $\mathbb{R}^{n}$<br>
+           b) An $n\times n$ matrix A is orthogonal if (and only if) its columns form and orthonormal basis of $\mathbb{R}^{n}$
+         </div>
+       </div>
+       <div class="step" data-step="4">
+         <div class="step-title">Theorem 5.3.4</div>
+         <div class="step-subtitle">Products and Inverses of orthogonal matrices</div>
+         <div class="step-body">
+           a) The product AB of two orthogonal $n\times n$ matrices A and B is orthogonal
+           b) The inverse $A^{-1}$ of an orthogonal $n\times n$ matrix A is orthogonal.
+         </div>
+       </div>
+       <div class="step" data-step="5">
+         <div class="step-title">The Transpose of a Matrix</div>
+         <div class="step-subtitle">The transpose of a matrix; symmetric and skew-symmetric matrices</div>
+         <div class="step-body">
+           Consider and $m\times n$ matrix A. The transpose $A^T$ of A is the $n \times m$ matrix whose ij-th entry is the ji-th entry of A: The roles of rows and columns are reversed.<br>
+           We say that a square matrix A is symmetric if $A^T=A$, and A is called skew-symmetric if $A^T=-A$
+         </div>
+       </div>
+       <div class="step" data-step="6">
+         <div class="step-title">Theorem 5.3.6</div>
+         <div class="step-subtitle"></div>
+         <div class="step-body">
+           If $\vec{v}$ and $\vec{w}$ are two (column) vectros inf $\mathbb{R}^{n}$, then 
+           $$\vec{v} \cdot \vec{w}=\vec{v}^T \\vec{w}$$
+         </div>
+       </div>
+       <div class="step" data-step="7">
+         <div class="step-title">Theorem 5.3.7</div>
+         <div class="step-subtitle"></div>
+         <div class="step-body">
+           Consider an $n\times n$ matrix A. The matrix A is orthogonal if (and only if) $A^TA=I_n$ or, equivalently, if $A^{-1}=A^T$
+         </div>
+       </div>
+       <div class="step" data-step="8">
+         <div class="step-title">Summary 5.3.8</div>
+         <div class="step-subtitle">Orthogonal Matrices</div>
+         <div class="step-body">
+           Consider an $n\times n$ matrix A. Then the following statements are equivalent:
+           <ul>
+            <item> A is an orthogonal matrix</item>
+            <item>The transformation $L(\vec{x})=A \vec{x}$ preserve length; that is $|A \vec{x}|=|\vec{x}|$ for all $\vec{x}$ in $\mathbb{R}^{n}$</item>
+            <item>The columns of A form an orthonormal basis of $\mathbb{R}^{n}$</item>
+            <item>$A^TA=I_n$</item>
+            <item>A^{-1}=A^T</item>
+            <item>A preserves the dot product, meaning that $(A \vec{x})\cdot (A \vec{y})=\vec{x}\cdot \vec{y}$ for all $\vec{x}$ and $\vec{y}$ in $\mathbb{R}^{n}$</item>
+            </ul>
+         </div>
+       </div>
       <!-- Controls -->
       <div class="reveal-controls" role="group" aria-label="Slide controls">
         <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
