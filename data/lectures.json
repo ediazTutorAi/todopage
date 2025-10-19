@@ -95,5 +95,15 @@
     "description": "Section 5.2",
     "tags": ["orthogonal","projections","orthonormal","qr factorization"],
     "url": "linear-algebra/fall2025/2025-10-16-qr-factorization/index.html"
+  },
+    {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-10-21",
+    "title": "Orthogonal transformations and orthogonal matrices",
+    "subtitle": "",
+    "description": "Section 5.3",
+    "tags": ["orthogonal","transpose"],
+    "url": "linear-algebra/fall2025/2025-10-21-orthogonal-transformations/index.html"
   }
 ]
