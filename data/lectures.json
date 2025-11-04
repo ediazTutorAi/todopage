@@ -105,5 +105,15 @@
     "description": "Section 5.3",
     "tags": ["orthogonal","transpose"],
     "url": "linear-algebra/fall2025/2025-10-21-orthogonal-transformations/index.html"
+  },
+    {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-11-04",
+    "title": "Determinants",
+    "subtitle": "",
+    "description": "Section 6.1",
+    "tags": ["determinants"],
+    "url": "linear-algebra/fall2025/2025-11-04-determinants.html"
   }
 ]
