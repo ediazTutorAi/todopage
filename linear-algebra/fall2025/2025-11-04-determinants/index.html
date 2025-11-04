@@ -88,7 +88,62 @@
            The signature of a pattern P is defined as $sgn P=(-1)^\text{number of inversions in P}$<br>
            The determinant of A is defined as<br>
            $$det(A)=\sum (sgn P)(prod P)$$
+           where the sum is taken over all $n!$ patterns P in the matrix A. Thus, we are summing up the products associated with all patterns with an even number of inversions, and we are subtracting the products associated with the patterns with an odd number of inversions.
 
+         </div>
+       </div>
+       <div class="step" data-step="7">
+         <div class="step-title">Theorem 6.1.4</div>
+         <div class="step-subtitle">Determinant of a triangular matrix</div>
+         <div class="step-body">
+           The determinant of an (upper or lower) triangular matrix is the product of the diagonal entries of the matrix<br>
+           In particular, the determinant of a diagonal matrix is the product of its diagonal entries.
+         </div>
+       </div>
+       <div class="step" data-step="8">
+         <div class="step-title">Theorem 6.2.1</div>
+         <div class="step-subtitle">Determinant of the Transpose</div>
+         <div class="step-body">
+           If A is a square matrix, then<br>
+           $$det(A^T)=det(A)$$
+         </div>
+       </div>
+       <div class="step" data-step="9">
+         <div class="step-title">Theorem 6.2.2</div>
+         <div class="step-subtitle">Linearity of the determinant in the rows and columns</div>
+         <div class="step-body">
+           Consider fixed row vectors $\vec{v_1},\cdots,\vec{v_{i-1}},\vec{v_{i+1}},\vec{v_n}$ with n components. Then the function:<br>
+           $$T(\vec{x})=$$ from $\mathbb{R}^{1\times n}$ to $\mathbb{R}$ is a linear transformation. This property is referred to as linearity of the determinant in the ith row. Likewise, the determinant is linear in all the columns.
+         </div>
+       </div>
+       <div class="step" data-step="10">
+         <div class="step-title">Theorem 6.2.3</div>
+         <div class="step-subtitle">Elementary row operations and determinants</div>
+         <div class="step-body">
+           a. If B is obtained from A by dividing a row of A by a scalar k, then $$det(B)=\frac{1}{k}det(A)$$
+           b. If B is obtained from A by a row swap,then 
+           $$det(B)=-det(A)$$
+           c. If B is obtained from A by adding a multiple of a row of A to another row, then
+           $$det(B)=det(A)$$
+         </div>
+         Analogous results hold for elementary column operations.
+       </div>
+       <div class="step" data-step="11">
+         <div class="step-title">Theorem 6.2.4</div>
+         <div class="step-subtitle">Invertibility and determinant</div>
+         <div class="step-body">
+           A square matrix A is invertible if and only if $det(A)\neq 0$
+         </div>
+       </div>
+       <div class="step" data-step="12">
+         <div class="step-title">Theorem 6.2.6</div>
+         <div class="step-subtitle">Determinants of products and powers</div>
+         <div class="step-body">
+           If A and B are nxn matrices and m is a positive integer, then<br>
+           a. $det(AB)=(detA)(detB)$, and<br>
+           b. $det(A^m)=(detA)^m$<br>
+           Interesting consequence is that<br>
+           If matrix A is similar to matrix B then, what is the relationship between $det(A)$ and $det(B)$.
          </div>
        </div>
       <!-- Controls -->
