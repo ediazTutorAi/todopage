@@ -43,6 +43,21 @@
           Curve C is a closed curve if there is a parameterization $\vec{r}(t)$,$a\leq t \leq b$ of C such that the parameterization traverses the curve exactly once and $\vec{r}(t)$, $a\leq t \leq b$ of C such that $\vec{r}$ is one-to-one over $(a,b)$. It is possible for $\vec{r}(a)=\vec{r}(b)$, meaning that the simple curve is also closed. 
         </div>
       </div>
+      <div class="step" data-step="2">
+        <div class="step-title">Definition</div>
+        <div class="step-subtitle">Connected regions</div>
+        <div class="step-body">
+          A region D is a connected region if, ofr any two points $P_1$ and $P_2$, there is a path from $P_1$ to $P_2$ with a trace contained entirely inside D. A region D is a simply connected region if D is connected for any simple closed curve C that lies inside D, and curve C can be shrunk continuously to a point while staying entirely inside D. In two dimensions, a region is simply connected if it is connected and has no holes.
+        </div>
+      </div>
+      <div class="step" data-step="3">
+        <div class="step-title">Fundamental Theorem for Line Integrals</div>
+        <div class="step-subtitle"></div>
+        <div class="step-body">
+          Let C be a piecewise smooth curve with parameterization $\vec{r}(t)$, $a\leq t \leq b$. Let f be a function of two or three variables with first-order partial derivatives that exist and are continuous on C. Then,<br>
+          $$\int_{C} \nabla f \cdot d\mathbf{r}=f(\vec{r}(b))-f(\vec{r}(a))$$
+        </div>
+      </div>
 
       <!-- Controls -->
       <div class="reveal-controls" role="group" aria-label="Slide controls">
