@@ -36,6 +36,15 @@
     "tags": ["Cylindrical","spherical","coordinates"],
     "url": "calculus3/fall2025/2025-10-15-cylindrical-sphericals-coordinates/index.html"
   },
+    {"course": "Calculus III",
+    "semester": "Fall 2025",
+    "date": "2025-11-05",
+    "title": "Conservative Vector Fields",
+    "subtitle": "",
+    "description": "",
+    "tags": ["conservative"],
+    "url": "calculus3/fall2025/2025-11-05-conservative-fields/index.html"
+  },
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
