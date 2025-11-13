@@ -134,5 +134,15 @@
     "description": "Section 7.1",
     "tags": ["diagonalization"],
     "url": "linear-algebra/fall2025/2025-11-11-diagonalization/index.html"
+  },
+    {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-11-13",
+    "title": "Finding the Eigenvalue of a Matrix",
+    "subtitle": "",
+    "description": "Section 7.2",
+    "tags": ["eigenvalues"],
+    "url": "linear-algebra/fall2025/2025-11-13-finding-the-eigenvalues/index.html"
   }
 ]

@@ -40,7 +40,9 @@
          <div class="step-title">Theorem 7.2.1</div>
          <div class="step-subtitle">Eigenvalues and determinants; characteristic equation</div>
          <div class="step-body">
-           Consider an $n\times n$ matrix 
+           Consider an $n\times n$ matrix A and a scalar $\lambda$. Then $\lambda$ is an eigenvalue of A if and only if:
+           $$det(A-\lambda I_n)=0$$
+           This is called the characteristic equation (or the secular equation) of matrix A.
           </div>
        </div>
        <div class="step" data-step="2">
@@ -54,41 +56,26 @@
            A basis $\vec{v_1},\cdots,\vec{v_n}$ of $\mathbb{R}^{n}$ is called an eigenbasis for A (or T) if the vectors $\vec{v_1},\cdots,\\vec{v_n}$ are eigenvectors of A.
          </div>
        </div>
-       <div class="step" data-step="3">
-         <div class="step-title">Theorem 7.1.3</div>
-         <div class="step-subtitle">Eigenbases and diagonalization</div>
+       <div class="step" data-step="2">
+         <div class="step-title">Theorem 7.2.2</div>
+         <div class="step-subtitle">Eigenvalues of a triangular matrix</div>
          <div class="step-body">
-           The matrix A is diagonalizable if and only if there exists an eigenbasis for A. If $\vec{v_1},\cdots,\vec{v_n}$ is an eigenbasis of A, with $A \vec{v_1}=\lambda_1 \vec{v_1},\cdots,A \vec{v_n}=\lambda_n \vec{v_n}$, then the matrices
-           $$S=[v_1\dots v_n]$$ and 
-           $$B=diag(\lambda_1\dots\lambda_n)$$ will diagonalize A, meaning that 
-           $$S^{-1}AS=B$$
-           Conversely, if the matrices S and B diagonalize A, then the column vectors of S will form an eigenbasis for A, and the diagonal entries of B will be the associated eigenvalues.
+           The eigenvalues of a triangular matrix are its diagonal entries.
+         </div>
+       </div>
+       <div class="step" data-step="3">
+         <div class="step-title">Definition 7.2.3</div>
+         <div class="step-subtitle">Trace</div>
+         <div class="step-body">
+           The sum of the diagonal entires of a square matrix A is called the trace of A, denoted by tr(A).
          </div>
        </div>
        <div class="step" data-step="4">
-         <div class="step-title">Theorem 7.1.4</div>
-         <div class="step-subtitle"></div>
+         <div class="step-title">Theorem 7.2.4</div>
+         <div class="step-subtitle">Characteristic equation of a $2 \times 2$ matrix A</div>
          <div class="step-body">
-           The possible real eingenvalues of an orthogonal matrix are 1 and -1.
+           $$det(A-\lambda I_2)=\lambda^2-(trA)\lambda+detA=0$$
          </div>
-       </div>
-       <div class="step" data-step="5">
-         <div class="step-title">Summary 7.1.5</div>
-         <div class="step-subtitle">Characterizations of invertible matrices</div>
-         <div class="step-body">
-           For an nxn matrix A, the following statements are equivalent:<br>
-           i. A is invetible<br>
-           ii. The linear system $A \vec{x}=\vec{b}$ has a unique solution $\vec{x}$, for all $\vec{b}$ in $\mathbb{R}^{n}$.<br>
-           iii. $rref(A)=I_n$<br>
-           iv. rank(A)=n<br>
-           v. im(A)=$\mathbb{R}^{n}$<br>
-           vi. ker(A)=${\vec{0}}$<br>
-           vii. The column vectors of A form a basis of $\mathbb{R}^{n}$<br>
-           viii. The column vectors of A span $\mathbb{R}^{n}$<br>
-           ix. The column vectors of A are linearly independent.<br>
-           x. det(A)$\neq 0$<br>
-           xi. 0 fails to be an eigenvalue of A.
-          </div>
        </div>
 
 
