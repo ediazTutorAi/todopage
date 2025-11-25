@@ -134,5 +134,15 @@
     "description": "Section 7.1",
     "tags": ["diagonalization"],
     "url": "linear-algebra/fall2025/2025-11-11-diagonalization/index.html"
+  },
+    {  
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-11-25",
+    "title": "Symmetric Matrices",
+    "subtitle": "",
+    "description": "Section 8.1",
+    "tags": ["symmetric","matrices"],
+    "url": "linear-algebra/fall2025/2025-11-25-symmetry/index.html"
   }
 ]
