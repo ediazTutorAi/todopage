@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Finding the Eigenvalues of a Matrix</h1>
+  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+</header>
+
+<main class="container">
+  <section class="single-col">
+    <div class="card" id="left-card">
+
+      <!-- STEPS -->
+       <div class="step" data-step="1">
+         <div class="step-title">Theorem 7.2.1</div>
+         <div class="step-subtitle">Eigenvalues and determinants; characteristic equation</div>
+         <div class="step-body">
+           Consider an $n\times n$ matrix A and a scalar $\lambda$. Then $\lambda$ is an eigenvalue of A if and only if:
+           $$det(A-\lambda I_n)=0$$
+           This is called the characteristic equation (or the secular equation) of matrix A.
+          </div>
+       </div>
+       <div class="step" data-step="2">
+         <div class="step-title">Definition 7.2.2</div>
+         <div class="step-subtitle">Eigenvectors, eigenvalues, and eigenbases</div>
+         <div class="step-body">
+           Consider a linear  transformation $T(\vec{x})=A \vec{x}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$<br>
+           A nonzero vector $\vec{v}$ in $\mathbb{R}^{n}$ is called an eigenvector of A (or T) if 
+           $$A \vec{v}=\lambda \vec{v}$$
+           for some scalar $\lambda$. This $\lambda$ is called the eigenvalue associated with eigenvector $\vec{v}$.<br>
+           A basis $\vec{v_1},\cdots,\vec{v_n}$ of $\mathbb{R}^{n}$ is called an eigenbasis for A (or T) if the vectors $\vec{v_1},\cdots,\\vec{v_n}$ are eigenvectors of A.
+         </div>
+       </div>
+       <div class="step" data-step="2">
+         <div class="step-title">Theorem 7.2.2</div>
+         <div class="step-subtitle">Eigenvalues of a triangular matrix</div>
+         <div class="step-body">
+           The eigenvalues of a triangular matrix are its diagonal entries.
+         </div>
+       </div>
+       <div class="step" data-step="3">
+         <div class="step-title">Definition 7.2.3</div>
+         <div class="step-subtitle">Trace</div>
+         <div class="step-body">
+           The sum of the diagonal entires of a square matrix A is called the trace of A, denoted by tr(A).
+         </div>
+       </div>
+       <div class="step" data-step="4">
+         <div class="step-title">Theorem 7.2.4</div>
+         <div class="step-subtitle">Characteristic equation of a $2 \times 2$ matrix A</div>
+         <div class="step-body">
+           $$det(A-\lambda I_2)=\lambda^2-(trA)\lambda+detA=0$$
+         </div>
+       </div>
+       <div class="step" data-step="5">
+         <div class="step-title">Theorem 7.2.5</div>
+         <div class="step-subtitle">Characteristic Polynomial</div>
+         <div class="step-body">
+           If A is an $n\times n$ matrix, then $det(A-\lambda I_n)$ is a polynomial of degree n, of the form:
+           $$(-\lambda)^n+(trA)(-\lambda)^{n-1}+\cdots+det A$$
+           $$=(-1)^n\lambda^n+(-1)^{n-1}(trA)\lambda^{n-1}+\cdots+detA$$
+           This is called the characteristic polynomial of A, denoted by $f_A(\lambda)$
+         </div>
+       </div>
+       <div class="step" data-step="6">
+         <div class="step-title">Definition 7.2.6</div>
+         <div class="step-subtitle">Algebraic multiplicity of an eigenvalue</div>
+         <div class="step-body">
+           We say that an eigenvalue $\lambda_0$ of a square matrix A has algebraic multiplicity k if $\lambda_0$ is a root of multiplicity k of the characteristic polynomial $f_A(\lambda)$ meaning that we can write
+           $$f_A(\lambda)=(\lambda_0-\lambda)^k g(\lambda)$$
+           for some polynomial $g(\lambda)$ with $g(\lambda_0)\neq 0$. We write $almu(\lambda_0)=k$
+         </div>
+       </div>
+       <div class="step" data-step="7">
+         <div class="step-title">Theorem 7.2.7</div>
+         <div class="step-subtitle">Number of eigenvalues</div>
+         <div class="step-body">
+           An $n\times n$ matrix has at most n real eigenvalues, even if they are counted with their algebraic multiplicities.<br>
+           If n is odd, then an $n\times n$ matrix has at least one real eigenvalue
+         </div>
+       </div>
+       <div class="step" data-step="8">
+         <div class="step-title">Theorem 7.2.8</div>
+         <div class="step-subtitle">Eigenvalues, determinant, and trace</div>
+         <div class="step-body">
+           If an $n\times n$ matrix A has the eigenvalues $\lambda_1,\lambda_2,\cdots,\lambda_n$ listed with their algebraic multiplicities, then:
+           $$det A = \lambda_1\lambda_2\cdots\lambda_n$$
+           the product of the eigenvalues, and<br>
+           $$tr A=\lambda_1+\lambda_2+\cdots\lambda_n$$,
+           the sum of the eigenvalues.
+         </div>
+       </div>
+
+
+
+      <!-- Controls -->
+      <div class="reveal-controls" role="group" aria-label="Slide controls">
+        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FLOATING GEO GEBRA WINDOW -->
+<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+  <div class="ggb-float-header" id="ggb-float-drag">
+    <span class="ggb-float-title">GeoGebra Applet</span>
+    <div class="ggb-actions">
+      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="ggb-host" class="ggb-float-host">
+    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+  </div>
+</div>
+<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+<!-- LEFT DRAWER (vocab/concepts + preview) -->
+<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+  <div class="drawer-header">
+    <strong>Key terms & concepts</strong>
+    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+  </div>
+  <div class="drawer-body">
+    <section>
+      <h3 class="drawer-h3">Vocabulary</h3>
+      <ul id="vocab-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Concepts</h3>
+      <ul id="concepts-list" class="drawer-vlist"></ul>
+    </section>
+    <section>
+      <h3 class="drawer-h3">Connections (preview)</h3>
+      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+      <button id="map-open" class="btn" type="button">Open Mind Map</button>
+    </section>
+  </div>
+</aside>
+<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+
+<!-- FLOATING MIND-MAP -->
+<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+  <div class="map-float-header">
+    <span class="map-title">Concept Connections</span>
+    <div class="map-actions">
+      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+      <button id="map-close" class="btn small" type="button">× Close</button>
+    </div>
+  </div>
+  <div id="map-host" class="map-host">
+    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+  </div>
+</div>
+<div id="map-backdrop" class="map-backdrop" hidden></div>
+
+<!-- JS entry (ES modules) -->
+<script type="module" src="/todopage/js/boot.js"></script>
+</body>
+</html>
