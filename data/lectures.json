@@ -63,15 +63,15 @@
   },
   {
     "course": "Calculus III",
-    "semester": "Spring 2026",
-    "date": "2026-01-12",
+    "semester": "Fall 2025",
+    "date": "2025-01-12",
     "title": "Vectors",
     "subtitle": "",
     "description": "",
     "tags": [
       "vectors"
     ],
-    "url": "calculus3/spring2026/2026-01-12-vectors/index.html"
+    "url": "calculus3/fall2025/2025-01-12-vectors/index.html"
   },
   {
     "course": "Linear Algebra",
