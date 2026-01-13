@@ -76,6 +76,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
+    "date": "2025-01-13",
+    "title": "Introduction to Linear Systems",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "linear systems"
+    ],
+    "url": "linear-algebra/fall2025/2025-01-13-linear-systems/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
     "date": "2025-10-02",
     "title": "Coordinates (continuation)",
     "subtitle": "",

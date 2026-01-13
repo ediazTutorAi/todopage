@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Introduction to Linear Systems</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">1.1 Linear Systems Page 1</div>
+          <div class="step-subtitle">What problem are we studying?</div>
+          <div class="step-body">
+            A <b>linear system</b> is a collection of linear equations in the same unknowns, for example
+            $$\begin{cases}
+            a_{11}x_1+a_{12}x_2+\cdots+a_{1n}x_n=b_1\\
+            a_{21}x_1+a_{22}x_2+\cdots+a_{2n}x_n=b_2\\
+            \vdots\\
+            a_{m1}x_1+a_{m2}x_2+\cdots+a_{mn}x_n=b_m
+            \end{cases}$$
+            A <b>solution</b> is a choice of $(x_1,\dots,x_n)$ that makes <i>every</i> equation true at once.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Linear equation Page 2</div>
+          <div class="step-subtitle">The “flat” kind of equation</div>
+          <div class="step-body">
+            A linear equation has variables only to the first power and no products of variables, e.g.
+            $$3x-2y+z=7.$$
+            Not linear: $x^2+y=1$, $xy+z=0$, $\sin(x)+y=0$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Geometric picture in $\mathbb{R}^2$ Page 3</div>
+          <div class="step-subtitle">Two lines at once</div>
+          <div class="step-body">
+            In two variables, each linear equation is a <b>line</b> in the $xy$-plane.
+            Solving a system means finding the intersection of those lines:
+            <ul>
+              <li><b>1 solution:</b> lines meet at one point.</li>
+              <li><b>No solutions:</b> parallel distinct lines.</li>
+              <li><b>Infinitely many:</b> the same line (dependent equations).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Geometric picture in $\mathbb{R}^3$ Page 4</div>
+          <div class="step-subtitle">Planes intersecting</div>
+          <div class="step-body">
+            In three variables, each linear equation is a <b>plane</b> in 3D.
+            A system asks for points where all planes meet:
+            <ul>
+              <li><b>1 solution:</b> planes meet at a single point.</li>
+              <li><b>No solutions:</b> planes never share a common point.</li>
+              <li><b>Infinitely many:</b> intersection is a line or a plane (free direction(s)).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Solution types Page 5</div>
+          <div class="step-subtitle">The only three possibilities</div>
+          <div class="step-body">
+            Every linear system is exactly one of:
+            <ol>
+              <li><b>Inconsistent:</b> no solution.</li>
+              <li><b>Consistent with unique solution:</b> exactly one solution.</li>
+              <li><b>Consistent with infinitely many solutions:</b> a whole family of solutions.</li>
+            </ol>
+            “Infinitely many” happens when at least one variable can vary freely.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Consistent vs. inconsistent Page 6</div>
+          <div class="step-subtitle">A quick diagnostic idea</div>
+          <div class="step-body">
+            A system is <b>consistent</b> if it has at least one solution.
+            It is <b>inconsistent</b> if the equations contradict each other.
+            A classic contradiction pattern is something like
+            $$0=1,$$
+            which signals “no solution.”
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Coefficient viewpoint Page 7</div>
+          <div class="step-subtitle">The data of the system</div>
+          <div class="step-body">
+            The numbers $a_{ij}$ are the <b>coefficients</b>, the $x_j$ are the <b>unknowns</b>, and the $b_i$ form the
+            <b>right-hand side</b>.
+            It’s helpful to separate:
+            <ul>
+              <li><b>Structure:</b> the coefficient pattern $(a_{ij})$</li>
+              <li><b>Targets:</b> the numbers $(b_i)$</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Preview: matrix form Page 8</div>
+          <div class="step-subtitle">One equation that represents them all</div>
+          <div class="step-body">
+            A linear system can be packaged as
+            $$A\mathbf{x}=\mathbf{b},$$
+            where $A$ is the coefficient matrix, $\mathbf{x}$ is the vector of unknowns, and $\mathbf{b}$ is the
+            right-hand side.
+            (The mechanics of solving this efficiently comes next.)
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Why linear systems matter Page 9</div>
+          <div class="step-subtitle">The “hub” problem of the course</div>
+          <div class="step-body">
+            Linear systems show up everywhere: balancing flows, fitting data, networks, economics, circuits, and as
+            approximations to nonlinear problems.
+            Many later topics (linear transformations, subspaces, eigenvalues) build on understanding
+            $$A\mathbf{x}=\mathbf{b}.$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Common student traps Page 10</div>
+          <div class="step-subtitle">What to watch for</div>
+          <div class="step-body">
+            <ul>
+              <li>Solving equations one-by-one (instead of simultaneously).</li>
+              <li>Assuming “two equations means one solution.” (Not true.)</li>
+              <li>Missing that <b>dependent</b> equations can produce infinitely many solutions.</li>
+              <li>Thinking inconsistency is rare—contradictions happen often in models/data.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- LEFT DRAWER (vocab/concepts + preview) -->
+  <aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+    <div class="drawer-header">
+      <strong>Key terms & concepts</strong>
+      <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+    </div>
+    <div class="drawer-body">
+      <section>
+        <h3 class="drawer-h3">Vocabulary</h3>
+        <ul id="vocab-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Concepts</h3>
+        <ul id="concepts-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Connections (preview)</h3>
+        <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+        <button id="map-open" class="btn" type="button">Open Mind Map</button>
+      </section>
+    </div>
+  </aside>
+  <button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer"
+    title="Open vocabulary">➜</button>
+
+  <!-- FLOATING MIND-MAP -->
+  <div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+    <div class="map-float-header">
+      <span class="map-title">Concept Connections</span>
+      <div class="map-actions">
+        <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+        <button id="map-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="map-host" class="map-host">
+      <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+    </div>
+  </div>
+  <div id="map-backdrop" class="map-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
