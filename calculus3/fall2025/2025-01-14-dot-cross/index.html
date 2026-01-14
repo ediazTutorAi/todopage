@@ -38,17 +38,91 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">2.1 Vectors</div>
-          <div class="step-subtitle">Definition and Notation</div>
+          <div class="step-title">2.3 Vectors Page 1</div>
+          <div class="step-subtitle">Dot Product (Algebraic Definition)</div>
           <div class="step-body">
-            A vector is a quantity that has both magnitude and direction.
-            A vector is represented by an arrow.
-            The length of the arrow represents the magnitude of the vector.
-            The direction of the arrow represents the direction of the vector. The endpoints of the segment are called
-            the initial point and the terminal point. The length of the segment represent the magnitude of the vector.
-            The magnitude is represented by double vertical bars, like $||\vec{v}||$
+            For $\vec{u}=\langle u_1,u_2,u_3\rangle$ and $\vec{v}=\langle v_1,v_2,v_3\rangle$,
+            $$\vec{u}\cdot\vec{v}=u_1v_1+u_2v_2+u_3v_3.$$
           </div>
         </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">2.3 Vectors Page 2</div>
+          <div class="step-subtitle">Dot Product (Geometric Definition)</div>
+          <div class="step-body">
+            $$\vec{u}\cdot\vec{v}=||\vec{u}||\,||\vec{v}||\cos\theta,$$
+            where $\theta$ is the angle between $\vec{u}$ and $\vec{v}$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">2.3 Vectors Page 3</div>
+          <div class="step-subtitle">Orthogonality</div>
+          <div class="step-body">
+            $\vec{u}$ and $\vec{v}$ are orthogonal iff
+            $$\vec{u}\cdot\vec{v}=0.$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">2.3 Vectors Page 4</div>
+          <div class="step-subtitle">Projection</div>
+          <div class="step-body">
+            The projection of $\vec{u}$ onto $\vec{v}$ is
+            $$\text{proj}_{\vec{v}}\vec{u}=\frac{\vec{u}\cdot\vec{v}}{||\vec{v}||^2}\vec{v}.$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">2.4 Vectors Page 1</div>
+          <div class="step-subtitle">Cross Product (Definition)</div>
+          <div class="step-body">
+            $\vec{u}\times\vec{v}$ is a vector orthogonal to both $\vec{u}$ and $\vec{v}$,
+            with direction given by the right-hand rule.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">2.4 Vectors Page 2</div>
+          <div class="step-subtitle">Cross Product (Magnitude)</div>
+          <div class="step-body">
+            $$||\vec{u}\times\vec{v}||=||\vec{u}||\,||\vec{v}||\sin\theta,$$
+            equal to the area of the parallelogram spanned by $\vec{u}$ and $\vec{v}$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">2.4 Vectors Page 3</div>
+          <div class="step-subtitle">Determinant Formula</div>
+          <div class="step-body">
+            $$\vec{u}\times\vec{v}=
+            \begin{vmatrix}
+            \mathbf{i} & \mathbf{j} & \mathbf{k} \\
+            u_1 & u_2 & u_3 \\
+            v_1 & v_2 & v_3
+            \end{vmatrix}.$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">2.4 Vectors Page 4</div>
+          <div class="step-subtitle">Parallel Vectors</div>
+          <div class="step-body">
+            $\vec{u}\times\vec{v}=\vec{0}$ iff $\vec{u}$ and $\vec{v}$ are parallel.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">2.4 Vectors Page 5</div>
+          <div class="step-subtitle">Area Applications</div>
+          <div class="step-body">
+            Area of a parallelogram:
+            $$A=||\vec{u}\times\vec{v}||.$$
+            Area of a triangle:
+            $$A=\tfrac12||\vec{u}\times\vec{v}||.$$
+          </div>
+        </div>
+
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
