@@ -2,19 +2,6 @@
   {
     "course": "Calculus III",
     "semester": "Fall 2025",
-    "date": "2025-01-14",
-    "title": "Dot and Cross Products",
-    "subtitle": "",
-    "description": "",
-    "tags": [
-      "dot",
-      "cross"
-    ],
-    "url": "calculus3/fall2025/2025-01-14-dot-cross/index.html"
-  },
-  {
-    "course": "Calculus III",
-    "semester": "Fall 2025",
     "date": "2025-10-01",
     "title": "Lagrange Multiplies",
     "subtitle": "One and two constraints",
