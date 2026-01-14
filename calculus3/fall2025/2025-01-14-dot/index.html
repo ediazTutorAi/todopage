@@ -28,7 +28,7 @@
 <body>
 
   <header class="site-header">
-    <h1>Vectors in the Plane and in Space</h1>
+    <h1>Dot and Cross Products</h1>
     <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
   </header>
 
@@ -38,194 +38,101 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">2.1 Vectors Page 1</div>
-          <div class="step-subtitle">Definition and Notation</div>
+          <div class="step-title">2.3 Vectors Page 1</div>
+          <div class="step-subtitle">Dot Product (Algebraic Definition)</div>
           <div class="step-body">
-            A vector is a quantity that has both magnitude and direction.
-            A vector is represented by an arrow.
-            The length of the arrow represents the magnitude of the vector.
-            The direction of the arrow represents the direction of the vector. The endpoints of the segment are called
-            the initial point and the terminal point. The length of the segment represent the magnitude of the vector.
-            The magnitude is represented by double vertical bars, like $||\vec{v}||$
+            For $\vec{u}=\langle u_1,u_2,u_3\rangle$ and $\vec{v}=\langle v_1,v_2,v_3\rangle$,
+            $$\vec{u}\cdot\vec{v}=u_1v_1+u_2v_2+u_3v_3.$$
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="2">
-          <div class="step-title">2.1 Vectors Page 2</div>
-          <div class="step-subtitle">Representation, Zero Vector, Equivalent Vectors</div>
+          <div class="step-title">2.3 Vectors Page 2</div>
+          <div class="step-subtitle">Dot Product (Geometric Definition)</div>
           <div class="step-body">
-            A vector in the plane is represented by a directed line segment (arrow) from an <b>initial point</b> to a
-            <b>terminal point</b>.
-            A vector whose initial and terminal points coincide is the <b>zero vector</b> (no direction).
-            Two vectors are <b>equivalent</b> if they have the same magnitude and the same direction, we treat them as
-            equal.
+            $$\vec{u}\cdot\vec{v}=||\vec{u}||\,||\vec{v}||\cos\theta,$$
+            where $\theta$ is the angle between $\vec{u}$ and $\vec{v}$.
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="3">
-          <div class="step-title">2.1 Vectors Page 3</div>
-          <div class="step-subtitle">Scalar Multiplication</div>
+          <div class="step-title">2.3 Vectors Page 3</div>
+          <div class="step-subtitle">Orthogonality</div>
           <div class="step-body">
-            If $k$ is a scalar and $\vec{v}$ is a vector, then $k\vec{v}$ is a vector with magnitude
-            $|k|\cdot||\vec{v}||$.
-            Direction is the same as $\vec{v}$ if $k>0$, opposite if
+            $\vec{u}$ and $\vec{v}$ are orthogonal iff
+            $$\vec{u}\cdot\vec{v}=0.$$
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">2.1 Vectors Page 4</div>
-          <div class="step-subtitle">Component Form (Definition) + Rule from Two Points</div>
+          <div class="step-title">2.3 Vectors Page 4</div>
+          <div class="step-subtitle">Projection</div>
           <div class="step-body">
-            A standard-position vector with terminal point $(x,y)$ is written in component form as $\langle x,
-            y\rangle$.
-            If $\overrightarrow{PQ}$ has initial point $P(x_1,y_1)$ and terminal point $Q(x_2,y_2)$, then
-            $$\overrightarrow{PQ}=\langle x_2-x_1,\; y_2-y_1\rangle$$
+            The projection of $\vec{u}$ onto $\vec{v}$ is
+            $$\text{proj}_{\vec{v}}\vec{u}=\frac{\vec{u}\cdot\vec{v}}{||\vec{v}||^2}\vec{v}.$$
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="5">
-          <div class="step-title">2.1 Vectors Page 5</div>
-          <div class="step-subtitle">Vector Operations in Components</div>
+          <div class="step-title">2.4 Vectors Page 1</div>
+          <div class="step-subtitle">Cross Product (Definition)</div>
           <div class="step-body">
-            If $\vec v=\langle v_1,v_2\rangle$ and $\vec w=\langle w_1,w_2\rangle$ and $k$ is a scalar, then
-            $$k\vec v=\langle kv_1,kv_2\rangle,\qquad \vec v+\vec w=\langle v_1+w_1,\; v_2+w_2\rangle.$$
-            You can also see that:
-            $$\vec{v}-\vec{w}=\vec{v}+\(-\vec{w}\)$$
+            $\vec{u}\times\vec{v}$ is a vector orthogonal to both $\vec{u}$ and $\vec{v}$,
+            with direction given by the right-hand rule.
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">2.1 Vectors Page 6</div>
-          <div class="step-subtitle">Magnitude Formula</div>
+          <div class="step-title">2.4 Vectors Page 2</div>
+          <div class="step-subtitle">Cross Product (Magnitude)</div>
           <div class="step-body">
-            If $\vec v=\langle x,y\rangle$, then
-            $$||\vec v||=\sqrt{x^2+y^2}.$$
-            This is just an application of the Pythagorean theorem.
+            $$||\vec{u}\times\vec{v}||=||\vec{u}||\,||\vec{v}||\sin\theta,$$
+            equal to the area of the parallelogram spanned by $\vec{u}$ and $\vec{v}$.
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="7">
-          <div class="step-title">2.1 Vectors Page 7</div>
-          <div class="step-subtitle">Magnitude + Direction ⇒ Components (Trig)</div>
+          <div class="step-title">2.4 Vectors Page 3</div>
+          <div class="step-subtitle">Determinant Formula</div>
           <div class="step-body">
-            If $||\vec v||=r$ and $\theta$ is the direction angle from the positive $x$-axis, then
-            $$\vec v=\langle r\cos\theta,\; r\sin\theta\rangle.$$
+            $$\vec{u}\times\vec{v}=
+            \begin{vmatrix}
+            \mathbf{i} & \mathbf{j} & \mathbf{k} \\
+            u_1 & u_2 & u_3 \\
+            v_1 & v_2 & v_3
+            \end{vmatrix}.$$
           </div>
         </div>
+
 
         <div class="step is-visible" data-step="8">
-          <div class="step-title">2.1 Vectors Page 8</div>
-          <div class="step-subtitle">Unit Vectors, Normalization, and $\mathbf{i},\mathbf{j}$</div>
-          <div class="step-body">
-            A <b>unit vector</b> has magnitude $1$.
-            For any nonzero $\vec v$, the unit vector in its direction is
-            $$\hat u=\frac{1}{||\vec v||}\vec v$$
-            The standard unit vectors are $\mathbf{i}=\langle 1,0\rangle$ and $\mathbf{j}=\langle 0,1\rangle$,
-            and any vector $\langle x,y\rangle$ can be written as $x\mathbf{i}+y\mathbf{j}$.
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="9">
-          <div class="step-title">2.1 Vectors Page 9</div>
-          <div class="step-subtitle">Theorem 2.1: Properties of Vector Operations</div>
-          <div class="step-body">
-            For vectors $\vec u,\vec v,\vec w$ and scalars $a,b$ (in the plane):
-            <ul>
-              <li>$\vec u+\vec v=\vec v+\vec u$ (commutative)</li>
-              <li>$(\vec u+\vec v)+\vec w=\vec u+(\vec v+\vec w)$ (associative)</li>
-              <li>$\vec v+\vec 0=\vec v$ (additive identity)</li>
-              <li>$\vec v+(-\vec v)=\vec 0$ (additive inverse)</li>
-              <li>$a(\vec u+\vec v)=a\vec u+a\vec v$ (distributive)</li>
-              <li>$(a+b)\vec v=a\vec v+b\vec v$ (distributive)</li>
-              <li>$a(b\vec v)=(ab)\vec v$, and $1\vec v=\vec v$</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="10">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 10</div>
-          <div class="step-subtitle">The 3D Coordinate System</div>
-          <div class="step-body">
-            Points in space are written as $(x,y,z)$ using three mutually perpendicular axes: $x$, $y$, and $z$.
-            The coordinate planes are the $xy$-, $xz$-, and $yz$-planes.
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="11">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 11</div>
-          <div class="step-subtitle">Vectors and Component Form</div>
-          <div class="step-body">
-            A vector in space is represented by a directed line segment.
-            A standard-position vector with terminal point $(x,y,z)$ is
-            $$\vec v=\langle x,y,z\rangle.$$
-            If $P(x_1,y_1,z_1)$ and $Q(x_2,y_2,z_2)$, then
-            $$\overrightarrow{PQ}=\langle x_2-x_1,\;y_2-y_1,\;z_2-z_1\rangle.$$
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="12">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 12</div>
-          <div class="step-subtitle">Vector Operations</div>
-          <div class="step-body">
-            If $\vec v=\langle v_1,v_2,v_3\rangle$, $\vec w=\langle w_1,w_2,w_3\rangle$, and $k$ is a scalar:
-            $$\vec v+\vec w=\langle v_1+w_1,\;v_2+w_2,\;v_3+w_3\rangle,$$
-            $$k\vec v=\langle kv_1,kv_2,kv_3\rangle.$$
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="13">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 13</div>
-          <div class="step-subtitle">Magnitude (Key Formula)</div>
-          <div class="step-body">
-            If $\vec v=\langle x,y,z\rangle$, then
-            $$||\vec v||=\sqrt{x^2+y^2+z^2}.$$
-            (Distance formula in space.)
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="14">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 14</div>
-          <div class="step-subtitle">Unit Vectors and Normalization</div>
-          <div class="step-body">
-            A <b>unit vector</b> has magnitude $1$.
-            For $\vec v\neq\vec 0$, the unit vector in its direction is
-            $$\hat u=\frac{1}{||\vec v||}\vec v.$$
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="15">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 15</div>
-          <div class="step-subtitle">Standard Basis Vectors</div>
-          <div class="step-body">
-            The standard unit vectors in $\mathbb{R}^3$ are
-            $$\mathbf{i}=\langle 1,0,0\rangle,\quad
-            \mathbf{j}=\langle 0,1,0\rangle,\quad
-            \mathbf{k}=\langle 0,0,1\rangle.$$
-            Any vector can be written as
-            $$\vec v=x\mathbf{i}+y\mathbf{j}+z\mathbf{k}.$$
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="16">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 16</div>
-          <div class="step-subtitle">Direction Angles</div>
-          <div class="step-body">
-            If $\alpha,\beta,\gamma$ are the angles a vector makes with the $x$-, $y$-, and $z$-axes, then
-            $$\cos\alpha=\frac{x}{||\vec v||},\quad
-            \cos\beta=\frac{y}{||\vec v||},\quad
-            \cos\gamma=\frac{z}{||\vec v||}.$$
-            These are called the <b>direction cosines</b>.
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="17">
-          <div class="step-title">2.2 Vectors in Three Dimensions Page 17</div>
+          <div class="step-title">2.4 Vectors Page 4</div>
           <div class="step-subtitle">Parallel Vectors</div>
           <div class="step-body">
-            Two nonzero vectors are <b>parallel</b> if one is a scalar multiple of the other:
-            $$\vec v \parallel \vec w \iff \vec v = k\vec w.$$
+            $\vec{u}\times\vec{v}=\vec{0}$ iff $\vec{u}$ and $\vec{v}$ are parallel.
           </div>
         </div>
+
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">2.4 Vectors Page 5</div>
+          <div class="step-subtitle">Area Applications</div>
+          <div class="step-body">
+            Area of a parallelogram:
+            $$A=||\vec{u}\times\vec{v}||.$$
+            Area of a triangle:
+            $$A=\tfrac12||\vec{u}\times\vec{v}||.$$
+          </div>
+        </div>
+
+
+
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
           <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
