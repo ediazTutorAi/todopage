@@ -144,14 +144,23 @@
         </div>
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">Consistent vs. inconsistent, page 6</div>
+          <div class="step-title">Solving a system of linear equations</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-            A system is <b>consistent</b> if it has at least one solution.
-            It is <b>inconsistent</b> if the equations contradict each other.
-            A classic contradiction pattern is something like
-            $$0=1,$$
-            which signals “no solution.”
+            We proceed from equation to equation, from top to botom.<br>
+            Suppose we get to the ith equation, with leading variable $x_j$ and leading nonzero coefficient c, so that
+            the ith equation looks like:
+            $$cx_j + \dots = d$$
+            Divide the ith equation by c to bring it into the form $x_j + \dots = \frac{d}{c}$.
+            Eliminate the variable $x_j$ from all other equations by subtracting appropriate multiples of the ith
+            equation from them.
+            Now proceed to the next equation.
+            If an equation zero = nonzero emerges in this process, then the system is inconsistent, and there are no
+            solutions.
+            If you get through the system wihtout encountering an inconsistency, then rearrange the equations so that
+            the leading variables appear in the natural order; this can be accomplished by swapping equations.
+            Solve each equation for its leading variable. You may freely choose values for the nonleading variables; the
+            leading variables are then determined by these choices.
           </div>
         </div>
 
