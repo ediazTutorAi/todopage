@@ -165,16 +165,17 @@
         </div>
 
         <div class="step is-visible" data-step="7">
-          <div class="step-title">Coefficient viewpoint, page 7</div>
+          <div class="step-title">Reduce row-echelon form</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-            The numbers $a_{ij}$ are the <b>coefficients</b>, the $x_j$ are the <b>unknowns</b>, and the $b_i$ form the
-            <b>right-hand side</b>.
-            It’s helpful to separate:
-            <ul>
-              <li><b>Structure:</b> the coefficient pattern $(a_{ij})$</li>
-              <li><b>Targets:</b> the numbers $(b_i)$</li>
-            </ul>
+            A matrix is said to be in reduced row-echelon form if it satisfies all of the following conditions:
+            <ol>
+              <li>If a row has nonzero entries, then the first nonzero entry is a 1, called the leading 1, or pivot, in
+                this row</li>
+              <li>If a column contains a leading 1, then all the other entries in that column are 0.</li>
+              <li>If a row contains a leading 1, then each row above it contains a leading 1 further to the left</li>
+            </ol>
+            Conditions c implies that rows of 0s if any, appear at the bottom of the matrix.
           </div>
         </div>
 
