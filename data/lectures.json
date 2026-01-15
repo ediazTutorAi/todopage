@@ -34,5 +34,17 @@
       "linear systems"
     ],
     "url": "linear-algebra/fall2025/2025-01-13-linear-systems/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
+    "date": "2025-01-15",
+    "title": "Gauss-Jordan Elimination",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "elimination"
+    ],
+    "url": "linear-algebra/fall2025/2025-01-15-gauss-elimination/index.html"
   }
 ]
