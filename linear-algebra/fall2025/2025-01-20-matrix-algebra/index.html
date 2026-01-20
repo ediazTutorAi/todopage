@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>On the Solutions of Linear Systems</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Theorem 1.3.1</div>
+          <div class="step-subtitle">Number of solutions of a linear system</div>
+          <div class="step-body">
+            A system of equations is said to be consistent if there is at least one solution. Otherwise, it is said to
+            be inconsistent.<br>
+            A linear system is inconsistent if and only if the reduced row-echelon form has a row of the form
+            $\begin{bmatrix}0&0&\cdots&0&1\end{bmatrix}$, representing the equation $0=1$.<br>
+            If a linear system is consistent, then it has either:
+            <ul>
+              <li><b>Unique solution:</b> the reduced row-echelon form has a leading 1 in every column of the
+                coefficient matrix.</li>
+              <li><b>Infinitely many solutions:</b> the reduced row-echelon form has a leading 1 in every column of the
+                coefficient matrix, but some columns do not have a leading 1, in other words, it has free variables.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition 1.3.2</div>
+          <div class="step-subtitle">The rank of a matrix</div>
+          <div class="step-body">
+            The rank of a matrix A is the number of leading 1's in rref(A), denoted as rank(A).
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Consider a system of n linear equations with m variables, which has a coefficient matrix A of size $n\times
+            m$. Show that:
+            <ul>
+              <li>a. The inequalities $rank(A) \leq n$ and $rank(A) \leq m$ always hold.</li>
+              <li>b. If the system is inconsistent, then $rank(A) < n $.</li>
+              <li>c. If the system is consistent, then $rank(A) = n$.</li>
+              <li>d. If the system has exactly one solution, then $rank(A) = m$.</li>
+              <li>e. If the system has infinitely many solutions, then $rank(A) < m$.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Geometric picture in $\mathbb{R}^3$, page 4</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            In three variables, each linear equation is a <b>plane</b> in 3D.
+            A system asks for points where all planes meet:
+            <ul>
+              <li><b>1 solution:</b> planes meet at a single point.</li>
+              <li><b>No solutions:</b> planes never share a common point.</li>
+              <li><b>Infinitely many:</b> intersection is a line or a plane (free direction(s)).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Solution types, page 5</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Every linear system is exactly one of:
+            <ol>
+              <li><b>Inconsistent:</b> no solution.</li>
+              <li><b>Consistent with unique solution:</b> exactly one solution.</li>
+              <li><b>Consistent with infinitely many solutions:</b> a whole family of solutions.</li>
+            </ol>
+            “Infinitely many” happens when at least one variable can vary freely.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Consistent vs. inconsistent, page 6</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            A system is <b>consistent</b> if it has at least one solution.
+            It is <b>inconsistent</b> if the equations contradict each other.
+            A classic contradiction pattern is something like
+            $$0=1,$$
+            which signals “no solution.”
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Coefficient viewpoint, page 7</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            The numbers $a_{ij}$ are the <b>coefficients</b>, the $x_j$ are the <b>unknowns</b>, and the $b_i$ form the
+            <b>right-hand side</b>.
+            It’s helpful to separate:
+            <ul>
+              <li><b>Structure:</b> the coefficient pattern $(a_{ij})$</li>
+              <li><b>Targets:</b> the numbers $(b_i)$</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Preview: matrix form, page 8</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            A linear system can be packaged as
+            $$A\mathbf{x}=\mathbf{b},$$
+            where $A$ is the coefficient matrix, $\mathbf{x}$ is the vector of unknowns, and $\mathbf{b}$ is the
+            right-hand side.
+            (The mechanics of solving this efficiently comes next.)
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Why linear systems matter, page 9</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Linear systems show up everywhere: balancing flows, fitting data, networks, economics, circuits, and as
+            approximations to nonlinear problems.
+            Many later topics (linear transformations, subspaces, eigenvalues) build on understanding
+            $$A\mathbf{x}=\mathbf{b}.$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Common student traps, page 10</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <ul>
+              <li>Solving equations one-by-one (instead of simultaneously).</li>
+              <li>Assuming “two equations means one unique solution.” (Not true.)</li>
+              <li>Missing that <b>dependent</b> equations can produce infinitely many solutions.</li>
+              <li>Thinking inconsistency is rare—contradictions happen often in models/data.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Problem 1, page 11</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Consider the following systems of linear equations:
+            <br><br>
+            (a)
+            $$\begin{cases}
+            x + 2y = 3\\
+            2x + 4y = 6
+            \end{cases}$$
+            <br>
+            (b)
+            $$\begin{cases}
+            x + 2y = 3\\
+            2x + 4y = 5
+            \end{cases}$$
+            <br>
+            (c)
+            $$\begin{cases}
+            x + 2y = 3\\
+            2x - y = 1
+            \end{cases}$$
+            <br><br>
+            For each system, determine whether it has
+            <b>no solution</b>, <b>exactly one solution</b>, or <b>infinitely many solutions</b>.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Problem 2, page 12</div>
+          <div class="step-subtitle">Geometric interpretation</div>
+          <div class="step-body">
+            Each equation below represents a plane in $\mathbb{R}^3$:
+            $$\begin{cases}
+            x + y + z = 1\\
+            2x + 2y + 2z = 2\\
+            x - y + z = 0
+            \end{cases}$$
+            <br>
+            Without solving the system explicitly, describe the
+            <b>geometric relationship</b> among the planes and predict the
+            <b>number of solutions</b> to the system.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Problem 3, page 13</div>
+          <div class="step-subtitle">Modeling with linear systems</div>
+          <div class="step-body">
+            A student buys tickets for a concert.
+            Adult tickets cost \$12 and student tickets cost \$8.
+            The student buys a total of 15 tickets and spends \$152.
+            <br><br>
+            (a) Define appropriate variables.
+            (b) Write a system of linear equations that models the situation.
+            (c) Explain what it would mean if the system were inconsistent.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="14">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Consider the system of linear equations:
+            $$\begin{cases}
+            x + y + z = 3 \\
+            2x + 2y + 2z = 7 \\
+            x + y + z = 4
+            \end{cases}$$
+            <br>
+            Use equation operations (adding multiples of equations or subtracting equations)
+            to eliminate variables and determine whether the system has a solution.
+            <br><br>
+            Explain what the final contradiction means in terms of the original equations.
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- LEFT DRAWER (vocab/concepts + preview) -->
+  <aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+    <div class="drawer-header">
+      <strong>Key terms & concepts</strong>
+      <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+    </div>
+    <div class="drawer-body">
+      <section>
+        <h3 class="drawer-h3">Vocabulary</h3>
+        <ul id="vocab-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Concepts</h3>
+        <ul id="concepts-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Connections (preview)</h3>
+        <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+        <button id="map-open" class="btn" type="button">Open Mind Map</button>
+      </section>
+    </div>
+  </aside>
+  <button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer"
+    title="Open vocabulary">➜</button>
+
+  <!-- FLOATING MIND-MAP -->
+  <div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+    <div class="map-float-header">
+      <span class="map-title">Concept Connections</span>
+      <div class="map-actions">
+        <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+        <button id="map-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="map-host" class="map-host">
+      <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+    </div>
+  </div>
+  <div id="map-backdrop" class="map-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
