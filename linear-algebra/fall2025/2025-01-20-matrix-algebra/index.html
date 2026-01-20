@@ -105,142 +105,101 @@
         </div>
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">Consistent vs. inconsistent, page 6</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 1.3.4</div>
+          <div class="step-subtitle">System of n equations in n variables</div>
           <div class="step-body">
-            A system is <b>consistent</b> if it has at least one solution.
-            It is <b>inconsistent</b> if the equations contradict each other.
-            A classic contradiction pattern is something like
-            $$0=1,$$
-            which signals “no solution.”
+            A linear system of n equations in n variables has a unique solution if and only if the rank of its
+            coefficient matrix A is n. In this case:
+            $$rref(A)=1_{n\times n}$$
+            the nxn matrix with 1's along the diagonal and 0's everywhere else.
           </div>
         </div>
 
         <div class="step is-visible" data-step="7">
-          <div class="step-title">Coefficient viewpoint, page 7</div>
+          <div class="step-title">Matrix Algebra</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-            The numbers $a_{ij}$ are the <b>coefficients</b>, the $x_j$ are the <b>unknowns</b>, and the $b_i$ form the
-            <b>right-hand side</b>.
-            It’s helpful to separate:
-            <ul>
-              <li><b>Structure:</b> the coefficient pattern $(a_{ij})$</li>
-              <li><b>Targets:</b> the numbers $(b_i)$</li>
-            </ul>
+            Definition 1.3.5 Sums of matrices: If $A$ and $B$ are $m\times n$ matrices, then their sum $A+B$ is the
+            $m\times n$ matrix obtained by adding corresponding entries:
+            $$(A+B)_{ij}=A_{ij}+B_{ij}$$
+            Scalar multiple of matrices:
+            If $A$ is an $m\times n$ matrix and $c$ is a scalar, then the scalar multiple $cA$ is the $m\times n$ matrix
+            obtained by multiplying each entry of $A$ by $c$:
+            $$(cA)_{ij}=cA_{ij}$$
           </div>
         </div>
 
         <div class="step is-visible" data-step="8">
-          <div class="step-title">Preview: matrix form, page 8</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Definiton 1.3.6</div>
+          <div class="step-subtitle">Dot product of vectors</div>
           <div class="step-body">
-            A linear system can be packaged as
-            $$A\mathbf{x}=\mathbf{b},$$
-            where $A$ is the coefficient matrix, $\mathbf{x}$ is the vector of unknowns, and $\mathbf{b}$ is the
-            right-hand side.
-            (The mechanics of solving this efficiently comes next.)
+            Consider two vectors $\vec{u}$ and $\vec{w}$ with components $(u_1, u_2, \ldots, u_n)$ and $(w_1, w_2,
+            \ldots, w_n)$, respectively. The dot product of $\vec{u}$ and $\vec{w}$ is defined as:
+            $$\vec{u} \cdot \vec{w} = u_1 w_1 + u_2 w_2 + \cdots + u_n w_n$$
+            Note that our definition of the dot product is not row-column sensitive. The dot product does not
+            distinguish between row and column vectors.
           </div>
         </div>
 
         <div class="step is-visible" data-step="9">
-          <div class="step-title">Why linear systems matter, page 9</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Definition 1.3.7</div>
+          <div class="step-subtitle">The product of $A\vec{x}$</div>
           <div class="step-body">
-            Linear systems show up everywhere: balancing flows, fitting data, networks, economics, circuits, and as
-            approximations to nonlinear problems.
-            Many later topics (linear transformations, subspaces, eigenvalues) build on understanding
-            $$A\mathbf{x}=\mathbf{b}.$$
+            If A is an nxn matrix with row vectors $\vec{a}_1, \vec{a}_2, \ldots, \vec{a}_n$ and $\vec{x}$ is an
+            n-dimensional column vector with components $x_1, x_2, \ldots, x_n$, then the product $A\vec{x}$ is defined
+            as:
+            $$A\vec{x} = \begin{pmatrix}
+            \vec{a}_1 \\
+            \vec{a}_2 \\
+            \vdots \\
+            \vec{a}_n
+            \end{pmatrix} \begin{pmatrix}
+            x_1 \\
+            x_2 \\
+            \vdots \\
+            x_n
+            \end{pmatrix}$$
+            In words, the ith component of $A\vec{x}$ is the dot product of the $i$th row of $A$ with $\vec{x}$. Note
+            that $A\vec{x}$ is a column vector with $n$ components, that is, a vector in $\mathbb{R}^n$.
           </div>
         </div>
 
         <div class="step is-visible" data-step="10">
-          <div class="step-title">Common student traps, page 10</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 1.3.8</div>
+          <div class="step-subtitle">The product $A\vec{x}$ in terms of the columns of $A$</div>
           <div class="step-body">
-            <ul>
-              <li>Solving equations one-by-one (instead of simultaneously).</li>
-              <li>Assuming “two equations means one unique solution.” (Not true.)</li>
-              <li>Missing that <b>dependent</b> equations can produce infinitely many solutions.</li>
-              <li>Thinking inconsistency is rare—contradictions happen often in models/data.</li>
-            </ul>
+            If the column vectors of an nxn matrix A are $\vec{v_1}, \vec{v_2}, \ldots, \vec{v_n}$, then the product
+            $A\vec{x}$ can be expressed as:
+            $$A\vec{x} = x_1\vec{v_1} + x_2\vec{v_2} + \cdots + x_n\vec{v_n}$$
           </div>
         </div>
 
         <div class="step is-visible" data-step="11">
-          <div class="step-title">Problem 1, page 11</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Definition 1.3.9</div>
+          <div class="step-subtitle">Linear combinations</div>
           <div class="step-body">
-            Consider the following systems of linear equations:
-            <br><br>
-            (a)
-            $$\begin{cases}
-            x + 2y = 3\\
-            2x + 4y = 6
-            \end{cases}$$
-            <br>
-            (b)
-            $$\begin{cases}
-            x + 2y = 3\\
-            2x + 4y = 5
-            \end{cases}$$
-            <br>
-            (c)
-            $$\begin{cases}
-            x + 2y = 3\\
-            2x - y = 1
-            \end{cases}$$
-            <br><br>
-            For each system, determine whether it has
-            <b>no solution</b>, <b>exactly one solution</b>, or <b>infinitely many solutions</b>.
+            A vector $\vec{b}$ in $\mathbb{R}^n$ is a linear combination of the vectors $\vec{v_1}, \vec{v_2},
+            \ldots, \vec{v_n}$ in $\mathbb{R}^n$ if there exist scalars $x_1, x_2, \ldots, x_n$ such that:
+            $$\vec{b} = x_1\vec{v_1} + x_2\vec{v_2} + \cdots + x_n\vec{v_n}$$
+            Give examples.
           </div>
         </div>
 
         <div class="step is-visible" data-step="12">
-          <div class="step-title">Problem 2, page 12</div>
-          <div class="step-subtitle">Geometric interpretation</div>
+          <div class="step-title">Theorem 1.3.10</div>
+          <div class="step-subtitle">Algebraic rules for $A\vec{x}$</div>
           <div class="step-body">
-            Each equation below represents a plane in $\mathbb{R}^3$:
-            $$\begin{cases}
-            x + y + z = 1\\
-            2x + 2y + 2z = 2\\
-            x - y + z = 0
-            \end{cases}$$
-            <br>
-            Without solving the system explicitly, describe the
-            <b>geometric relationship</b> among the planes and predict the
-            <b>number of solutions</b> to the system.
+            If A is an nxn matrix, $\vec{x}$ and $\vec{y}$ are vectors in $\mathbb{R}^n$, and $k$ is a scalar, then:
+            $$A(\vec{x} + \vec{y}) = A\vec{x} + A\vec{y}$$
+            $$A(k\vec{x}) = k(A\vec{x})$$
           </div>
         </div>
 
         <div class="step is-visible" data-step="13">
-          <div class="step-title">Problem 3, page 13</div>
-          <div class="step-subtitle">Modeling with linear systems</div>
+          <div class="step-title">Theorem 1.3.11</div>
+          <div class="step-subtitle">Matrix form of a linear system</div>
           <div class="step-body">
-            A student buys tickets for a concert.
-            Adult tickets cost \$12 and student tickets cost \$8.
-            The student buys a total of 15 tickets and spends \$152.
-            <br><br>
-            (a) Define appropriate variables.
-            (b) Write a system of linear equations that models the situation.
-            (c) Explain what it would mean if the system were inconsistent.
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="14">
-          <div class="step-title">Example</div>
-          <div class="step-subtitle"></div>
-          <div class="step-body">
-            Consider the system of linear equations:
-            $$\begin{cases}
-            x + y + z = 3 \\
-            2x + 2y + 2z = 7 \\
-            x + y + z = 4
-            \end{cases}$$
-            <br>
-            Use equation operations (adding multiples of equations or subtracting equations)
-            to eliminate variables and determine whether the system has a solution.
-            <br><br>
-            Explain what the final contradiction means in terms of the original equations.
+            We can write the linear system with augmented matrix $[A|\vec{b}]$ in matrix form as $$A\vec{x}=\vec{b}$$.
           </div>
         </div>
 
