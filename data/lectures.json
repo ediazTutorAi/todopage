@@ -40,6 +40,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
+    "date": "2025-01-29",
+    "title": "Introduction to Linear Transformations",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "linear transformations"
+    ],
+    "url": "linear-algebra/fall2025/2025-01-20-section-21/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
     "date": "2025-01-13",
     "title": "Introduction to Linear Systems",
     "subtitle": "",
