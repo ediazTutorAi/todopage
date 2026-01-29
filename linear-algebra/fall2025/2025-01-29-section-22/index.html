@@ -51,51 +51,47 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="2" data-ggb-id="cdf8zjjj">
-          <div class="step-title">Example 5</div>
-          <div class="step-subtitle"></div>
+        <div class="step is-visible" data-step="2" data-ggb-id="">
+          <div class="step-title">Definition 2.2.1</div>
+          <div class="step-subtitle">Orthogonal Projections</div>
           <div class="step-body">
-            Consider the letter L in the plane, made up of the vectors $\vec{v}_1 = (1, 0)$ and $\vec{v}_2 = (0, 1)$.
-            The Geogebra applet shows the effect of the linear transformation $T:\mathbb{R}^2\to\mathbb{R}^2$ defined by
-            $$T(\vec{x})=\begin{pmatrix} cos(\theta) & -sin(\theta) \\ sin(\theta) & cos(\theta) \end{pmatrix}\vec{x}$$
-            for various values of $\theta$ in $[0,2\pi]$.
+            Consider a line L in the coordinate plane, running through the origin. Any vector $\vec{v}$ in
+            $\mathbb{R}^2$ can be written uniquely as:
+            $$\vec{x} = \vec{x}_\parallel + \vec{x}_\perp$$
+            where $\vec{x}_\parallel$ is parallel to L and $\vec{x}_\perp$ is perpendicular (orthogonal) to L.<br>
+            The transformation $T(\vec{x}) = \vec{x}_\parallel$ is called the orthogonal projection of $\vec{x}$ onto L,
+            often denoted as $proj_L(\vec{x})$. If $\vec{w}$ is a nonzero vector parallel to L, then:
+            $$proj_L(\vec{x}) = \frac{\vec{x} \cdot \vec{w}}{\|\vec{w}\|^2} \vec{w}$$.
+            In particular, if $\vec{u}=\begin{pmatrix}u_1\\u_2\end{pmatrix}$ is a unit vector parallel to L, then:
+            $$proj_L(\vec{x})=(\vec{x}\cdot\vec{u})\vec{u}$$
+            The transformation $T(\vec{x})=proj_L(\vec{x})$ is linear, with matrix:
+            $$A = \begin{pmatrix} u_1^2 & u_1u_2 \\ u_1u_2 & u_2^2 \end{pmatrix}$$ in the case of the unit vector
+            $\vec{u}$.
           </div>
         </div>
 
         <div class="step is-visible" data-step="3">
-          <div class="step-title">Example 6</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Definition 2.2.2</div>
+          <div class="step-subtitle">Reflections</div>
           <div class="step-body">
-            Consider the linear transformation $T(\vec{x}) = A\vec{x}$ where $A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6
-            \\ 7 & 8 & 9 \end{pmatrix}$.<br>
-            Find $T(\vec{v})$ where $\vec{v} = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$ and $T(\vec{w})$ where
-            $\vec{w} = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}$.
+            $$ref_L(\vec{x}) = 2proj_L(\vec{x}) - \vec{x}$$
+            The matrix of the reflection is of the form:
+            $$A = \begin{pmatrix} a&b \\ b& -a \end{pmatrix}$$
+            where $a^2+b^2=1$. Conversely, any matrix of this form is the matrix of a reflection.
           </div>
         </div>
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">Theorem 2.1.2</div>
-          <div class="step-subtitle">The columns of the matrix of a linear transformation</div>
+          <div class="step-title">Theorem 2.2.3</div>
+          <div class="step-subtitle">Rotations</div>
           <div class="step-body">
-            Consider a linear transformation $T:\mathbb{R}^m\to\mathbb{R}^n$. Then, the matrix of $T$ is:
-            $$A = \begin{pmatrix} T(\vec{e}_1) & T(\vec{e}_2) & \cdots & T(\vec{e}_m) \end{pmatrix}$$
-            where $\vec{e}_1, \vec{e}_2, \ldots, \vec{e}_m$ are the standard basis vectors for $\mathbb{R}^m$.<br>
-            To justify this result use theorem 1.3.8.
+            The matrix of a counterclockwise rotation by an angle $\theta$ is:
+            $$A = \begin{pmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{pmatrix}$$
+            Note that this matrix is of the form:
+            $$A = \begin{pmatrix} a&-b \\ b& a \end{pmatrix}$$
+            where $a^2+b^2=1$. Conversely, any matrix of this form is the matrix of a rotation.
           </div>
         </div>
-
-        <div class="step is-visible" data-step="5">
-          <div class="step-title">Theorem 2.1.3</div>
-          <div class="step-subtitle">Linear transformations</div>
-          <div class="step-body">
-            A transformation $T$ from $\mathbb{R}^m$ to $\mathbb{R}^n$ is linear if and only if:<br>
-            <ul>
-              <li>$T(\vec{v} + \vec{w}) = T(\vec{v}) + T(\vec{w})$ for all $\vec{v}, \vec{w}$ in $\mathbb{R}^m$</li>
-              <li>$T(k\vec{v}) = kT(\vec{v})$ for all $\vec{v}$ in $\mathbb{R}^m$ and all scalars $k$</li>
-            </ul>
-          </div>
-        </div>
-
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
