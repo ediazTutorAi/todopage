@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>MATH 2326 — Calculus 3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
@@ -11,8 +11,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
             {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
+            {left:'\[', right:'\]', display:true},
+            {left:'\(', right:'\)', display:false},
             {left:'$',  right:'$',  display:false}
           ],throwOnError:false});"></script>
 
@@ -28,8 +28,8 @@
 <body>
 
   <header class="site-header">
-    <h1>2.2 Linear Transformations in Geometry</h1>
-    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+    <h1>Dot and Cross Products</h1>
+    <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
   </header>
 
   <main class="container">
@@ -38,52 +38,102 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Derivatives of Vector Valued Functions</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">2.3 The Dot Product</div>
+          <div class="step-subtitle">Definition (Scalar Product)</div>
           <div class="step-body">
-
+            For vectors $\mathbf{u}=\langle u_1,u_2,u_3\rangle$ and $\mathbf{v}=\langle v_1,v_2,v_3\rangle$:
+            $$\mathbf{u}\cdot\mathbf{v}=u_1v_1+u_2v_2+u_3v_3.$$
+            The result is a **scalar**
           </div>
         </div>
+
+
 
         <div class="step is-visible" data-step="2">
-          <div class="step-title">Properties of the Derivatives of Vector Valued Functions</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">2.3 The Dot Product</div>
+          <div class="step-subtitle">Geometric Form (Angle)</div>
           <div class="step-body">
-
+            If $\theta$ is the angle between nonzero vectors $\mathbf{u},\mathbf{v}$,
+            $$\mathbf{u}\cdot\mathbf{v}=||\mathbf{u}||\,||\mathbf{v}||\cos\theta.$$
+            Useful for finding angles.
           </div>
         </div>
+
+
 
         <div class="step is-visible" data-step="3">
-          <div class="step-title">Tangent Vectors and unit tangent vectors.</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">2.3 The Dot Product</div>
+          <div class="step-subtitle">Orthogonal Vectors</div>
           <div class="step-body">
-
+            Vectors are **orthogonal** iff
+            $$\mathbf{u}\cdot\mathbf{v}=0.$$
+            Useful perpendicularity test.
           </div>
         </div>
+
+
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">Tangent Vectors and principal unit tangent vector.</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">2.3 The Dot Product</div>
+          <div class="step-subtitle">Projection</div>
           <div class="step-body">
-
+            The projection of $\mathbf{v}$ onto $\mathbf{u}$ is
+            $$\text{proj}_{\mathbf{u}}\,\mathbf{v}=\frac{\mathbf{v}\cdot\mathbf{u}}{\mathbf{u}\cdot\mathbf{u}}\mathbf{u}.$$
+            component of one vector along another
           </div>
         </div>
+
+
 
         <div class="step is-visible" data-step="5">
-          <div class="step-title">Integrals of Vector Valued Functions. Motion in Space</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">2.4 The Cross Product</div>
+          <div class="step-subtitle">Definition (Vector Product)</div>
           <div class="step-body">
-
+            For $\mathbf{u},\mathbf{v}\in\mathbb{R}^3$,
+            $\mathbf{u}\times\mathbf{v}$ is a **vector orthogonal** to both $\mathbf{u}$ & $\mathbf{v}$.
+            Its direction follows the **right-hand rule**.
           </div>
         </div>
+
+
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">Arc Length, Arc Length Parameterization and Curvature</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">2.4 The Cross Product</div>
+          <div class="step-subtitle">Determinant Formula</div>
           <div class="step-body">
-
+            $$\mathbf{u}\times\mathbf{v}=\begin{vmatrix}
+            \mathbf{i} & \mathbf{j} & \mathbf{k}\\
+            u_1 & u_2 & u_3\\
+            v_1 & v_2 & v_3
+            \end{vmatrix}.$$
+            computational form
           </div>
         </div>
+
+
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">2.4 The Cross Product</div>
+          <div class="step-subtitle">Magnitude (Area)</div>
+          <div class="step-body">
+            $$||\mathbf{u}\times\mathbf{v}||=||\mathbf{u}||\,||\mathbf{v}||\sin\theta,$$
+            the **area of parallelogram** with sides $\mathbf{u},\mathbf{v}$.
+          </div>
+        </div>
+
+
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">2.4 The Cross Product</div>
+          <div class="step-subtitle">Special Properties</div>
+          <div class="step-body">
+            If $\mathbf{u}\times\mathbf{v}=0$, then $\mathbf{u},\mathbf{v}$ are **parallel**, zero area.
+            Triple scalar product:
+            $$\mathbf{u}\cdot(\mathbf{v}\times\mathbf{w})$$
+            gives **volume** of parallelepiped.
+          </div>
+        </div>
+
 
 
 
@@ -154,6 +204,9 @@
 
   <!-- JS entry (ES modules) -->
   <script type="module" src="/todopage/js/boot.js"></script>
+
+  <!-- Reminder: keep knowledge.json inside this lecture's folder -->
+  <!-- e.g., lectures/linear-space/knowledge.json -->
 </body>
 
 </html>
