@@ -28,7 +28,7 @@
 <body>
 
   <header class="site-header">
-    <h1>2.2 Linear Transformations in Geometry</h1>
+    <h1>2.3 Matrix Products</h1>
     <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
   </header>
 
@@ -38,53 +38,62 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Derivatives of Vector Valued Functions</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Definition 2.3.1</div>
+          <div class="step-subtitle">Matrix multiplication</div>
           <div class="step-body">
+            a. Let B be an $n \times p$ matrix and A be an $q \times m$ matrix. The product $BA$ is defined if and only
+            if $p = q$.<br>
+            b. If B is $n \times p$ and A is $p \times m$, then the product $BA$ is defined as the matrix of the linear
+            transformation $T(\vec{x}) = B(A\vec{x})$. This means that $T(\vec{x}) = B(A\vec{x})=(B A)\vec{x}$ for all
+            $\vec{x}$ in $\mathbb{R}^m$. The product $BA$ is an $n \times m$ matrix.
 
           </div>
         </div>
 
-        <div class="step is-visible" data-step="2">
-          <div class="step-title">Properties of the Derivatives of Vector Valued Functions</div>
+        <div class="step is-visible" data-step="2" data-ggb-id="cdf8zjjj">
+          <div class="step-title">Example 5</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-
+            Consider the letter L in the plane, made up of the vectors $\vec{v}_1 = (1, 0)$ and $\vec{v}_2 = (0, 1)$.
+            The Geogebra applet shows the effect of the linear transformation $T:\mathbb{R}^2\to\mathbb{R}^2$ defined by
+            $$T(\vec{x})=\begin{pmatrix} cos(\theta) & -sin(\theta) \\ sin(\theta) & cos(\theta) \end{pmatrix}\vec{x}$$
+            for various values of $\theta$ in $[0,2\pi]$.
           </div>
         </div>
 
         <div class="step is-visible" data-step="3">
-          <div class="step-title">Tangent Vectors and unit tangent vectors.</div>
+          <div class="step-title">Example 6</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-
+            Consider the linear transformation $T(\vec{x}) = A\vec{x}$ where $A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6
+            \\ 7 & 8 & 9 \end{pmatrix}$.<br>
+            Find $T(\vec{v})$ where $\vec{v} = \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}$ and $T(\vec{w})$ where
+            $\vec{w} = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}$.
           </div>
         </div>
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">Tangent Vectors and principal unit tangent vector.</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 2.1.2</div>
+          <div class="step-subtitle">The columns of the matrix of a linear transformation</div>
           <div class="step-body">
-
+            Consider a linear transformation $T:\mathbb{R}^m\to\mathbb{R}^n$. Then, the matrix of $T$ is:
+            $$A = \begin{pmatrix} T(\vec{e}_1) & T(\vec{e}_2) & \cdots & T(\vec{e}_m) \end{pmatrix}$$
+            where $\vec{e}_1, \vec{e}_2, \ldots, \vec{e}_m$ are the standard basis vectors for $\mathbb{R}^m$.<br>
+            To justify this result use theorem 1.3.8.
           </div>
         </div>
 
         <div class="step is-visible" data-step="5">
-          <div class="step-title">Integrals of Vector Valued Functions. Motion in Space</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 2.1.3</div>
+          <div class="step-subtitle">Linear transformations</div>
           <div class="step-body">
-
+            A transformation $T$ from $\mathbb{R}^m$ to $\mathbb{R}^n$ is linear if and only if:<br>
+            <ul>
+              <li>$T(\vec{v} + \vec{w}) = T(\vec{v}) + T(\vec{w})$ for all $\vec{v}, \vec{w}$ in $\mathbb{R}^m$</li>
+              <li>$T(k\vec{v}) = kT(\vec{v})$ for all $\vec{v}$ in $\mathbb{R}^m$ and all scalars $k$</li>
+            </ul>
           </div>
         </div>
-
-        <div class="step is-visible" data-step="6">
-          <div class="step-title">Arc Length, Arc Length Parameterization and Curvature</div>
-          <div class="step-subtitle"></div>
-          <div class="step-body">
-
-          </div>
-        </div>
-
 
 
         <!-- Controls -->
