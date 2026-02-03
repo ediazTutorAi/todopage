@@ -40,6 +40,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Fall 2025",
+    "date": "2025-02-03",
+    "title": "Matrix Products",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "matrix products"
+    ],
+    "url": "linear-algebra/fall2025/2025-02-03-section-23/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Fall 2025",
     "date": "2025-01-29",
     "title": "The Geometry of Linear Transformations",
     "subtitle": "",
