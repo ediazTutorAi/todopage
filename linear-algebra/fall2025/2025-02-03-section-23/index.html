@@ -122,6 +122,72 @@
           </div>
         </div>
 
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">The Inverse of a linear transformation</div>
+          <div class="step-subtitle">Inverse functions</div>
+          <div class="step-body">
+            A function $T$ from $X$ to $Y$ is called invertible if the equation $T(\vec{x}) = \vec{y}$ has a unique
+            solution x in X for every y in Y.<br>
+            In this case, the inverse function $T^{-1}$ from Y to X is defined by $T^{-1}(\vec{y}) = \vec{x}$ the unique
+            x in X such that $T(\vec{x}) = \vec{y}$.<br>
+            To put it differently, the equation $T(\vec{x}) = \vec{y}$ has a unique solution for every y in Y if and
+            only if the equation $T^{-1}(\vec{y}) = \vec{x}$ has a unique solution for every x in X.<br>
+            Note that $T^{-1}(T(x))=x$ for all $x$ in $X$ and $T(T^{-1}(y))=y$ for all $y$ in $Y$.<br>
+            Conversely, if $L$ is a function from $Y$ to $X$ such that $L(T(x))=x$ for all $x$ in $X$ and $T(L(y))=y$
+            for all $y$ in $Y$, then $L$ is the inverse function of $T$.<br>
+            If a function $T$ is invertible, then so is $T^{-1}$ and $(T^{-1})^{-1}=T$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Definition 2.4.2</div>
+          <div class="step-subtitle">Invertible matrices</div>
+          <div class="step-body">
+            A square matrix $A$ is said to be invertible if the linear transformation $\vec{y}=T(\vec{x})=A\vec{x}$ is
+            invertible. In this case, the matrix of $T^{-1}$ is denoted by $A^{-1}$. If the linear transformation
+            $\vec{y}=T(\vec{x})=A\vec{x}$ is invertible, then its inverse is $\vec{x}=T^{-1}(\vec{y})=A^{-1}\vec{y}$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Theorem 2.4.3</div>
+          <div class="step-subtitle">Invertibility</div>
+          <div class="step-body">
+            An $n \times n$ matrix $A$ is invertible if and only if $$rref(A)=I_n$$
+            or, equivalently, if $$rank(A)=n$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Theorem 2.4.4</div>
+          <div class="step-subtitle">Invertibility and linear systems</div>
+          <div class="step-body">
+            Let A be an $n \times n$ matrix:
+            a. Consider a vector $\vec{b}$ in $\mathbb{R}^n$. If A is invertible, then the system $A\vec{x}=\vec{b}$ has
+            a unique solution given by $\vec{x}=A^{-1}\vec{b}$. If A is noninvertible, then the system
+            $A\vec{x}=\vec{b}$ has either no solution or infinitely many solutions.<br>
+            b. Consider the special case when $\vec{b}=\vec{0}$. The system $A\vec{x}=\vec{0}$ has $\vec{x}=\vec{0}$ as
+            a solution. If A is invertible, then this is the only solution. If A is noninvertible, then the system
+            $A\vec{x}=\vec{0}$ has infinitely many solutions.
+
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Theorem 2.4.5</div>
+          <div class="step-subtitle">Finding the inverse of a matrix</div>
+          <div class="step-body">
+            To find the inverse of an $n \times n$ matrix A, form the $n \times 2n$ augmented matrix $$[A|I_n]$$ and
+            compute the reduced row echelon form of this matrix.
+            <ul>
+              <li>If $rref([A|I_n])$ is of the form $[I_n|B]$, then A is invertible and $A^{-1}=B$.</li>
+              <li>If $rref[A|I_n]$ is of another form , then A is noninvertible. Note that the left half of
+                $rref[A|I_n]$ is $rref(A)$</li>
+            </ul>
+
+          </div>
+        </div>
+
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
