@@ -2,6 +2,19 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-02-04",
+    "title": "Arc Length, Curvature, and Motion",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "arc length",
+      "curvature"
+    ],
+    "url": "calculus3/fall2025/2025-02-04-arclength-curvature-motion/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-01-21",
     "title": "Lines, Planes and Quadric Surfaces",
     "subtitle": "",
