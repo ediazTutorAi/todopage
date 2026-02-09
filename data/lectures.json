@@ -15,7 +15,7 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
-    "date": "2026-02-09-02",
+    "date": "2026-02-10",
     "title": "Limits and Continuity",
     "subtitle": "",
     "description": "",
@@ -23,19 +23,19 @@
       "limits",
       "continuity"
     ],
-    "url": "calculus3/fall2025/2025-02-09b-limits-continuity/index.html"
+    "url": "calculus3/fall2025/2025-02-10-limits-continuity/index.html"
   },
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
-    "date": "2026-02-09-01",
+    "date": "2026-02-09",
     "title": "Functions of Several Variables",
     "subtitle": "",
     "description": "",
     "tags": [
       "functions of several variables"
     ],
-    "url": "calculus3/fall2025/2025-02-09a-functions-several-variables/index.html"
+    "url": "calculus3/fall2025/2025-02-09-functions-several-variables/index.html"
   },
   {
     "course": "Calculus III",
