@@ -38,78 +38,50 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Theorem 3.4</div>
-          <div class="step-subtitle">Arc-Length Formulas</div>
+          <div class="step-title">Definition</div>
+          <div class="step-subtitle">Function of Two Variables</div>
           <div class="step-body">
-            The arc length of a curve $C$ defined by $\mathbf{r}(t)= f(t)\mathbf{i}+g(t)\mathbf{j}+h(t)\mathbf{k}$ for
-            $a \leq t \leq b$ is given by
-            $$L=\int_a^b \sqrt{f'(t)^2+g'(t)^2+h'(t)^2}dt=\int_a^b \|\mathbf{r}'(t)\|dt$$
+            A function of two variables $z=f(x,y)$ maps each ordered pair $(x,y)$ in a subset $D$ of the real plane
+            $\mathbb{R}^2$ to a unique real number $z$. The set D is called the domain of the function. The range of f
+            is the set of all real number z that has at least one ordered pair $(x,y)$ in D such that $f(x,y)=z$.
           </div>
         </div>
 
         <div class="step" data-step="2">
-          <div class="step-title">Arc Length Parameterization</div>
-          <div class="step-subtitle">Definition</div>
+          <div class="step-title">Domains and Ranges for Functions of Two Variables</div>
+          <div class="step-subtitle">Definition and Graphing</div>
           <div class="step-body">
-            A smooth curve $C$ with position vector $\mathbf{r}(t)$, $a \leq t \leq b$, is parameterized by arc length
-            if
-            $$\|\mathbf{r}'(t)\| = 1$$
-            Consider the example of a circle of radius 1 centered at the origin with two different parametrerizations.
+            Give some examples of functions of two variables and their domains and ranges.<br>
+            Give examples of graphs of functions in two variables.
           </div>
         </div>
 
         <div class="step" data-step="3">
-          <div class="step-title">Curvature</div>
+          <div class="step-title">Level Curves</div>
           <div class="step-subtitle">Definition</div>
           <div class="step-body">
-            Let C be a smooth curve in the plane of in space given by $\mathbf{r}(s)$ where $s$ is the arc length
-            parameter. The curvature of C is given by
-            $$\kappa(s) = \|dT/ds\|$$ where $T(s)$ is the unit tangent vector defined as
-            $$T(s) = \frac{dr}{ds}$$
-            <br>
-            <br>
-            The curvature of a curve is a measure of how much the curve bends. Give examples.
+            Given a function $f(x,y)$ and a number c in the range of f, a level curve of a function of two variables for
+            the value c is defined to be the set of points satisfying the equation $f(x,y)=c$.<br>
+            Another useful tool for understanding the graph of a function of two variables is called a vertical trace,
+            which are the curves obtained by intersecting the graph of f with the xz- or yz-plane, or any plane parellel
+            to them.<br>
+            Definition of vertical trace: Consider a function $z=f(x,y)$ with domain $D \subset \mathbb{R}^2$. A
+            vertical trace of the function can be either the set of points that solves the equation $f(a,y)=z$ for a
+            given constant $x=a$ or $f(x,b)=z$ for a given constant $y=b$.
+
           </div>
         </div>
 
         <div class="step" data-step="4">
-          <div class="step-title">Alternative Formula for Curvature</div>
+          <div class="step-title">Functions of More than two variables</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-            If C is a smooth curve given by $\mathbf{r}(t)$, then the curvature of C is given by
-            $$\kappa(t) = \frac{\|T'(t)\|}{\|r'(t)\|}$$
-            If C is a three-dimensional curve, then the curvature of C is given by
-            $$\kappa(t) = \frac{\|r'(t) \times r''(t)\|}{\|r'(t)\|^3}$$
-            If C is a plane curve given by $y=f(x)$, then the curvature of C is given by
-            $$\kappa(x) = \frac{|f''(x)|}{(1+[f'(x)]^2)^{3/2}}$$
-
-            Give the idea of the proof of the first formula.
+            A function of threee variables is a function of the form $w=f(x,y,z)$. The same definitions of domain and
+            range apply in this case.<br>
+            Definition: Given a function $f(x,y,z)$ and a number c in the range of f, a level surface of a function of
+            three variables is defined to be the set of points satisfying the equation $f(x,y,z)=c$.
           </div>
         </div>
-
-        <div class="step" data-step="5">
-          <div class="step-title">The normal and binormal vectors</div>
-          <div class="step-subtitle"></div>
-          <div class="step-body">
-            Let C be a three-dimensional smooth curve represented by $\mathbf{r}(t)$ over an open interval I. If
-            $\vec{T}'(t) \neq 0$, then the principal unit normal vector at t is defined to be
-            $$N(t) = \frac{T'(t)}{\|T'(t)\|}$$
-            The binormal vector at t is defined as
-            $$B(t) = T(t) \times N(t)$$
-            where $T(t)$ is the unit tangent vector.
-          </div>
-        </div>
-
-        <div class="step" data-step="6">
-          <div class="step-title">Motion in Space</div>
-          <div class="step-subtitle"></div>
-          <div class="step-body">
-            For motion in space we just need to remember that the velocity vector is derivative of the position vector
-            and the acceleration vector is the derivative of the velocity vector. And we use Calculus over vector-valued
-            functions as we had consider in previous sections.
-          </div>
-        </div>
-
 
 
         <!-- Controls -->
