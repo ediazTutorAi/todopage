@@ -102,6 +102,20 @@
   },
   {
     "course": "Linear Algebra",
+    "semester": "Spring 2026",
+    "date": "2026-02-012",
+    "title": "Subspaces, Bases and Linear Independence",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "subspaces",
+      "bases",
+      "linear independence"
+    ],
+    "url": "linear-algebra/fall2025/2025-02-12-subspaces/index.html"
+  },
+  {
+    "course": "Linear Algebra",
     "semester": "Fall 2025",
     "date": "2025-02-03",
     "title": "Matrix Products",

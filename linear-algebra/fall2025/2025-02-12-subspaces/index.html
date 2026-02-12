@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>3.2 Subspaces, Bases and Linear Independence</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Definition 3.2.1</div>
+          <div class="step-subtitle">Subspaces of $\mathbb{R}^n$</div>
+          <div class="step-body">
+            A subset W of the vector space $\mathbb{R}^n$ is called a (linear) subspace of $\mathbb{R}^n$ if it has the
+            following three properties:<br>
+            <ul>
+              <li>W contains the zero vector in $\mathbb{R}^n$</li>
+              <li>W is closed under addition: If $\vec{w}_1, \vec{w}_2 \in W$, then $\vec{w}_1 + \vec{w}_2 \in W$</li>
+              <li>W is closed under scalar multiplication: If $\vec{w} \in W$ and $k \in \mathbb{R}$, then $k\vec{w} \in
+                W$</li>
+            </ul>
+            Properties (2) and (3) together mean that W is closed under linear combinations.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Theorem 3.2.2</div>
+          <div class="step-subtitle">Image and kernel are subspaces</div>
+          <div class="step-body">
+            If $T(\vec{x})=A\vec{x}$ is a linear transformation from $\mathbb{R}^m$ to $\mathbb{R}^n$, then:
+            <ul>
+              <li>$\text{Im}(T)$ is a subspace of $\mathbb{R}^n$</li>
+              <li>$\text{Ker}(T)$ is a subspace of $\mathbb{R}^m$</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Definition 3.2.3</div>
+          <div class="step-subtitle">Redundant vectors; linear independence; basis</div>
+          <div class="step-body">
+            Consider vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_k$ in $\mathbb{R}^n$.<br>
+            a. We say that a vector $\vec{v}_i$ in the list $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ is redundatn if
+            $\vec{v}_i$ is a linear combination of the preceding vectors $\vec{v}_1, \vec{v}_2, \ldots,
+            \vec{v}_{i-1}$.<br>
+            b. The vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ are called linearly independent if none of them is
+            redundant. Otherwise, the vectors are called linearly dependent (meaning at least one of them is
+            redundant)<br>
+            c. We say that the vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ in a subspace $V$ of $\mathbb{R}^n$
+            form a basis for $V$ if they span $V$ and are linearly independent.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Theorem 3.2.4</div>
+          <div class="step-subtitle">Basis of the image</div>
+          <div class="step-body">
+            To construct a basis of the image of a matrix A, list all the column vectors of A, and omit the redundant
+            vectors from this list.<br><br>
+            But how can we identify the redundant vectors?
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Theorem 3.2.5</div>
+          <div class="step-subtitle">Linear independence and zero components</div>
+          <div class="step-body">
+            Consider vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ in $\mathbb{R}^n$. If $\vec{v}_1$ is nonzero, and
+            if each of the vectors $\vec{v}_i$ for $i \geq 2$ has a nonzero entry in a component where all preceding
+            vectors $\vec{v}_1,\ldots,\vec{v}_{i-1}$ have a 0, then the vectors $\vec{v}_1, \vec{v}_2, \ldots,
+            \vec{v}_m$ are linearly independent.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Definition 3.2.6</div>
+          <div class="step-subtitle">Linear Relations</div>
+          <div class="step-body">
+            Consider the vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ in $\mathbb{R}^n$. An equation of the form
+            $$c_1\vec{v}_1 + c_2\vec{v}_2 + \cdots + c_m\vec{v}_m = \vec{0}$$
+            where $c_1, c_2, \ldots, c_m$ are scalars, is called a linear relation among the vectors. There is always
+            the trivial relation, with $c_1 = c_2 = \cdots = c_m = 0$. Nontrivial relations (where at least one
+            coefficient $c_i$ is nonzero) may or many not exist among the vectors $\vec{v}_1,\ldots,\vec{v}_m$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Theorem 3.2.7</div>
+          <div class="step-subtitle">Relations and linear dependence</div>
+          <div class="step-body">
+            The vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ in $\mathbb{R}^n$ are linearly dependent if and only
+            if there are nontrivial linear relations among them.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Theorem 3.2.8</div>
+          <div class="step-subtitle">Kernel and relations</div>
+          <div class="step-body">
+            The vectors in the kernel of an $n \times m$ matrix $A$ correspond to the linear relations among the column
+            vectors of $A$: The equation
+            $$A\vec{x} = \vec{0}$$
+            means that
+            $$x_1\vec{v}_1 + x_2\vec{v}_2 + \cdots + x_m\vec{v}_m = \vec{0}$$
+            In particular, the column vectors of A are linearly independent if and only if $\text{Ker}(A) =
+            \{\vec{0}\}$, or, equivalently, if $\tex{rank}(A) = m$. This condition implies that $m\leq n$. Thus, we can
+            find at most n linearly independent vectors in $\mathbb{R}^n$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Summary 3.2.9</div>
+          <div class="step-subtitle">Various characterizations of linear independence</div>
+          <div class="step-body">
+            For a list $\vec{v}_1, \ldots, \vec{v}_m$ of vectors in $\mathbb{R}^n$, the following statements are
+            equivalent:
+            <ul>
+              <li>The vectors are linearly independent.</li>
+              <li>None of the vectos is redundant, meaning that none of them is linear combination of the preceding
+                vectors</li>
+              <li>None of the vectors is a linear combination of the other vectors in the list</li>
+              <li>The only linear relation among the vectors is the trivial relation</li>
+              <li>The kernel of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is
+                $\{\vec{0}\}$.</li>
+              <li>The rank of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is equal to
+                $m$.</li>
+            </ul>
+          </div>
+        </div>
+
+
+
+
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- LEFT DRAWER (vocab/concepts + preview) -->
+  <aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+    <div class="drawer-header">
+      <strong>Key terms & concepts</strong>
+      <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+    </div>
+    <div class="drawer-body">
+      <section>
+        <h3 class="drawer-h3">Vocabulary</h3>
+        <ul id="vocab-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Concepts</h3>
+        <ul id="concepts-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Connections (preview)</h3>
+        <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+        <button id="map-open" class="btn" type="button">Open Mind Map</button>
+      </section>
+    </div>
+  </aside>
+  <button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer"
+    title="Open vocabulary">➜</button>
+
+  <!-- FLOATING MIND-MAP -->
+  <div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+    <div class="map-float-header">
+      <span class="map-title">Concept Connections</span>
+      <div class="map-actions">
+        <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+        <button id="map-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="map-host" class="map-host">
+      <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+    </div>
+  </div>
+  <div id="map-backdrop" class="map-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
