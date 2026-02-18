@@ -42,11 +42,9 @@
           <div class="step-subtitle">Directional Derivative</div>
           <div class="step-body">
             Suppose $z=f(x,y)$ is a function of two variables with a domain of D. Let $\(a,b\)$ be a point in D and
-            define $\vec{u}=cos(\theta)\hat{i}+sin(\theta)\hat{j}$. Then the directional derivative of f in the
+            define $\vec{u}=cos(\theta)\hat{i}+sin(\theta)\hat{j}$. Then, the directional derivative of f in the
             direction of $\vec{u}$ is given by
-            $$
-            D_\vec{u}f(a,b) = \lim_{h \to 0} \frac{f(a+hcos(\theta), b+hsin(\theta)) - f(a,b)}{h}
-            $$
+            $$D_\vec{u} f(a,b) = \lim_{h \to 0} \frac{f(a+hcos(\theta), b+hsin(\theta)) - f(a,b)}{h}$$
             provided the limit exists.
 
           </div>
@@ -107,6 +105,27 @@
             Suppose the function $z=f(x,y)$ has continuous first-order partial derivatives in an open disk centered at
             the point $(x_0,y_0)$. If $\nabla f(x_0,y_0) \neq \vec{0}$, then $\nabla f(x_0,y_0)$ is normal to the level
             curve of f at $(x_0,y_0)$.
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Tangent Planes</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            Let $P_0=(x_0,y_0,z_0)$ be a point on a surface S, and let C be any curve passing through $P_0$ and lying
+            entirely ins S. If the tangent lines to all such curves C at $P_0$ lie in the same plane, then this plane is
+            called the tangent plane to S at $P_0$.
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Definition</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Let S be a surface defined by a differential function $z=f(x,y)$, and let $P_0=(x_0,y_0)$ be a point in the
+            domain of f. Then, the equation of the tangent plane to S at $P_0$ is given by
+            $$z =f(x_0,y_0) + f_x(x_0,y_0)(x-x_0) + f_y(x_0,y_0)(y-y_0)$$
+            Observe the relation between this is the gradient we studied before.
           </div>
         </div>
 
