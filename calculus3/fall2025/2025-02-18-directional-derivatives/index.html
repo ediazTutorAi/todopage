@@ -58,7 +58,7 @@
             differentiable everywhere. Then the directional derivative of $f$ in the direction of
             $\vec{u}=cos(\theta)\hat{i}+sin(\theta)\hat{j}$ is given by
             $$
-            D_\vec{u}f(x,y) = f_x(x,y)cos(\theta) + f_y(x,y)sin(\theta)
+            D_{\vec{u}}f(x,y) = f_x(x,y)cos(\theta) + f_y(x,y)sin(\theta)
             $$
           </div>
         </div>
@@ -68,9 +68,9 @@
           <div class="step-subtitle">Definition</div>
           <div class="step-body">
             Let $z=f(x,y)$ be a function of x and y such that $f_x$ and $f_y$ exist. The vector $\nabla f(x,y) =
-            <f_x(x,y), f_y(x,y)>$ is called the gradient of f.
-              The directional derivative of f in the direction of $\vec{u}$ is given by
-              $$D_\vec{u}f(x,y) = \nabla f(x,y) \cdot \vec{u}$$
+            \langle f_x(x,y), f_y(x,y) \rangle$ is called the gradient of f.
+            The directional derivative of f in the direction of $\vec{u}$ is given by
+            $$D_{\vec{u}}f(x,y) = \nabla f(x,y) \cdot \vec{u}$$
           </div>
         </div>
 
@@ -81,7 +81,7 @@
             Suppose the function $z=f(x,y)$ is differentiable at $(x_0,y_0)$. Then:
             <ol>
               <li>If $\nabla f(x_0,y_0)=\vec{0}$, then $D_\vec{u}f(x_0,y_0)=0$ for all unit vectors $\vec{u}$.</li>
-              <li>If $\nabla f(x_0,y_0) \neq \vec{0}$, then $D_\vec{u}f(x_0,y_0)$ has a maximum value of
+              <li>If $\nabla f(x_0,y_0) \neq \vec{0}$, then $D_{\vec{u}}f(x_0,y_0)$ has a maximum value of
                 $\left|\nabla f(x_0,y_0)\right|$ in the direction of $\nabla f(x_0,y_0)$ and a minimum value of
                 $-\left|\nabla f(x_0,y_0)\right|$ in the direction of $-\nabla f(x_0,y_0)$.</li>
             </ol>
