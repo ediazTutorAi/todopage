@@ -2,6 +2,19 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-02-18",
+    "title": "Directional Derivatives and Tangent Planes",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "Directional Derivatives",
+      "Tangent Planes"
+    ],
+    "url": "calculus3/fall2025/2025-02-18-directional-derivatives/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-02-11",
     "title": "Partial Derivatives and Chain Rule",
     "subtitle": "",
