@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+  <link rel="stylesheet" href="/todopage/css/drawer.css">
+  <link rel="stylesheet" href="/todopage/css/map.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>3.3 The dimension of a subspace of $\mathbb{R}^n$</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Definition 3.3.1</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Consider vectors $\vec{v}_1,\ldots,\vec{v}_p$ in a subspace $V$ of $\mathbb{R}^n$. If the vectors
+            $\vec{v}_1,\ldots,\vec{v}_p$ are linearly independent and the vectors $\vec{w}_1,\ldots,\vec{w}_q$ span $V$,
+            then $p \leq q$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Theorem 3.3.2</div>
+          <div class="step-subtitle">Number of vectors in a basis</div>
+          <div class="step-body">
+            All bases of a subspace $V$ of $\mathbb{R}^n$ consist of the same number of vectors.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Definition 3.3.3</div>
+          <div class="step-subtitle">Dimension</div>
+          <div class="step-body">
+            Consider a subspace $V$ of $\mathbb{R}^n$. The number of vectors in a basis of $V$ is called the dimension
+            of $V$, denoted by $\dim(V)$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Theorem 3.3.4</div>
+          <div class="step-subtitle">Independent vectors and spanning vectors in a subspace of $\mathbb{R}^n$</div>
+          <div class="step-body">
+            Consider a subspace $V$ of $\mathbb{R}^n$ with $\dim(V) = m$.
+            <ol>
+              <li>We can find at most m linearly independent vectors in $V$.</li>
+              <li>We need at leas m vectors to span $V$.</li>
+              <li>If m vectors in $V$ are linearly independent, then they form a basis of $V$.</li>
+              <li>If m vectors in $V$ span $V$, then they form a basis of $V$.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Theorem 3.3.5</div>
+          <div class="step-subtitle">Using rref to construct a basis of the image</div>
+          <div class="step-body">
+            To construct a basis of the image of A, pick the column vectors of A that correspond to the columns of
+            rref(A) containing the leading 1's.
+            <br>
+            The main points are:
+            <ol>
+              <li>The nonredundant column vectors of A form a basis of the image of A.</li>
+              <li>The redundant columns of A correspond to those of rref(A)</li>
+              <li>The nonredundant column vectors of rref(A) are those containing the leading 1's.</li>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Definition 3.3.6</div>
+          <div class="step-subtitle">Dimension of the Image</div>
+          <div class="step-body">
+            For any matrix A,
+            $$\dim(\text{Im}(A)) = \text{rank}(A)$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Theorem 3.3.7</div>
+          <div class="step-subtitle">Rank-nullity theorem</div>
+          <div class="step-body">
+            For any $n \times m$ matrix $A$, the equation
+            $$\dim(\text{Im}(A)) + \dim(\text{Ker}(A)) = m$$
+            holds. The dimension of $\text{ker}(A)$ is called the nullity of $A$, and in Theorem 3.3.6 we observed that
+            $\dim(\text{Im}(A)) = \text{rank}(A)$. Thus we can write the preceding equation alternatively as
+            $$\text{rank}(A) + \text{nullity}(A) = m$$
+            Some authors go so far as to call this the fundamental theorem of linear algebra.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Theorem 3.3.8</div>
+          <div class="step-subtitle">Finding bases of the kernel and image by inspection</div>
+          <div class="step-body">
+            The vectors in the kernel of an $n \times m$ matrix $A$ correspond to the linear relations among the column
+            vectors of $A$: The equation
+            $$A\vec{x} = \vec{0}$$
+            means that
+            $$x_1\vec{v}_1 + x_2\vec{v}_2 + \cdots + x_m\vec{v}_m = \vec{0}$$
+            In particular, the column vectors of A are linearly independent if and only if $\text{Ker}(A) =
+            \{\vec{0}\}$, or, equivalently, if $\text{rank}(A) = m$. This condition implies that $m\leq n$. Thus, we can
+            find at most n linearly independent vectors in $\mathbb{R}^n$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Summary 3.2.9</div>
+          <div class="step-subtitle">Various characterizations of linear independence</div>
+          <div class="step-body">
+            For a list $\vec{v}_1, \ldots, \vec{v}_m$ of vectors in $\mathbb{R}^n$, the following statements are
+            equivalent:
+            <ul>
+              <li>The vectors are linearly independent.</li>
+              <li>None of the vectos is redundant, meaning that none of them is linear combination of the preceding
+                vectors</li>
+              <li>None of the vectors is a linear combination of the other vectors in the list</li>
+              <li>The only linear relation among the vectors is the trivial relation</li>
+              <li>The kernel of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is
+                $\{\vec{0}\}$.</li>
+              <li>The rank of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is equal to
+                $m$.</li>
+            </ul>
+          </div>
+        </div>
+
+
+
+
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- LEFT DRAWER (vocab/concepts + preview) -->
+  <aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+    <div class="drawer-header">
+      <strong>Key terms & concepts</strong>
+      <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+    </div>
+    <div class="drawer-body">
+      <section>
+        <h3 class="drawer-h3">Vocabulary</h3>
+        <ul id="vocab-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Concepts</h3>
+        <ul id="concepts-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Connections (preview)</h3>
+        <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+        <button id="map-open" class="btn" type="button">Open Mind Map</button>
+      </section>
+    </div>
+  </aside>
+  <button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer"
+    title="Open vocabulary">➜</button>
+
+  <!-- FLOATING MIND-MAP -->
+  <div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+    <div class="map-float-header">
+      <span class="map-title">Concept Connections</span>
+      <div class="map-actions">
+        <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+        <button id="map-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="map-host" class="map-host">
+      <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
+    </div>
+  </div>
+  <div id="map-backdrop" class="map-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
