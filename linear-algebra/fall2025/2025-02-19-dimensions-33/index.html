@@ -119,34 +119,44 @@
           <div class="step-title">Theorem 3.3.8</div>
           <div class="step-subtitle">Finding bases of the kernel and image by inspection</div>
           <div class="step-body">
-            The vectors in the kernel of an $n \times m$ matrix $A$ correspond to the linear relations among the column
-            vectors of $A$: The equation
-            $$A\vec{x} = \vec{0}$$
-            means that
-            $$x_1\vec{v}_1 + x_2\vec{v}_2 + \cdots + x_m\vec{v}_m = \vec{0}$$
-            In particular, the column vectors of A are linearly independent if and only if $\text{Ker}(A) =
-            \{\vec{0}\}$, or, equivalently, if $\text{rank}(A) = m$. This condition implies that $m\leq n$. Thus, we can
-            find at most n linearly independent vectors in $\mathbb{R}^n$.
+            Suppose you are able to spot the redundants columns of a matrix A. Express each redundant column as a linear
+            combination of the preceding columns, $\vec{v}_i = c_1\vec{v}_1 + \cdots + c_{i-1}\vec{v}_{i-1}$, write a
+            corresponding relation, $-c_1\vec{v}_1 - \cdots - c_{i-1}\vec{v}_{i-1} + \vec{v}_i = \vec{0}$; and generate
+            the vector:
+            $$\vec{w}_i = \begin{bmatrix} -c_1 \\ \vdots \\ -c_{i-1} \\ 1 \\ 0 \\ \vdots \\ 0 \end{bmatrix}$$
+            in the kernel of A. The vectors so constructed form a basis of the kernal of A.
+            <br>
+            The nonredundant columns of A form a basis of the image of A.
           </div>
         </div>
 
         <div class="step is-visible" data-step="9">
-          <div class="step-title">Summary 3.2.9</div>
-          <div class="step-subtitle">Various characterizations of linear independence</div>
+          <div class="step-title">Summary 3.3.9</div>
+          <div class="step-subtitle">Bases of $\mathbb{R}^n$</div>
           <div class="step-body">
-            For a list $\vec{v}_1, \ldots, \vec{v}_m$ of vectors in $\mathbb{R}^n$, the following statements are
-            equivalent:
-            <ul>
-              <li>The vectors are linearly independent.</li>
-              <li>None of the vectos is redundant, meaning that none of them is linear combination of the preceding
-                vectors</li>
-              <li>None of the vectors is a linear combination of the other vectors in the list</li>
-              <li>The only linear relation among the vectors is the trivial relation</li>
-              <li>The kernel of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is
-                $\{\vec{0}\}$.</li>
-              <li>The rank of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is equal to
-                $m$.</li>
-            </ul>
+            The vectors $\vec{v}_1, \ldots, \vec{v}_n$ form a basis of $\mathbb{R}^n$ if and only if the matrix:
+            $$\begin{bmatrix} \vec{v}_1 & \cdots & \vec{v}_n \end{bmatrix}$$
+            is invertible
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Theorem 3.3.10</div>
+          <div class="step-subtitle">Various characterizations of invertible matrices</div>
+          <div class="step-body">
+            For an $n \times n$ matrix $A$, the following statements are equivalent:
+            <ol>
+              <li>$A$ is invertible</li>
+              <li>The linear system $A\vec{x} = \vec{b}$ has a unique solution for every $\vec{b}$ in $\mathbb{R}^n$
+              </li>
+              <li>$\text{rref}(A) = I_n$</li>
+              <li>The rank of $A$ is $n$</li>
+              <li>$\text{im}(A)=\mathbb{R}^n$</li>
+              <li>$\text{ker}(A)=\left\{\vec{0}\right\}$</li>
+              <li>The column vectors of A form a basis of $\mathbb{R}^n$</li>
+              <li>The column vectors of A span $\mathbb{R}^n$</li>
+              <li>The column vectors of A are linearly independent</li>
+            </ol>
           </div>
         </div>
 
