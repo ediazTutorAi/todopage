@@ -3,6 +3,19 @@
     "course": "Calculus III",
     "semester": "Spring 2026",
     "date": "2026-02-23",
+    "title": "Max/Min Problems",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "maxima",
+      "minima"
+    ],
+    "url": "calculus3/fall2025/2025-02-24-max-min-problems/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
+    "date": "2026-02-23",
     "title": "Tangent Planes and Linear Approximation",
     "subtitle": "",
     "description": "",
