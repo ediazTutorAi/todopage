@@ -41,7 +41,7 @@
           <div class="step-title">Definition</div>
           <div class="step-subtitle">Tangent Planes</div>
           <div class="step-body">
-            Let $P_0=\(x_0,y_0,z_0\)$ be a point on a surface S, and let C be any curve passing through $P_0$ and lying
+            Let $P_0=(x_0,y_0,z_0)$ be a point on a surface S, and let C be any curve passing through $P_0$ and lying
             entirely in S. If the tangent lines to all such curves C at $P_0$ lie in the same plane, then this plane is
             called the tangent plane to S at $P_0$.
           </div>
@@ -81,33 +81,35 @@
 
 
         <div class="step" data-step="6">
-          <div class="step-title">Gradients and Level Curves</div>
-          <div class="step-subtitle">Gradient is normal to the level curves</div>
+          <div class="step-title">Theorem 4.6</div>
+          <div class="step-subtitle">Differentiability Implies Continuity</div>
           <div class="step-body">
-            Suppose the function $z=f(x,y)$ has continuous first-order partial derivatives in an open disk centered at
-            the point $(x_0,y_0)$. If $\nabla f(x_0,y_0) \neq \vec{0}$, then $\nabla f(x_0,y_0)$ is normal to the level
-            curve of f at $(x_0,y_0)$.
+            Let $z=f(x,y)$ be a function of two variables with $\(x_0,y_0\)$ in the domain of $f$. If $f(x,y)$ is
+            differentiable at $\(x_0,y_0\)$, then $f(x,y)$ is continuous at $\(x_0,y_0\)$
           </div>
         </div>
 
         <div class="step" data-step="7">
-          <div class="step-title">Tangent Planes</div>
-          <div class="step-subtitle">Definition</div>
+          <div class="step-title">Theorem 4.7</div>
+          <div class="step-subtitle">Continuity of First Partials Implies Differentiability</div>
           <div class="step-body">
-            Let $P_0=(x_0,y_0,z_0)$ be a point on a surface S, and let C be any curve passing through $P_0$ and lying
-            entirely ins S. If the tangent lines to all such curves C at $P_0$ lie in the same plane, then this plane is
-            called the tangent plane to S at $P_0$.
+            Let $z=f(x,y)$ be a function of two variables with $\(x_0,y_0\)$ in the domain of $f$. If
+            $f(x,y),f_x(x,y),\text{ and } f_y(x,y)$ all exist in a neighborhood of $\(x_0,y_0\)$ and are continuous at
+            $\(x_0,y_0\)$, then $f(x,y)$ is differentiable there.
           </div>
         </div>
 
         <div class="step" data-step="8">
           <div class="step-title">Definition</div>
-          <div class="step-subtitle"></div>
+          <div class="step-subtitle">total differential</div>
           <div class="step-body">
-            Let S be a surface defined by a differential function $z=f(x,y)$, and let $P_0=(x_0,y_0)$ be a point in the
-            domain of f. Then, the equation of the tangent plane to S at $P_0$ is given by
-            $$z =f(x_0,y_0) + f_x(x_0,y_0)(x-x_0) + f_y(x_0,y_0)(y-y_0)$$
-            Observe the relation between this is the gradient we studied before.
+            Let $z=f(x,y)$ be a function of two variables with $\(x_0,y_0\)$ in the domain of $f$, and let $\delta{x}$
+            and $\delta{y}$ be chose so that $\(\x_0+\delta{x},y_0+\delta{y})$ is also in the domain of $f$. If $f$ is
+            differentiable at the point $\(x_0,y_0\)$, then the differentials $dx$ and $dy$ are defined
+            $$dx=\delta{x} \text{ and } dy=\delta{y}$$
+            The differential $dz$, also called the total differential of $z=f(x,y)$ at $\(x_0,y_0\)$, is defined as
+            $$dz=f_x(x_0,y_0)dx+f_y(x_0,y_0)dy$$
+            Observe that $\delta{z}\approx dz$, so we can use the previous formula to get the change in z.
           </div>
         </div>
 
