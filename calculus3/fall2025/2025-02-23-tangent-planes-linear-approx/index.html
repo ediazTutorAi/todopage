@@ -71,7 +71,7 @@
           <div class="step-title">Definition</div>
           <div class="step-subtitle">Differentiable</div>
           <div class="step-body">
-            A function $f(x,y)$ is differentiable at a point $P(x_0,y_0)$ if, for all points $(x,y)$ in a $\delta$
+            A function $f(x,y)$ is differentiable at a point $P(x_0,y_0)$ if, for all points $(x,y)$ in a $\Delta$
             disk around P, we can write
             $$f(x,y)=f(x_0,y_0)+f_x(x_0,y_0)(x-x_0)+f_y(x_0,y_0)(y-y_0)+E(x,y)$$
             where the error term E satisfies
@@ -104,25 +104,15 @@
           <div class="step-subtitle">total differential</div>
           <div class="step-body">
             Let $z=f(x,y)$ be a function of two variables with $(x_0,y_0)$ in the domain of $f$, and let $\delta{x}$
-            and $\delta{y}$ be chose so that $(x_0+\delta{x},y_0+\delta{y})$ is also in the domain of $f$. If $f$ is
+            and $\delta{y}$ be chose so that $(x_0+\Delta{x},y_0+\Delta{y})$ is also in the domain of $f$. If $f$ is
             differentiable at the point $(x_0,y_0)$, then the differentials $dx$ and $dy$ are defined
-            $$dx=\delta{x} \text{ and } dy=\delta{y}$$
+            $$dx=\Delta{x} \text{ and } dy=\Delta{y}$$
             The differential $dz$, also called the total differential of $z=f(x,y)$ at $(x_0,y_0)$, is defined as
             $$dz=f_x(x_0,y_0)dx+f_y(x_0,y_0)dy$$
-            Observe that $\delta{z}\approx dz$, so we can use the previous formula to get the change in z.
+            Observe that $\Delta{z}\approx dz$, so we can use the previous formula to get the change in z.
           </div>
         </div>
 
-        <div class="step" data-step="9">
-          <div class="step-title">Linear Approximation</div>
-          <div class="step-subtitle">Definition</div>
-          <div class="step-body">
-            Let $z=f(x,y)$ be a function of x and y such that $f_x$ and $f_y$ exist. Then, the linear approximation of f
-            at
-            $(x_0,y_0)$ is given by
-            $$L(x,y) = f(x_0,y_0) + f_x(x_0,y_0)(x-x_0) + f_y(x_0,y_0)(y-y_0)$$
-          </div>
-        </div>
 
 
         <!-- Controls -->
