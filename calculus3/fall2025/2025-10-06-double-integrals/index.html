@@ -119,7 +119,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="5">
+        <div class="step" data-step="7">
           <div class="step-title">Definition</div>
           <div class="step-subtitle">Iterated Integrals</div>
           <div class="step-body">
@@ -130,13 +130,24 @@
           </div>
         </div>
 
-        <div class="step" data-step="5">
+        <div class="step" data-step="8">
           <div class="step-title">Theorem 5.2</div>
           <div class="step-subtitle">Fubini's Theorem</div>
           <div class="step-body">
             Suppose that $f(x,y)$ is a function of two variables that is continuous over a rectangular region
             $R=\{(x,y)\in\mathbb{R}^2|a\leq x\leq b, c\leq y \leq d\}$. Then the double integral of f over the region
-            equals any of the iterated integrals.
+            equals any of the iterated integrals.<br>
+            More generally, Fubini's theorem is true if f is bounded on R and f is discontinuous only on a finite number
+            of continuous curves. In other words, f has to be integrable over R.
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Theorem 5.4</div>
+          <div class="step-subtitle">Fubini's Theorem Strong Form</div>
+          <div class="step-body">
+            For a function $f(x,y)$ that is continuous on a region D of Type 1, we have<br>
+            $$\iint_{D}f(x,y)dA=\iint_{D}f(x,y)dydx=\int_a^b\left[\int_{g_1(x)}^{g_2(x)}f(x,y)dy\right]$$
           </div>
         </div>
 
