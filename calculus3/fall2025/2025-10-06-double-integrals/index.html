@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <title>MATH 2326 — Calculus 3</title>
@@ -8,8 +9,7 @@
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
             {left:'$$', right:'$$', display:true},
             {left:'\[', right:'\]', display:true},
             {left:'\(', right:'\)', display:false},
@@ -24,130 +24,173 @@
   <link rel="stylesheet" href="/todopage/css/map.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Double Integrals</h1>
-  <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Double Integrals</h1>
+    <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">5.1 Double Integration over Rectangular Regions</div>
-        <div class="step-subtitle">Definition</div>
-        <div class="step-body">
-          The double integral of the function $f(x,y)$ over the rectangular region R in the xy-plane is defined
-          $$\iint_{R} f(x,y) \, dV \, dA=\lim_{m,n \to \infty}\sum_{i=1}^m\sum_{j=1}^n f(x_i^*,y_j^*)\delta A $$
-          But what do all of these mean? 
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">5.1 Double Integration over Rectangular Regions</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            The double integral of the function $f(x,y)$ over the rectangular region R in the xy-plane is defined
+            $$\iint_{R} f(x,y) \, dV \, dA=\lim_{m,n \to \infty}\sum_{i=1}^m\sum_{j=1}^n f(x_i^*,y_j^*)\delta A $$
+            But what do all of these mean?
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="2" data-ggb-id="g8xftbbf">
-        <div class="step-title">Rectangular Division</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          Observe that our domain is a rectangle in the xy-plane. We have divided this rectangle into several smaller sub-rectangles. For each of these sub-rectangles, we select a representative point, which we’ll denote by $(x_j, y_j)$. At that point, we evaluate our function $f(x, y)$. The value $f(x_j, y_j)$ gives us the height of a rectangular “box” built above that small region.<br>
-          By multiplying this height $f(x_j, y_j)$ by the area of the base sub-rectangle, we obtain the volume of that small box.<br>
-          If we repeat this process for every sub-rectangle and then add up all those small volumes, we get an approximation for the total volume under the surface $z = f(x, y)$ and above the rectangular region in the plane.<br> 
-          As we make the subdivisions finer and finer, this approximation becomes more accurate and in the limit, it becomes the double integral of $f(x, y)$ over the region.
+        <div class="step" data-step="2" data-ggb-id="g8xftbbf">
+          <div class="step-title">Rectangular Division</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Observe that our domain is a rectangle in the xy-plane. We have divided this rectangle into several smaller
+            sub-rectangles. For each of these sub-rectangles, we select a representative point, which we’ll denote by
+            $(x_j, y_j)$. At that point, we evaluate our function $f(x, y)$. The value $f(x_j, y_j)$ gives us the height
+            of a rectangular “box” built above that small region.<br>
+            By multiplying this height $f(x_j, y_j)$ by the area of the base sub-rectangle, we obtain the volume of that
+            small box.<br>
+            If we repeat this process for every sub-rectangle and then add up all those small volumes, we get an
+            approximation for the total volume under the surface $z = f(x, y)$ and above the rectangular region in the
+            plane.<br>
+            As we make the subdivisions finer and finer, this approximation becomes more accurate and in the limit, it
+            becomes the double integral of $f(x, y)$ over the region.
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="3" data-ggb-id="naebkqfv">
-        <div class="step-title">Double Integral</div>
-        <div class="step-subtitle">Visualization in 3D</div>
-        <div class="step-body">
-          In this GeoGebra visualization, you can see how each of the small boxes is formed above the sub-rectangles of our domain. This picture helps us visualize how the double integral is constructed, by summing up the volumes of all these tiny boxes.<br>
-          You can think of the double integral as representing the total volume under the surface $z = f(x, y)$. Notice, however, that this interpretation works directly only when the surface lies above the xy-plane, since in that case the function values are positive and the volume makes sense as a positive quantity.
+        <div class="step" data-step="3" data-ggb-id="naebkqfv">
+          <div class="step-title">Double Integral</div>
+          <div class="step-subtitle">Visualization in 3D</div>
+          <div class="step-body">
+            In this GeoGebra visualization, you can see how each of the small boxes is formed above the sub-rectangles
+            of our domain. This picture helps us visualize how the double integral is constructed, by summing up the
+            volumes of all these tiny boxes.<br>
+            You can think of the double integral as representing the total volume under the surface $z = f(x, y)$.
+            Notice, however, that this interpretation works directly only when the surface lies above the xy-plane,
+            since in that case the function values are positive and the volume makes sense as a positive quantity.
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="4" data-ggb-id="tz3wuxkj">
-        <div class="step-title">Double Integral</div>
-        <div class="step-subtitle">for General Regions</div>
-        <div class="step-body">
-          In this GeoGebra visualization, we are looking at a more general region, which we have divided into rectangular strips. (We are not showing the smaller subdivisions this time.)<br>
-          Notice that, to cover the entire region, these strips extend from the left to the right across the x-values of the region. The height of each strip goes from the bottom curve up to the top curve.<br>
-          As we imagine taking finer and finer strips, their width becomes smaller and smaller — approaching zero. However, since the width never actually reaches zero, we represent it symbolically as dx.
+        <div class="step" data-step="4" data-ggb-id="tz3wuxkj">
+          <div class="step-title">Double Integral</div>
+          <div class="step-subtitle">for General Regions</div>
+          <div class="step-body">
+            In this GeoGebra visualization, we are looking at a more general region, which we have divided into
+            rectangular strips. (We are not showing the smaller subdivisions this time.)<br>
+            Notice that, to cover the entire region, these strips extend from the left to the right across the x-values
+            of the region. The height of each strip goes from the bottom curve up to the top curve.<br>
+            As we imagine taking finer and finer strips, their width becomes smaller and smaller — approaching zero.
+            However, since the width never actually reaches zero, we represent it symbolically as dx.
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="5" data-ggb-id="d26andr7">
-        <div class="step-title">Step Title</div>
-        <div class="step-subtitle">Step Subtitle</div>
-        <div class="step-body">
-          Step body text here.
-        </div>
-      </div>
 
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        <div class="step" data-step="5" data-ggb-id="d26andr7">
+          <div class="step-title">Visualization of a Double Integral over a general region</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Visualization of a Double Integral over a general region
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Theorem 5.1 Properties of Double Integrals</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Assume that the functions $f(x,y)$ and $g(x,y)$ are integrable over the rectangular region R; S and T are
+            subregions; and assume that m and M are real numbers.<br>
+            i. The sum $f(x,y)+g(x,y)$ is integrable and<br>
+            $$\iint_{R}[f(x,y)+g(x,y)]dA=\iint_{R}f(x,y)dA+\iint_{R}g(x,y)dA$$
+            ii. If c is a constant, then $cf(x,y)$ is integrable and
+            $$\iint_{R}cf(x,y)dA=c\iint_{R}f(x,y)dA$$
+            iii. If $R=S\cup T$ and $S\cap T=\emptyset$ except an overlap on the boundaries, then
+            $$\iint_{R}f(x,y)dA=\iint_{S}f(x,y)dA+\iint_{T}f(x,y)dA$$
+            iv.If $f(x,y)\geq g(x,y)$ for $(x,y)$ in R, then
+            $$\iint_{R}f(x,y)dA \geq \iint_{R}g(x,y)dA$$
+            v. If $m\leq f(x,y) \leq M $, then
+            $$m\times A(R) \leq \iint_{R}f(x,y)dA\leq M\times A(R)$$
+            vi. In the case where $f(x,y)$ can be factored as a product of a function $g(x)$ of x only and a function
+            $h(y)$ of y only, then over the region $R=\{(x,y)|a\leq x \leq b, c\leq y \leq d\}$, the double integral can
+            be written
+            $$\iint_{R}f(x,y)dA=\left(\int_{a}^{b}g(x)dx\right)\left(\int_c^d h(y)dy\right)$$
+          </div>
+        </div>
+
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
-<!-- LEFT DRAWER (vocab/concepts + preview) -->
-<aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
-  <div class="drawer-header">
-    <strong>Key terms & concepts</strong>
-    <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
-  </div>
-  <div class="drawer-body">
-    <section>
-      <h3 class="drawer-h3">Vocabulary</h3>
-      <ul id="vocab-list" class="drawer-vlist"></ul>
-    </section>
-    <section>
-      <h3 class="drawer-h3">Concepts</h3>
-      <ul id="concepts-list" class="drawer-vlist"></ul>
-    </section>
-    <section>
-      <h3 class="drawer-h3">Connections (preview)</h3>
-      <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
-      <button id="map-open" class="btn" type="button">Open Mind Map</button>
-    </section>
-  </div>
-</aside>
-<button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer" title="Open vocabulary">➜</button>
+  <!-- LEFT DRAWER (vocab/concepts + preview) -->
+  <aside id="left-drawer" class="left-drawer" aria-hidden="true" aria-label="Vocabulary & Concepts">
+    <div class="drawer-header">
+      <strong>Key terms & concepts</strong>
+      <div class="drawer-actions"><button id="drawer-close" class="btn small" type="button">×</button></div>
+    </div>
+    <div class="drawer-body">
+      <section>
+        <h3 class="drawer-h3">Vocabulary</h3>
+        <ul id="vocab-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Concepts</h3>
+        <ul id="concepts-list" class="drawer-vlist"></ul>
+      </section>
+      <section>
+        <h3 class="drawer-h3">Connections (preview)</h3>
+        <div class="map-preview"><svg id="map-preview-svg" class="map-svg" viewBox="0 0 420 260"></svg></div>
+        <button id="map-open" class="btn" type="button">Open Mind Map</button>
+      </section>
+    </div>
+  </aside>
+  <button id="drawer-handle" class="drawer-handle" aria-expanded="false" aria-controls="left-drawer"
+    title="Open vocabulary">➜</button>
 
-<!-- FLOATING MIND-MAP -->
-<div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
-  <div class="map-float-header">
-    <span class="map-title">Concept Connections</span>
-    <div class="map-actions">
-      <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
-      <button id="map-close" class="btn small" type="button">× Close</button>
+  <!-- FLOATING MIND-MAP -->
+  <div id="map-float" class="map-float" aria-hidden="true" role="dialog" aria-label="Mind map">
+    <div class="map-float-header">
+      <span class="map-title">Concept Connections</span>
+      <div class="map-actions">
+        <button id="map-collapse" class="btn small" type="button">↙ Collapse</button>
+        <button id="map-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="map-host" class="map-host">
+      <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
     </div>
   </div>
-  <div id="map-host" class="map-host">
-    <svg id="map-svg" class="map-svg" viewBox="0 0 1200 760"></svg>
-  </div>
-</div>
-<div id="map-backdrop" class="map-backdrop" hidden></div>
+  <div id="map-backdrop" class="map-backdrop" hidden></div>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- Reminder: keep knowledge.json inside this lecture's folder -->
-<!-- e.g., lectures/linear-space/knowledge.json -->
+  <!-- Reminder: keep knowledge.json inside this lecture's folder -->
+  <!-- e.g., lectures/linear-space/knowledge.json -->
 </body>
+
 </html>
