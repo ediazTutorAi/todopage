@@ -47,62 +47,57 @@
             $$\iint_{R}f(x,y)dA=\int_{\alpha}^{\beta}f(rcos(\theta),rsin(\theta)) r dr d\theta$$
           </div>
         </div>
-        <div class="step" data-step="2" data-ggb-id="g8xftbbf">
-          <div class="step-title">Rectangular Division</div>
-          <div class="step-subtitle"></div>
-          <div class="step-body">
-            Observe that our domain is a rectangle in the xy-plane. We have divided this rectangle into several smaller
-            sub-rectangles. For each of these sub-rectangles, we select a representative point, which we’ll denote by
-            $(x_j, y_j)$. At that point, we evaluate our function $f(x, y)$. The value $f(x_j, y_j)$ gives us the height
-            of a rectangular “box” built above that small region.<br>
-            By multiplying this height $f(x_j, y_j)$ by the area of the base sub-rectangle, we obtain the volume of that
-            small box.<br>
-            If we repeat this process for every sub-rectangle and then add up all those small volumes, we get an
-            approximation for the total volume under the surface $z = f(x, y)$ and above the rectangular region in the
-            plane.<br>
-            As we make the subdivisions finer and finer, this approximation becomes more accurate and in the limit, it
-            becomes the double integral of $f(x, y)$ over the region.
-          </div>
-        </div>
-        <div class="step" data-step="3" data-ggb-id="naebkqfv">
-          <div class="step-title">Double Integral</div>
-          <div class="step-subtitle">Visualization in 3D</div>
-          <div class="step-body">
-            In this GeoGebra visualization, you can see how each of the small boxes is formed above the sub-rectangles
-            of our domain. This picture helps us visualize how the double integral is constructed, by summing up the
-            volumes of all these tiny boxes.<br>
-            You can think of the double integral as representing the total volume under the surface $z = f(x, y)$.
-            Notice, however, that this interpretation works directly only when the surface lies above the xy-plane,
-            since in that case the function values are positive and the volume makes sense as a positive quantity.
-          </div>
-        </div>
-        <div class="step" data-step="4" data-ggb-id="tz3wuxkj">
-          <div class="step-title">Double Integral</div>
-          <div class="step-subtitle">for General Regions</div>
-          <div class="step-body">
-            In this GeoGebra visualization, we are looking at a more general region, which we have divided into
-            rectangular strips. (We are not showing the smaller subdivisions this time.)<br>
-            Notice that, to cover the entire region, these strips extend from the left to the right across the x-values
-            of the region. The height of each strip goes from the bottom curve up to the top curve.<br>
-            As we imagine taking finer and finer strips, their width becomes smaller and smaller — approaching zero.
-            However, since the width never actually reaches zero, we represent it symbolically as dx.
-          </div>
-        </div>
-        <div class="step" data-step="5" data-ggb-id="d26andr7">
-          <div class="step-title">Step Title</div>
-          <div class="step-subtitle">Step Subtitle</div>
-          <div class="step-body">
-            Step body text here.
-          </div>
-        </div>
 
-        <!-- Controls -->
-        <div class="reveal-controls" role="group" aria-label="Slide controls">
-          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        <div class="step" data-step="2">
+          <div class="step-title">Theorem 16.4</div>
+          <div class="step-subtitle">Change of Variables for Double Integrals over More General Polar Regions</div>
+          <div class="step-body">
+            Let $f$ be continuous on the region R in the xy-plane expressed in polar coordinates as:
+            $$R=\{(r,\theta):0\leq g(\theta)\leq r\leq h(\theta),\alpha\leq\beta\}$$
+            where $0<\beta-\alpha\leq 2\pi$. Then
+              $$\iint_{R}f(x,y)dA=\int_{\alpha}^{\beta}\int_{g(\theta)}^{h(\theta)}f(rcos(\theta),rsin(\theta)) r dr
+              d\theta$$ </div>
+          </div>
+          <div class="step" data-step="3" data-ggb-id="naebkqfv">
+            <div class="step-title">Double Integral</div>
+            <div class="step-subtitle">Visualization in 3D</div>
+            <div class="step-body">
+              In this GeoGebra visualization, you can see how each of the small boxes is formed above the sub-rectangles
+              of our domain. This picture helps us visualize how the double integral is constructed, by summing up the
+              volumes of all these tiny boxes.<br>
+              You can think of the double integral as representing the total volume under the surface $z = f(x, y)$.
+              Notice, however, that this interpretation works directly only when the surface lies above the xy-plane,
+              since in that case the function values are positive and the volume makes sense as a positive quantity.
+            </div>
+          </div>
+          <div class="step" data-step="4" data-ggb-id="tz3wuxkj">
+            <div class="step-title">Double Integral</div>
+            <div class="step-subtitle">for General Regions</div>
+            <div class="step-body">
+              In this GeoGebra visualization, we are looking at a more general region, which we have divided into
+              rectangular strips. (We are not showing the smaller subdivisions this time.)<br>
+              Notice that, to cover the entire region, these strips extend from the left to the right across the
+              x-values
+              of the region. The height of each strip goes from the bottom curve up to the top curve.<br>
+              As we imagine taking finer and finer strips, their width becomes smaller and smaller — approaching zero.
+              However, since the width never actually reaches zero, we represent it symbolically as dx.
+            </div>
+          </div>
+          <div class="step" data-step="5" data-ggb-id="d26andr7">
+            <div class="step-title">Step Title</div>
+            <div class="step-subtitle">Step Subtitle</div>
+            <div class="step-body">
+              Step body text here.
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="reveal-controls" role="group" aria-label="Slide controls">
+            <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+            <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+            <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+          </div>
         </div>
-      </div>
     </section>
   </main>
 
