@@ -155,6 +155,20 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
+    "date": "2026-03-05",
+    "title": "Matrix of Linear Transformations",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "Linear Transformations",
+      "matrix",
+      "change of basis"
+    ],
+    "url": "linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
     "date": "2026-03-03",
     "title": "Linear Transformations",
     "subtitle": "",
