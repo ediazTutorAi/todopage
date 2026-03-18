@@ -2,6 +2,18 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-18",
+    "title": "Cylindrical and Spherical Integrals",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "Cylindrical Integrals"
+    ],
+    "url": "calculus3/fall2025/2025-10-15-cylindrical-sphericals-coordinates/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-16",
     "title": "Triple Integrals",
     "subtitle": "",
