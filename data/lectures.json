@@ -179,6 +179,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
+    "date": "2026-03-19",
+    "title": "QR-Factorization",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "qr factorization"
+    ],
+    "url": "linear-algebra/fall2025/2025-10-16-qr-factorization/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
     "date": "2026-03-17",
     "title": "Orthogonality",
     "subtitle": "",
