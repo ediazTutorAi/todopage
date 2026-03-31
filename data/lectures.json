@@ -2,6 +2,18 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-23",
+    "title": "Line Integrals",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "Line Integrals"
+    ],
+    "url": "calculus3/fall2025/2025-11-03-line-integrals/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-18",
     "title": "Cylindrical and Spherical Integrals",
     "subtitle": "",
@@ -175,6 +187,18 @@
       "vectors"
     ],
     "url": "calculus3/fall2025/2025-01-12-vectors/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
+    "date": "2026-03-31",
+    "title": "Orthogonal Transformation",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "orthogonal transformation"
+    ],
+    "url": "linear-algebra/fall2025/2025-10-21-orthogonal-transformation/index.html"
   },
   {
     "course": "Linear Algebra",
