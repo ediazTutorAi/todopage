@@ -191,6 +191,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
+    "date": "2026-04-09",
+    "title": "diagonalization",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "diagonalization"
+    ],
+    "url": "linear-algebra/fall2025/2025-11-11-diagonalization/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
     "date": "2026-04-02",
     "title": "determinants",
     "subtitle": "",
