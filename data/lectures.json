@@ -191,6 +191,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
+    "date": "2026-04-10",
+    "title": "finding eigenvalues",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "eigenvalues"
+    ],
+    "url": "linear-algebra/fall2025/2025-11-13-finding-the-eigenvalues/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
     "date": "2026-04-09",
     "title": "diagonalization",
     "subtitle": "",
