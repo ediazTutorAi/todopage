@@ -191,6 +191,18 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
+    "date": "2026-04-16",
+    "title": "finding eigenvectors",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "eigenvectors"
+    ],
+    "url": "linear-algebra/fall2025/2025-11-16-finding-the-eigenvectors/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
     "date": "2026-04-10",
     "title": "finding eigenvalues",
     "subtitle": "",
