@@ -90,23 +90,28 @@
           </div>
         </div>
         <div class="step" data-step="5">
-          <div class="step-title">Theorem 7.2.5</div>
-          <div class="step-subtitle">Characteristic Polynomial</div>
+          <div class="step-title">Theorem 7.3.6</div>
+          <div class="step-subtitle">Algebraic versus geometric multiplicity</div>
           <div class="step-body">
-            If A is an $n\times n$ matrix, then $det(A-\lambda I_n)$ is a polynomial of degree n, of the form:
-            $$(-\lambda)^n+(trA)(-\lambda)^{n-1}+\cdots+det A$$
-            $$=(-1)^n\lambda^n+(-1)^{n-1}(trA)\lambda^{n-1}+\cdots+detA$$
-            This is called the characteristic polynomial of A, denoted by $f_A(\lambda)$
+            If $\lambda$ is an eigenvalue of a square matrix A, then
+            $$\text{gemu}(\lambda)=\text{almu}(\lambda)$$
           </div>
         </div>
         <div class="step" data-step="6">
-          <div class="step-title">Definition 7.2.6</div>
-          <div class="step-subtitle">Algebraic multiplicity of an eigenvalue</div>
+          <div class="step-title">Definition 7.3.7</div>
+          <div class="step-subtitle">Strategy for Diagonalization</div>
           <div class="step-body">
-            We say that an eigenvalue $\lambda_0$ of a square matrix A has algebraic multiplicity k if $\lambda_0$ is a
-            root of multiplicity k of the characteristic polynomial $f_A(\lambda)$ meaning that we can write
-            $$f_A(\lambda)=(\lambda_0-\lambda)^k g(\lambda)$$
-            for some polynomial $g(\lambda)$ with $g(\lambda_0)\neq 0$. We write $almu(\lambda_0)=k$
+            Suppose we are asked to determine whether a given $n\times n$ matrix A is diagonalizable. If so, we wish to
+            find an invertible matrix S such that $S^{-1}AS=B$ is diagonal.<br>
+            We can proceed as follows:<br>
+            a. Find the eigenvalues of A by solving the characteristic equation
+            $$f_A(\lambda)=det(A-\lambda I_n)=0$$
+            b. For each eigenvalue $\lambda$, find a basis of the eigenspace
+            $$E_{\lambda}=ker(A-\lambda I_n)$$
+            c. Matrix A is diagonalizable if and only if the dimensions of the eigenspace add up to n. In this case, we
+            find an eigenbasis $\vec{v}_1,\cdots,\vec{v}_n$ for A by concatenating the bases of the eigenspaces we found
+            in part b. Let
+            $$S=\begin{pmatrix}\vec{v}_1&\vec{v}_2&\cdots&\vec{v}_n\end{pmatrix}$$
           </div>
         </div>
         <div class="step" data-step="7">
