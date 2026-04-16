@@ -53,7 +53,7 @@
             Consider an eigenvalue $\lambda$ of an $n\times n$ matrix A. The dimension of eigenspace
             $E_{\lambda}=ker(A-\lambda I_n)$ is called the geometric multiplicity of eigenvalue $\lambda$, denoted
             $\text{gemu}(\lambda)$. Thus,
-            $$\text{geme}(\lambda)=nullity(A-\lambda I_n)=n-rank(A-\lambda I_n)$$
+            $$\text{gemu}(\lambda)=nullity(A-\lambda I_n)=n-rank(A-\lambda I_n)$$
           </div>
         </div>
         <div class="step" data-step="2">
@@ -68,17 +68,24 @@
           </div>
         </div>
         <div class="step" data-step="3">
-          <div class="step-title">Definition 7.2.3</div>
-          <div class="step-subtitle">Trace</div>
+          <div class="step-title">Theorem 7.3.4</div>
+          <div class="step-subtitle">An $n\times n$ matrix with n distinc eigenvalues</div>
           <div class="step-body">
-            The sum of the diagonal entires of a square matrix A is called the trace of A, denoted by tr(A).
+            If an $n\times n$ matrix A has n distinct eigenvalues, then A is diagonalizable. We can construct an
+            eigenbasis by finding an eigenvector for each eigenvalue.
           </div>
         </div>
         <div class="step" data-step="4">
-          <div class="step-title">Theorem 7.2.4</div>
-          <div class="step-subtitle">Characteristic equation of a $2 \times 2$ matrix A</div>
+          <div class="step-title">Theorem 7.3.5</div>
+          <div class="step-subtitle">The eigenvalues of similar matrices</div>
           <div class="step-body">
-            $$det(A-\lambda I_2)=\lambda^2-(trA)\lambda+detA=0$$
+            Suppose a matrix A is similar to B. Then <br>
+            a. Matrices A and B have the same characteristic polynomial; that is, $f_A({\lambda})=f_B(\lambda)$.<br>
+            b. $rank(A)=rank(B)$ and nullity A = nullity B.<br>
+            c. Matrices A and B have the same eigenvalues, with the same algebraic and geometric multiplicities.
+            However, the eigenvectors need not be the same.<br>
+            d. Matrices A and B have the same determinant and the same trace:<br>
+            detA=detB and tr(A)=tr(B).
           </div>
         </div>
         <div class="step" data-step="5">
