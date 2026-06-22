@@ -16,6 +16,20 @@
       "subtitle": "",
       "ggbId": "",
       "bodyHtml": "An infinite series is the sum in order of the elements of a sequence. Consider the sequence $\\{a_n\\}_{n=1}$ then the series will be given by $$\\displaystyle\\Sigma_{n=1}^{\\infty}a_n=a_1+a_2+a_3+\\cdots$$"
+    },
+    {
+      "tag": "definition",
+      "label": "Partial Sums",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "For each positive integer k, the sum\n  \\[S_k=\\Sigma_{n=1}^k a_k=a_1+a_2+\\cdots+a_n\\]is called the k-th partial sum. The partial sums form a sequence \\(\\{S_k\\}\\) if this sequence converges, the sum converges, if not, the sum diverges."
+    },
+    {
+      "tag": "step",
+      "label": "Reindex",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "Notice that the sum don't need to start at index 0 it could start at any index"
     }
   ]
 }

@@ -70,22 +70,45 @@ html, body { margin: 0; height: 100%; font-family: system-ui, Arial, sans-serif;
 .lecture-delete:hover { opacity: 1; background: #fde2e2; }
 
 #editor {
-  padding: 16px 20px;
+  padding: 12px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   min-height: 0;
 }
 
-label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--muted); flex: 1; }
+label { display: flex; flex-direction: column; gap: 2px; font-size: 0.78rem; color: var(--muted); flex: 1; }
 input, select, textarea {
   font: inherit;
-  padding: 6px 8px;
+  font-size: 0.85rem;
+  padding: 4px 7px;
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--ink);
 }
-.row { display: flex; gap: 12px; }
+.row { display: flex; gap: 10px; }
+
+#meta-form { border: 1px solid var(--line); border-radius: 8px; }
+.meta-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.meta-header:hover { background: #f8fafc; }
+.meta-chevron { font-size: 0.7rem; width: 1em; }
+.meta-summary { font-weight: 600; color: var(--ink); }
+.meta-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 10px 10px;
+  border-top: 1px solid var(--line);
+}
+.meta-body[hidden] { display: none; }
 
 #steps-section {
   display: flex;

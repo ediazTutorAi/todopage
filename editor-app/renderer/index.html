@@ -23,29 +23,35 @@
 
   <main id="editor">
     <section id="meta-form">
-      <div class="row">
-        <label>Course
-          <input id="f-course" type="text" list="course-options" placeholder="Course name" />
-          <datalist id="course-options"></datalist>
-        </label>
-        <label>Date
-          <input id="f-date" type="date" />
+      <div class="meta-header" id="meta-toggle">
+        <span class="meta-chevron">▸</span>
+        <span class="meta-summary" id="meta-summary">New lecture</span>
+      </div>
+      <div class="meta-body" id="meta-body" hidden>
+        <div class="row">
+          <label>Course
+            <input id="f-course" type="text" list="course-options" placeholder="Course name" />
+            <datalist id="course-options"></datalist>
+          </label>
+          <label>Date
+            <input id="f-date" type="date" />
+          </label>
+          <label>Tags (comma separated)
+            <input id="f-tags" type="text" />
+          </label>
+        </div>
+        <div class="row">
+          <label>Title
+            <input id="f-title" type="text" placeholder="Lecture title" />
+          </label>
+          <label>Subtitle
+            <input id="f-subtitle" type="text" />
+          </label>
+        </div>
+        <label>Description
+          <textarea id="f-description" rows="2"></textarea>
         </label>
       </div>
-      <label>Title
-        <input id="f-title" type="text" placeholder="Lecture title" />
-      </label>
-      <div class="row">
-        <label>Subtitle
-          <input id="f-subtitle" type="text" />
-        </label>
-        <label>Tags (comma separated)
-          <input id="f-tags" type="text" />
-        </label>
-      </div>
-      <label>Description
-        <textarea id="f-description" rows="2"></textarea>
-      </label>
     </section>
 
     <section id="steps-section">

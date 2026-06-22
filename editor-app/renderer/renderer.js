@@ -14,13 +14,32 @@ const els = {
   btnSave: document.getElementById('btn-save'),
   statusMsg: document.getElementById('status-msg'),
   btnRefresh: document.getElementById('btn-refresh-preview'),
-  courseOptions: document.getElementById('course-options')
+  courseOptions: document.getElementById('course-options'),
+  metaToggle: document.getElementById('meta-toggle'),
+  metaBody: document.getElementById('meta-body'),
+  metaChevron: document.querySelector('#meta-toggle .meta-chevron'),
+  metaSummary: document.getElementById('meta-summary')
 };
 
 const cm = initEditor(document.getElementById('tag-editor'));
 
 let currentUrl = null; // null = new, unsaved lecture
 const expandedCourses = new Set();
+
+function updateMetaSummary() {
+  const parts = [els.course.value, els.date.value, els.title.value].filter(Boolean);
+  els.metaSummary.textContent = parts.length ? parts.join(' · ') : 'New lecture';
+}
+
+function setMetaExpanded(expanded) {
+  els.metaBody.hidden = !expanded;
+  els.metaChevron.textContent = expanded ? '▾' : '▸';
+  if (!expanded) updateMetaSummary();
+}
+
+els.metaToggle.addEventListener('click', () => {
+  setMetaExpanded(els.metaBody.hidden);
+});
 
 els.addButtons.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -39,6 +58,7 @@ function clearForm() {
   els.description.value = '';
   cm.setValue('');
   els.statusMsg.textContent = '';
+  setMetaExpanded(true);
   highlightActiveLecture();
 }
 
@@ -51,6 +71,7 @@ function fillForm(content) {
   els.description.value = content.description || '';
   cm.setValue(content.stepsText || '');
   els.statusMsg.textContent = '';
+  setMetaExpanded(false);
 }
 
 async function selectLecture(lecture) {
