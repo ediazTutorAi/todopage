@@ -326,7 +326,7 @@
     "course": "Linear Algebra",
     "semester": "Fall 2025",
     "date": "2025-02-19",
-    "title": "Dimensions of subspaces",
+    "title": "3.3 The dimension of a subspace of $\\mathbb{R}^n$",
     "subtitle": "",
     "description": "",
     "tags": [
@@ -352,7 +352,7 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
-    "date": "2026-02-012",
+    "date": "2026-02-12",
     "title": "Subspaces, Bases and Linear Independence",
     "subtitle": "",
     "description": "",
@@ -375,18 +375,6 @@
       "kernel"
     ],
     "url": "linear-algebra/fall2025/2025-02-10-image-kernel/index.html"
-  },
-  {
-    "course": "Linear Algebra",
-    "semester": "Spring 2026",
-    "date": "2026-01-29",
-    "title": "The Geometry of Linear Transformations",
-    "subtitle": "",
-    "description": "",
-    "tags": [
-      "linear transformations"
-    ],
-    "url": "linear-algebra/fall2025/2025-01-29-section-22/index.html"
   },
   {
     "course": "Linear Algebra",

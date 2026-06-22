@@ -82,7 +82,7 @@ body.slide-mode .card {
   display: grid;
   grid-template-rows: 1fr auto;
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto;
   place-items: center;
 }
 
