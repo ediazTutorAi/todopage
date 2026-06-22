@@ -1,0 +1,171 @@
+import { initEditor } from './editor.js';
+import { insertSnippet } from './tagSnippets.js';
+
+const els = {
+  lectureList: document.getElementById('lecture-list'),
+  btnNew: document.getElementById('btn-new'),
+  course: document.getElementById('f-course'),
+  date: document.getElementById('f-date'),
+  title: document.getElementById('f-title'),
+  subtitle: document.getElementById('f-subtitle'),
+  tags: document.getElementById('f-tags'),
+  description: document.getElementById('f-description'),
+  addButtons: document.querySelectorAll('.step-add-buttons button'),
+  btnSave: document.getElementById('btn-save'),
+  statusMsg: document.getElementById('status-msg'),
+  btnRefresh: document.getElementById('btn-refresh-preview'),
+  courseOptions: document.getElementById('course-options')
+};
+
+const cm = initEditor(document.getElementById('tag-editor'));
+
+let currentUrl = null; // null = new, unsaved lecture
+const expandedCourses = new Set();
+
+els.addButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    insertSnippet(cm, btn.dataset.tag);
+    cm.focus();
+  });
+});
+
+function clearForm() {
+  currentUrl = null;
+  els.course.value = 'Calculus III';
+  els.date.value = new Date().toISOString().slice(0, 10);
+  els.title.value = '';
+  els.subtitle.value = '';
+  els.tags.value = '';
+  els.description.value = '';
+  cm.setValue('');
+  els.statusMsg.textContent = '';
+  highlightActiveLecture();
+}
+
+function fillForm(content) {
+  els.course.value = content.course;
+  els.date.value = content.date;
+  els.title.value = content.title;
+  els.subtitle.value = content.subtitle || '';
+  els.tags.value = (content.tags || []).join(', ');
+  els.description.value = content.description || '';
+  cm.setValue(content.stepsText || '');
+  els.statusMsg.textContent = '';
+}
+
+async function selectLecture(lecture) {
+  const content = await window.lectureAPI.loadContent(lecture.url);
+  currentUrl = lecture.url;
+  expandedCourses.add(lecture.course || '(No course)');
+  fillForm(content);
+  highlightActiveLecture();
+  cm.refresh();
+  const managed = await window.lectureAPI.isAppManaged(lecture.url);
+  els.statusMsg.textContent = managed ? '' : 'Imported from existing HTML — saving will regenerate this lecture\'s index.html.';
+}
+
+function highlightActiveLecture() {
+  els.lectureList.querySelectorAll('.lecture-item').forEach(it => {
+    it.classList.toggle('active', it.dataset.url === currentUrl);
+  });
+}
+
+async function deleteLecture(lec) {
+  const ok = window.confirm(`Delete "${lec.title}"?\n\nThis removes its folder from disk and cannot be undone unless it's already committed to git.`);
+  if (!ok) return;
+  await window.lectureAPI.deleteLecture(lec.url);
+  if (currentUrl === lec.url) clearForm();
+  await refreshLectureList();
+}
+
+async function refreshLectureList() {
+  const lectures = await window.lectureAPI.list();
+  els.lectureList.innerHTML = '';
+
+  const courseNames = [...new Set(lectures.map(l => l.course).filter(Boolean))].sort();
+  els.courseOptions.innerHTML = courseNames.map(c => `<option value="${c}"></option>`).join('');
+
+  const byCourse = new Map();
+  for (const lec of lectures) {
+    const key = lec.course || '(No course)';
+    if (!byCourse.has(key)) byCourse.set(key, []);
+    byCourse.get(key).push(lec);
+  }
+
+  for (const course of [...byCourse.keys()].sort()) {
+    const lecs = byCourse.get(course).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const isOpen = expandedCourses.has(course);
+
+    const header = document.createElement('div');
+    header.className = 'course-group-header';
+    header.innerHTML = `<span class="course-chevron">${isOpen ? '▾' : '▸'}</span> ${course} <span class="course-count">${lecs.length}</span>`;
+    header.addEventListener('click', () => {
+      if (expandedCourses.has(course)) expandedCourses.delete(course);
+      else expandedCourses.add(course);
+      refreshLectureList();
+    });
+    els.lectureList.appendChild(header);
+
+    if (!isOpen) continue;
+
+    for (const lec of lecs) {
+      const managed = await window.lectureAPI.isAppManaged(lec.url);
+      const item = document.createElement('div');
+      item.className = 'lecture-item';
+      item.dataset.url = lec.url;
+      item.innerHTML = `
+        <div class="lecture-item-main">
+          <div>${lec.title}</div>
+          <div class="l-date">${lec.date}${managed ? '' : ' ⤓'}</div>
+        </div>
+        <button type="button" class="lecture-delete" title="Delete lecture">🗑</button>`;
+      item.addEventListener('click', () => selectLecture(lec));
+      item.querySelector('.lecture-delete').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteLecture(lec);
+      });
+      els.lectureList.appendChild(item);
+    }
+  }
+  highlightActiveLecture();
+}
+
+els.btnRefresh.addEventListener('click', () => {
+  if (!currentUrl) {
+    els.statusMsg.textContent = 'Save the lecture first to preview it.';
+    return;
+  }
+  window.lectureAPI.openPreview(currentUrl);
+});
+els.btnNew.addEventListener('click', clearForm);
+
+els.btnSave.addEventListener('click', async () => {
+  const data = {
+    course: els.course.value,
+    date: els.date.value,
+    title: els.title.value.trim(),
+    subtitle: els.subtitle.value.trim(),
+    description: els.description.value.trim(),
+    tags: els.tags.value.split(',').map(t => t.trim()).filter(Boolean),
+    stepsText: cm.getValue()
+  };
+
+  try {
+    let result;
+    if (currentUrl) {
+      result = await window.lectureAPI.saveContent(currentUrl, data);
+      els.statusMsg.textContent = `Saved "${result.title}".`;
+    } else {
+      result = await window.lectureAPI.create(data);
+      currentUrl = result.url;
+      expandedCourses.add(result.course || '(No course)');
+      els.statusMsg.textContent = `Created "${result.title}".`;
+    }
+    await refreshLectureList();
+  } catch (err) {
+    els.statusMsg.textContent = `Error: ${err.message}`;
+  }
+});
+
+clearForm();
+refreshLectureList();

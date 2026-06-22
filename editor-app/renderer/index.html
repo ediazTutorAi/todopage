@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Lecture Editor</title>
+<link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="../node_modules/codemirror/theme/eclipse.css">
+<link rel="stylesheet" href="../node_modules/katex/dist/katex.min.css">
+<link rel="stylesheet" href="styles.css">
+<script src="../node_modules/codemirror/lib/codemirror.js"></script>
+<script src="../node_modules/codemirror/mode/xml/xml.js"></script>
+<script src="../node_modules/codemirror/addon/edit/closetag.js"></script>
+<script src="../node_modules/codemirror/addon/edit/matchbrackets.js"></script>
+<script src="../node_modules/katex/dist/katex.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <aside id="sidebar">
+    <button id="btn-new" class="btn primary" type="button">+ New Lecture</button>
+    <div id="lecture-list"></div>
+  </aside>
+
+  <main id="editor">
+    <section id="meta-form">
+      <div class="row">
+        <label>Course
+          <input id="f-course" type="text" list="course-options" placeholder="Course name" />
+          <datalist id="course-options"></datalist>
+        </label>
+        <label>Date
+          <input id="f-date" type="date" />
+        </label>
+      </div>
+      <label>Title
+        <input id="f-title" type="text" placeholder="Lecture title" />
+      </label>
+      <div class="row">
+        <label>Subtitle
+          <input id="f-subtitle" type="text" />
+        </label>
+        <label>Tags (comma separated)
+          <input id="f-tags" type="text" />
+        </label>
+      </div>
+      <label>Description
+        <textarea id="f-description" rows="2"></textarea>
+      </label>
+    </section>
+
+    <section id="steps-section">
+      <div class="steps-header">
+        <h3>Steps</h3>
+        <div class="step-add-buttons">
+          <button type="button" class="btn small" data-tag="definition">+ Definition</button>
+          <button type="button" class="btn small" data-tag="theorem">+ Theorem</button>
+          <button type="button" class="btn small" data-tag="example">+ Example</button>
+          <button type="button" class="btn small" data-tag="summary">+ Summary</button>
+          <button type="button" class="btn small" data-tag="step">+ Custom</button>
+        </div>
+      </div>
+      <div id="tag-editor"></div>
+    </section>
+
+    <div class="save-bar">
+      <span id="status-msg" class="muted"></span>
+      <button id="btn-refresh-preview" class="btn" type="button">⟳ Preview</button>
+      <button id="btn-save" class="btn primary" type="button">Save</button>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="renderer.js"></script>
+</body>
+</html>

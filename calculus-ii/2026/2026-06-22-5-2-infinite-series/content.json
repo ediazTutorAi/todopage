@@ -1,0 +1,21 @@
+{
+  "course": "Calculus II ",
+  "semester": "Summer 2026",
+  "date": "2026-06-22",
+  "title": "5.2 Infinite Series",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "infinite series",
+    "series"
+  ],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Infinite Series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "An infinite series is the sum in order of the elements of a sequence. Consider the sequence $\\{a_n\\}_{n=1}$ then the series will be given by $$\\displaystyle\\Sigma_{n=1}^{\\infty}a_n=a_1+a_2+a_3+\\cdots$$"
+    }
+  ]
+}

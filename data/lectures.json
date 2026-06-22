@@ -63,6 +63,18 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-02-26",
+    "title": "Lagrange Multipliers",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "Lagrange multipliers"
+    ],
+    "url": "calculus3/fall2025/2025-10-01-Lagrange-multipliers/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-02-24",
     "title": "Max/Min Problems",
     "subtitle": "",
@@ -423,5 +435,18 @@
       "rank"
     ],
     "url": "linear-algebra/fall2025/2025-01-20-matrix-algebra/index.html"
+  },
+  {
+    "course": "Calculus II ",
+    "semester": "Summer 2026",
+    "date": "2026-06-22",
+    "title": "5.2 Infinite Series",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "infinite series",
+      "series"
+    ],
+    "url": "calculus-ii/2026/2026-06-22-5-2-infinite-series/index.html"
   }
 ]

@@ -1,0 +1,17 @@
+{
+  "name": "lecture-editor",
+  "version": "1.0.0",
+  "description": "Local desktop editor for scaffolding and editing todopage lectures",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "codemirror": "^5.65.16",
+    "katex": "^0.16.11"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}
