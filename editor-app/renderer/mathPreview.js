@@ -29,8 +29,11 @@ function positionPopupNearCursor(cm, pop, pos) {
   pop.style.left = `${left}px`;
 }
 
-export function openLatexInputPopup(cm, closer, displayMode) {
-  const cur = cm.getCursor();
+// editing (optional): { tex, from, to } when re-opening an already-committed
+// math span for revision, instead of inserting a brand-new one.
+export function openLatexInputPopup(cm, closer, displayMode, editing) {
+  const opener = closer === ')' ? '\\(' : '\\[';
+  const cur = editing ? editing.from : cm.getCursor();
 
   const pop = document.createElement('div');
   pop.className = 'latex-popup';
@@ -39,6 +42,7 @@ export function openLatexInputPopup(cm, closer, displayMode) {
   const ta = document.createElement('textarea');
   ta.rows = 3;
   ta.cols = 48;
+  if (editing) ta.value = editing.tex;
   pop.appendChild(ta);
 
   const hint = document.createElement('span');
@@ -51,10 +55,30 @@ export function openLatexInputPopup(cm, closer, displayMode) {
   pop.style.visibility = 'visible';
   enhanceLatexTextarea(ta);
   ta.focus();
+  if (editing) ta.select();
 
-  cm.replaceRange(' ', cur);
-  const start = { ...cur };
-  const end = { line: cur.line, ch: cur.ch + 1 };
+  let start, end;
+  if (editing) {
+    start = { ...editing.from };
+    end = { ...editing.to };
+  } else {
+    cm.replaceRange(' ', cur);
+    start = { ...cur };
+    end = { line: cur.line, ch: cur.ch + 1 };
+  }
+
+  function commitSpan(tex) {
+    const span = document.createElement('span');
+    span.innerHTML = katex.renderToString(tex, { throwOnError: false, displayMode });
+    const mark = cm.markText(start, end, { replacedWith: span, handleMouseEvents: true });
+    span.addEventListener('click', () => {
+      const range = mark.find();
+      if (!range) return;
+      mark.clear();
+      openLatexInputPopup(cm, closer, displayMode, { tex, from: range.from, to: range.to });
+    });
+    return mark;
+  }
 
   let liveMark = null;
 
@@ -73,27 +97,33 @@ export function openLatexInputPopup(cm, closer, displayMode) {
     }
   }
 
-  render('');
+  render(editing ? editing.tex : '');
   ta.addEventListener('input', () => render(ta.value.trim()));
+
+  function cancel() {
+    if (liveMark) { liveMark.clear(); liveMark = null; }
+    if (editing) {
+      commitSpan(editing.tex);
+    } else {
+      cm.replaceRange('', start, end);
+    }
+  }
 
   ta.addEventListener('keydown', ev => {
     if (ev.key === 'Enter') {
       ev.preventDefault();
       const tex = ta.value.trim();
-      const opener = closer === ')' ? '\\(' : '\\[';
+      if (liveMark) { liveMark.clear(); liveMark = null; }
       const finalText = `${opener}${tex}\\${closer}`;
       cm.replaceRange(finalText, start, end);
-      const newEnd = { line: start.line, ch: start.ch + finalText.length };
-      const span = document.createElement('span');
-      span.innerHTML = katex.renderToString(tex, { throwOnError: false, displayMode });
-      cm.markText(start, newEnd, { replacedWith: span, handleMouseEvents: true });
+      end = { line: start.line, ch: start.ch + finalText.length };
+      commitSpan(tex);
       pop.remove();
       cm.focus();
     }
     if (ev.key === 'Escape') {
       ev.preventDefault();
-      if (liveMark) liveMark.clear();
-      cm.replaceRange('', start, end);
+      cancel();
       pop.remove();
       cm.focus();
     }
@@ -102,8 +132,7 @@ export function openLatexInputPopup(cm, closer, displayMode) {
   ta.addEventListener('blur', () => {
     setTimeout(() => {
       if (document.body.contains(pop)) {
-        if (liveMark) liveMark.clear();
-        cm.replaceRange('', start, end);
+        cancel();
         pop.remove();
       }
     }, 0);

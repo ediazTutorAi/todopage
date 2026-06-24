@@ -34,6 +34,13 @@
       "subtitle": "",
       "ggbId": "",
       "bodyHtml": "Find if the next series converges or diverges<br></br>\n  a) \\(\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n+1}\\frac{1}{n^2}\\) <br></br>\n  b) \\(\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n+1}\\frac{n}{n+1}\\)"
+    },
+    {
+      "tag": "theorem",
+      "label": "Remainders in the Alternating Series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "Conside an alternating series that satisfies the hypothesis of the alternating series test. Meaning that converges. Let S denote the sum of the series and \\(S_N\\) denotes the N-th partial sum. For any integer \\(N\\geq1\\), the remainder \\(R_N=S-S_N\\) satisfies that \\[|R_N|\\leq b_{n+1}\\]"
     }
   ]
 }
