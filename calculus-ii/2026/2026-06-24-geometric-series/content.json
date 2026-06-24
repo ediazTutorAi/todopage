@@ -1,0 +1,27 @@
+{
+  "course": "Calculus II ",
+  "semester": "Summer 2026",
+  "date": "2026-06-24",
+  "title": "Geometric Series",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "geometric series"
+  ],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Geometric Series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "A geometric series is a series of the form\n  \\[\\displaystyle\\sum_{n=1}^{\\infty}r^n\\]where \\(r\\), called the ratio, is a real number."
+    },
+    {
+      "tag": "theorem",
+      "label": "Geometric Series Theorem",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "A geometric series converges if the ration \\(r\\) satisfies the inequaliy -1 < r < 1 <br></br>\n  If the geometric series converges it converges to\n  \\[\\displaystyle\\sum_{n=1}^{\\infty}\\frac{r}{1-r}\\]"
+    }
+  ]
+}
