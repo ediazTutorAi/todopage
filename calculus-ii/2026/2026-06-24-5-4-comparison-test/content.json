@@ -18,6 +18,13 @@
     },
     {
       "tag": "theorem",
+      "label": "p-series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "The series of the form \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{n^p}\\) converges when \\(p>1\\). Otherwise diverges.<br></br>\n  <strong>Proof:</strong> By the Integral Test."
+    },
+    {
+      "tag": "theorem",
       "label": "Comparison Test",
       "subtitle": "",
       "ggbId": "",
