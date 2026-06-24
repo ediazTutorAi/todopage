@@ -54,10 +54,12 @@ function openPreviewWindow(url) {
   if (previewWin && !previewWin.isDestroyed()) {
     previewWin.loadURL(fullUrl);
     previewWin.focus();
+    previewWin.webContents.openDevTools({ mode: 'right' });
     return;
   }
   previewWin = new BrowserWindow({ width: 1000, height: 800, title: 'Lecture Preview' });
   previewWin.loadURL(fullUrl);
+  previewWin.webContents.openDevTools({ mode: 'right' });
   previewWin.on('closed', () => { previewWin = null; });
 }
 
