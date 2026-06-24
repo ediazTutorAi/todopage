@@ -5,7 +5,9 @@
   "title": "5.4 Comparison Test",
   "subtitle": "",
   "description": "",
-  "tags": [],
+  "tags": [
+    "comparison test"
+  ],
   "steps": [
     {
       "tag": "step",

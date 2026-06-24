@@ -456,7 +456,9 @@
     "title": "5.4 Comparison Test",
     "subtitle": "",
     "description": "",
-    "tags": [],
+    "tags": [
+      "comparison test"
+    ],
     "url": "calculus-ii/2026/2026-06-24-5-4-comparison-test/index.html"
   }
 ]
