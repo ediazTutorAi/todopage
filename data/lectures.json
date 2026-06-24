@@ -480,7 +480,9 @@
     "title": "5.5 Alternating Series",
     "subtitle": "",
     "description": "",
-    "tags": [],
+    "tags": [
+      "alternating series"
+    ],
     "url": "calculus-ii/2026/2026-06-24-5-5-alternating-series/index.html"
   }
 ]
