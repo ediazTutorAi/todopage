@@ -1,0 +1,25 @@
+{
+  "course": "Calculus II ",
+  "semester": "Summer 2026",
+  "date": "2026-06-24",
+  "title": "5.5 Alternating Series",
+  "subtitle": "",
+  "description": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Objectives",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "i. Use the alternating series test to test an alternating series for convergence<br></br>\n  ii. Estimate the sum of an alternating series<br></br>\n  ii. Explain the meaning of absolute convergence and conditional convergence"
+    },
+    {
+      "tag": "definition",
+      "label": "Alternating Series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "Any series whose terms alternate between positive and negative values is called an alternating series. An alternating series can be written in the form \\[\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n+1}b_n=b_1-b_2+b_3-b_4+\\cdots\\]or\n  \\[\\displaystyle\\sum_{n=1}^{\\infty}(-1)^nb_n=-b_1+b_2-b_3+\\cdots\\]where \\(b_n>0\\) for all positive integers n."
+    }
+  ]
+}

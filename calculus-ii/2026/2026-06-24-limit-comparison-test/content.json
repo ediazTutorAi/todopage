@@ -21,7 +21,14 @@
       "label": "Warning",
       "subtitle": "",
       "ggbId": "",
-      "bodyHtml": "i. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=0\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) diverges, the limit comparison test gives no information about the behaviour of \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) <br></br>\n  \n  ii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=\\infty\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) converges, the limit comparison test gives no information about the behavior of \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\)"
+      "bodyHtml": "i. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=0\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) diverges, the limit comparison test gives no information about the behaviour of \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) <br></br>\n  \n  ii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=\\infty\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) converges, the limit comparison test gives no information about the behavior of \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\)<br></br>\n  Example: Consider the series \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{\\sqrt{n}}\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{n^2}\\). You know their behavior because they are p-series."
+    },
+    {
+      "tag": "step",
+      "label": "Exercises",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "Use the limit comparison test for the next series<br></br>\n  i. \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{\\sqrt{n}+1}\\) <br></br>\n  ii. \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{2^n+1}{3^n}\\) <br></br>\n  iii. \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{ln(n)}{n^2}\\)"
     }
   ]
 }

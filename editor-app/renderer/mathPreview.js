@@ -1,10 +1,40 @@
 import { enhanceLatexTextarea } from './latexSmartInput.js';
 
+const MARGIN = 10;
+
+// Positions a fixed-position popup near a CodeMirror text position, flipping
+// above/below and clamping horizontally so it never runs off-screen and
+// prefers whichever side of the cursor's line has enough room to avoid
+// covering it.
+function positionPopupNearCursor(cm, pop, pos) {
+  const coords = cm.cursorCoords(pos, 'window');
+  const rect = pop.getBoundingClientRect();
+  const viewportH = window.innerHeight;
+  const viewportW = window.innerWidth;
+
+  const spaceBelow = viewportH - coords.bottom;
+  const spaceAbove = coords.top;
+  const placeBelow = spaceBelow >= rect.height + MARGIN || spaceBelow >= spaceAbove;
+
+  const top = placeBelow
+    ? Math.min(coords.bottom + MARGIN, viewportH - rect.height - MARGIN)
+    : Math.max(coords.top - rect.height - MARGIN, MARGIN);
+
+  const left = Math.min(
+    Math.max(coords.left - rect.width / 2, MARGIN),
+    viewportW - rect.width - MARGIN
+  );
+
+  pop.style.top = `${Math.max(top, MARGIN)}px`;
+  pop.style.left = `${left}px`;
+}
+
 export function openLatexInputPopup(cm, closer, displayMode) {
   const cur = cm.getCursor();
 
   const pop = document.createElement('div');
   pop.className = 'latex-popup';
+  pop.style.visibility = 'hidden';
 
   const ta = document.createElement('textarea');
   ta.rows = 3;
@@ -17,6 +47,8 @@ export function openLatexInputPopup(cm, closer, displayMode) {
   pop.appendChild(hint);
 
   document.body.appendChild(pop);
+  positionPopupNearCursor(cm, pop, cur);
+  pop.style.visibility = 'visible';
   enhanceLatexTextarea(ta);
   ta.focus();
 
@@ -81,6 +113,7 @@ export function openLatexInputPopup(cm, closer, displayMode) {
 export function openLatexAttributePopup(cm, from, to, initialValue) {
   const pop = document.createElement('div');
   pop.className = 'latex-popup';
+  pop.style.visibility = 'hidden';
 
   const ta = document.createElement('textarea');
   ta.rows = 3;
@@ -98,6 +131,8 @@ export function openLatexAttributePopup(cm, from, to, initialValue) {
   pop.appendChild(hint);
 
   document.body.appendChild(pop);
+  positionPopupNearCursor(cm, pop, from);
+  pop.style.visibility = 'visible';
   enhanceLatexTextarea(ta);
   ta.focus();
   ta.select();
