@@ -1,0 +1,25 @@
+{
+  "course": "Calculus II ",
+  "semester": "Summer 2026",
+  "date": "2026-06-24",
+  "title": "5.4 Comparison Test",
+  "subtitle": "",
+  "description": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Objectives",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "1. Use the comparison test to test a series for convergence <br>\n  \t2. Use limit comparison test to test a series for convergence"
+    },
+    {
+      "tag": "theorem",
+      "label": "Comparison Test",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "i. Suppose there exists an integer N such that \\(0\\leq a_n\\leq b_n\\) for all \\(n\\geq N\\). If \\(\\displaystyle\\sum_{n=1}^{\\infty} b_n\\) converges, then \\(\\displaystyle\\sum_{n=1}^{\\infty} a_n\\) converges. <br></br>\n   \n  ii. Suppose there exists an integer N such that \\(a_n\\geq b_n \\geq 0\\) for all \\(n\\geq N\\). If \\(\\displaystyle\\sum_{n=1}^{\\infty} b_n\\) diverges, then \\(\\displaystyle\\sum_{n=1}^{\\infty} a_n\\) diverges.<br></br>\n   \n   <strong>Proof:</strong> Use the Bounded Monotone Convergence Theorem"
+    }
+  ]
+}
