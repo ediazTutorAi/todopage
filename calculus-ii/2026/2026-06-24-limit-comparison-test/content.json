@@ -1,0 +1,20 @@
+{
+  "course": "Calculus II ",
+  "semester": "Summer 2026",
+  "date": "2026-06-24",
+  "title": "5.4 Limit Comparison Test",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "limit comparison"
+  ],
+  "steps": [
+    {
+      "tag": "theorem",
+      "label": "5.12 Theorem Limit Comparison Test",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "Let \\(a_n\\), \\(b_n\\geq0\\) for all \\(n\\geq1\\).<br></br>\n  i. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=L\\neq0\\), then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) both converge or both diverge<br></br>\n  ii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=0\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) converges, then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) converges<br></br>\n  iii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=\\infty\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) diverges, then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) diverges"
+    }
+  ]
+}

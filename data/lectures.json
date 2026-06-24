@@ -460,5 +460,17 @@
       "comparison test"
     ],
     "url": "calculus-ii/2026/2026-06-24-5-4-comparison-test/index.html"
+  },
+  {
+    "course": "Calculus II ",
+    "semester": "Summer 2026",
+    "date": "2026-06-24",
+    "title": "5.4 Limit Comparison Test",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "limit comparison"
+    ],
+    "url": "calculus-ii/2026/2026-06-24-limit-comparison-test/index.html"
   }
 ]
