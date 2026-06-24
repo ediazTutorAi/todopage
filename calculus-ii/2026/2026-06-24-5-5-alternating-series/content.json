@@ -20,6 +20,20 @@
       "subtitle": "",
       "ggbId": "",
       "bodyHtml": "Any series whose terms alternate between positive and negative values is called an alternating series. An alternating series can be written in the form \\[\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n+1}b_n=b_1-b_2+b_3-b_4+\\cdots\\]or\n  \\[\\displaystyle\\sum_{n=1}^{\\infty}(-1)^nb_n=-b_1+b_2-b_3+\\cdots\\]where \\(b_n>0\\) for all positive integers n."
+    },
+    {
+      "tag": "theorem",
+      "label": "Alternating Series Test",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "An alternating series converges if <br></br>\n\\(0 < b_{n+1}\\leq b_n\\) and <br></br>\nii. \\(\\displaystyle\\lim_{n\\to\\infty}b_n=0\\)"
+    },
+    {
+      "tag": "step",
+      "label": "Exercises",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "Find if the next series converges or diverges<br></br>\n  a) \\(\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n+1}\\frac{1}{n^2}\\) <br></br>\n  b) \\(\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n+1}\\frac{n}{n+1}\\)"
     }
   ]
 }
