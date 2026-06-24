@@ -15,6 +15,13 @@
       "subtitle": "",
       "ggbId": "",
       "bodyHtml": "Let \\(a_n\\), \\(b_n\\geq0\\) for all \\(n\\geq1\\).<br></br>\n  i. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=L\\neq0\\), then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) both converge or both diverge<br></br>\n  ii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=0\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) converges, then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) converges<br></br>\n  iii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=\\infty\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) diverges, then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) diverges"
+    },
+    {
+      "tag": "step",
+      "label": "Warning",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "i. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=0\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) diverges, the limit comparison test gives no information about the behaviour of \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) <br></br>\n  \n  ii. If \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{a_n}{b_n}=\\infty\\) and \\(\\displaystyle\\sum_{n=1}^{\\infty}b_n\\) converges, the limit comparison test gives no information about the behavior of \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\)"
     }
   ]
 }
