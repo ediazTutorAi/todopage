@@ -49,14 +49,7 @@
       "label": "Example Comparison Test",
       "subtitle": "",
       "ggbId": "",
-      "bodyHtml": "Analize the series \\(\\displaystyle\\sum_{k=2}^{\\infty} \\frac{\\sqrt{lnk}}{k}\\) for convergence and divergence."
-    },
-    {
-      "tag": "example",
-      "label": "Example Integral Test",
-      "subtitle": "",
-      "ggbId": "",
-      "bodyHtml": "Use the integral test to analize the series \\(\\displaystyle\\sum_{k=1}^{\\infty}\\frac{k}{e^k}\\)"
+      "bodyHtml": "Analize the series \\(\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n^3+3n+1}\\) for convergence and divergence."
     }
   ]
 }
