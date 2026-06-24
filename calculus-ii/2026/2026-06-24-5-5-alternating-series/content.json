@@ -57,6 +57,13 @@
       "subtitle": "",
       "ggbId": "",
       "bodyHtml": "A series \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) exhibits <strong>absolute convergence</strong> if \\(\\displaystyle\\sum_{n=1}^{\\infty}|a_n|\\) converges.<br></br>\n  A series \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) exhibits <strong>conditional convergence</strong> if \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) converges but \\(\\displaystyle\\sum_{n=1}^{\\infty}|a_n|\\) diverges."
+    },
+    {
+      "tag": "theorem",
+      "label": "5.15 Absolute Convergens imples Convergence",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "If \\(\\displaystyle\\sum_{n=1}^{\\infty}|a_n|\\) converges, then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) converges"
     }
   ]
 }
