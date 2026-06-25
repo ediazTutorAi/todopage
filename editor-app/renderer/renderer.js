@@ -25,6 +25,7 @@ const cm = initEditor(document.getElementById('tag-editor'));
 
 let currentUrl = null; // null = new, unsaved lecture
 const expandedCourses = new Set();
+let cachedLectures = [];
 
 function updateMetaSummary() {
   const parts = [els.course.value, els.date.value, els.title.value].filter(Boolean);
@@ -81,8 +82,7 @@ async function selectLecture(lecture) {
   fillForm(content);
   highlightActiveLecture();
   cm.refresh();
-  const managed = await window.lectureAPI.isAppManaged(lecture.url);
-  els.statusMsg.textContent = managed ? '' : 'Imported from existing HTML — saving will regenerate this lecture\'s index.html.';
+  els.statusMsg.textContent = lecture.managed ? '' : 'Imported from existing HTML — saving will regenerate this lecture\'s index.html.';
 }
 
 function highlightActiveLecture() {
@@ -100,14 +100,18 @@ async function deleteLecture(lec) {
 }
 
 async function refreshLectureList() {
-  const lectures = await window.lectureAPI.list();
+  cachedLectures = await window.lectureAPI.list();
+  renderLectureList();
+}
+
+function renderLectureList() {
   els.lectureList.innerHTML = '';
 
-  const courseNames = [...new Set(lectures.map(l => l.course).filter(Boolean))].sort();
+  const courseNames = [...new Set(cachedLectures.map(l => l.course).filter(Boolean))].sort();
   els.courseOptions.innerHTML = courseNames.map(c => `<option value="${c}"></option>`).join('');
 
   const byCourse = new Map();
-  for (const lec of lectures) {
+  for (const lec of cachedLectures) {
     const key = lec.course || '(No course)';
     if (!byCourse.has(key)) byCourse.set(key, []);
     byCourse.get(key).push(lec);
@@ -123,21 +127,20 @@ async function refreshLectureList() {
     header.addEventListener('click', () => {
       if (expandedCourses.has(course)) expandedCourses.delete(course);
       else expandedCourses.add(course);
-      refreshLectureList();
+      renderLectureList();
     });
     els.lectureList.appendChild(header);
 
     if (!isOpen) continue;
 
     for (const lec of lecs) {
-      const managed = await window.lectureAPI.isAppManaged(lec.url);
       const item = document.createElement('div');
       item.className = 'lecture-item';
       item.dataset.url = lec.url;
       item.innerHTML = `
         <div class="lecture-item-main">
           <div>${lec.title}</div>
-          <div class="l-date">${lec.date}${managed ? '' : ' ⤓'}</div>
+          <div class="l-date">${lec.date}${lec.managed ? '' : ' ⤓'}</div>
         </div>
         <button type="button" class="lecture-delete" title="Delete lecture">🗑</button>`;
       item.addEventListener('click', () => selectLecture(lec));

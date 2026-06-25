@@ -21,7 +21,7 @@
       "label": "Definition 7.2.2",
       "subtitle": "Eigenvectors, eigenvalues, and eigenbases",
       "ggbId": "",
-      "bodyHtml": "Consider a linear  transformation $T(\\vec{x})=A \\vec{x}$ from $\\mathbb{R}^{n}$ to $\\mathbb{R}^{n}$<br>\n           A nonzero vector $\\vec{v}$ in $\\mathbb{R}^{n}$ is called an eigenvector of A (or T) if \n           $$A \\vec{v}=\\lambda \\vec{v}$$\n           for some scalar $\\lambda$. This $\\lambda$ is called the eigenvalue associated with eigenvector $\\vec{v}$.<br>\n           A basis $\\vec{v_1},\\cdots,\\vec{v_n}$ of $\\mathbb{R}^{n}$ is called an eigenbasis for A (or T) if the vectors $\\vec{v_1},\\cdots,\\\\vec{v_n}$ are eigenvectors of A."
+      "bodyHtml": "Consider a linear  transformation $T(\\vec{x})=A \\vec{x}$ from $\\mathbb{R}^{n}$ to $\\mathbb{R}^{n}$<br>\n           A nonzero vector $\\vec{v}$ in $\\mathbb{R}^{n}$ is called an eigenvector of A (or T) if \n           $$A \\vec{v}=\\lambda \\vec{v}$$\n           for some scalar $\\lambda$. This $\\lambda$ is called the eigenvalue associated with eigenvector $\\vec{v}$.<br>\n           A basis $\\vec{v_1},\\cdots,\\vec{v_n}$ of $\\mathbb{R}^{n}$ is called an eigenbasis for A (or T) if the vectors $\\vec{v_1},\\cdots,\\vec{v_n}$ are eigenvectors of A."
     },
     {
       "tag": "theorem",

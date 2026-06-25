@@ -45,7 +45,7 @@ function writeLecturesJson(data) {
 }
 
 function listLectures() {
-  return readLecturesJson();
+  return readLecturesJson().map(lec => ({ ...lec, managed: isAppManaged(lec.url) }));
 }
 
 function courseDirFor(course) {
