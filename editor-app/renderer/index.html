@@ -5,12 +5,16 @@
 <title>Lecture Editor</title>
 <link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
 <link rel="stylesheet" href="../node_modules/codemirror/theme/eclipse.css">
+<link rel="stylesheet" href="../node_modules/codemirror/addon/fold/foldgutter.css">
 <link rel="stylesheet" href="../node_modules/katex/dist/katex.min.css">
 <link rel="stylesheet" href="styles.css">
 <script src="../node_modules/codemirror/lib/codemirror.js"></script>
 <script src="../node_modules/codemirror/mode/xml/xml.js"></script>
 <script src="../node_modules/codemirror/addon/edit/closetag.js"></script>
 <script src="../node_modules/codemirror/addon/edit/matchbrackets.js"></script>
+<script src="../node_modules/codemirror/addon/fold/foldcode.js"></script>
+<script src="../node_modules/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../node_modules/codemirror/addon/fold/xml-fold.js"></script>
 <script src="../node_modules/katex/dist/katex.min.js"></script>
 </head>
 <body>
@@ -65,6 +69,7 @@
           <button type="button" class="btn small" data-tag="step">+ Custom</button>
           <button type="button" class="btn small" data-tag="ul">+ Bulleted List</button>
           <button type="button" class="btn small" data-tag="ol">+ Numbered List</button>
+          <button type="button" class="btn small" data-tag="geogebra">+ GeoGebra</button>
         </div>
       </div>
       <div id="tag-editor"></div>

@@ -49,9 +49,40 @@
           <div class="step-body">
             <ul>
   <li>4.5.1 State the Chain Rule for one or two independent variables</li>
-    <li>4.5.2</li>
-    <li>4.5.3</li>
+    <li>4.5.2 Use tree diagrams as an aid to understanding the chain rule for several independent and intermediate variables</li>
+    <li>4.5.3 Perform Implicit differentiation of a function of two or more variables</li>
 </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Theorem 4.8 Chain Rule for One Independent Variable</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Suppose that \(x=g(t)\) and \(y=h(t)\) are differentiable functions of t and \(z=f(x,y)\) is a differentiable function of \(x\) and \(y\). Then \(z=f(x(t),y(t))\) is a differentiable function of t and
+  \[\frac{dz}{dt}=\frac{\partial z}{\partial x}\cdot\frac{dx}{dt}+\frac{\partial z}{\partial y}\cdot\frac{dy}{dt}\]where the ordinary derivatives are evaluated at t and the partial derivatives are evaluated at \((x,y)\).
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Chain Rule for Two Independent Variables</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Suppose \(x=g(u,v)\) and \(y=h(u,v)\) are differentiable functions of \(u\) and \(v\), and \(z=f(x,y)\) is a differentiable function of x and y. Then, \(z=f(g(u,v),h(u,v))\) is a differentiable function of u and v, and
+  \[\frac{\partial z}{\partial u}=\frac{\partial z}{\partial x}\frac{\partial x}{\partial u}+\frac{\partial z}{\partial y}\frac{\partial y}{\partial u}\]and 
+  \[\frac{\partial z}{\partial v}=\frac{\partial z}{\partial x}\frac{\partial x}{\partial v}+\frac{\partial z}{\partial y}\frac{\partial y}{\partial v}\]
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">4.11 Implicit Differentiation of a Function of Two or More Variables</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Suppose the function \(z=f(x,y)\) defines y implicitly as a function \(y=g(x)\) of x via the equation \(f(x,y)=0\). Then
+  \[\frac{dy}{dx}=-\frac{\frac{\partial f}{\partial x}}{\frac{\partial f}{\partial y}}\]provided \(f_y(x,y)\neq0\).
+  If the equation \(f(x,y,z)=0\) defines z implicitly as a differentiable function of x and y, then
+  \[\frac{\partial z}{\partial x}=-\frac{\frac{\partial f}{\partial x}}{\frac{\partial f}{\partial z}}\]and 
+ \[\frac{\partial z}{\partial y}=-\frac{\frac{\partial f}{\partial y}}{\frac{\partial f}{\partial z}}\]as long as \(f_z(x,y,z)\neq0\).
           </div>
         </div>
 

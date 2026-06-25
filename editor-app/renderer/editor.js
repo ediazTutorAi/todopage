@@ -25,7 +25,9 @@ export function initEditor(container) {
     lineNumbers: true,
     lineWrapping: true,
     autoCloseTags: true,
-    matchBrackets: true
+    matchBrackets: true,
+    foldGutter: true,
+    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
   });
 
   cm.on('keydown', (cmInstance, event) => {
