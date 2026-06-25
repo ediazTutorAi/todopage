@@ -37,7 +37,11 @@ function readLecturesJson() {
 }
 
 function writeLecturesJson(data) {
-  fs.writeFileSync(LECTURES_JSON, JSON.stringify(data, null, 2) + '\n', 'utf8');
+  // Write atomically (temp file + rename) so a concurrent read or a crash
+  // mid-write can never observe a truncated/empty lectures.json.
+  const tmpPath = `${LECTURES_JSON}.tmp`;
+  fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2) + '\n', 'utf8');
+  fs.renameSync(tmpPath, LECTURES_JSON);
 }
 
 function listLectures() {

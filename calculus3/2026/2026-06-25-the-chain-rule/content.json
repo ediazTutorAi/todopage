@@ -1,0 +1,20 @@
+{
+  "course": "Calculus III",
+  "semester": "Summer 2026",
+  "date": "2026-06-25",
+  "title": "The Chain Rule",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "chain rule"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Objectives",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "<ul>\n  <li>4.5.1 State the Chain Rule for one or two independent variables</li>\n    <li>4.5.2</li>\n    <li>4.5.3</li>\n</ul>"
+    }
+  ]
+}

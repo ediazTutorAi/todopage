@@ -1,0 +1,42 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-02-11",
+  "title": "Partial Derivatives and Chain Rule",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "Partial Derivatives",
+    "Chain Rule"
+  ],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Idea of Directional Derivative",
+      "ggbId": "",
+      "bodyHtml": "Idea: Imagine you are on a surface defined by $z = f(x,y)$, and you want to know the rate of change of the\n            height as you move in a specific direction.<br>\n            What this idea reminds you of?<br>\n            What could be a practical way to compute this rate of change?<br>\n            How do you define \"direction\" in the domain of $f$? <br>\n            In particular, what does it mean to move in the direction of the x-axis or the y-axis?<br>"
+    },
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Partial Derivatives",
+      "ggbId": "",
+      "bodyHtml": "Let $f(x,y)$ be a function of two variables. Then the partial derivative of f with respect to x, written as\n            $\\partial_x f(x,y)$ or $f_x(x,y)$ is defined as\n            $$\n            f_x(x,y) = \\lim_{h \\to 0} \\frac{f(x+h,y) - f(x,y)}{h}\n            $$\n            Similarly, the partial derivative of f with respect to y, written as $\\partial_y f(x,y)$ or $f_y(x,y)$ is\n            defined as\n            $$\n            f_y(x,y) = \\lim_{h \\to 0} \\frac{f(x,y+h) - f(x,y)}{h}\n            $$"
+    },
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Higher-Order Partial Derivatives",
+      "ggbId": "",
+      "bodyHtml": "The second-order partial derivatives of $f(x,y)$ are defined as\n            $$f_{xx} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right) = \\frac{\\partial^2\n            f}{\\partial x^2}$$\n            $$f_{yy} = \\frac{\\partial}{\\partial y}\\left(\\frac{\\partial f}{\\partial y}\\right) = \\frac{\\partial^2\n            f}{\\partial y^2}$$\n            $$f_{xy} = \\frac{\\partial}{\\partial y}\\left(\\frac{\\partial f}{\\partial x}\\right) = \\frac{\\partial^2\n            f}{\\partial y \\partial x}$$\n            $$f_{yx} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial y}\\right) = \\frac{\\partial^2\n            f}{\\partial x \\partial y}$$"
+    },
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Clairaut's Theorem",
+      "ggbId": "",
+      "bodyHtml": "If $f_{xy}$ and $f_{yx}$ are continuous on an open disk, then for any point $(x,y)$ in the disk,\n            $$f_{xy}(x,y) = f_{yx}(x,y)$$"
+    }
+  ]
+}

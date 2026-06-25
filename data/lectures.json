@@ -496,5 +496,17 @@
       "geometric series"
     ],
     "url": "calculus-ii/2026/2026-06-24-geometric-series/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Summer 2026",
+    "date": "2026-06-25",
+    "title": "The Chain Rule",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "chain rule"
+    ],
+    "url": "calculus3/2026/2026-06-25-the-chain-rule/index.html"
   }
 ]
