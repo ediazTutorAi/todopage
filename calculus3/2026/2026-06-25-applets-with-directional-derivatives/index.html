@@ -1,37 +1,36 @@
-// Generates a lecture index.html matching the structure used across the
-// existing todopage lectures (post drawer/mindmap removal): KaTeX head,
-// shared CSS, .card/.step markup, slide controls, GeoGebra float panel.
+<!DOCTYPE html>
+<html lang="en">
 
-function escapeHtml(s) {
-  return String(s ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
+<head>
+  <meta charset="utf-8" />
+  <title>Applets with Directional Derivatives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-function stepHtml(step, index) {
-  const ggbAttr = step.ggbId ? ` data-ggb-id="${escapeHtml(step.ggbId)}"` : '';
-  return `        <div class="step is-visible" data-step="${index + 1}"${ggbAttr}>
-          <div class="step-title">${escapeHtml(step.label)}</div>
-          <div class="step-subtitle">${escapeHtml(step.subtitle || '')}</div>
-          <div class="step-body">
-            ${step.bodyHtml || ''}
-          </div>
-        </div>`;
-}
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
-function renderLectureHtml({ title, steps }) {
-  const stepsHtml = steps.map(stepHtml).join('\n\n');
-  const hasGeogebra = stepsHtml.includes('<geogebra');
-
-  const geogebraHead = !hasGeogebra ? '' : `
   <!-- GeoGebra (inline diagrams via command API) -->
   <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
   <script defer>
     window.addEventListener('load', function () {
       var ASPECT_RATIO = 1.25;
       document.querySelectorAll('geogebra').forEach(function (el, i) {
-        var commands = el.textContent.split('\\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
         var container = document.createElement('div');
         container.id = 'geogebra-' + i;
         container.style.width = '100%';
@@ -84,34 +83,7 @@ function renderLectureHtml({ title, steps }) {
       });
     });
   </script>
-`;
 
-  return `<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <title>${escapeHtml(title)}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- KaTeX -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
-  <script defer>
-    window.addEventListener('load', function () {
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '\\\\[', right: '\\\\]', display: true},
-          {left: '\\\\(', right: '\\\\)', display: false},
-          {left: '$', right: '$', display: false}
-        ],
-        throwOnError: false
-      });
-    });
-  </script>
-${geogebraHead}
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -122,7 +94,7 @@ ${geogebraHead}
 <body>
 
   <header class="site-header">
-    <h1>${escapeHtml(title)}</h1>
+    <h1>Applets with Directional Derivatives</h1>
     <div class="meta"></div>
   </header>
 
@@ -131,7 +103,23 @@ ${geogebraHead}
       <div class="card" id="left-card">
 
         <!-- STEPS -->
-${stepsHtml}
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Applets with directional derivatives</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <geogebra width="800" height="500" perspective="3D">
+  f(x,y)=(x^2/5)+y^2
+  A(1,1,f(1,1))
+  p:z=f(1,1)
+  Intersect(f,p)
+</geogebra>
+ <geogebra width="800" height="500" perspective="2D">
+  eq:(x^2/5)+y^2=6/5
+  gr: Vector((1,1),(1,1)+(1/5,1))
+  (1/5)(x-1)+(y-1)=0
+</geogebra>
+          </div>
+        </div>
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
@@ -164,7 +152,3 @@ ${stepsHtml}
 </body>
 
 </html>
-`;
-}
-
-module.exports = { renderLectureHtml };

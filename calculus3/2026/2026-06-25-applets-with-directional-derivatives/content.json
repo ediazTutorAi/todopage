@@ -1,0 +1,18 @@
+{
+  "course": "Calculus III",
+  "semester": "Summer 2026",
+  "date": "2026-06-25",
+  "title": "Applets with Directional Derivatives",
+  "subtitle": "",
+  "description": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Applets with directional derivatives",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "<geogebra width=\"800\" height=\"500\" perspective=\"3D\">\n  f(x,y)=(x^2/5)+y^2\n  A(1,1,f(1,1))\n  p:z=f(1,1)\n  Intersect(f,p)\n</geogebra>\n <geogebra width=\"800\" height=\"500\" perspective=\"2D\">\n  eq:(x^2/5)+y^2=6/5\n  gr: Vector((1,1),(1,1)+(1/5,1))\n  (1/5)(x-1)+(y-1)=0\n</geogebra>"
+    }
+  ]
+}

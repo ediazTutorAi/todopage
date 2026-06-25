@@ -3,18 +3,92 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 2326 — Calculus 3</title>
+  <title>Directional Derivatives and Tangent Planes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\[', right:'\]', display:true},
-            {left:'\(', right:'\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- GeoGebra (inline diagrams via command API) -->
+  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      var ASPECT_RATIO = 1.25;
+      document.querySelectorAll('geogebra').forEach(function (el, i) {
+        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var container = document.createElement('div');
+        container.id = 'geogebra-' + i;
+        container.style.width = '100%';
+        el.replaceWith(container);
+
+        var explicitWidth = el.getAttribute('width');
+        var explicitHeight = el.getAttribute('height');
+        function computeSize() {
+          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
+          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
+          return { w: w, h: h };
+        }
+
+        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
+        var size = computeSize();
+        var ggbApi = null;
+
+        try {
+          var applet = new GGBApplet({
+            id: container.id,
+            width: size.w,
+            height: size.h,
+            showToolBar: false,
+            showMenuBar: false,
+            showAlgebraInput: false,
+            showResetIcon: false,
+            appName: perspective === '3D' ? '3d' : 'classic',
+            appletOnLoad: function (api) {
+              ggbApi = api;
+              var failed = commands.filter(function (cmd) { return !api.evalCommand(cmd); });
+              if (failed.length) {
+                var msg = document.createElement('div');
+                msg.style.color = '#b00020';
+                msg.textContent = 'Diagram error in command(s): ' + failed.join('; ');
+                container.insertAdjacentElement('afterend', msg);
+              }
+            }
+          }, true);
+          applet.inject(container.id);
+
+          if (!explicitWidth) {
+            var resizeTimer = null;
+            window.addEventListener('resize', function () {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(function () {
+                if (!ggbApi) return;
+                var s = computeSize();
+                ggbApi.setSize(s.w, s.h);
+              }, 150);
+            });
+          }
+        } catch (err) {
+          container.textContent = 'Diagram error: ' + err.message;
+          container.style.color = '#b00020';
+        }
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -26,8 +100,8 @@
 <body>
 
   <header class="site-header">
-    <h1>Directional Derivatives</h1>
-    <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
+    <h1>Directional Derivatives and Tangent Planes</h1>
+    <div class="meta"></div>
   </header>
 
   <main class="container">
@@ -35,20 +109,7 @@
       <div class="card" id="left-card">
 
         <!-- STEPS -->
-        <div class="step is-visible" data-step="1" data-ggb="dkpq2ez8">
-          <div class="step-title">Definition</div>
-          <div class="step-subtitle">Directional Derivative</div>
-          <div class="step-body">
-            Suppose $z=f(x,y)$ is a function of two variables with a domain of D. Let $(a,b)$ be a point in D and
-            define $\vec{u}=cos(\theta)\hat{i}+sin(\theta)\hat{j}$. Then, the directional derivative of f in the
-            direction of $\vec{u}$ is given by
-            $$D_{\vec{u}}f(a,b)=\lim_{h\to 0}\frac{f(a+hcos(\theta), b+hsin(\theta))-f(a,b)}{h}$$
-            provided the limit exists.
-
-          </div>
-        </div>
-
-        <div class="step" data-step="2">
+        <div class="step is-visible" data-step="1">
           <div class="step-title">Theorem 4.12</div>
           <div class="step-subtitle">Directional Derivative of a Function of Two Variables</div>
           <div class="step-body">
@@ -61,7 +122,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="3">
+        <div class="step is-visible" data-step="2">
           <div class="step-title">Gradient</div>
           <div class="step-subtitle">Definition</div>
           <div class="step-body">
@@ -72,7 +133,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="4">
+        <div class="step is-visible" data-step="3">
           <div class="step-title">Theorem 4.13</div>
           <div class="step-subtitle">Properties of the Gradient</div>
           <div class="step-body">
@@ -86,18 +147,22 @@
           </div>
         </div>
 
-
-        <div class="step" data-step="6">
+        <div class="step is-visible" data-step="4">
           <div class="step-title">Gradients and Level Curves</div>
           <div class="step-subtitle">Gradient is normal to the level curves</div>
           <div class="step-body">
             Suppose the function $z=f(x,y)$ has continuous first-order partial derivatives in an open disk centered at
             the point $(x_0,y_0)$. If $\nabla f(x_0,y_0) \neq \vec{0}$, then $\nabla f(x_0,y_0)$ is normal to the level
             curve of f at $(x_0,y_0)$.
+  
+<geogebra perspective="3D">
+  f(x,y)=x^2+y^2
+  
+</geogebra>
           </div>
         </div>
 
-        <div class="step" data-step="7">
+        <div class="step is-visible" data-step="5">
           <div class="step-title">Tangent Planes</div>
           <div class="step-subtitle">Definition</div>
           <div class="step-body">
@@ -107,7 +172,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="8">
+        <div class="step is-visible" data-step="6">
           <div class="step-title">Definition</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
@@ -118,7 +183,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="9">
+        <div class="step is-visible" data-step="7">
           <div class="step-title">Linear Approximation</div>
           <div class="step-subtitle">Definition</div>
           <div class="step-body">
@@ -128,7 +193,6 @@
             $$L(x,y) = f(x_0,y_0) + f_x(x_0,y_0)(x-x_0) + f_y(x_0,y_0)(y-y_0)$$
           </div>
         </div>
-
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
@@ -154,7 +218,6 @@
     </div>
   </div>
   <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
-
 
   <!-- JS entry (ES modules) -->
   <script type="module" src="/todopage/js/boot.js"></script>

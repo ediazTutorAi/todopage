@@ -1,9 +1,8 @@
 # Lecture Editor
 
-A local desktop app for authoring new lectures for the `todopage` site without
-hand-writing HTML. It only manages lectures it created itself — existing
-hand-written lectures are left untouched and shown as locked (🔒) in the
-sidebar.
+A local desktop app for authoring and editing lectures for the `todopage` site
+without hand-writing HTML. It can open and modify any lecture in the repo,
+including pre-existing hand-written ones.
 
 ## What it does
 
@@ -40,9 +39,6 @@ sidebar.
 
 ## What it does not do
 
-- It cannot open or edit lectures that weren't created by it (the 38+
-  pre-existing hand-written lectures). Those stay exactly as they are; keep
-  editing them directly in a text editor.
 - It never runs `git` commands.
 
 ## Technical details
@@ -63,10 +59,10 @@ sidebar.
     `tagSnippets.js` for the toolbar's tag-insertion skeletons,
     `mathPreview.js` + `latexSmartInput.js` for the backtick LaTeX popup,
     `renderer.js` wiring it all together.
-- **Content format**: each app-created lecture folder has a `content.json`
-  sidecar (course/date/title/tags/steps) alongside the generated
-  `index.html`. The presence of `content.json` is how the app tells apart
-  lectures it manages from ones it doesn't.
+- **Content format**: app-created lecture folders have a `content.json`
+  sidecar (course/date/title/tags/steps) alongside the generated `index.html`.
+  When opening a hand-written lecture that has no `content.json`, the app
+  parses the existing `index.html` directly to populate the editor.
 - **Tag parsing**: `lib/parseTags.js` converts the bracket-tag text into the
   step-object array (`parseSteps`) and back into editable tag text
   (`stepsToTagText`) for round-trip editing.

@@ -508,5 +508,15 @@
       "chain rule"
     ],
     "url": "calculus3/2026/2026-06-25-the-chain-rule/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Summer 2026",
+    "date": "2026-06-25",
+    "title": "Applets with Directional Derivatives",
+    "subtitle": "",
+    "description": "",
+    "tags": [],
+    "url": "calculus3/2026/2026-06-25-applets-with-directional-derivatives/index.html"
   }
 ]
