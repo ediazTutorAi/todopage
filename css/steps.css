@@ -89,7 +89,7 @@ body.slide-mode .card {
 body.slide-mode .card .step {
   display: none !important;
   margin: 0;
-  width: min(900px, 88%);
+  width: min(1200px, 88%);
   font-size: 1.42rem;
   /* 🚫 removed line-height: 1.78 here */
   box-shadow: 0 14px 48px rgba(0,0,0,0.18);
