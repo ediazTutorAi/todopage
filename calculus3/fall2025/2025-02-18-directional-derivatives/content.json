@@ -36,7 +36,7 @@
       "label": "Gradients and Level Curves",
       "subtitle": "Gradient is normal to the level curves",
       "ggbId": "",
-      "bodyHtml": "Suppose the function $z=f(x,y)$ has continuous first-order partial derivatives in an open disk centered at\n            the point $(x_0,y_0)$. If $\\nabla f(x_0,y_0) \\neq \\vec{0}$, then $\\nabla f(x_0,y_0)$ is normal to the level\n            curve of f at $(x_0,y_0)$.\n  \n<geogebra perspective=\"3D\">\n  f(x,y)=x^2+y^2\n  \n</geogebra>"
+      "bodyHtml": "Suppose the function $z=f(x,y)$ has continuous first-order partial derivatives in an open disk centered at\n            the point $(x_0,y_0)$. If $\\nabla f(x_0,y_0) \\neq \\vec{0}$, then $\\nabla f(x_0,y_0)$ is normal to the level\n            curve of f at $(x_0,y_0)$."
     },
     {
       "tag": "step",
