@@ -202,6 +202,8 @@ els.btnSave.addEventListener('click', async () => {
     stepsText: cm.getValue()
   };
 
+  els.btnSave.disabled = true;
+  els.btnSave.textContent = 'Saving…';
   try {
     let result;
     if (currentUrl) {
@@ -213,11 +215,18 @@ els.btnSave.addEventListener('click', async () => {
       expandedCourses.add(result.course || '(No course)');
       els.statusMsg.textContent = `Created "${result.title}".`;
     }
+    els.btnSave.textContent = 'Saved!';
     els.btnSave.classList.add('btn-saved');
-    setTimeout(() => els.btnSave.classList.remove('btn-saved'), 2000);
+    setTimeout(() => {
+      els.btnSave.textContent = 'Save';
+      els.btnSave.classList.remove('btn-saved');
+      els.btnSave.disabled = false;
+    }, 2000);
     await refreshLectureList();
   } catch (err) {
     els.statusMsg.textContent = `Error: ${err.message}`;
+    els.btnSave.textContent = 'Save';
+    els.btnSave.disabled = false;
   }
 });
 

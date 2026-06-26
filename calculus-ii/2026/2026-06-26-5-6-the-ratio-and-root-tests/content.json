@@ -2,7 +2,7 @@
   "course": "Calculus II",
   "semester": "Summer 2026",
   "date": "2026-06-26",
-  "title": "5.6 The ratio and root Tests",
+  "title": "5.6 The ratio Test",
   "subtitle": "",
   "description": "",
   "tags": [],
@@ -33,7 +33,7 @@
       "label": "Warning",
       "subtitle": "Pedagogical Issues when using the ratio Test",
       "ggbId": "",
-      "bodyHtml": "<ol type=\"a\">\n  <li>Choosing the Ratio Test when another test is obvious. Think of \\(\\displaystyle\\sum{n=1}^{\\infty}\\frac{1}{n^2}\\)</li>\n    <li>Thinking that the limit of the ratio equals 1 means divergence</li>\n    <li>Forgetting the absolute value</li>\n    <li>Simplification mistakes</li>\n    <li>Mishandling powers</li>\n    <li>Difficult with factorials</li>\n    <li>Limits involving infinity, using the LHospital Rule</li>\n</ol>"
+      "bodyHtml": "<ol type=\"a\">\n  <li>Choosing the Ratio Test when another test is obvious.</li>\n  Think of \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{n^2}\\)\n    <li>Thinking that the limit of the ratio equals 1 means divergence</li>\n  Again, think in \\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{n^2}\\)\n    <li>Forgetting the absolute value</li>\n    <li>Simplification mistakes and difficult with factorials</li>\n  Because students are not familiar with factorial, some tend to write \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{(n+1)!}{n!}=1\\) which is a simplification with a dificult with factorials,mistake.\n    <li>Mishandling powers</li>\n    Sometimes students may write \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{2^{n+1}}{2^n}=\\lim_{n\\to\\infty}2^n\\) instead of 2.\n    <li>Limits involving infinity, using the LHospital Rule</li>\n  Think of \\(\\displaystyle\\lim_{n\\to\\infty}\\frac{2n+1}{3n+3}\\)\n</ol>"
     }
   ],
   "notes": "Introduce the ratio test after the observation of what happens with the ratio of two consecutive terms of a geometric series.\nIf the ratio diminished by a ratio less than 1 we have enough lowering so the how series converges."

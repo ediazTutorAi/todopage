@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5.6 The ratio Test</title>
+  <title>5.6 The root Test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
@@ -34,7 +34,7 @@
 <body>
 
   <header class="site-header">
-    <h1>5.6 The ratio Test</h1>
+    <h1>5.6 The root Test</h1>
     <div class="meta"></div>
   </header>
 
@@ -44,59 +44,24 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Objectives</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 5.17</div>
+          <div class="step-subtitle">Root Test</div>
           <div class="step-body">
-            <ul>
-  <li>5.6.1 Use the ratio test to determine absolute convergence of a series</li>
-  <li>5.6.2 Use the root test to determine absolute convergence of a series</li>
-  <li>5.6.3 Describe a strategy for testing the convergence of a given series</li>
-</ul>
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="2">
-          <div class="step-title">Theorem 5.16</div>
-          <div class="step-subtitle">Ratio Test</div>
-          <div class="step-body">
-            Let \(\displaystyle\sum_{n=1}^{\infty}a_n\) be a series with nozero terms. Let
-  \[\rho=\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|\]<ol>
-  <li>If \(0\leq\rho < 1\) , then \(\displaystyle\sum_{n=1}^{\infty}a_n\) converges absolutely </li>
-    <li>If \(\rho > 1\) or \(\rho = \infty\), then \(\displaystyle\sum_{n=1}^{\infty}a_n\) diverges</li>
+            Consider the series \(\displaystyle\sum_{n=1}^{\infty}a_n\). Let
+  \[\rho=\lim_{n\to\infty}\sqrt[n]{|a_n|}\]<ol>
+  <li>If \(0\leq\rho < 1\), then \(\displaystyle\sum_{n=1}^{\infty}a_n\) converges</li>
+    <li>If \(\rho > 1\) or \(\rho=\infty\), then \(\displaystyle\sum_{n=1}^{\infty}a_n\) diverges</li>
     <li>If \(\rho=1\), the test does not provide any information</li>
 </ol>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="3">
-          <div class="step-title">Using the Ratio Test</div>
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Examples from Root Test</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-            For each of the following series, use the ratio test to determine whether the series converges or diverges.
-  <ol type="a">
-  <li>\(\displaystyle\sum_{n=1}^{\infty}\frac{2^n}{n!}\)</li>
-    <li>\(\displaystyle\sum_{n=1}^{\infty}\frac{n^n}{n!}\)</li>
-    <li>\(\displaystyle\sum_{n=1}^{\infty}\frac{(-1)^n(n!)^2}{(2n)!}\)</li>
-</ol>
-          </div>
-        </div>
-
-        <div class="step is-visible" data-step="4">
-          <div class="step-title">Warning</div>
-          <div class="step-subtitle">Pedagogical Issues when using the ratio Test</div>
-          <div class="step-body">
             <ol type="a">
-  <li>Choosing the Ratio Test when another test is obvious.</li>
-  Think of \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n^2}\)
-    <li>Thinking that the limit of the ratio equals 1 means divergence</li>
-  Again, think in \(\displaystyle\sum_{n=1}^{\infty}\frac{1}{n^2}\)
-    <li>Forgetting the absolute value</li>
-    <li>Simplification mistakes and difficult with factorials</li>
-  Because students are not familiar with factorial, some tend to write \(\displaystyle\lim_{n\to\infty}\frac{(n+1)!}{n!}=1\) which is a simplification with a dificult with factorials,mistake.
-    <li>Mishandling powers</li>
-    Sometimes students may write \(\displaystyle\lim_{n\to\infty}\frac{2^{n+1}}{2^n}=\lim_{n\to\infty}2^n\) instead of 2.
-    <li>Limits involving infinity, using the LHospital Rule</li>
-  Think of \(\displaystyle\lim_{n\to\infty}\frac{2n+1}{3n+3}\)
+  <li></li>
 </ol>
           </div>
         </div>

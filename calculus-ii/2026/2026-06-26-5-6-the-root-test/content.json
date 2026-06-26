@@ -1,0 +1,28 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-06-26",
+  "title": "5.6 The root Test",
+  "subtitle": "",
+  "description": "",
+  "notes": "You can make a comparison with the geometric series again, by how much is the n-term being similar to the $r^n$ for some r. Therefore, you can see that $r=\\sqrt[n]{a_n}$",
+  "tags": [
+    "root test"
+  ],
+  "steps": [
+    {
+      "tag": "theorem",
+      "label": "Theorem 5.17",
+      "subtitle": "Root Test",
+      "ggbId": "",
+      "bodyHtml": "Consider the series \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\). Let\n  \\[\\rho=\\lim_{n\\to\\infty}\\sqrt[n]{|a_n|}\\]<ol>\n  <li>If \\(0\\leq\\rho < 1\\), then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) converges</li>\n    <li>If \\(\\rho > 1\\) or \\(\\rho=\\infty\\), then \\(\\displaystyle\\sum_{n=1}^{\\infty}a_n\\) diverges</li>\n    <li>If \\(\\rho=1\\), the test does not provide any information</li>\n</ol>"
+    },
+    {
+      "tag": "example",
+      "label": "Examples from Root Test",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "<ol type=\"a\">\n  <li></li>\n</ol>"
+    }
+  ]
+}
