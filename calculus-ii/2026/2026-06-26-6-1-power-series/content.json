@@ -1,0 +1,21 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-06-26",
+  "title": "6.1 Power Series",
+  "subtitle": "",
+  "description": "",
+  "notes": "",
+  "tags": [
+    "power series"
+  ],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Power Series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "A series of the form\n  \\[\\displaystyle\\sum_{n=0}^{\\infty}c_nx^n=c_0+c_1x+c_2x^2+\\cdots\\]is a power series centered at \\(x=0\\). A series of the form\n  \\[\\displaystyle\\sum_{n=0}^{\\infty}c_n(x-a)^n=c_0+c_1(x-a)+c_2(x-a)^2+\\cdots\\]is a power series centered at \\(x=a\\). We are defining that \\(x^0=1\\) and \\((x-a)^0=1\\) even when x=0 and x=a respectively."
+    }
+  ]
+}

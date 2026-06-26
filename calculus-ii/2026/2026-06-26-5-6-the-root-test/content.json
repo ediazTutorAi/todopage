@@ -22,7 +22,14 @@
       "label": "Examples from Root Test",
       "subtitle": "",
       "ggbId": "",
-      "bodyHtml": "<ol type=\"a\">\n  <li></li>\n</ol>"
+      "bodyHtml": "<ol type=\"a\">\n  <li>\\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{(n^2+3n)^n}{(4n^2+5)^n}\\)</li>\n    <li>\\(\\displaystyle\\sum_{n=1}^{\\infty}\\frac{n^n}{(ln(n))^n}\\)</li>\n</ol>"
+    },
+    {
+      "tag": "step",
+      "label": "Warning",
+      "subtitle": "application issues",
+      "ggbId": "",
+      "bodyHtml": "<ol type=\"a\">\n  <li>The main issue is to use the root test on factorial. Never do that.</li>\n    <li>The main application is when your n-term is the n-th power of an element, think of it like \\(a_n=(f(n))^n\\)</li>\n</ol>"
     }
   ]
 }

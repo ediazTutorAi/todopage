@@ -15,6 +15,7 @@ const snippets = {
   ul: { tpl: '<ul>\n  <li></li>\n</ul>', cursorAfter: '<li>', wrap: wrapAsListItem },
   ol: { tpl: '<ol>\n  <li></li>\n</ol>', cursorAfter: '<li>', wrap: wrapAsListItem },
   al: { tpl: '<ol type="a">\n  <li></li>\n</ol>', cursorAfter: '<li>', wrap: (sel) => `<ol type="a">\n  <li>${sel}</li>\n</ol>` },
+  table: { tpl: '<table>\n  <thead>\n    <tr><th></th><th></th></tr>\n  </thead>\n  <tbody>\n    <tr><td></td><td></td></tr>\n    <tr><td></td><td></td></tr>\n  </tbody>\n</table>', cursorAfter: '<th>', wrap: null },
   geogebra: {
     tpl: '<geogebra perspective="2D">\n  \n</geogebra>',
     cursorAfter: 'perspective="2D">',

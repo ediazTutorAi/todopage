@@ -1,0 +1,19 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-06-26",
+  "title": "5.6 Choosing a Convergence Test for a Series",
+  "subtitle": "",
+  "description": "",
+  "notes": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "summary",
+      "label": "Choosing a Convergence Test for a Series",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "<table>\n  <thead>\n    <tr><th>If you see...</th><th>Think...</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>factorials</td><td>Ratio Test</td></tr>\n    <tr><td>n! and exponentials together</td><td>Ratio Test</td></tr>\n    <tr><td>expression raised to the nth power \\((f(n))^n\\)</td><td>Root Test inmmediately</td></tr>\n    <tr><td>\\(n^n\\)</td><td>Root Test often</td></tr>\n    <tr><td>ordinary rational functions</td><td>Probably neither</td></tr>\n  </tbody>\n</table>"
+    }
+  ]
+}
