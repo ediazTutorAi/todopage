@@ -57,7 +57,7 @@ function lectureDirFromUrl(url) {
   return path.join(REPO_ROOT, path.dirname(url));
 }
 
-function createLecture({ course, date, title, subtitle, description, tags, stepsText }) {
+function createLecture({ course, date, title, subtitle, description, notes, tags, stepsText }) {
   if (!course) throw new Error('Course is required');
   if (!title || !title.trim()) throw new Error('Title is required');
   if (!isValidDate(date)) throw new Error(`Invalid date: "${date}" (expected YYYY-MM-DD)`);
@@ -79,6 +79,7 @@ function createLecture({ course, date, title, subtitle, description, tags, steps
     course, semester, date, title,
     subtitle: subtitle || '',
     description: description || '',
+    notes: notes || '',
     tags: tags || [],
     steps
   };
@@ -131,7 +132,7 @@ function loadContent(url) {
   return { ...content, stepsText: stepsToTagText(content.steps) };
 }
 
-function saveContent(url, { title, subtitle, description, tags, stepsText }) {
+function saveContent(url, { title, subtitle, description, notes, tags, stepsText }) {
   const dir = lectureDirFromUrl(url);
   const contentPath = path.join(dir, 'content.json');
   const prev = fs.existsSync(contentPath)
@@ -144,6 +145,7 @@ function saveContent(url, { title, subtitle, description, tags, stepsText }) {
     title: title ?? prev.title,
     subtitle: subtitle ?? prev.subtitle,
     description: description ?? prev.description,
+    notes: notes ?? prev.notes ?? '',
     tags: tags ?? prev.tags,
     steps
   };

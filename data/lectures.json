@@ -437,7 +437,7 @@
     "url": "linear-algebra/fall2025/2025-01-20-matrix-algebra/index.html"
   },
   {
-    "course": "Calculus II ",
+    "course": "Calculus II",
     "semester": "Summer 2026",
     "date": "2026-06-22",
     "title": "5.2 Infinite Series",
@@ -450,7 +450,7 @@
     "url": "calculus-ii/2026/2026-06-22-5-2-infinite-series/index.html"
   },
   {
-    "course": "Calculus II ",
+    "course": "Calculus II",
     "semester": "Summer 2026",
     "date": "2026-06-24",
     "title": "5.4 Comparison Test",
@@ -462,7 +462,7 @@
     "url": "calculus-ii/2026/2026-06-24-5-4-comparison-test/index.html"
   },
   {
-    "course": "Calculus II ",
+    "course": "Calculus II",
     "semester": "Summer 2026",
     "date": "2026-06-24",
     "title": "5.4 Limit Comparison Test",
@@ -474,7 +474,7 @@
     "url": "calculus-ii/2026/2026-06-24-limit-comparison-test/index.html"
   },
   {
-    "course": "Calculus II ",
+    "course": "Calculus II",
     "semester": "Summer 2026",
     "date": "2026-06-24",
     "title": "5.5 Alternating Series",
@@ -486,7 +486,7 @@
     "url": "calculus-ii/2026/2026-06-24-5-5-alternating-series/index.html"
   },
   {
-    "course": "Calculus II ",
+    "course": "Calculus II",
     "semester": "Summer 2026",
     "date": "2026-06-24",
     "title": "Geometric Series",
@@ -518,5 +518,15 @@
     "description": "",
     "tags": [],
     "url": "calculus3/2026/2026-06-25-applets-with-directional-derivatives/index.html"
+  },
+  {
+    "course": "Calculus II",
+    "semester": "Summer 2026",
+    "date": "2026-06-26",
+    "title": "5.6 The ratio and root Tests",
+    "subtitle": "",
+    "description": "",
+    "tags": [],
+    "url": "calculus-ii/2026/2026-06-26-5-6-the-ratio-and-root-tests/index.html"
   }
 ]

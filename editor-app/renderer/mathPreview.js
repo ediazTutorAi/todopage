@@ -139,6 +139,29 @@ export function openLatexInputPopup(cm, closer, displayMode, editing) {
   });
 }
 
+export function renderMathMarks(cm) {
+  const text = cm.getValue();
+  const re = /\\([\(\[])[\s\S]*?\\([\)\]])/g;
+  let match;
+  while ((match = re.exec(text)) !== null) {
+    const displayMode = match[1] === '[';
+    const inner = match[0].slice(2, -2).trim();
+    const from = cm.posFromIndex(match.index);
+    const to = cm.posFromIndex(match.index + match[0].length);
+    try {
+      const span = document.createElement('span');
+      span.innerHTML = katex.renderToString(inner, { throwOnError: true, displayMode });
+      const mark = cm.markText(from, to, { replacedWith: span, handleMouseEvents: true });
+      span.addEventListener('click', () => {
+        const range = mark.find();
+        if (!range) return;
+        mark.clear();
+        openLatexInputPopup(cm, displayMode ? ']' : ')', displayMode, { tex: inner, from: range.from, to: range.to });
+      });
+    } catch { /* leave raw text if KaTeX fails */ }
+  }
+}
+
 export function openLatexAttributePopup(cm, from, to, initialValue) {
   const pop = document.createElement('div');
   pop.className = 'latex-popup';

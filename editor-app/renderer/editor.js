@@ -1,4 +1,4 @@
-import { openLatexInputPopup, openLatexAttributePopup } from './mathPreview.js';
+import { openLatexInputPopup, openLatexAttributePopup, renderMathMarks } from './mathPreview.js';
 
 function getAttributeRange(cm, cur) {
   const line = cm.getLine(cur.line);
@@ -57,5 +57,6 @@ export function initEditor(container) {
     openLatexInputPopup(cmInstance, closer, displayMode);
   });
 
+  cm.renderMathMarks = () => renderMathMarks(cm);
   return cm;
 }

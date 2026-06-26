@@ -10,6 +10,7 @@ const els = {
   subtitle: document.getElementById('f-subtitle'),
   tags: document.getElementById('f-tags'),
   description: document.getElementById('f-description'),
+  notes: document.getElementById('f-notes'),
   addButtons: document.querySelectorAll('.step-add-buttons button'),
   btnSave: document.getElementById('btn-save'),
   statusMsg: document.getElementById('status-msg'),
@@ -38,6 +39,26 @@ function setMetaExpanded(expanded) {
   if (!expanded) updateMetaSummary();
 }
 
+function notesRawText() {
+  return els.notes.dataset.raw ?? els.notes.textContent;
+}
+
+function renderNotesKatex() {
+  const text = els.notes.textContent;
+  els.notes.dataset.raw = text;
+  const html = text.replace(/\$\$(.+?)\$\$/gs, (_, t) => {
+    try { return katex.renderToString(t, { displayMode: true }); } catch { return `$$${t}$$`; }
+  }).replace(/\$(.+?)\$/g, (_, t) => {
+    try { return katex.renderToString(t, { displayMode: false }); } catch { return `$${t}$`; }
+  });
+  els.notes.innerHTML = html;
+}
+
+els.notes.addEventListener('focus', () => {
+  els.notes.textContent = notesRawText();
+});
+els.notes.addEventListener('blur', renderNotesKatex);
+
 els.metaToggle.addEventListener('click', () => {
   setMetaExpanded(els.metaBody.hidden);
 });
@@ -57,6 +78,8 @@ function clearForm() {
   els.subtitle.value = '';
   els.tags.value = '';
   els.description.value = '';
+  els.notes.textContent = '';
+  delete els.notes.dataset.raw;
   cm.setValue('');
   els.statusMsg.textContent = '';
   setMetaExpanded(true);
@@ -70,7 +93,11 @@ function fillForm(content) {
   els.subtitle.value = content.subtitle || '';
   els.tags.value = (content.tags || []).join(', ');
   els.description.value = content.description || '';
+  els.notes.textContent = content.notes || '';
+  delete els.notes.dataset.raw;
+  if (content.notes) renderNotesKatex();
   cm.setValue(content.stepsText || '');
+  cm.renderMathMarks();
   els.statusMsg.textContent = '';
   setMetaExpanded(false);
 }
@@ -170,6 +197,7 @@ els.btnSave.addEventListener('click', async () => {
     title: els.title.value.trim(),
     subtitle: els.subtitle.value.trim(),
     description: els.description.value.trim(),
+    notes: notesRawText().trim(),
     tags: els.tags.value.split(',').map(t => t.trim()).filter(Boolean),
     stepsText: cm.getValue()
   };
@@ -185,6 +213,8 @@ els.btnSave.addEventListener('click', async () => {
       expandedCourses.add(result.course || '(No course)');
       els.statusMsg.textContent = `Created "${result.title}".`;
     }
+    els.btnSave.classList.add('btn-saved');
+    setTimeout(() => els.btnSave.classList.remove('btn-saved'), 2000);
     await refreshLectureList();
   } catch (err) {
     els.statusMsg.textContent = `Error: ${err.message}`;

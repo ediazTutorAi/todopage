@@ -1,0 +1,63 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-03-18",
+  "title": "Cylindrical and Spherical Integrals",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "Cylindrical Integrals"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Cylindrical Coordinates",
+      "subtitle": "Definition",
+      "ggbId": "dbhs3q8t",
+      "bodyHtml": "To convert from rectangular to cylindrical coordinates, we use the conversion $x=r\\cos(\\theta)$, $y=r\\sin(\\theta)$ and $z=z$. To convert from cylindrical to rectangular coordinates, we use $r^2=x^2+y^2$,$\\tan(\\theta)=\\frac{y}{x}$ and $z=z$."
+    },
+    {
+      "tag": "step",
+      "label": "Special surfaces in cylindrical coordinates",
+      "subtitle": "",
+      "ggbId": "p5kthve3",
+      "bodyHtml": "By fixing one of the variables in cylindrical coordinates, we can obtain some special surfaces. Can you guess what surfaces we obtain by fixing each of the variables?"
+    },
+    {
+      "tag": "step",
+      "label": "Review of Spherical Coordinates",
+      "subtitle": "",
+      "ggbId": "bvp8sg2n",
+      "bodyHtml": "To convert from spherical coordinates to rectangular coordinates:\n          $$x=\\rho\\sin(\\phi)\\cos(\\theta),\\quad y=\\rho\\sin(\\phi)\\sin(\\theta),\\quad z=\\rho\\cos(\\phi)$$\n          To convert from rectangular coordinates to spherical coordinates:\n          $$\\rho=\\sqrt{x^2+y^2+z^2},\\quad \\theta=\\tan^{-1}\\left(\\frac{y}{x}\\right),\\quad \\phi=\\cos^{-1}\\left(\\frac{z}{\\sqrt{x^2+y^2 +z^2}}\\right)$$\n          Look at the applet to see how the coordinates change as we move the point."
+    },
+    {
+      "tag": "step",
+      "label": "Integration in Cylindrical coordinates",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "If the cylindrical region over which we have to integrate is a general solid, we look at the projections onto the coordinate planes. Hence the triple integral of a continuous function $f(r,\\theta,z)$ over a general solid region $E=\\{(r,\\theta,z)|(r,\\theta)\\in D, u_1(r,\\theta)\\leq z \\leq u_2(r,\\theta)\\}$ in $\\mathbb{R}^3$, where D is the projection of E onto the $r\\theta$-plane, is given by:\n          $$\\iiint_E f(r,\\theta,z)rdrd\\theta dz=\\iint_D\\left[\\int_{u_1(r,\\theta)}^{u_2(r,\\theta)} f(r,\\theta,z)dz\\right]\\,rdr\\,d\\theta$$\n          In particular, if $D=\\{(r,\\theta)|g_1(\\theta)\\leq r \\leq g_2(\\theta),\\alpha\\leq\\theta\\leq\\beta\\}$, then we have:\n          $$\\iiint_E f(r,\\theta,z)r dr d\\theta=\\int_{\\theta=\\alpha}^{\\theta=\\beta}\\int_{r=g_1(\\theta)}^{r=g_2(\\theta)}\\int_{z=u_1(r,\\theta)}^{z=u_2(r,\\theta)} f(r,\\theta,z)r dz dr d\\theta$$"
+    },
+    {
+      "tag": "step",
+      "label": "Setting up Triple Integrals in Cylindrical coordinates",
+      "subtitle": "Examples and change of limits of integration",
+      "ggbId": "",
+      "bodyHtml": ""
+    },
+    {
+      "tag": "step",
+      "label": "Setting up Triple Integrals in Spherical coordinates",
+      "subtitle": "Examples",
+      "ggbId": "",
+      "bodyHtml": "Much of the same as said for cylindrical coordinate apply to spherical coordinates, except that the Jacobian is going to be\n          $$\\rho^2sin(\\phi)$$"
+    },
+    {
+      "tag": "definition",
+      "label": "yyy",
+      "subtitle": "",
+      "ggbId": "",
+      "bodyHtml": "\\(x+\\frac{x}{v}\\)"
+    }
+  ],
+  "notes": ""
+}

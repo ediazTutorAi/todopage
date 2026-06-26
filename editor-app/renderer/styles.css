@@ -110,6 +110,24 @@ input, select, textarea {
 }
 .meta-body[hidden] { display: none; }
 
+.notes-editable {
+  min-height: 4.5em;
+  padding: 4px 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  cursor: text;
+  outline: none;
+}
+.notes-editable:focus { border-color: var(--accent); }
+.notes-editable:empty::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  pointer-events: none;
+}
+
 #steps-section {
   display: flex;
   flex-direction: column;
@@ -145,6 +163,7 @@ input, select, textarea {
 }
 .btn:hover { background: #eef2f7; }
 .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.btn-saved { background: #16a34a; border-color: #16a34a; color: #fff; transition: background 0.3s, border-color 0.3s; }
 .btn.small { padding: 4px 8px; font-size: 0.78rem; }
 
 .save-bar {
