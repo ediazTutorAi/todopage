@@ -64,6 +64,7 @@ html, body {
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
   font-size: 1.30rem;
+  padding-bottom: 60px;
 }
 
 /* Apply relaxed line-height only to paragraph-style text */

@@ -69,10 +69,19 @@
 .step .step-icon:hover { background: #f3f4f6; }
 
 .reveal-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   gap: 8px;
-  margin-top: 0.9rem;
   align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--line);
+  z-index: 100;
 }
 
 /* Slide Mode */
@@ -82,6 +91,7 @@ body.slide-mode .card {
   display: grid;
   grid-template-rows: 1fr auto;
   padding: 0;
+  padding-bottom: 60px;
   overflow-y: auto;
   place-items: center;
 }
@@ -108,6 +118,14 @@ body.slide-mode .card .step.is-current {
 body.slide-mode .card .katex {
   font-size: 1.06em;
   line-height: 1.2 !important;
+}
+
+/* Reveal mode */
+.reveal-hidden {
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 180ms ease-in;
 }
 
 /* Tables */

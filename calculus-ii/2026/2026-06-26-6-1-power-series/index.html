@@ -44,12 +44,85 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
+          <div class="step-title">Objectives for Power Series</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <ul>
+  <li>6.1.1 Identify a power series and provide examples of them</li>
+    <li>6.1.2 Determine the radius of convergence and interval of convergence of a power series</li>
+    <li>6.1.3 Use a power series to represent a function</li>
+</ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
           <div class="step-title">Power Series</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
             A series of the form
   \[\displaystyle\sum_{n=0}^{\infty}c_nx^n=c_0+c_1x+c_2x^2+\cdots\]is a power series centered at \(x=0\). A series of the form
   \[\displaystyle\sum_{n=0}^{\infty}c_n(x-a)^n=c_0+c_1(x-a)+c_2(x-a)^2+\cdots\]is a power series centered at \(x=a\). We are defining that \(x^0=1\) and \((x-a)^0=1\) even when x=0 and x=a respectively.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Theorem 6.1</div>
+          <div class="step-subtitle">Convergence of a Power Series</div>
+          <div class="step-body">
+            Consider the power series \(\displaystyle\sum_{n=0}^{\infty}c_n(x-a)^n\). The series satisfies exactly one of the following properties:
+  <ol>
+  <li>The series converges at \(x=a\) and diverges for all \(x\neq a\).</li>
+    <li>The series converges for all real numbers x.</li>
+    <li>There exists a real number R > 0 such that the series converges if \(|x-a| < R\) and diverges if \(|x-a| > R\). At the values x where \(|x-a|=R\), the series may converge or diverge.</li>
+</ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Interval of convergence, Radius of convergence</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Consider the power series \(\displaystyle\sum_{n=0}^{\infty}c_n(x-a)^n\). The set of real numbers x where the series converges is the interval of convergence. If there exists a real number R > 0 such that the series converges for \(|x-a| < R\) and diverges for \(|x-a| > R\), then R is the radius of convergence. If the series converges only at x=a, we say the radius of converges is R = 0. If the series converges for all real numbers x, we say the radius of convergence is \(R = \infty\).
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5" data-reveal="true">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <p reveal-inline> Solve \(\displaystyle\sum_{n=0}^{\infty}\frac{x^n}{n!}\) <span>Use ratio Test</span><span>\(\displaystyle\lim_{n\to\infty}\left|\frac{\frac{x^{n+1}}{(n+1)!}}{\frac{x^n}{n!}}\right|\)</span></p>
+  <p reveal-inline>\(=\displaystyle\lim_{n\to\infty}\left|\frac{n!x^{n+1}}{(n+1)!x^n}\right|\)<span>\(=\displaystyle\lim_{n\to\infty}\left|\frac{x}{n+1}\right|\)</span></p>
+  <p>\(=\displaystyle\lim_{n\to\infty}\frac{|x|}{n+1}\)</p>
+  <p>Then for all x a real number we have \(\displaystyle\lim_{n\to\infty}\frac{|x|}{n+1}=0\)</p>
+  <p>Then the interval of radiues of convergence is \(R=\infty\) and the interval of converge is all the real numbers</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6" data-reveal="true">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <p>Find the interval and radius of convergence of \(\displaystyle\sum_{n=0}^{\infty}n!x^n\). What test?</p>
+  <p>Use the ratio test: \(\displaystyle\lim_{n\to\infty}\left|\frac{(n+1)!x^{n+1}}{n!x^n}\right|\). This simplifies to:</p>
+  <p>\(=\displaystyle\lim_{n\to\infty}|(n+1)x|\)</p>
+  <p>This limit is infinity for all the values of x. Therefore, the radius of convergence is 0 and the interval of convergence is just the point 0</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7" data-reveal="true">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <p>Find the interval and the radius of convergence of the series \(\displaystyle\sum_{n=0}^{\infty}\frac{(x-2)^n}{(n+1)3^n}\)</p>
+  <p reveal-inline>\(\displaystyle\lim_{n\to\infty}\left|\frac{\frac{(x-2)^{n+1}}{((n+1)+1)3^{n+1}}}{\frac{(x-2)^n}{(n+1)3^n}}\right|\)<span>\(=\displaystyle\lim_{n\to\infty}\left|\frac{(x-2)^{n+1}(n+1)3^n}{(x-2)^n(n+2)3^{n+1}}\right|\)</span><span>\(=\displaystyle\lim_{n\to\infty}\left|\frac{(x-2)(n+1)}{(n+2)3}\right|\)</span></p>
+  <p reveal-inline>\(=\displaystyle\left|\frac{x-2}{3}\right|\lim_{n\to\infty}\frac{n+1}{n+2}\)<span>\(=\left|\frac{x-2}{3}\right|=\rho\)</span></p>
+  <p>Remember that in order for this series to converge \(\rho\) must be < 1 also remember that when \(\rho=1\) the test is inconclusive so we need another test to show convergence or divergence</p>
+    <p reveal-inline><span>\(\left|\frac{x-2}{3}\right|\lt 1\) implies</span> <span>\(\left|x-2\right|\lt3\). </span><span>This means the radius of convergence is 3 centered at \(x=2\). </span><span>This means the interval of convergence so far is \((-1,5)\). </span><span>We need to analize the ends \(x=-1\) and \(x=5\)</span> </p>
+    <p reveal-inline><span>Case \(x=1\). </span><span>\(\displaystyle\sum_{n=0}^{\infty}\frac{(-1)^n}{(n+1)}\) </span><span>This is an alternate series, whih is the same as the Alternating Harmonic Series, so it converges </span></p>
+    <p>Case \(x=5\)</p>
+    <p>The series is \(\displaystyle\sum_{n=0}^{\infty}\frac{1}{(n+1)}\), which is the harmonic series, divergent</p>
+
+    <p>Therefore, the interval of convergence is \([-1,5)\)</p>
           </div>
         </div>
 

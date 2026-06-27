@@ -11,7 +11,8 @@ function escapeHtml(s) {
 
 function stepHtml(step, index) {
   const ggbAttr = step.ggbId ? ` data-ggb-id="${escapeHtml(step.ggbId)}"` : '';
-  return `        <div class="step is-visible" data-step="${index + 1}"${ggbAttr}>
+  const revealAttr = step.reveal ? ` data-reveal="true"` : '';
+  return `        <div class="step is-visible" data-step="${index + 1}"${ggbAttr}${revealAttr}>
           <div class="step-title">${escapeHtml(step.label)}</div>
           <div class="step-subtitle">${escapeHtml(step.subtitle || '')}</div>
           <div class="step-body">

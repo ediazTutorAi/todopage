@@ -35,6 +35,7 @@ function parseSteps(text) {
       label: attrs.title || '',
       subtitle: attrs.subtitle || '',
       ggbId: attrs.ggb || '',
+      reveal: /\breveal\b/.test(attrsStr),
       bodyHtml: body.trim()
     });
   }
@@ -50,6 +51,7 @@ function stepsToTagText(steps) {
     let openTag = `<${tag} title="${escapeAttr(step.label)}"`;
     if (step.subtitle) openTag += ` subtitle="${escapeAttr(step.subtitle)}"`;
     if (step.ggbId) openTag += ` ggb="${escapeAttr(step.ggbId)}"`;
+    if (step.reveal) openTag += ` reveal`;
     openTag += '>';
     return `${openTag}\n${step.bodyHtml || ''}\n</${tag}>`;
   }).join('\n\n');
