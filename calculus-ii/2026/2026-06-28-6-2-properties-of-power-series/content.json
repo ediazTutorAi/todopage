@@ -1,0 +1,46 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-06-28",
+  "title": "6.2 Properties of Power Series",
+  "subtitle": "",
+  "description": "",
+  "notes": "",
+  "tags": [
+    "properties of power series"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Objectives",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<ul>\n  <li>6.2.1 Combine Power Series by addition and subtraction</li>\n    <li>6.2.2 Create a new power series by multiplication by a power of the variable or a constant, or by substitution</li>\n    <li>6.2.3 Multiply two power series together</li>\n    <li>6.2.4 Differentiate and Integrate power series term-by-term</li>\n</ul>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 6.2",
+      "subtitle": "Combining Power Series",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Suppose that the two power series \\(\\displaystyle\\sum_{n=0}^{\\infty}c_nx^n\\) and \\(\\displaystyle\\sum_{n=0}^{\\infty}d_nx^n\\) converge to the function f and g, respectively, on a common interval I.\n<ol>\n  <li>The power series \\(\\displaystyle\\sum_{n=0}^{\\infty}(c_nx^n\\pm d_nx^n)\\) converges to \\(f\\pm g\\) on I.</li>\n  <li>For any integer \\(m\\geq0\\) and any real number b, the power series \\(\\displaystyle\\sum_{n=0}^{\\infty}bx^mc_nx^n\\) converges to \\(bx^mf(x)\\) on I.</li>\n  <li>For any integer \\(m\\geq 0\\) and any real number b, the series \\(\\displaystyle\\sum_{n=0}^{\\infty}c_n(bx^m)^n\\) converges to \\(f(bx^m)\\) for all x such that \\(bx^m\\) is in I</li>\n</ol>"
+    },
+    {
+      "tag": "example",
+      "label": "Constructing Power Series from Known Power Series",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<ol type=\"a\">\n  <li>\\(f(x)=\\frac{3x}{1+x^2}\\)</li>\n    <li>\\(f(x)=\\frac{1}{(x-1)(x-3)}\\)</li>\n</ol>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 6.4",
+      "subtitle": "Term-by-Term Differentiation and Integration for Power Series",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Suppose that the power series defined a function \\(f(x)=\\displaystyle\\sum_{n=0}^{\\infty}c_n(x-a)^n\\) and converges to the function on the interval \\((a-R,a+R)\\) for some R > 0. The derivative of the function f will be given by differentiation the series term-by-term\n  \\[f'(x)=\\displaystyle\\sum_{n=1}^{\\infty}nc_n(x-a)^{n-1}\\]\\[=c_1+2c_2(x-a)+3c_3(x-a)^2+\\cdots\\]for x such that \\(|x-a|\\lt R\\).\n  \n  Also, to find \\(\\displaystyle\\int f(x)dx\\), we can integrate the series term-by-term. The resulting series converges on \\((a-R,a+R)\\), and we have\n  \\[\\int f(x)dx = \\sum_{n=0}^{\\infty}c_n\\frac{(x-a)^{n+1}}{n+1}+C\\]\\[=C+c_0+c_1\\frac{(x-a)^2}{2}+c_2\\frac{(x-a)^3}{3}+\\cdots\\]for \\(|x-a|\\lt R\\), where C is the constant of integration."
+    }
+  ]
+}

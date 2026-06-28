@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>6.2 Properties of Power Series</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>6.2 Properties of Power Series</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Objectives</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <ul>
+  <li>6.2.1 Combine Power Series by addition and subtraction</li>
+    <li>6.2.2 Create a new power series by multiplication by a power of the variable or a constant, or by substitution</li>
+    <li>6.2.3 Multiply two power series together</li>
+    <li>6.2.4 Differentiate and Integrate power series term-by-term</li>
+</ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Theorem 6.2</div>
+          <div class="step-subtitle">Combining Power Series</div>
+          <div class="step-body">
+            Suppose that the two power series \(\displaystyle\sum_{n=0}^{\infty}c_nx^n\) and \(\displaystyle\sum_{n=0}^{\infty}d_nx^n\) converge to the function f and g, respectively, on a common interval I.
+<ol>
+  <li>The power series \(\displaystyle\sum_{n=0}^{\infty}(c_nx^n\pm d_nx^n)\) converges to \(f\pm g\) on I.</li>
+  <li>For any integer \(m\geq0\) and any real number b, the power series \(\displaystyle\sum_{n=0}^{\infty}bx^mc_nx^n\) converges to \(bx^mf(x)\) on I.</li>
+  <li>For any integer \(m\geq 0\) and any real number b, the series \(\displaystyle\sum_{n=0}^{\infty}c_n(bx^m)^n\) converges to \(f(bx^m)\) for all x such that \(bx^m\) is in I</li>
+</ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Constructing Power Series from Known Power Series</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <ol type="a">
+  <li>\(f(x)=\frac{3x}{1+x^2}\)</li>
+    <li>\(f(x)=\frac{1}{(x-1)(x-3)}\)</li>
+</ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Theorem 6.4</div>
+          <div class="step-subtitle">Term-by-Term Differentiation and Integration for Power Series</div>
+          <div class="step-body">
+            Suppose that the power series defined a function \(f(x)=\displaystyle\sum_{n=0}^{\infty}c_n(x-a)^n\) and converges to the function on the interval \((a-R,a+R)\) for some R > 0. The derivative of the function f will be given by differentiation the series term-by-term
+  \[f'(x)=\displaystyle\sum_{n=1}^{\infty}nc_n(x-a)^{n-1}\]\[=c_1+2c_2(x-a)+3c_3(x-a)^2+\cdots\]for x such that \(|x-a|\lt R\).
+  
+  Also, to find \(\displaystyle\int f(x)dx\), we can integrate the series term-by-term. The resulting series converges on \((a-R,a+R)\), and we have
+  \[\int f(x)dx = \sum_{n=0}^{\infty}c_n\frac{(x-a)^{n+1}}{n+1}+C\]\[=C+c_0+c_1\frac{(x-a)^2}{2}+c_2\frac{(x-a)^3}{3}+\cdots\]for \(|x-a|\lt R\), where C is the constant of integration.
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
