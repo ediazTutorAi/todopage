@@ -3,18 +3,26 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 2326 — Calculus 3</title>
+  <title>Double Integrals</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\[', right:'\]', display:true},
-            {left:'\(', right:'\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -27,7 +35,7 @@
 
   <header class="site-header">
     <h1>Double Integrals</h1>
-    <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
+    <div class="meta"></div>
   </header>
 
   <main class="container">
@@ -44,7 +52,8 @@
             But what do all of these mean?
           </div>
         </div>
-        <div class="step" data-step="2" data-ggb-id="g8xftbbf">
+
+        <div class="step is-visible" data-step="2" data-ggb-id="g8xftbbf">
           <div class="step-title">Rectangular Division</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
@@ -61,7 +70,8 @@
             becomes the double integral of $f(x, y)$ over the region.
           </div>
         </div>
-        <div class="step" data-step="3" data-ggb-id="naebkqfv">
+
+        <div class="step is-visible" data-step="3" data-ggb-id="naebkqfv">
           <div class="step-title">Double Integral</div>
           <div class="step-subtitle">Visualization in 3D</div>
           <div class="step-body">
@@ -73,7 +83,8 @@
             since in that case the function values are positive and the volume makes sense as a positive quantity.
           </div>
         </div>
-        <div class="step" data-step="4" data-ggb-id="tz3wuxkj">
+
+        <div class="step is-visible" data-step="4" data-ggb-id="tz3wuxkj">
           <div class="step-title">Double Integral</div>
           <div class="step-subtitle">for General Regions</div>
           <div class="step-body">
@@ -86,7 +97,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="5" data-ggb-id="d26andr7">
+        <div class="step is-visible" data-step="5" data-ggb-id="d26andr7">
           <div class="step-title">Visualization of a Double Integral over a general region</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
@@ -94,7 +105,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="6">
+        <div class="step is-visible" data-step="6">
           <div class="step-title">Theorem 5.1 Properties of Double Integrals</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
@@ -117,7 +128,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="7">
+        <div class="step is-visible" data-step="7">
           <div class="step-title">Definition</div>
           <div class="step-subtitle">Iterated Integrals</div>
           <div class="step-body">
@@ -128,7 +139,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="8">
+        <div class="step is-visible" data-step="8">
           <div class="step-title">Theorem 5.2</div>
           <div class="step-subtitle">Fubini's Theorem</div>
           <div class="step-body">
@@ -140,7 +151,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="9">
+        <div class="step is-visible" data-step="9">
           <div class="step-title">Theorem 5.4</div>
           <div class="step-subtitle">Fubini's Theorem Strong Form</div>
           <div class="step-body">
@@ -153,7 +164,7 @@
           </div>
         </div>
 
-        <div class="step" data-step="5">
+        <div class="step is-visible" data-step="10">
           <div class="step-title">Example 5.15</div>
           <div class="step-subtitle">Changing the order of integration</div>
           <div class="step-body">
@@ -161,8 +172,6 @@
             integrals.
           </div>
         </div>
-
-
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
@@ -188,7 +197,6 @@
     </div>
   </div>
   <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
-
 
   <!-- JS entry (ES modules) -->
   <script type="module" src="/todopage/js/boot.js"></script>

@@ -1,0 +1,94 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-03-02",
+  "title": "Double Integrals",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "double Integrals"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "5.1 Double Integration over Rectangular Regions",
+      "subtitle": "Definition",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "The double integral of the function $f(x,y)$ over the rectangular region R in the xy-plane is defined\n            $$\\iint_{R} f(x,y) \\, dV \\, dA=\\lim_{m,n \\to \\infty}\\sum_{i=1}^m\\sum_{j=1}^n f(x_i^*,y_j^*)\\delta A $$\n            But what do all of these mean?"
+    },
+    {
+      "tag": "step",
+      "label": "Rectangular Division",
+      "subtitle": "",
+      "ggbId": "g8xftbbf",
+      "reveal": false,
+      "bodyHtml": "Observe that our domain is a rectangle in the xy-plane. We have divided this rectangle into several smaller\n            sub-rectangles. For each of these sub-rectangles, we select a representative point, which we’ll denote by\n            $(x_j, y_j)$. At that point, we evaluate our function $f(x, y)$. The value $f(x_j, y_j)$ gives us the height\n            of a rectangular “box” built above that small region.<br>\n            By multiplying this height $f(x_j, y_j)$ by the area of the base sub-rectangle, we obtain the volume of that\n            small box.<br>\n            If we repeat this process for every sub-rectangle and then add up all those small volumes, we get an\n            approximation for the total volume under the surface $z = f(x, y)$ and above the rectangular region in the\n            plane.<br>\n            As we make the subdivisions finer and finer, this approximation becomes more accurate and in the limit, it\n            becomes the double integral of $f(x, y)$ over the region."
+    },
+    {
+      "tag": "step",
+      "label": "Double Integral",
+      "subtitle": "Visualization in 3D",
+      "ggbId": "naebkqfv",
+      "reveal": false,
+      "bodyHtml": "In this GeoGebra visualization, you can see how each of the small boxes is formed above the sub-rectangles\n            of our domain. This picture helps us visualize how the double integral is constructed, by summing up the\n            volumes of all these tiny boxes.<br>\n            You can think of the double integral as representing the total volume under the surface $z = f(x, y)$.\n            Notice, however, that this interpretation works directly only when the surface lies above the xy-plane,\n            since in that case the function values are positive and the volume makes sense as a positive quantity."
+    },
+    {
+      "tag": "step",
+      "label": "Double Integral",
+      "subtitle": "for General Regions",
+      "ggbId": "tz3wuxkj",
+      "reveal": false,
+      "bodyHtml": "In this GeoGebra visualization, we are looking at a more general region, which we have divided into\n            rectangular strips. (We are not showing the smaller subdivisions this time.)<br>\n            Notice that, to cover the entire region, these strips extend from the left to the right across the x-values\n            of the region. The height of each strip goes from the bottom curve up to the top curve.<br>\n            As we imagine taking finer and finer strips, their width becomes smaller and smaller — approaching zero.\n            However, since the width never actually reaches zero, we represent it symbolically as dx."
+    },
+    {
+      "tag": "step",
+      "label": "Visualization of a Double Integral over a general region",
+      "subtitle": "",
+      "ggbId": "d26andr7",
+      "reveal": false,
+      "bodyHtml": "Visualization of a Double Integral over a general region"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 5.1 Properties of Double Integrals",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Assume that the functions $f(x,y)$ and $g(x,y)$ are integrable over the rectangular region R; S and T are\n            subregions; and assume that m and M are real numbers.<br>\n            i. The sum $f(x,y)+g(x,y)$ is integrable and<br>\n            $$\\iint_{R}[f(x,y)+g(x,y)]dA=\\iint_{R}f(x,y)dA+\\iint_{R}g(x,y)dA$$\n            ii. If c is a constant, then $cf(x,y)$ is integrable and\n            $$\\iint_{R}cf(x,y)dA=c\\iint_{R}f(x,y)dA$$\n            iii. If $R=S\\cup T$ and $S\\cap T=\\emptyset$ except an overlap on the boundaries, then\n            $$\\iint_{R}f(x,y)dA=\\iint_{S}f(x,y)dA+\\iint_{T}f(x,y)dA$$\n            iv.If $f(x,y)\\geq g(x,y)$ for $(x,y)$ in R, then\n            $$\\iint_{R}f(x,y)dA \\geq \\iint_{R}g(x,y)dA$$\n            v. If $m\\leq f(x,y) \\leq M $, then\n            $$m\\times A(R) \\leq \\iint_{R}f(x,y)dA\\leq M\\times A(R)$$\n            vi. In the case where $f(x,y)$ can be factored as a product of a function $g(x)$ of x only and a function\n            $h(y)$ of y only, then over the region $R=\\{(x,y)|a\\leq x \\leq b, c\\leq y \\leq d\\}$, the double integral can\n            be written\n            $$\\iint_{R}f(x,y)dA=\\left(\\int_{a}^{b}g(x)dx\\right)\\left(\\int_c^d h(y)dy\\right)$$"
+    },
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Iterated Integrals",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Assume a,b,c and d are real numbers. We define an iterated integral for a function $f(x,y)$ over the\n            rectangular region $R=[a,b]\\times [c,d]$ as <br>\n            a. $$\\int_a^b \\int_c^d f(x,y)dydx=\\int_a^b \\left[\\int_c^d f(x,y)dy\\right]dx$$\n            b. $$\\int_c^d \\int_a^b f(x,y)dydx=\\int_c^d \\left[\\int_a^b f(x,y)dy\\right]dx$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 5.2",
+      "subtitle": "Fubini's Theorem",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Suppose that $f(x,y)$ is a function of two variables that is continuous over a rectangular region\n            $R=\\{(x,y)\\in\\mathbb{R}^2|a\\leq x\\leq b, c\\leq y \\leq d\\}$. Then the double integral of f over the region\n            equals any of the iterated integrals.<br>\n            More generally, Fubini's theorem is true if f is bounded on R and f is discontinuous only on a finite number\n            of continuous curves. In other words, f has to be integrable over R."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 5.4",
+      "subtitle": "Fubini's Theorem Strong Form",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "For a function $f(x,y)$ that is continuous on a region D of Type 1 (a region that lies between two vertical\n            lines), we have<br>\n            $$\\iint_{D}f(x,y)dA=\\iint_{D}f(x,y)dydx=\\int_a^b\\left[\\int_{g_1(x)}^{g_2(x)}f(x,y)dy\\right]dx$$\n            Similarly, for a function $f(x,y)$ that is continuous on a region D of Type II (a region that lies between\n            two horizontal lines) we have\n            $$\\iint_{D}f(x,y)dA=\\iint_{D}f(x,y)dxdy=\\int_c^d\\left[\\int_{h_1(y)}^{h_2(y)}f(x,y)dx\\right]dy$$"
+    },
+    {
+      "tag": "example",
+      "label": "Example 5.15",
+      "subtitle": "Changing the order of integration",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Changing the order of itegration is one of the typical exercises to assess understanting of double\n            integrals."
+    }
+  ],
+  "notes": ""
+}

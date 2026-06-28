@@ -1,0 +1,38 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-02-26",
+  "title": "Lagrange Multipliers",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "Lagrange multipliers"
+  ],
+  "steps": [
+    {
+      "tag": "theorem",
+      "label": "Theorem 4.20",
+      "subtitle": "Method of Lagrange Multipliers: One Constraint",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let f and g be functions of two variables with continuous partial derivatives at every point of some open set containing the smooth curve \\(g(x,y)=0\\). Suppose that f, when restricted to points on the curve \\(g(x,y)=0\\), has a local extremum at the point $(x_0,y_0)$ and that $\\nabla g(x_0,y_0)\\neq 0$. Then there is a number $\\lambda$ called the Lagrange multiplier, for which <br>\n          $$\\nabla f(x_{0},y_{0})=\\lambda\\nabla g(x_{0},y_{0})$$."
+    },
+    {
+      "tag": "step",
+      "label": "Steps for Using Lagrange Multipliers",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "1. Determine the objective function $f(x,y)$ and the constraint function $g(x,y)$. Does the optimization problem involve maximizing or minimizing the objective function?<br>\n          2. Set up a system of equations using the following template:\n          $$\\nabla f(x_0,y_0)=\\lambda \\nabla g(x_0,y_0)$$\n          $$g(x_0,y_0)=0$$\n          3. Solve for $x_0$ and $y_0$<br>\n          4. The largest of the values of f at the solutions found in step 3 maximizes f; the smallest of those values minimizes f."
+    },
+    {
+      "tag": "step",
+      "label": "Problems with Two Constraints",
+      "subtitle": "",
+      "ggbId": "npeqnccv",
+      "reveal": false,
+      "bodyHtml": "The method of Lagrange multipliers can be applied to problems with more than one constraint. In this case the optimization function, w is a function of three variables:\n          $$w=f(x,y,z)$$ and it is subject to two constraints:\n          $$g(x,y,z)=0\\text{ and } h(x,y,z)=0$$\n          There are two Lagrange multipliers, $\\lambda_1$ and $\\lambda_2$, and the system of equations becomes\n          $$\\nabla f(x_0,y_0,z_0)=\\lambda_1\\nabla g(x_0,y_0,z_0)+\\lambda_2\\nabla h(x_0,y_0,z_0)$$\n          $$g(x_0,y_0,z_0)=0$$\n          $$h(x_0,y_0,z_0)=0$$"
+    }
+  ],
+  "notes": ""
+}

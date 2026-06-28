@@ -1,0 +1,63 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-02-24",
+  "title": "Max/Min Problems",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "maxima",
+    "minima"
+  ],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Critical Points",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $z=f(x,y)$ be a function of two variables that is defined on an open set containing the point\n            $(x_0,y_0)$. The point $(x_0,y_0)$ is called a critical point of a function of two variables $f$ if one of\n            the two following conditions holds:<br>\n            1. $f_x(x_0,y_0)=f_y(x_0,y_0)=0$<br>\n            2. Either $f_x(x_0,y_0)$ or $f_y(x_0,y_0)$ does not exist."
+    },
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Classification of Extrema",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $z=f(x,y)$ be a function of two variables that is defined and continuous on an open set containing the\n            point $(x_0,y_0)$. Then $f$ has a local maximum at $(x_0,y_0)$ if\n            $$f(x_0,y_0)\\geq f(x,y)$$\n            for all points $(x,y)$ within some disk centered at $(x_0,y_0)$. The number $f(x_0,y_0)$ is called a local\n            maximum value. If the preceding inequality holds for every point $(x,y)$ in the domain of $f$, then $f$ has\n            a global maximum, also called an absolute maximum at $(x_0,y_0)$.<br>\n            The function $f$ has a local minimum at $(x_0,y_0)$ if\n            $$f(x_0,y_0)\\leq f(x,y)$$\n            for all points $(x,y)$ withing some disk centered at $(x_0,y_0)$. The number $f(x_0,y_0)$ is called a local\n            minimum value. If the preceding inequality holds for every point $(x,y)$ in the domain of $f$, then $f$ has\n            a global minimum, also called an absolute minimum at $(x_0,y_0)$.<br><br>\n            If $f(x_0,y_0)$ is either a local maximum or local minimum value, then it is called a local extremum."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 4.16",
+      "subtitle": "Fermat's Theorem for Functions of Two Variables",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $z=f(x,y)$ be a function of two variables that is defined and continuous on an open set containing the\n            point $(x_0,y_0)$. Suppose $f_x$ and $f_y$ each exists at $(x_0,y_0)$. If $f$ has a local extremum at\n            $(x_0,y_0)$, then $(x_0,y_0)$ is a critical point of $f$."
+    },
+    {
+      "tag": "definition",
+      "label": "Definition",
+      "subtitle": "Saddle Point",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Given the function $z=f(x,y)$, the point $(x_0,y_0,f(x_0,y_0))$ is a saddle point if both $f_x(x_0,y_0)=0$\n            and $f_y(x_0,y_0)=0$, but $f$ does not have a local extremum at $(x_0,y_0)$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 4.17",
+      "subtitle": "Second Derivative Test",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $z=f(x,y)$ be a function of two variables for which the first- and second-order partial derivatives are\n            continuous on some disk containing the point $(x_0,y_0)$. Suppose $f_x(x_0,y_0)=0$ and $f_y(x_0,y_0)=0$.\n            Define the quantity.\n            $$D=f_{xx}(x_0,y_0)f_{yy}(x_0,y_0)-(f_{xy}(x_0,y_0))^2$$\n  \n            i. If $D\\geq 0$ and $f_{xx}(x_0,y_0)\\geq 0$, then $f$ has a local minimum at $(x_0,y_0)$<br>\n            ii. If $D\\geq 0$ and $f_{xx}(x_0,y_0)\\leq 0$, then $f$ has a local maximum at $(x_0,y_0)$<br>\n            iii. If $D\\leq 0$, then $f$ has a saddle point at $(x_0,y_0)$<br>\n            iv. If $D=0$, then the test is inconclusive"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 4.19",
+      "subtitle": "Finding Extrem Values of a Function of Two Variables",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Assume $z=f(x,y)$ is a differentiable function of two variables defined on a closed, bounded set D. Then f\n            will attain the absolute maximum value and the absolute minimum value, which are, respectively, the largest\n            and smalles values found among the following:<br>\n            i. The values of $f$ at the critical points of $f$ in $D$<br>\n            ii. The values of $f$ on the boundary of $D$."
+    }
+  ],
+  "notes": ""
+}
