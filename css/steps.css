@@ -120,6 +120,27 @@ body.slide-mode .card .katex {
   line-height: 1.2 !important;
 }
 
+/* Slide dot indicators */
+.slide-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-right: 12px;
+  flex-wrap: wrap;
+}
+.slide-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.slide-dot.active { background: var(--accent); }
+.slide-dot:hover { background: var(--accent); opacity: 0.6; }
+
 /* Reveal mode */
 .reveal-hidden {
   opacity: 0;

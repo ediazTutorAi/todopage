@@ -28,27 +28,34 @@ function renderLectureHtml({ title, steps }) {
   const geogebraHead = !hasGeogebra ? '' : `
   <!-- GeoGebra (inline diagrams via command API) -->
   <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
-  <script defer>
-    window.addEventListener('load', function () {
+  <script>
+    (function () {
+      var initialized = [];
       var ASPECT_RATIO = 1.25;
-      document.querySelectorAll('geogebra').forEach(function (el, i) {
+
+      function initGgbElement(el) {
+        if (initialized.indexOf(el) >= 0) return;
+        if (typeof GGBApplet === 'undefined') return;
+        initialized.push(el);
+
         var commands = el.textContent.split('\\n').map(function (s) { return s.trim(); }).filter(Boolean);
         var container = document.createElement('div');
-        container.id = 'geogebra-' + i;
+        container.id = 'geogebra-' + initialized.length;
         container.style.width = '100%';
         el.replaceWith(container);
 
         var explicitWidth = el.getAttribute('width');
         var explicitHeight = el.getAttribute('height');
+        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
+        var ggbApi = null;
+
         function computeSize() {
           var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
           var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
           return { w: w, h: h };
         }
 
-        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
         var size = computeSize();
-        var ggbApi = null;
 
         try {
           var applet = new GGBApplet({
@@ -82,8 +89,18 @@ function renderLectureHtml({ title, steps }) {
           container.textContent = 'Diagram error: ' + err.message;
           container.style.color = '#b00020';
         }
+      }
+
+      window._initGgbInStep = function (stepEl) {
+        if (!stepEl) return;
+        stepEl.querySelectorAll('geogebra').forEach(initGgbElement);
+      };
+
+      window.addEventListener('load', function () {
+        var current = document.querySelector('.step.is-current') || document.querySelector('.step.is-visible');
+        if (current) window._initGgbInStep(current);
       });
-    });
+    })();
   </script>
 `;
 

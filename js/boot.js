@@ -1,5 +1,5 @@
 import { loadGeoGebra, openFloat, closeFloat, toggleFloatExpand, enableGgbDrag } from './ggb.js';
-import { injectStepIcons, enterSlideMode, exitSlideMode, nextSlide, prevSlide, setCurrent } from './slideMode.js';
+import { injectStepIcons, injectSlideDots, enterSlideMode, exitSlideMode, nextSlide, prevSlide, setCurrent } from './slideMode.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // add ▶ buttons next to steps with data-ggb-id
@@ -41,6 +41,7 @@ enableGgbDrag();
     if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
   });
 
+  injectSlideDots();
   // start in Slide Mode
   enterSlideMode();
 });

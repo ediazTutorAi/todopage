@@ -62,6 +62,7 @@ export function setCurrent(i) {
   if (slideMode) {
     steps.forEach((s, idx) => { s.classList.toggle('is-visible', idx===slideIndex); s.classList.toggle('is-current', idx===slideIndex); });
     resetReveal(steps[slideIndex]);
+    if (typeof window._initGgbInStep === 'function') window._initGgbInStep(steps[slideIndex]);
   } else {
     steps.forEach((s, idx) => s.classList.toggle('is-current', idx===slideIndex));
     if (!steps[slideIndex].classList.contains('is-visible')) steps[slideIndex].classList.add('is-visible');
@@ -96,6 +97,24 @@ function updateControls(){
   if (!btnPrev || !btnNext || !steps.length) return;
   btnPrev.disabled = slideIndex <= 0 && (!revealUnits || revealIndex <= 0);
   btnNext.disabled = slideIndex >= steps.length - 1 && (!revealUnits || revealIndex >= revealUnits.length);
+  document.querySelectorAll('.slide-dot').forEach((dot, i) => dot.classList.toggle('active', i === slideIndex));
+}
+
+export function injectSlideDots() {
+  const steps = allSteps();
+  const controls = document.querySelector('.reveal-controls');
+  if (!controls || !steps.length) return;
+  const bar = document.createElement('div');
+  bar.className = 'slide-dots';
+  steps.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'slide-dot';
+    dot.type = 'button';
+    dot.title = `Slide ${i + 1}`;
+    dot.addEventListener('click', () => setCurrent(i));
+    bar.appendChild(dot);
+  });
+  controls.insertBefore(bar, controls.firstChild);
 }
 
 export function injectStepIcons(onClick){
