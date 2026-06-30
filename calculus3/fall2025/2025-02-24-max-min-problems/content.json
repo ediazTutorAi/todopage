@@ -57,6 +57,30 @@
       "ggbId": "",
       "reveal": false,
       "bodyHtml": "Assume $z=f(x,y)$ is a differentiable function of two variables defined on a closed, bounded set D. Then f\n            will attain the absolute maximum value and the absolute minimum value, which are, respectively, the largest\n            and smalles values found among the following:<br>\n            i. The values of $f$ at the critical points of $f$ in $D$<br>\n            ii. The values of $f$ on the boundary of $D$."
+    },
+    {
+      "tag": "example",
+      "label": "Example 4.39",
+      "subtitle": "Using the Second Derivative Test",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Find the critical points for each of the following functions, and use the second derivative test to find the local extrema:\n  <ol type=\"a\">\n  <li>\\(f(x,y)=4x^2+9y^2+8x-36y+24\\)</li>\n    <li>\\(g(x,y)=\\frac{1}{3}x^3+y^2+2xy-6x-3y+4\\)</li>\n</ol>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 4.18",
+      "subtitle": "Extreme Value Theorem",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "A continuous function \\(f(x,y)\\) on a close and bounded set D in the plane attains an absolute maximum at some point of d and an absolute minimum value at some point of D."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 4.19",
+      "subtitle": "Finding Extreme Values of a Function of Two Variables",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Assume \\(z=f(x,y)\\) is a differentiable function of two variables defined on a closed, bounded set D. Then f will attain the absolute maximum value and the absolute minimum value, which are, respectively, the largest and smallest values found among the following:\n  <ol>\n  <li>The values of f at the critical points of f in D</li>\n    <li>The values of f on the boundary of D</li>\n</ol>"
     }
   ],
   "notes": ""
