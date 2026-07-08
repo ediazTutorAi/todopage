@@ -579,10 +579,20 @@
     "course": "Calculus II",
     "semester": "Summer 2026",
     "date": "2026-07-08",
-    "title": "6.3 Taylor and Maclauring Series 6.4 Working with Taylor Series",
+    "title": "6.3 Taylor and Maclauring Series",
     "subtitle": "",
     "description": "",
     "tags": [],
     "url": "calculus-ii/2026/2026-07-08-6-3-taylor-and-maclauring-series-6-4-working-with-taylor-series/index.html"
+  },
+  {
+    "course": "Calculus II",
+    "semester": "Summer 2026",
+    "date": "2026-07-08",
+    "title": "6.4 Working with Taylor Series",
+    "subtitle": "",
+    "description": "",
+    "tags": [],
+    "url": "calculus-ii/2026/2026-07-08-6-4-working-with-taylor-series/index.html"
   }
 ]

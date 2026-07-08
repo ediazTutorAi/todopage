@@ -1,0 +1,52 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-07-08",
+  "title": "6.4 Working with Taylor Series",
+  "subtitle": "",
+  "description": "",
+  "notes": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Objectives",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<ul>\n  <li>6.4.1 Write the terms of the binomial series</li>\n    <li>6.4.2 Recognize the Taylor series expansions of common functions</li>\n    <li>6.4.3 Recognize and apply techniques to find the Taylor series for a function</li>\n    <li>6.4.4 Use Taylor series to evaluate nonelementary integrals</li>\n</ul>"
+    },
+    {
+      "tag": "definition",
+      "label": "Binomial Series",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "For any real number r, the Maclaurin series for \\(f(x)=(1+x)^r\\) is the binomial series. It converges to f for \\(|x|\\lt 1\\), and we write\n  \\[(1+x)^r=\\sum_{n=0}^{\\infty}\\binom{r}{n}x^n\\]\\[=1+rx+\\frac{r(r-1)}{2!}x^2+\\cdots+\\frac{r(r-1)\\cdots(r-n+1)}{n!}x^n+\\cdots\\]\n  for \\(|x|\\lt 1\\)"
+    },
+    {
+      "tag": "definition",
+      "label": "Common Functions Expressed as Taylor Series",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n  <thead>\n    <tr><th>Function</th><th>Maclaurin Series</th><th>Interval of Convergence</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>\\(f(x)=\\frac{1}{1-x}\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}x^n\\)</td><td>\\(-1\\lt x\\lt 1\\)</td></tr>\n    <tr><td>\\(f(x)=e^x\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}\\frac{x^n}{n!}\\)</td><td>\\(-\\infty\\lt x \\lt\\infty\\)</td></tr>\n    <tr><td>\\(f(x)=sin(x)\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}(-1)^n\\frac{x^{2n+1}}{(2n+1)!}\\)</td><td>\\(-\\infty\\lt x \\lt \\infty\\)</td></tr>\n    <tr><td>\\(f(x)=cos(x)\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}(-1)^n\\frac{x^{2n}}{(2n)!}\\)</td><td>\\(-\\infty \\lt x \\lt \\infty\\)</td></tr>\n    <tr><td>\\(f(x)=ln(1+x)\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}(-1)^{n+1}\\frac{x^{n}}{n}\\)</td><td>\\(-1\\leq x\\leq 1\\)</td></tr>\n    <tr><td>\\(f(x)=tan^{-1}(x)\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}(-1)^n\\frac{x^{2n+1}}{2n+1}\\)</td><td>\\(-1\\leq x\\leq 1\\)</td></tr>\n    <tr><td>\\(f(x)=(1+x)^r\\)</td><td>\\(\\displaystyle\\sum_{n=0}^{\\infty}\\binom{r}{n}x^n\\)</td><td>\\(-1\\lt x\\lt 1\\)</td></tr>\n  </tbody>\n</table>"
+    },
+    {
+      "tag": "example",
+      "label": "Checkpoint 6.17",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Find the Maclaurin series for \\(sin(x^2)\\)"
+    },
+    {
+      "tag": "example",
+      "label": "Using Taylor Series to Evaluate a Definite Integral",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<ol type=\"a\">\n  <li>Express \\(\\displaystyle\\int e^{-x^2}dx\\) as an infinite series</li>\n    <li>Evaluate \\(\\displaystyle\\int_0^1e^{-x^2}dx\\) to within an error of 0.01</li>\n</ol>"
+    }
+  ]
+}
