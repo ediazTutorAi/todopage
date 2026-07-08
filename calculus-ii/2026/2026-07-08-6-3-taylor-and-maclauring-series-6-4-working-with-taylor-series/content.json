@@ -1,0 +1,68 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-07-08",
+  "title": "6.3 Taylor and Maclauring Series 6.4 Working with Taylor Series",
+  "subtitle": "",
+  "description": "",
+  "notes": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Objectives",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<ol>\n  <li>Describe the procedure for finding a Taylor polynomial of a given order for a function </li>\n    <li>Explain the meaning and significance of Taylor's theorem with remainder</li>\n    <li>Estimate the remainder for a Taylor series approximation of a given function</li>\n</ol>"
+    },
+    {
+      "tag": "definition",
+      "label": "Taylor Series",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If f has derivatives of all orders at \\(x=a\\), then the Taylor Series for the function f at a is \\[\\sum_{n=0}^{\\infty}\\frac{f^{(n)}(a)}{n!}(x-a)^n=f(a)+f'(a)(x-a)+\\frac{f''(a)}{2!}(x-a)^2+\\cdots+\\frac{f^{(n)}(a)}{n!}(x-a)^n+\\cdots\\]The Taylor series for f at 0 is known as the Maclaurin series for f."
+    },
+    {
+      "tag": "theorem",
+      "label": "Uniqueness of Taylor Series",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If a function f has a power series at a that converges to f on some open interval constaining a, then that power series is the Taylor series for f at a."
+    },
+    {
+      "tag": "definition",
+      "label": "nth Taylor polynomial",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If f has n derivatives at x=a, then the nth Taylor polynomial for f at a is\n  \\[p_n(x)=f(a)+f'(a)(x-a)+\\frac{f''(a)}{2!}(x-a)^2+\\frac{f'''(a)}{31}(x-a)^3+\\cdots\\frac{f^{(n)}(a)}{n!}(x-a)^n\\]The nth Taylor polymomial for f at 0 is known as the nth Maclaurin polynomial for f."
+    },
+    {
+      "tag": "example",
+      "label": "Checkpoint 6.10",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<ol type=\"a\">\n    <li>Find the Taylor polynomials \\(p_0,p_1,p_2\\) and \\(p_3\\) for \\(f(x)=\\frac{1}{x^2}\\) at \\(x=1\\).</li>\n    <li>Find the Maclaurin polynomila and write it using sigma notation for\n    <ol type=\"a\">\n  <li>\\(f(x)=e^x\\)</li>\n      <li>\\(f(x)=sin(x)\\)</li>\n      <li>\\(f(x)=cos(x)\\)</li>\n</ol></li>\n</ol>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 6.7",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let f be a function that can be differentiated \\(n+1\\) times on an interval I containing the real number a. Let \\(p_n\\) be the nth Taylor polynomial of f at a and let\n  \\[R_n=f(x)-p_n(x)\\]be the nth remainder. Then for each x in the interval I, there exists a real number c between a and x such that \n  \\[R_n(x)=\\frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}\\]If there exists a real number M such that \\(|f^{(n+1)}(x)|\\leq M\\) for all \\(x\\in I\\), then\n  \\[\\left|R_n(x)\\right|\\leq\\frac{M}{(n+1)!}|x-a|^{n+1}\\]for all x in I."
+    },
+    {
+      "tag": "example",
+      "label": "Checkpoint 6.12",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "a) Find the first and second Taylor polynomials for \\(f(x)=\\sqrt{x}\\) at x=4. Use these polynomials to estimate \\(\\sqrt{6}\\). Use Taylor's theorem to bound the error.\n  Graphs will be nice to understand what is happening behind the scenes.<br></br>\n  b) For what values of x does the fifth Maclaurin polynomial approximate \\(sin(x)\\) to within \\(0.0001\\)?"
+    }
+  ]
+}

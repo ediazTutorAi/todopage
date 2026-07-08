@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>6.3 Taylor and Maclauring Series 6.4 Working with Taylor Series</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>6.3 Taylor and Maclauring Series 6.4 Working with Taylor Series</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Objectives</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <ol>
+  <li>Describe the procedure for finding a Taylor polynomial of a given order for a function </li>
+    <li>Explain the meaning and significance of Taylor's theorem with remainder</li>
+    <li>Estimate the remainder for a Taylor series approximation of a given function</li>
+</ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Taylor Series</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            If f has derivatives of all orders at \(x=a\), then the Taylor Series for the function f at a is \[\sum_{n=0}^{\infty}\frac{f^{(n)}(a)}{n!}(x-a)^n=f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\cdots+\frac{f^{(n)}(a)}{n!}(x-a)^n+\cdots\]The Taylor series for f at 0 is known as the Maclaurin series for f.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Uniqueness of Taylor Series</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            If a function f has a power series at a that converges to f on some open interval constaining a, then that power series is the Taylor series for f at a.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">nth Taylor polynomial</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            If f has n derivatives at x=a, then the nth Taylor polynomial for f at a is
+  \[p_n(x)=f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\frac{f'''(a)}{31}(x-a)^3+\cdots\frac{f^{(n)}(a)}{n!}(x-a)^n\]The nth Taylor polymomial for f at 0 is known as the nth Maclaurin polynomial for f.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Checkpoint 6.10</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <ol type="a">
+    <li>Find the Taylor polynomials \(p_0,p_1,p_2\) and \(p_3\) for \(f(x)=\frac{1}{x^2}\) at \(x=1\).</li>
+    <li>Find the Maclaurin polynomila and write it using sigma notation for
+    <ol type="a">
+  <li>\(f(x)=e^x\)</li>
+      <li>\(f(x)=sin(x)\)</li>
+      <li>\(f(x)=cos(x)\)</li>
+</ol></li>
+</ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Theorem 6.7</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Let f be a function that can be differentiated \(n+1\) times on an interval I containing the real number a. Let \(p_n\) be the nth Taylor polynomial of f at a and let
+  \[R_n=f(x)-p_n(x)\]be the nth remainder. Then for each x in the interval I, there exists a real number c between a and x such that 
+  \[R_n(x)=\frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}\]If there exists a real number M such that \(|f^{(n+1)}(x)|\leq M\) for all \(x\in I\), then
+  \[\left|R_n(x)\right|\leq\frac{M}{(n+1)!}|x-a|^{n+1}\]for all x in I.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Checkpoint 6.12</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            a) Find the first and second Taylor polynomials for \(f(x)=\sqrt{x}\) at x=4. Use these polynomials to estimate \(\sqrt{6}\). Use Taylor's theorem to bound the error.
+  Graphs will be nice to understand what is happening behind the scenes.<br></br>
+  b) For what values of x does the fifth Maclaurin polynomial approximate \(sin(x)\) to within \(0.0001\)?
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
