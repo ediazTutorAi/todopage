@@ -1,0 +1,55 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-03-04",
+  "title": "Double Integrals in Polar Coordinates",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "double Integrals",
+    "polar coordinats"
+  ],
+  "steps": [
+    {
+      "tag": "theorem",
+      "label": "Theorem 16.3",
+      "subtitle": "Change of Variables for Double Integrals over Polar Rectangle Regions",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let \\(f\\) be continuous on the region R in the xy-plane expressed in polar coordinates as\n            $R=\\{(r,\\theta):0\\leq a \\leq r \\leq b,\\alpha \\leq\\theta\\leq\\beta\\}$, where $\\beta-\\alpha\\leq 2\\pi$. Then $f$\n            is integrable over R, and the double integral of $f$ over R is\n            $$\\iint_{R}f(x,y)dA=\\int_{\\alpha}^{\\beta}\\int_{a}^{b}f(rcos(\\theta),rsin(\\theta)) r dr d\\theta$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 16.4",
+      "subtitle": "Change of Variables for Double Integrals over More General Polar Regions",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $f$ be continuous on the region R in the xy-plane expressed in polar coordinates as:\n            $$R=\\{(r,\\theta):0\\leq g(\\theta)\\leq r\\leq h(\\theta),\\alpha\\leq\\beta\\}$$\n            where $0<\\beta-\\alpha\\leq 2\\pi$. Then\n              $$\\iint_{R}f(x,y)dA=\\int_{\\alpha}^{\\beta}\\int_{g(\\theta)}^{h(\\theta)}f(rcos(\\theta),rsin(\\theta)) r dr\n              d\\theta$$"
+    },
+    {
+      "tag": "step",
+      "label": "Area of Polar Regions",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "The area of the polar region $R=\\{(r,\\theta):0\\leq g(\\theta)\\leq r\\leq\n              h(\\theta),\\alpha\\leq\\theta\\leq\\beta\\}$ where $0<\\beta-\\alpha\\leq 2\\pi$, is\n                $$A=\\iint_{R}dA=\\int_{\\alpha}^{\\beta}\\int_{g(\\theta)}^{h(\\theta)} r dr d\\theta$$"
+    },
+    {
+      "tag": "example",
+      "label": "Evaluating a Double Integral by Converting from Rectangular Coordinates",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Evaluate the integral \\(\\displaystyle\\iint_R(1-x^2-y^2)dA\\) where R is the unit disk on the xy-plane."
+    },
+    {
+      "tag": "example",
+      "label": "Finding a Volume Using Double Integration",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Find the volume of the solid that lies under the paraboloid \\(z=4-x^2-y^2\\) and above the disk \\((x-1)^2+y^2=1\\) on the xy-plane."
+    }
+  ],
+  "notes": ""
+}
