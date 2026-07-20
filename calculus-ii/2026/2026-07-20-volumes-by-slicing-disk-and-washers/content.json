@@ -1,0 +1,28 @@
+{
+  "course": "Calculus II",
+  "semester": "Summer 2026",
+  "date": "2026-07-20",
+  "title": "Volumes by Slicing, Disk, and washers",
+  "subtitle": "",
+  "description": "",
+  "notes": "",
+  "tags": [],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Volume by Slicing or Cross-Section",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let S be a solid extending from \\(x=a\\) to \\(x=b\\). Suppose that every plane is perpendicular to the x-axis intersects Sin a cross section whose are can be given by a function \\(A(x)\\). Then the volume of the solid is obtained by summing the volumes of infinitely many infinitesimally thin slices.\n  \\[V=\\int_a^b A(x)dx\\]We can interpret this formula as the sum of infinitesimal volumes of cylinders, these cylinders are construct by taking a cross sectional area of the solid times the thickness of the section to create a cylinder."
+    },
+    {
+      "tag": "definition",
+      "label": "Disk and Washer Methods",
+      "subtitle": "",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If the sectional area is given by a disk or a washer, then we name this method of computing the volume of the corresponding solid as disk or washwer methods"
+    }
+  ]
+}
