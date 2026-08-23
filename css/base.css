@@ -5,6 +5,10 @@
   --line: #e5e7eb;
   --bg: #ffffff;
   --header-h: 72px;
+  /* Sign convention for diagram elements whose value can be positive or
+     negative (angle arcs, coordinate signs, etc.) -- not a general repaint
+     of --accent, which is already used for many non-sign UI purposes. */
+  --negative: #c0392b;
 }
 
 * { box-sizing: border-box; }

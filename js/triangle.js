@@ -313,18 +313,49 @@ function renderTriangle(el) {
   el.replaceWith(container);
 }
 
-// <angle-plane angle="150" label-a="α = 150°" label-b="β = -210°" ray-label="terminal side">
+// <angle-plane angle="150" label-a="α = 150°" arc-b="-210" label-b="β = -210°" ray-label="terminal side">
 // A single ray from the origin at an arbitrary angle (not limited to 0-90°,
-// unlike <triangle type="right">), with axes and an arc back to the positive
-// x-axis -- for "angle in standard position" diagrams that aren't a triangle
-// at all. Reuses renderAxes/placeOverlay from the <triangle> implementation
-// above. Intentionally narrow: one ray, up to two text labels (for showing
-// two different rotations -- e.g. positive/negative coterminal -- to the
-// same terminal side) plus an optional ray-tip label. A more general
-// multi-ray version can be built later if a lesson needs more than this.
+// unlike <triangle type="right">), with axes and up to two labeled rotation
+// arcs back to the positive x-axis -- for "angle in standard position"
+// diagrams that aren't a triangle at all. Reuses renderAxes/placeOverlay from
+// the <triangle> implementation above.
+//
+// `arc-a` (defaults to `angle`) and `arc-b` (optional) are each swept from 0°
+// to their own value and drawn at their own radius (arc-b slightly further
+// out, so two arcs sharing a ray stay visually distinct rather than
+// retracing the same circle) -- for showing two different rotations, e.g. a
+// positive and negative coterminal angle, to the *same* terminal ray. Each
+// arc's color follows its own sign automatically (blue = positive, red =
+// negative, via the `--negative` token), not a hardcoded "a is blue, b is
+// red" rule -- so a single-arc diagram with a negative `angle` also renders
+// red with no extra attribute.
+//
+// Intentionally narrow beyond that: one ray, at most two arcs/labels, plus
+// an optional ray-tip label. A more general multi-ray version can be built
+// later if a lesson needs more than this.
+
+// One labeled rotation: sweeps from 0° to `deg`, drawn at `radius`. Sign of
+// `deg` drives color (the blue/red positive/negative convention) -- never
+// hardcoded per-slot, so it applies the same way to arc-a and arc-b alike.
+function buildArc(O, deg, radius) {
+  const points = [];
+  const steps = 28;
+  for (let i = 0; i <= steps; i++) {
+    const t = toRad((deg * i) / steps);
+    points.push({ x: O.x + radius * Math.cos(t), y: O.y - radius * Math.sin(t) });
+  }
+  const bisectorRad = toRad(deg / 2);
+  const labelAt = {
+    x: O.x + (radius + 16) * Math.cos(bisectorRad),
+    y: O.y - (radius + 16) * Math.sin(bisectorRad),
+  };
+  return { points, labelAt, isNegative: deg < 0 };
+}
 
 function layoutAnglePlane(el) {
   const angleDeg = parseFloat(el.getAttribute('angle') || '0');
+  const arcADeg = parseFloat(el.getAttribute('arc-a') || angleDeg);
+  const arcBDeg = el.hasAttribute('arc-b') ? parseFloat(el.getAttribute('arc-b')) : null;
   const R = 95, ARC_R = 34, AXIS_OVERSHOOT = 25;
   const size = R + AXIS_OVERSHOOT;
   const W = size * 2, H = size * 2;
@@ -332,24 +363,13 @@ function layoutAnglePlane(el) {
   const rad = toRad(angleDeg);
   const tip = { x: O.x + R * Math.cos(rad), y: O.y - R * Math.sin(rad) };
 
-  const arcPoints = [];
-  const steps = 28;
-  for (let i = 0; i <= steps; i++) {
-    const t = toRad((angleDeg * i) / steps);
-    arcPoints.push({ x: O.x + ARC_R * Math.cos(t), y: O.y - ARC_R * Math.sin(t) });
-  }
-
-  const bisectorRad = toRad(angleDeg / 2);
-  const labelAAt = { x: O.x + (ARC_R + 16) * Math.cos(bisectorRad), y: O.y - (ARC_R + 16) * Math.sin(bisectorRad) };
-
   return {
     viewBox: `0 0 ${W} ${H}`, W, H, O, R,
     tip,
-    arcPoints,
+    arcA: buildArc(O, arcADeg, ARC_R),
     labelA: el.getAttribute('label-a'),
-    labelAAt,
+    arcB: arcBDeg === null ? null : buildArc(O, arcBDeg, ARC_R + 12),
     labelB: el.getAttribute('label-b'),
-    labelBAt: { x: O.x + R * 0.55, y: O.y + 38 },
     rayLabel: el.getAttribute('ray-label'),
     rayLabelAt: { x: O.x + (R + 14) * Math.cos(rad), y: O.y - (R + 14) * Math.sin(rad) - 10 },
     axes: {
@@ -361,7 +381,7 @@ function layoutAnglePlane(el) {
 
 function renderAnglePlane(el) {
   const layout = layoutAnglePlane(el);
-  const { O, tip, arcPoints, labelA, labelAAt, labelB, labelBAt, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
+  const { O, tip, arcA, labelA, arcB, labelB, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
 
   const container = document.createElement('div');
   container.className = 'triangle-diagram';
@@ -378,10 +398,12 @@ function renderAnglePlane(el) {
 
   renderAxes(svg, figure, axes, W, H);
 
-  const arc = document.createElementNS(SVG_NS, 'polyline');
-  arc.setAttribute('points', arcPoints.map(p => `${p.x},${p.y}`).join(' '));
-  arc.setAttribute('class', 'triangle-arc');
-  svg.appendChild(arc);
+  [arcA, arcB].filter(Boolean).forEach(arcInfo => {
+    const arc = document.createElementNS(SVG_NS, 'polyline');
+    arc.setAttribute('points', arcInfo.points.map(p => `${p.x},${p.y}`).join(' '));
+    arc.setAttribute('class', `triangle-arc${arcInfo.isNegative ? ' is-negative' : ''}`);
+    svg.appendChild(arc);
+  });
 
   const ray = document.createElementNS(SVG_NS, 'line');
   ray.setAttribute('x1', O.x);
@@ -398,8 +420,14 @@ function renderAnglePlane(el) {
   dot.setAttribute('class', 'triangle-point');
   svg.appendChild(dot);
 
-  if (labelA) placeOverlay(figure, labelAAt, W, H, 'triangle-angle-label', labelA);
-  if (labelB) placeOverlay(figure, labelBAt, W, H, 'triangle-angle-label', labelB);
+  if (labelA) {
+    const cls = `triangle-angle-label${arcA.isNegative ? ' is-negative' : ''}`;
+    placeOverlay(figure, arcA.labelAt, W, H, cls, labelA);
+  }
+  if (labelB && arcB) {
+    const cls = `triangle-angle-label${arcB.isNegative ? ' is-negative' : ''}`;
+    placeOverlay(figure, arcB.labelAt, W, H, cls, labelB);
+  }
   if (rayLabel) placeOverlay(figure, rayLabelAt, W, H, 'triangle-point-label', rayLabel);
 
   el.replaceWith(container);

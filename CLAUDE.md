@@ -111,18 +111,34 @@ plus percentage-positioned HTML overlay labels (side lengths, angle measures, mo
 Anything that needs to *move* (drag a point, angle sliders, live-updating dependent
 values) stays on the existing `<geogebra>` tag instead — `<triangle>` is static only.
 
-### `<angle-plane angle="…" label-a="…" label-b="…" ray-label="…">`
+### `<angle-plane angle="…" label-a="…" arc-b="…" label-b="…" ray-label="…">`
 
 A single ray from the origin at an *arbitrary* angle (not limited to 0–90° like
 `type="right"` — its height formula breaks down past 90°, and there's no triangle here at
-all, just axes + one ray + an arc). For "angle in standard position" diagrams: axes,
-one ray, an arc back to the positive x-axis, and up to two text labels near the arc/ray
-(built for showing two different rotations — e.g. a positive and a negative coterminal
-angle — to the *same* physical ray) plus an optional label at the ray's tip. Implemented
-in `js/triangle.js` alongside `<triangle>`, reusing its `renderAxes`/`placeOverlay`
-helpers directly rather than duplicating them — no new module, no new CSS file. No
-`build` support (not asked for; this is a presented illustration, not a
-construct-it-yourself exercise like `<triangle build>`).
+all, just axes + a ray + up to two arcs). For "angle in standard position" diagrams: axes,
+one ray, and up to two labeled rotation arcs — `arc-a` (defaults to `angle`) and the
+optional `arc-b`, each swept from 0° to its own value and drawn at its own radius (`arc-b`
+slightly further out, so two arcs sharing one ray stay visually distinct rather than
+retracing the same circle). Built for showing two different rotations — e.g. a positive
+and a negative coterminal angle — to the *same* physical ray, plus an optional
+`ray-label` at the ray's tip. Implemented in `js/triangle.js` alongside `<triangle>`,
+reusing its `renderAxes`/`placeOverlay` helpers directly rather than duplicating them —
+no new module, no new CSS file. No `build` support (not asked for; this is a presented
+illustration, not a construct-it-yourself exercise like `<triangle build>`).
+
+**Sign convention (blue = positive, red = negative):** each arc's color follows its own
+sign automatically — negative sweep → `var(--negative)` (a new token in `css/base.css`,
+`#c0392b`), non-negative → the existing `--accent` blue already used for angle labels
+elsewhere. This is driven by the arc's numeric value, not a hardcoded "arc-a is blue,
+arc-b is red" rule, so a single-arc diagram with a negative `angle` also renders red with
+no extra attribute. Scoped deliberately narrow: this convention lives on `.triangle-arc`/
+`.triangle-angle-label` only (sign-bearing diagram elements), **not** a repaint of the
+site's general `--accent` — that color is used pervasively for non-sign UI (reveal
+underlines, axis labels, etc.) and redefining what it means would be a much bigger, far
+riskier change than this warrants. Color is always a reinforcing cue alongside a
+minus-sign already present in the text label, never the only signal (colorblind
+accessibility). Extend `--negative` to other sign-bearing diagram elements (coordinate
+signs, quadrant charts) the same way if/when a lesson needs it.
 
 Deliberately narrow: exactly one ray, at most two labels near it, no `reveal` slots. If a
 lesson later needs multiple independent rays, quadrant shading, or a general "any number

@@ -208,6 +208,8 @@ reveal:hover { background: #eef6fc; }
 .triangle-equal-tick { fill: none; stroke: var(--ink); stroke-width: 1.5; }
 .triangle-axis { stroke: var(--muted); stroke-width: 1.5; }
 .triangle-arc { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.triangle-arc.is-negative { stroke: var(--negative); }
+.triangle-angle-label.is-negative { color: var(--negative); }
 .triangle-axis-arrowhead { fill: var(--muted); }
 .triangle-axis-label { color: var(--muted); font-style: italic; font-size: 0.9em; }
 .triangle-point { fill: var(--accent); stroke: #fff; stroke-width: 1.5; }
