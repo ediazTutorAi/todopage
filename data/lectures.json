@@ -3,6 +3,18 @@
     "course": "Trigonometry",
     "semester": "Fall 2026",
     "date": "2026-08-23",
+    "title": "Angles in the Coordinate Plane",
+    "subtitle": "Lesson 04",
+    "description": "Standard position, coterminal and quadrantal angles, sine/cosine/tangent for any angle, and the ASTC sign mnemonic.",
+    "tags": [
+      "Angles in the Coordinate Plane"
+    ],
+    "url": "trigonometry/2026/2026-08-23-lesson-04-angles-in-the-coordinate-plane/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
+    "date": "2026-08-23",
     "title": "Introduction to Right Triangle Trigonometry",
     "subtitle": "Lesson 03",
     "description": "SOH-CAH-TOA, special angles, and reciprocal ratios via right-triangle diagrams.",

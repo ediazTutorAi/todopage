@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Angles in the Coordinate Plane</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- GeoGebra (inline diagrams via command API) -->
+  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      var ASPECT_RATIO = 1.25;
+      document.querySelectorAll('geogebra').forEach(function (el, i) {
+        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var container = document.createElement('div');
+        container.id = 'geogebra-' + i;
+        container.style.width = '100%';
+        el.replaceWith(container);
+
+        var explicitWidth = el.getAttribute('width');
+        var explicitHeight = el.getAttribute('height');
+        function computeSize() {
+          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
+          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
+          return { w: w, h: h };
+        }
+
+        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
+        var view = el.getAttribute('view'); // "xmin,xmax,ymin,ymax" -- set via the API, not evalCommand
+        var size = computeSize();
+        var ggbApi = null;
+
+        try {
+          var applet = new GGBApplet({
+            id: container.id,
+            width: size.w,
+            height: size.h,
+            showToolBar: false,
+            showMenuBar: false,
+            showAlgebraInput: false,
+            showResetIcon: false,
+            appName: perspective === '3D' ? '3d' : 'classic',
+            appletOnLoad: function (api) {
+              ggbApi = api;
+              if (view) {
+                var b = view.split(',').map(Number);
+                api.setCoordSystem(b[0], b[1], b[2], b[3]);
+              }
+              commands.forEach(function (cmd) { api.evalCommand(cmd); });
+            }
+          }, true);
+          applet.inject(container.id);
+
+          if (!explicitWidth) {
+            var resizeTimer = null;
+            window.addEventListener('resize', function () {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(function () {
+                if (!ggbApi) return;
+                var s = computeSize();
+                ggbApi.setSize(s.w, s.h);
+              }, 150);
+            });
+          }
+        } catch (err) {
+          container.textContent = 'Diagram error: ' + err.message;
+          container.style.color = '#b00020';
+        }
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+  <style>
+    .quadrant-chart {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin: 0.9rem auto;
+      max-width: 460px;
+    }
+    .quadrant-chart > div {
+      background: #fff;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .quadrant-chart .word { font-weight: 800; font-size: 1.1em; margin-bottom: 0.3rem; }
+    .quadrant-chart .pos { color: var(--accent); }
+    .quadrant-chart .neg { color: #b00020; font-size: 0.9em; }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Angles in the Coordinate Plane</h1>
+    <div class="meta">Trigonometry · Lesson 04</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Standard Position</div>
+          <div class="step-subtitle">Standard position, quadrantal, and coterminal angles</div>
+          <div class="step-body">
+            <p>
+              An angle is said to be in <reveal>standard</reveal> <reveal>position</reveal>
+              if the vertex is positioned at the origin with the initial side along the
+              positive \(x\)-axis.
+            </p>
+            <p>
+              Angles formed by clockwise rotation are <reveal>negative</reveal> in measure,
+              while angles formed by counterclockwise rotation are <reveal>positive</reveal>
+              in measure.
+            </p>
+            <p>
+              Any two angles in standard position that share a common terminal side are said
+              to be <reveal>coterminal</reveal> angles. Coterminal angles differ by a
+              multiple of \(360°\).
+            </p>
+            <p>
+              Any angle, in standard position, with terminal side along either the \(x\)- or
+              \(y\)-axis is called a <reveal>quadrantal</reveal> angle.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Demonstration</div>
+          <div class="step-subtitle">A positive and a negative angle, coterminal</div>
+          <div class="step-body">
+            <p>
+              \(\alpha\) and \(\beta\) share the <i>same</i> terminal side in QII —
+              \(\alpha\) reaches it by sweeping \(150°\) counterclockwise (so
+              \(\alpha > 0\)); \(\beta\) reaches the same ray by sweeping the rest of the
+              way around clockwise (so \(\beta < 0\)). They're coterminal, differing by
+              exactly \(360°\): \(\alpha = 150°\), \(\beta = 150° - 360° = -210°\).
+            </p>
+            <geogebra width="640" height="480" perspective="2D" view="-2.2,2.2,-2.2,2.2">
+              O=(0,0)
+              X=(1,0)
+              A=(cos(150deg),sin(150deg))
+              terminalRay=Ray(O,A)
+              SetColor(terminalRay,20,90,190)
+              arcAlpha=Angle(X,O,A)
+              txtRay=Text("terminal side (α and β)",(cos(150deg)*1.15,sin(150deg)*1.15+0.15))
+              txtAlpha=Text("α = 150°",(cos(100deg)*0.55,sin(100deg)*0.55))
+              txtBeta=Text("β = -210°",(0.9,-0.5))
+            </geogebra>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Finding coterminal angles</div>
+          <div class="step-body">
+            <p>Find two coterminal angles, one negative and one positive, for each angle \(\theta\).</p>
+            <p><b>(a)</b> \(\theta = 260°\)</p>
+            <p>
+              \(260° - 360° = \) <reveal>\(-100°\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(260° + 360° = \) <reveal>\(620°\)</reveal>
+            </p>
+            <p><b>(b)</b> \(\theta = -944°\)</p>
+            <p>
+              \(-944° + 360° = \) <reveal>\(-584°\)</reveal> \(\ \to\ \)
+              \(-584° + 360° = \) <reveal>\(-224°\)</reveal> \(\ \to\ \)
+              \(-224° + 360° = \) <reveal>\(136°\)</reveal>
+            </p>
+            <p class="muted small">Coterminal angles: <reveal>\(-224°\) and \(136°\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Sine, cosine, tangent for a point in QI</div>
+          <div class="step-body">
+            <p>
+              Let \(\theta\) be a positive acute angle in standard position, whose terminal
+              side passes through \((x_1, y_1)\). Construct a right triangle with base along
+              the positive \(x\)-axis, and let \(r\) be the distance from the origin to
+              \((x_1, y_1)\).
+            </p>
+            <triangle type="right" angle="35" label-a="θ" adjacent="\(x_1\)" opposite="\(y_1\)" hypotenuse="r"></triangle>
+            <p>\(r = \) <reveal>\(\sqrt{x_1^2 + y_1^2}\)</reveal></p>
+            <p>
+              \(\sin(\theta) = \) <reveal>\(\dfrac{y_1}{r}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos(\theta) = \) <reveal>\(\dfrac{x_1}{r}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan(\theta) = \) <reveal>\(\dfrac{y_1}{x_1}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Definitions: Sine, Cosine, and Tangent for any Angle</div>
+          <div class="step-subtitle">Not just acute angles of a right triangle</div>
+          <div class="step-body">
+            <p>
+              Let \(\theta\) be any angle in standard position with terminal side passing
+              through the point \(P(x,y)\), and distance from the origin given by \(r\),
+              where \(r = \) <reveal>\(\sqrt{x^2+y^2}\)</reveal>, \(r > 0\). Then:
+            </p>
+            <table>
+              <tr><td>\(\sin(\theta) = \dfrac{y}{r}\)</td><td>\(\cos(\theta) = \dfrac{x}{r}\)</td><td>\(\tan(\theta) = \dfrac{y}{x},\ x \ne 0\)</td></tr>
+            </table>
+            <p class="muted small">
+              This works in <i>any</i> quadrant — our right-triangle-only definitions from
+              Lesson 03 become inadequate once \(\theta > 90°\), but these ratios hold everywhere.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">An angle with terminal side through \((-12,-5)\)</div>
+          <div class="step-body">
+            <geogebra width="640" height="480" perspective="2D" view="-14,14,-14,14">
+              O=(0,0)
+              P=(-12,-5)
+              seg=Segment(O,P)
+              r=Distance(O,P)
+            </geogebra>
+            <p>\(x = -12,\ y = -5,\ r = \) <reveal>\(\sqrt{(-12)^2+(-5)^2} = 13\)</reveal></p>
+            <p>
+              \(\sin(\theta) = \) <reveal>\(-\dfrac{5}{13}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos(\theta) = \) <reveal>\(-\dfrac{12}{13}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan(\theta) = \) <reveal>\(\dfrac{5}{12}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Quadrantal angles</div>
+          <div class="step-body">
+            <p><b>(a)</b> Terminal side of \(\theta\) passing through \((-\pi, 0)\) — so \(\theta = 180°\), \(x=-\pi,\ y=0,\ r=\pi\).</p>
+            <p>
+              \(\sin\theta = \) <reveal>\(0\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos\theta = \) <reveal>\(-1\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan\theta = \) <reveal>\(0\)</reveal>
+            </p>
+            <p><b>(b)</b> \(\theta = 270°\) — any point on the terminal side works, e.g. \((0,-1)\).</p>
+            <p>
+              \(\sin\theta = \) <reveal>\(-1\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos\theta = \) <reveal>\(0\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan\theta = \) <reveal>undefined</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">Least positive angle with terminal side \(y = -3x,\ x>0\)</div>
+          <div class="step-body">
+            <geogebra width="640" height="480" perspective="2D" view="-5,5,-5,5">
+              O=(0,0)
+              P=(1,-3)
+              line1=Line(O,P)
+              r=Distance(O,P)
+            </geogebra>
+            <p>\(x = 1,\ y = -3,\ r = \) <reveal>\(\sqrt{10}\)</reveal></p>
+            <p>
+              \(\sin\theta = \) <reveal>\(-\dfrac{3\sqrt{10}}{10}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos\theta = \) <reveal>\(\dfrac{\sqrt{10}}{10}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan\theta = \) <reveal>\(-3\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">The ASTC Mnemonic</div>
+          <div class="step-subtitle">Remembering signs by quadrant</div>
+          <div class="step-body">
+            <p>
+              We use the mnemonic <reveal>All Students Take Calculus</reveal> to recall the
+              sign of each trig function by quadrant.
+            </p>
+            <div class="quadrant-chart">
+              <div>
+                <div class="word">Students (QII)</div>
+                <div class="pos">\(\sin\theta > 0\)</div>
+                <div class="neg">\(\cos\theta < 0,\ \tan\theta < 0\)</div>
+              </div>
+              <div>
+                <div class="word">All (QI)</div>
+                <div class="pos">\(\sin\theta > 0,\ \cos\theta > 0,\ \tan\theta > 0\)</div>
+              </div>
+              <div>
+                <div class="word">Take (QIII)</div>
+                <div class="pos">\(\tan\theta > 0\)</div>
+                <div class="neg">\(\sin\theta < 0,\ \cos\theta < 0\)</div>
+              </div>
+              <div>
+                <div class="word">Calculus (QIV)</div>
+                <div class="pos">\(\cos\theta > 0\)</div>
+                <div class="neg">\(\sin\theta < 0,\ \tan\theta < 0\)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Determine the sign</div>
+          <div class="step-body">
+            <p>
+              \(\sin(190°)\), \(190° \in\) QIII \(\Rightarrow\) <reveal>\(< 0\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\cos(337°)\), \(337° \in\) QIV \(\Rightarrow\) <reveal>\(> 0\)</reveal>
+            </p>
+            <p>
+              \(\tan(122°)\), \(122° \in\) QII \(\Rightarrow\) <reveal>\(< 0\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\tan(270°) = \) <reveal>undefined (\(270°\) is quadrantal)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 7</div>
+          <div class="step-subtitle">Identify the possible quadrant(s)</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(\sin(\theta) > 0,\ \cos(\theta) < 0\)</p>
+            <p><reveal>\(\theta \in\) QII</reveal></p>
+            <p><b>(b)</b> \(\tan(\theta) > 0,\ \cos(\theta) > 0,\ \sin(\theta) < 0\)</p>
+            <p><reveal>No such \(\theta\) exists! (\(\cos>0\) needs QI/QIV; \(\sin<0\) needs QIII/QIV; \(\tan>0\) needs QI/QIII — no quadrant satisfies all three.)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Definitions: Reciprocal Ratios</div>
+          <div class="step-subtitle">Cosecant, secant, and cotangent for any angle</div>
+          <div class="step-body">
+            <table>
+              <tr><td>\(\sin(\theta) = \dfrac{y}{r}\)</td><td>&rarr;</td><td>\(\csc(\theta) = \) <reveal>\(\dfrac{r}{y}\)</reveal></td></tr>
+              <tr><td>\(\cos(\theta) = \dfrac{x}{r}\)</td><td>&rarr;</td><td>\(\sec(\theta) = \) <reveal>\(\dfrac{r}{x}\)</reveal></td></tr>
+              <tr><td>\(\tan(\theta) = \dfrac{y}{x}\)</td><td>&rarr;</td><td>\(\cot(\theta) = \) <reveal>\(\dfrac{x}{y}\)</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Example 8</div>
+          <div class="step-subtitle">Reciprocal ratios and quadrant reasoning</div>
+          <div class="step-body">
+            <p><b>(a)</b> Using the Example 3 triangle, \((-12,-5)\), \(r = 13\):</p>
+            <p>
+              \(\csc(\theta) = \) <reveal>\(-\dfrac{13}{5}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\sec(\theta) = \) <reveal>\(-\dfrac{13}{12}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cot(\theta) = \) <reveal>\(\dfrac{12}{5}\)</reveal>
+            </p>
+            <p><b>(b)</b> Sign of \(\sin(25°) \cdot \cot(100°) \cdot \sec(225°)\):</p>
+            <p><reveal>\((+)(-)(-) = \) positive</reveal></p>
+            <p><b>(c)</b> Quadrant(s) where \(\sin(\theta) > 0\) and \(\cot(\theta) < 0\):</p>
+            <p><reveal>\(\theta \in\) QII</reveal></p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW (unused by the inline <geogebra> command tag above,
+       kept for markup/CSS consistency with other lessons) -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
