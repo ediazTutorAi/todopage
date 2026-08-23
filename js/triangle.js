@@ -313,6 +313,99 @@ function renderTriangle(el) {
   el.replaceWith(container);
 }
 
+// <angle-plane angle="150" label-a="α = 150°" label-b="β = -210°" ray-label="terminal side">
+// A single ray from the origin at an arbitrary angle (not limited to 0-90°,
+// unlike <triangle type="right">), with axes and an arc back to the positive
+// x-axis -- for "angle in standard position" diagrams that aren't a triangle
+// at all. Reuses renderAxes/placeOverlay from the <triangle> implementation
+// above. Intentionally narrow: one ray, up to two text labels (for showing
+// two different rotations -- e.g. positive/negative coterminal -- to the
+// same terminal side) plus an optional ray-tip label. A more general
+// multi-ray version can be built later if a lesson needs more than this.
+
+function layoutAnglePlane(el) {
+  const angleDeg = parseFloat(el.getAttribute('angle') || '0');
+  const R = 95, ARC_R = 34, AXIS_OVERSHOOT = 25;
+  const size = R + AXIS_OVERSHOOT;
+  const W = size * 2, H = size * 2;
+  const O = { x: size, y: size };
+  const rad = toRad(angleDeg);
+  const tip = { x: O.x + R * Math.cos(rad), y: O.y - R * Math.sin(rad) };
+
+  const arcPoints = [];
+  const steps = 28;
+  for (let i = 0; i <= steps; i++) {
+    const t = toRad((angleDeg * i) / steps);
+    arcPoints.push({ x: O.x + ARC_R * Math.cos(t), y: O.y - ARC_R * Math.sin(t) });
+  }
+
+  const bisectorRad = toRad(angleDeg / 2);
+  const labelAAt = { x: O.x + (ARC_R + 16) * Math.cos(bisectorRad), y: O.y - (ARC_R + 16) * Math.sin(bisectorRad) };
+
+  return {
+    viewBox: `0 0 ${W} ${H}`, W, H, O, R,
+    tip,
+    arcPoints,
+    labelA: el.getAttribute('label-a'),
+    labelAAt,
+    labelB: el.getAttribute('label-b'),
+    labelBAt: { x: O.x + R * 0.55, y: O.y + 38 },
+    rayLabel: el.getAttribute('ray-label'),
+    rayLabelAt: { x: O.x + (R + 14) * Math.cos(rad), y: O.y - (R + 14) * Math.sin(rad) - 10 },
+    axes: {
+      xStart: { x: 0, y: O.y }, xEnd: { x: W, y: O.y },
+      yStart: { x: O.x, y: H }, yEnd: { x: O.x, y: 0 },
+    },
+  };
+}
+
+function renderAnglePlane(el) {
+  const layout = layoutAnglePlane(el);
+  const { O, tip, arcPoints, labelA, labelAAt, labelB, labelBAt, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
+
+  const container = document.createElement('div');
+  container.className = 'triangle-diagram';
+
+  const figure = document.createElement('div');
+  figure.className = 'triangle-diagram-figure';
+  figure.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+  container.appendChild(figure);
+
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', viewBox);
+  svg.setAttribute('class', 'triangle-diagram-svg');
+  figure.appendChild(svg);
+
+  renderAxes(svg, figure, axes, W, H);
+
+  const arc = document.createElementNS(SVG_NS, 'polyline');
+  arc.setAttribute('points', arcPoints.map(p => `${p.x},${p.y}`).join(' '));
+  arc.setAttribute('class', 'triangle-arc');
+  svg.appendChild(arc);
+
+  const ray = document.createElementNS(SVG_NS, 'line');
+  ray.setAttribute('x1', O.x);
+  ray.setAttribute('y1', O.y);
+  ray.setAttribute('x2', tip.x);
+  ray.setAttribute('y2', tip.y);
+  ray.setAttribute('class', 'triangle-outline');
+  svg.appendChild(ray);
+
+  const dot = document.createElementNS(SVG_NS, 'circle');
+  dot.setAttribute('cx', tip.x);
+  dot.setAttribute('cy', tip.y);
+  dot.setAttribute('r', 3.5);
+  dot.setAttribute('class', 'triangle-point');
+  svg.appendChild(dot);
+
+  if (labelA) placeOverlay(figure, labelAAt, W, H, 'triangle-angle-label', labelA);
+  if (labelB) placeOverlay(figure, labelBAt, W, H, 'triangle-angle-label', labelB);
+  if (rayLabel) placeOverlay(figure, rayLabelAt, W, H, 'triangle-point-label', rayLabel);
+
+  el.replaceWith(container);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('triangle').forEach(renderTriangle);
+  document.querySelectorAll('angle-plane').forEach(renderAnglePlane);
 });

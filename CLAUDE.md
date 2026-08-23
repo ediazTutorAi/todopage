@@ -111,6 +111,24 @@ plus percentage-positioned HTML overlay labels (side lengths, angle measures, mo
 Anything that needs to *move* (drag a point, angle sliders, live-updating dependent
 values) stays on the existing `<geogebra>` tag instead — `<triangle>` is static only.
 
+### `<angle-plane angle="…" label-a="…" label-b="…" ray-label="…">`
+
+A single ray from the origin at an *arbitrary* angle (not limited to 0–90° like
+`type="right"` — its height formula breaks down past 90°, and there's no triangle here at
+all, just axes + one ray + an arc). For "angle in standard position" diagrams: axes,
+one ray, an arc back to the positive x-axis, and up to two text labels near the arc/ray
+(built for showing two different rotations — e.g. a positive and a negative coterminal
+angle — to the *same* physical ray) plus an optional label at the ray's tip. Implemented
+in `js/triangle.js` alongside `<triangle>`, reusing its `renderAxes`/`placeOverlay`
+helpers directly rather than duplicating them — no new module, no new CSS file. No
+`build` support (not asked for; this is a presented illustration, not a
+construct-it-yourself exercise like `<triangle build>`).
+
+Deliberately narrow: exactly one ray, at most two labels near it, no `reveal` slots. If a
+lesson later needs multiple independent rays, quadrant shading, or a general "any number
+of angles" version, extend this rather than writing a third diagram tag — the shared
+axis/arrow/label plumbing already lives here.
+
 ### Reference builds
 
 - `trigonometry/2026/2026-08-23-lesson-03-right-triangle-trigonometry/index.html` — first
