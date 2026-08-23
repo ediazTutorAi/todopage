@@ -162,6 +162,31 @@ is always oriented up-and-right) would overlap the ray line itself whenever the 
 points down or left, which `<angle-plane>` very much needs to support (that's the whole
 point of not being limited to 0–90°).
 
+### Lesson 03 Example 3 also converted to `build`
+
+The 45-45-90 triangle didn't have axes/a plotted point to build up, but it still fit the
+same idea: the workbook derives the hypotenuse via the Pythagorean theorem *after* the
+legs are drawn, rather than giving it upfront. Now `<triangle type="right" angle="45"
+adjacent="1" opposite="1" build>` with `<reveal slot="hypotenuse">\(\sqrt{2}\)</reveal>` —
+2 stages (legs+angles, then the hypotenuse blank), no `axes` needed. Confirms `build`
+doesn't require `axes` to be useful.
+
+**Bug found and fixed while doing this**: a `<reveal>` used as a diagram label sizes its
+box (including the dashed placeholder border) to its *actual* content width even while
+that content is hidden — fine inline in a sentence (a longer expected answer gets a
+longer blank, which reads naturally), but on a diagram a long expression produced a
+comically wide dashed line floating across the triangle, unrelated to where the label
+actually anchors. First-pass content also used a full derivation
+(`\sqrt{1^2+1^2}=\sqrt{2}`) as the reveal, which is both the direct cause here and
+inconsistent with the existing convention elsewhere (Lesson 04 Example 6 only reveals the
+plain answer, `\sqrt{34}`) — shortened to match. **Also fixed generally**, not just
+patched for this instance: `reveal.triangle-overlay:not(.is-revealed) { max-width: 3em;
+overflow: hidden; }` in `css/steps.css` caps any diagram-label reveal to a compact
+placeholder pre-click regardless of content length, and lifts the cap once revealed so
+long content still displays in full. Keep diagram-label reveal content short by
+convention anyway (just the answer, not its derivation) — this CSS is a safety net, not a
+license to put long expressions there.
+
 ### Second GeoGebra→native conversion: Lesson 04 Example 3
 
 Same reasoning as Lesson 03 Example 6: the workbook's "draw an angle θ with terminal side

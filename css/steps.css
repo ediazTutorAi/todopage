@@ -224,3 +224,11 @@ reveal:hover { background: #eef6fc; }
 .triangle-angle-label { color: var(--accent); font-weight: 700; font-size: 0.85em; }
 .triangle-side-label { background: #fff; padding: 0 0.2em; }
 .triangle-point-label { color: var(--ink); font-size: 0.85em; }
+/* A <reveal> used as a diagram label sizes to its real (if hidden) content by
+   default, so a long expression produces a comically wide dashed placeholder
+   floating on the diagram instead of a compact blank. Cap it before reveal;
+   drop the cap once revealed so long content still displays in full. */
+reveal.triangle-overlay:not(.is-revealed) {
+  max-width: 3em;
+  overflow: hidden;
+}

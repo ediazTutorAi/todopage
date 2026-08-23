@@ -141,8 +141,14 @@
           <div class="step-title">Example 3</div>
           <div class="step-subtitle">A 45° right triangle</div>
           <div class="step-body">
-            <p>Using the right triangle trigonometric definitions, find the sine, cosine, and tangent values indicated below.</p>
-            <triangle type="right" angle="45" adjacent="1" opposite="1" hypotenuse="√2"></triangle>
+            <p>
+              Using the right triangle trigonometric definitions, find the sine, cosine, and tangent values indicated
+              below. Click <b>Build</b>: mark the equal \(45°\) angles, add the two legs, then find the hypotenuse
+              with the Pythagorean theorem.
+            </p>
+            <triangle type="right" angle="45" adjacent="1" opposite="1" build>
+              <reveal slot="hypotenuse">\(\sqrt{2}\)</reveal>
+            </triangle>
             <p>
               \(\sin(45°) = \) <reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal> &nbsp;&nbsp;&nbsp;
               \(\cos(45°) = \) <reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal> &nbsp;&nbsp;&nbsp;
@@ -244,7 +250,7 @@
               (counterclockwise) acute angle from the positive \(x\)-axis to the side formed by the origin and
               the given coordinate.
             </p>
-            <triangle type="right" angle="30.96" label-a="θ" adjacent="5" opposite="3" axes build>
+            <triangle type="right" angle="30.96" label-a="θ" label-c="" point-label="(5, 3)" adjacent="5" opposite="3" axes build>
               <reveal slot="hypotenuse">\(\sqrt{34}\)</reveal>
             </triangle>
             <p>
