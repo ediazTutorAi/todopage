@@ -6,6 +6,13 @@
 // type="scalene" (a general, non-symmetric triangle) is intentionally not
 // implemented yet -- it needs real triangle-solving (law of sines/cosines)
 // rather than a closed-form layout, and no current lesson needs it.
+//
+// `build` (bare boolean, type="right" only): instead of painting the finished
+// figure immediately, reveal it in the same 3 stages the workbook's own
+// "(a) graph theta / (b) construct the triangle / (c) find r" steps use,
+// advanced by a button rather than by clicking the diagram itself (there's
+// nothing visible to click before a line exists). Lets the instructor build
+// the picture live instead of presenting it pre-drawn.
 
 const PAD = 34;
 
@@ -48,14 +55,15 @@ function layoutRight(el) {
     viewBox: `0 0 ${W} ${H}`, W, H,
     vertices: { A, B, C },
     rightAngleAt: B,
+    point: C,
     sides: {
-      adjacent: { mid: mid(A, B) },
-      opposite: { mid: mid(B, C) },
-      hypotenuse: { mid: mid(A, C) },
+      adjacent: { p1: A, p2: B, mid: mid(A, B), stage: 2 },
+      opposite: { p1: B, p2: C, mid: mid(B, C), stage: 2 },
+      hypotenuse: { p1: A, p2: C, mid: mid(A, C), stage: 1 },
     },
     angles: [
-      { at: inset(A, B, C, 26), label: labelA },
-      { at: inset(C, A, B, 26), label: labelC },
+      { at: inset(A, B, C, 26), label: labelA, stage: 1 },
+      { at: inset(C, A, B, 26), label: labelC, stage: 1 },
     ],
   };
 
@@ -85,9 +93,9 @@ function layoutIsosceles(el) {
     viewBox: `0 0 ${W} ${H}`, W, H,
     vertices: { L, R, T },
     sides: {
-      base: { mid: mid(L, R) },
-      leg1: { mid: mid(L, T) },
-      leg2: { mid: mid(R, T) },
+      base: { p1: L, p2: R, mid: mid(L, R) },
+      leg1: { p1: L, p2: T, mid: mid(L, T) },
+      leg2: { p1: R, p2: T, mid: mid(R, T) },
     },
     angles: [{ at: inset(T, L, R, 24), label: `${round(apexDeg)}°` }],
     ticks: [{ p1: L, p2: T }, { p1: R, p2: T }],
@@ -107,9 +115,9 @@ function layoutEquilateral() {
     viewBox: `0 0 ${W} ${H}`, W, H,
     vertices: { L, R, T },
     sides: {
-      side1: { mid: mid(L, R) },
-      side2: { mid: mid(L, T) },
-      side3: { mid: mid(R, T) },
+      side1: { p1: L, p2: R, mid: mid(L, R) },
+      side2: { p1: L, p2: T, mid: mid(L, T) },
+      side3: { p1: R, p2: T, mid: mid(R, T) },
     },
     angles: [
       { at: inset(L, R, T, 22), label: '60°' },
@@ -127,6 +135,7 @@ function layoutScalene() {
 
 const LAYOUTS = { right: layoutRight, isosceles: layoutIsosceles, equilateral: layoutEquilateral, scalene: layoutScalene };
 const SVG_NS = 'http://www.w3.org/2000/svg';
+const MAX_BUILD_STAGE = 3;
 
 function renderRightAngleTick(svg, at, size) {
   // Assumes layoutRight's fixed orientation: interior is up-and-left of `at`.
@@ -134,6 +143,7 @@ function renderRightAngleTick(svg, at, size) {
   p.setAttribute('points', `${at.x - size},${at.y} ${at.x - size},${at.y - size} ${at.x},${at.y - size}`);
   p.setAttribute('class', 'triangle-right-tick');
   svg.appendChild(p);
+  return p;
 }
 
 function renderEqualTick(svg, p1, p2) {
@@ -151,7 +161,7 @@ function renderEqualTick(svg, p1, p2) {
 
 let axisMarkerCounter = 0;
 
-function renderAxes(svg, container, axes, W, H) {
+function renderAxes(svg, figure, axes, W, H) {
   const markerId = `triangle-axis-arrow-${++axisMarkerCounter}`;
   const defs = document.createElementNS(SVG_NS, 'defs');
   const marker = document.createElementNS(SVG_NS, 'marker');
@@ -180,17 +190,17 @@ function renderAxes(svg, container, axes, W, H) {
     svg.appendChild(line);
   });
 
-  placeOverlay(container, { x: axes.xEnd.x - 4, y: axes.xEnd.y - 14 }, W, H, 'triangle-axis-label', 'x');
-  placeOverlay(container, { x: axes.yEnd.x + 14, y: axes.yEnd.y + 2 }, W, H, 'triangle-axis-label', 'y');
+  placeOverlay(figure, { x: axes.xEnd.x - 4, y: axes.xEnd.y - 14 }, W, H, 'triangle-axis-label', 'x');
+  placeOverlay(figure, { x: axes.yEnd.x + 14, y: axes.yEnd.y + 2 }, W, H, 'triangle-axis-label', 'y');
 }
 
-function placeOverlay(container, point, W, H, cls, text) {
+function placeOverlay(figure, point, W, H, cls, text) {
   const span = document.createElement('span');
   span.className = `triangle-overlay ${cls}`;
   span.style.left = `${(point.x / W) * 100}%`;
   span.style.top = `${(point.y / H) * 100}%`;
   span.textContent = text;
-  container.appendChild(span);
+  figure.appendChild(span);
   return span;
 }
 
@@ -201,29 +211,54 @@ function renderTriangle(el) {
   const layout = layoutFn(el);
   if (!layout) return;
 
-  const { vertices, sides, angles, rightAngleAt, ticks, axes, viewBox, W, H } = layout;
+  const buildMode = type === 'right' && el.hasAttribute('build');
+  const { vertices, sides, angles, rightAngleAt, ticks, axes, point, viewBox, W, H } = layout;
+  const gated = []; // { el, stage } -- only consulted when buildMode is true
+  const gate = (node, stage) => { if (buildMode && stage > 0) gated.push({ el: node, stage }); return node; };
 
   const container = document.createElement('div');
   container.className = 'triangle-diagram';
-  container.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+
+  const figure = document.createElement('div');
+  figure.className = 'triangle-diagram-figure';
+  figure.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+  container.appendChild(figure);
 
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', viewBox);
   svg.setAttribute('class', 'triangle-diagram-svg');
+  figure.appendChild(svg);
 
-  if (axes) renderAxes(svg, container, axes, W, H);
+  if (axes) renderAxes(svg, figure, axes, W, H); // stage 0: the coordinate plane itself, always shown
 
-  const poly = document.createElementNS(SVG_NS, 'polygon');
-  poly.setAttribute('points', Object.values(vertices).map(v => `${v.x},${v.y}`).join(' '));
-  poly.setAttribute('class', 'triangle-outline');
-  svg.appendChild(poly);
+  Object.values(sides).forEach(side => {
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', side.p1.x);
+    line.setAttribute('y1', side.p1.y);
+    line.setAttribute('x2', side.p2.x);
+    line.setAttribute('y2', side.p2.y);
+    line.setAttribute('class', 'triangle-outline');
+    svg.appendChild(line);
+    gate(line, side.stage || 0);
+  });
 
-  if (rightAngleAt) renderRightAngleTick(svg, rightAngleAt, 16);
+  if (point && axes) {
+    const dot = document.createElementNS(SVG_NS, 'circle');
+    dot.setAttribute('cx', point.x);
+    dot.setAttribute('cy', point.y);
+    dot.setAttribute('r', 3.5);
+    dot.setAttribute('class', 'triangle-point');
+    svg.appendChild(dot);
+    gate(dot, 1);
+  }
+
+  if (rightAngleAt) gate(renderRightAngleTick(svg, rightAngleAt, 16), 2);
   (ticks || []).forEach(t => renderEqualTick(svg, t.p1, t.p2));
 
-  container.appendChild(svg);
-
-  angles.forEach(a => placeOverlay(container, a.at, W, H, 'triangle-angle-label', a.label));
+  angles.forEach(a => gate(
+    placeOverlay(figure, a.at, W, H, 'triangle-angle-label', a.label),
+    a.stage || 0
+  ));
 
   Object.entries(sides).forEach(([name, side]) => {
     const slotEl = el.querySelector(`reveal[slot="${name}"]`);
@@ -240,8 +275,28 @@ function renderTriangle(el) {
     node.classList.add('triangle-overlay', 'triangle-side-label');
     node.style.left = `${(side.mid.x / W) * 100}%`;
     node.style.top = `${(side.mid.y / H) * 100}%`;
-    container.appendChild(node);
+    figure.appendChild(node);
+    // "finding r" (the hypotenuse label) is its own final stage; leg labels
+    // land alongside the legs themselves in stage 2.
+    gate(node, name === 'hypotenuse' ? 3 : (side.stage || 0));
   });
+
+  if (buildMode) {
+    let stage = 0;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn small triangle-build-btn';
+    const applyStage = () => {
+      gated.forEach(g => g.el.classList.toggle('triangle-build-pending', g.stage > stage));
+      btn.textContent = stage >= MAX_BUILD_STAGE ? '↺ Reset' : 'Build →';
+    };
+    btn.addEventListener('click', () => {
+      stage = stage >= MAX_BUILD_STAGE ? 0 : stage + 1;
+      applyStage();
+    });
+    applyStage();
+    container.appendChild(btn);
+  }
 
   el.replaceWith(container);
 }

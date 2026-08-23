@@ -190,10 +190,17 @@ reveal:hover { background: #eef6fc; }
 
 /* <triangle> diagram */
 .step-body .triangle-diagram {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
   width: min(420px, 100%);
-  aspect-ratio: var(--triangle-aspect, 1);
   margin: 0.9rem auto;
+}
+.triangle-diagram-figure {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--triangle-aspect, 1);
 }
 .triangle-diagram-svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .triangle-outline { fill: none; stroke: var(--ink); stroke-width: 2; }
@@ -202,6 +209,9 @@ reveal:hover { background: #eef6fc; }
 .triangle-axis { stroke: var(--muted); stroke-width: 1.5; }
 .triangle-axis-arrowhead { fill: var(--muted); }
 .triangle-axis-label { color: var(--muted); font-style: italic; font-size: 0.9em; }
+.triangle-point { fill: var(--accent); stroke: #fff; stroke-width: 1.5; }
+.triangle-build-pending { visibility: hidden; }
+.triangle-build-btn { align-self: center; }
 .triangle-overlay {
   position: absolute;
   transform: translate(-50%, -50%);

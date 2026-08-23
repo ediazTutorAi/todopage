@@ -90,6 +90,19 @@ plus percentage-positioned HTML overlay labels (side lengths, angle measures, mo
   (`layoutScalene`, logs a console error) — general triangle-solving (law of
   sines/cosines) isn't built, since nothing needs it yet. Build it when a lesson actually
   requires a non-symmetric triangle diagram.
+- `build` (bare boolean, `type="right"` only): don't paint the finished figure — reveal it
+  in 3 stages via a **button** (not click-the-diagram, since there's nothing visible to
+  click before a line exists), matching a "(a) graph θ / (b) construct the triangle /
+  (c) find r" style exercise: stage 1 = hypotenuse + point + angle label(s); stage 2 =
+  the two legs + right-angle tick + their labels; stage 3 = the hypotenuse's own label
+  (e.g. `r`). Axes (if `axes` is also set) are stage 0 — always shown, since they're the
+  "graph paper," not something being constructed. Button reads "Build →" then cycles to
+  "↺ Reset" at the final stage. This exists because presenting the whole diagram at once
+  defeats an exercise that's explicitly asking the class to construct it step by step —
+  use `build` whenever the workbook phrases a diagram as "graph/plot/construct," not just
+  "here is the triangle." Implemented as a `stage` tag on each SVG/overlay piece in
+  `renderTriangle` (`js/triangle.js`), toggled via a `.triangle-build-pending` CSS class —
+  no effect at all when `build` isn't set, so every earlier diagram is unchanged.
 
 Anything that needs to *move* (drag a point, angle sliders, live-updating dependent
 values) stays on the existing `<geogebra>` tag instead — `<triangle>` is static only.
@@ -98,8 +111,15 @@ values) stays on the existing `<geogebra>` tag instead — `<triangle>` is stati
 
 - `trigonometry/2026/2026-08-23-lesson-03-right-triangle-trigonometry/index.html` — first
   page built with these tags: intro blanks, a side-naming exercise with two `<triangle>`
-  diagrams, several worked examples with ratio reveals, a special-angles table with
-  per-cell reveals, and one example on the existing `<geogebra>` tag.
+  diagrams, several worked examples with ratio reveals, and a special-angles table with
+  per-cell reveals. Example 6 originally used `<geogebra>` (plot (5,3), build the
+  triangle, find r) but was converted to `<triangle type="right" axes build>` once `build`
+  existed — it's a static, fixed-point diagram, not something needing GeoGebra's
+  draggability, and the workbook phrases it as "construct," which `build` matches
+  directly. The `<geogebra>` head script was removed from this page entirely once nothing
+  in it used `<geogebra>` anymore. **Has an app-managed `content.json` sidecar** (created
+  once the editor-app GUI opened this lesson) — kept in sync by hand when index.html is
+  hand-edited, so a future editor-app save doesn't clobber this content.
 - `trigonometry/2026/2026-08-23-lesson-04-angles-in-the-coordinate-plane/index.html` —
   second page; confirmed `<reveal>`/`<triangle>` need no changes to cover a lesson outside
   right-triangle-only content (angles in any quadrant, sign/quadrant reasoning). Uses

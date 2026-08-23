@@ -24,83 +24,6 @@
     });
   </script>
 
-  <!-- GeoGebra (inline diagrams via command API) -->
-  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
-  <script>
-    (function () {
-      var initialized = [];
-      var ASPECT_RATIO = 1.25;
-
-      function initGgbElement(el) {
-        if (initialized.indexOf(el) >= 0) return;
-        if (typeof GGBApplet === 'undefined') return;
-        initialized.push(el);
-
-        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-        var container = document.createElement('div');
-        container.id = 'geogebra-' + initialized.length;
-        container.style.width = '100%';
-        el.replaceWith(container);
-
-        var explicitWidth = el.getAttribute('width');
-        var explicitHeight = el.getAttribute('height');
-        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
-        var ggbApi = null;
-
-        function computeSize() {
-          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
-          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
-          return { w: w, h: h };
-        }
-
-        var size = computeSize();
-
-        try {
-          var applet = new GGBApplet({
-            id: container.id,
-            width: size.w,
-            height: size.h,
-            showToolBar: false,
-            showMenuBar: false,
-            showAlgebraInput: false,
-            showResetIcon: false,
-            appName: perspective === '3D' ? '3d' : 'classic',
-            appletOnLoad: function (api) {
-              ggbApi = api;
-              commands.forEach(function (cmd) { api.evalCommand(cmd); });
-            }
-          }, true);
-          applet.inject(container.id);
-
-          if (!explicitWidth) {
-            var resizeTimer = null;
-            window.addEventListener('resize', function () {
-              clearTimeout(resizeTimer);
-              resizeTimer = setTimeout(function () {
-                if (!ggbApi) return;
-                var s = computeSize();
-                ggbApi.setSize(s.w, s.h);
-              }, 150);
-            });
-          }
-        } catch (err) {
-          container.textContent = 'Diagram error: ' + err.message;
-          container.style.color = '#b00020';
-        }
-      }
-
-      window._initGgbInStep = function (stepEl) {
-        if (!stepEl) return;
-        stepEl.querySelectorAll('geogebra').forEach(initGgbElement);
-      };
-
-      window.addEventListener('load', function () {
-        var current = document.querySelector('.step.is-current') || document.querySelector('.step.is-visible');
-        if (current) window._initGgbInStep(current);
-      });
-    })();
-  </script>
-
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -321,13 +244,9 @@
               (counterclockwise) acute angle from the positive \(x\)-axis to the side formed by the origin and
               the given coordinate.
             </p>
-            <geogebra width="640" height="480" perspective="2D">
-              O=(0,0)
-              A=(5,3)
-              B=(5,0)
-              Polygon(O,B,A)
-              theta=Angle(B,O,A)
-            </geogebra>
+            <triangle type="right" angle="30.96" label-a="θ" adjacent="5" opposite="3" axes build>
+              <reveal slot="hypotenuse">\(\sqrt{34}\)</reveal>
+            </triangle>
             <p>
               \(\sin\theta = \) <reveal>\(\dfrac{3}{\sqrt{34}}\)</reveal> &nbsp;&nbsp;&nbsp;
               \(\tan\theta = \) <reveal>\(\dfrac{3}{5}\)</reveal>
