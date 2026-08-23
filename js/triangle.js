@@ -140,7 +140,29 @@ function layoutScalene() {
 
 const LAYOUTS = { right: layoutRight, isosceles: layoutIsosceles, equilateral: layoutEquilateral, scalene: layoutScalene };
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const MAX_BUILD_STAGE = 3;
+
+// Shared by <triangle build> and <angle-plane build>: `gated` is an array of
+// { el, stage } pairs collected while rendering. Adds a button that reveals
+// one stage at a time (stage's max is whatever the diagram actually used --
+// not a fixed number, since <triangle> needs 3 and <angle-plane> needs 2),
+// cycling to "Reset" at the end.
+function attachBuildControl(container, gated) {
+  const maxStage = gated.reduce((m, g) => Math.max(m, g.stage), 0);
+  let stage = 0;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn small triangle-build-btn';
+  const applyStage = () => {
+    gated.forEach(g => g.el.classList.toggle('triangle-build-pending', g.stage > stage));
+    btn.textContent = stage >= maxStage ? '↺ Reset' : 'Build →';
+  };
+  btn.addEventListener('click', () => {
+    stage = stage >= maxStage ? 0 : stage + 1;
+    applyStage();
+  });
+  applyStage();
+  container.appendChild(btn);
+}
 
 function renderRightAngleTick(svg, at, size) {
   // Assumes layoutRight's fixed orientation: interior is up-and-left of `at`.
@@ -293,22 +315,7 @@ function renderTriangle(el) {
     gate(node, name === 'hypotenuse' ? 3 : (side.stage || 0));
   });
 
-  if (buildMode) {
-    let stage = 0;
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn small triangle-build-btn';
-    const applyStage = () => {
-      gated.forEach(g => g.el.classList.toggle('triangle-build-pending', g.stage > stage));
-      btn.textContent = stage >= MAX_BUILD_STAGE ? '↺ Reset' : 'Build →';
-    };
-    btn.addEventListener('click', () => {
-      stage = stage >= MAX_BUILD_STAGE ? 0 : stage + 1;
-      applyStage();
-    });
-    applyStage();
-    container.appendChild(btn);
-  }
+  if (buildMode) attachBuildControl(container, gated);
 
   el.replaceWith(container);
 }
@@ -334,6 +341,11 @@ function renderTriangle(el) {
 // Intentionally narrow beyond that: one ray, at most two arcs/labels, plus
 // an optional ray-tip label. A more general multi-ray version can be built
 // later if a lesson needs more than this.
+//
+// `build` (bare boolean): same staged-reveal mechanism as <triangle build>
+// (shared via attachBuildControl below), just with 2 stages instead of 3 --
+// stage 1 = the ray/point/arc(s)/angle label(s) ("graph the angle"), stage 2
+// = point-label/ray-label ("here's the point we plotted").
 
 // One labeled rotation: sweeps from 0° to `deg`, drawn at `radius`. Sign of
 // `deg` drives color (the blue/red positive/negative convention) -- never
@@ -391,6 +403,10 @@ function renderAnglePlane(el) {
   const layout = layoutAnglePlane(el);
   const { O, tip, pointLabel, pointLabelAt, arcA, labelA, arcB, labelB, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
 
+  const buildMode = el.hasAttribute('build');
+  const gated = []; // { el, stage } -- only consulted when buildMode is true
+  const gate = (node, stage) => { if (buildMode) gated.push({ el: node, stage }); return node; };
+
   const container = document.createElement('div');
   container.className = 'triangle-diagram';
 
@@ -404,13 +420,14 @@ function renderAnglePlane(el) {
   svg.setAttribute('class', 'triangle-diagram-svg');
   figure.appendChild(svg);
 
-  renderAxes(svg, figure, axes, W, H);
+  renderAxes(svg, figure, axes, W, H); // stage 0: the coordinate plane itself, always shown
 
   [arcA, arcB].filter(Boolean).forEach(arcInfo => {
     const arc = document.createElementNS(SVG_NS, 'polyline');
     arc.setAttribute('points', arcInfo.points.map(p => `${p.x},${p.y}`).join(' '));
     arc.setAttribute('class', `triangle-arc${arcInfo.isNegative ? ' is-negative' : ''}`);
     svg.appendChild(arc);
+    gate(arc, 1);
   });
 
   const ray = document.createElementNS(SVG_NS, 'line');
@@ -420,6 +437,7 @@ function renderAnglePlane(el) {
   ray.setAttribute('y2', tip.y);
   ray.setAttribute('class', 'triangle-outline');
   svg.appendChild(ray);
+  gate(ray, 1);
 
   const dot = document.createElementNS(SVG_NS, 'circle');
   dot.setAttribute('cx', tip.x);
@@ -427,20 +445,23 @@ function renderAnglePlane(el) {
   dot.setAttribute('r', 3.5);
   dot.setAttribute('class', 'triangle-point');
   svg.appendChild(dot);
+  gate(dot, 1);
 
   if (pointLabel) {
-    placeOverlay(figure, pointLabelAt, W, H, 'triangle-point-label', pointLabel);
+    gate(placeOverlay(figure, pointLabelAt, W, H, 'triangle-point-label', pointLabel), 2);
   }
 
   if (labelA) {
     const cls = `triangle-angle-label${arcA.isNegative ? ' is-negative' : ''}`;
-    placeOverlay(figure, arcA.labelAt, W, H, cls, labelA);
+    gate(placeOverlay(figure, arcA.labelAt, W, H, cls, labelA), 1);
   }
   if (labelB && arcB) {
     const cls = `triangle-angle-label${arcB.isNegative ? ' is-negative' : ''}`;
-    placeOverlay(figure, arcB.labelAt, W, H, cls, labelB);
+    gate(placeOverlay(figure, arcB.labelAt, W, H, cls, labelB), 1);
   }
-  if (rayLabel) placeOverlay(figure, rayLabelAt, W, H, 'triangle-point-label', rayLabel);
+  if (rayLabel) gate(placeOverlay(figure, rayLabelAt, W, H, 'triangle-point-label', rayLabel), 2);
+
+  if (buildMode) attachBuildControl(container, gated);
 
   el.replaceWith(container);
 }

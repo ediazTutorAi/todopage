@@ -146,6 +146,15 @@ independent rays, quadrant shading, or a general "any number of angles" version,
 this rather than writing a third diagram tag — the shared axis/arrow/label plumbing
 already lives here.
 
+Also supports `build` (bare boolean), same staged-reveal idea as `<triangle build>` but
+with **2** stages instead of 3 (there's less to construct — no legs, no right-angle tick):
+stage 1 = the ray/point/arc(s)/angle label(s) ("graph the angle"), stage 2 =
+`point-label`/`ray-label` ("here's the point we plotted"). The button/stage-cycling logic
+(`attachBuildControl` in `js/triangle.js`) is now **shared** between `<triangle>` and
+`<angle-plane>` — it computes the max stage from whatever pieces were actually gated
+rather than a hardcoded number, so each tag's own stage count just falls out of how many
+stages its pieces use.
+
 `point-label`'s position is computed **radially outward along the ray** (past the
 endpoint, plus a small perpendicular nudge), not a fixed screen-space offset — a fixed
 offset (which is what `<triangle>`'s `point-label` uses, fine there since that tag's ray
@@ -159,9 +168,12 @@ Same reasoning as Lesson 03 Example 6: the workbook's "draw an angle θ with ter
 through (-12,-5)" is a static, fixed-point diagram — no dragging needed — so it's now
 `<angle-plane angle="202.62" label-a="θ" point-label="(-12, -5)">` instead of
 `<geogebra>`. `angle` is the point's standard-position angle in degrees
-(`atan2(y,x)`, normalized to `[0,360)`: `atan2(-5,-12) ≈ -157.38° → 202.62°`). Lesson 04's
-Example 5 still legitimately uses `<geogebra>` (its own point, same conversion could apply
-later if wanted), so that page's GeoGebra head script stays.
+(`atan2(y,x)`, normalized to `[0,360)`: `atan2(-5,-12) ≈ -157.38° → 202.62°`).
+
+**Example 5 converted too** (same reasoning, plus `build`): point (1,-3),
+`angle="288.43"` (`atan2(-3,1) ≈ -71.57° → 288.43°`). With Example 3, the demo, and
+Example 5 all off `<geogebra>`, nothing in Lesson 04 uses it anymore — its GeoGebra head
+script was removed the same way Lesson 03's was.
 
 ### Reference builds
 
