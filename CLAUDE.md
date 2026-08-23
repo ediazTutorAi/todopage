@@ -140,10 +140,28 @@ minus-sign already present in the text label, never the only signal (colorblind
 accessibility). Extend `--negative` to other sign-bearing diagram elements (coordinate
 signs, quadrant charts) the same way if/when a lesson needs it.
 
-Deliberately narrow: exactly one ray, at most two labels near it, no `reveal` slots. If a
-lesson later needs multiple independent rays, quadrant shading, or a general "any number
-of angles" version, extend this rather than writing a third diagram tag — the shared
-axis/arrow/label plumbing already lives here.
+Deliberately narrow: exactly one ray, at most two arcs/labels near it, an optional
+`point-label` at the ray's endpoint, no `reveal` slots. If a lesson later needs multiple
+independent rays, quadrant shading, or a general "any number of angles" version, extend
+this rather than writing a third diagram tag — the shared axis/arrow/label plumbing
+already lives here.
+
+`point-label`'s position is computed **radially outward along the ray** (past the
+endpoint, plus a small perpendicular nudge), not a fixed screen-space offset — a fixed
+offset (which is what `<triangle>`'s `point-label` uses, fine there since that tag's ray
+is always oriented up-and-right) would overlap the ray line itself whenever the angle
+points down or left, which `<angle-plane>` very much needs to support (that's the whole
+point of not being limited to 0–90°).
+
+### Second GeoGebra→native conversion: Lesson 04 Example 3
+
+Same reasoning as Lesson 03 Example 6: the workbook's "draw an angle θ with terminal side
+through (-12,-5)" is a static, fixed-point diagram — no dragging needed — so it's now
+`<angle-plane angle="202.62" label-a="θ" point-label="(-12, -5)">` instead of
+`<geogebra>`. `angle` is the point's standard-position angle in degrees
+(`atan2(y,x)`, normalized to `[0,360)`: `atan2(-5,-12) ≈ -157.38° → 202.62°`). Lesson 04's
+Example 5 still legitimately uses `<geogebra>` (its own point, same conversion could apply
+later if wanted), so that page's GeoGebra head script stays.
 
 ### Reference builds
 

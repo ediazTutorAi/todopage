@@ -313,7 +313,8 @@ function renderTriangle(el) {
   el.replaceWith(container);
 }
 
-// <angle-plane angle="150" label-a="α = 150°" arc-b="-210" label-b="β = -210°" ray-label="terminal side">
+// <angle-plane angle="150" point-label="(x,y)" label-a="α = 150°" arc-b="-210" label-b="β = -210°" ray-label="terminal side">
+// `point-label` (optional) marks the ray's endpoint, e.g. "(-12, -5)".
 // A single ray from the origin at an arbitrary angle (not limited to 0-90°,
 // unlike <triangle type="right">), with axes and up to two labeled rotation
 // arcs back to the positive x-axis -- for "angle in standard position"
@@ -361,11 +362,18 @@ function layoutAnglePlane(el) {
   const W = size * 2, H = size * 2;
   const O = { x: size, y: size };
   const rad = toRad(angleDeg);
-  const tip = { x: O.x + R * Math.cos(rad), y: O.y - R * Math.sin(rad) };
+  const dir = { x: Math.cos(rad), y: -Math.sin(rad) }; // unit vector along the ray, in SVG space
+  const perp = { x: -dir.y, y: dir.x };
+  const tip = { x: O.x + R * dir.x, y: O.y + R * dir.y };
 
   return {
     viewBox: `0 0 ${W} ${H}`, W, H, O, R,
     tip,
+    pointLabel: el.getAttribute('point-label'),
+    // Offset outward along the ray (away from the origin, past the dot) plus
+    // a small perpendicular nudge -- a fixed screen-space offset would
+    // overlap the ray whenever it points down/left instead of up/right.
+    pointLabelAt: { x: tip.x + dir.x * 16 + perp.x * 11, y: tip.y + dir.y * 16 + perp.y * 11 },
     arcA: buildArc(O, arcADeg, ARC_R),
     labelA: el.getAttribute('label-a'),
     arcB: arcBDeg === null ? null : buildArc(O, arcBDeg, ARC_R + 12),
@@ -381,7 +389,7 @@ function layoutAnglePlane(el) {
 
 function renderAnglePlane(el) {
   const layout = layoutAnglePlane(el);
-  const { O, tip, arcA, labelA, arcB, labelB, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
+  const { O, tip, pointLabel, pointLabelAt, arcA, labelA, arcB, labelB, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
 
   const container = document.createElement('div');
   container.className = 'triangle-diagram';
@@ -419,6 +427,10 @@ function renderAnglePlane(el) {
   dot.setAttribute('r', 3.5);
   dot.setAttribute('class', 'triangle-point');
   svg.appendChild(dot);
+
+  if (pointLabel) {
+    placeOverlay(figure, pointLabelAt, W, H, 'triangle-point-label', pointLabel);
+  }
 
   if (labelA) {
     const cls = `triangle-angle-label${arcA.isNegative ? ' is-negative' : ''}`;
