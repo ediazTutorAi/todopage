@@ -232,3 +232,17 @@ reveal.triangle-overlay:not(.is-revealed) {
   max-width: 3em;
   overflow: hidden;
 }
+
+/* <sign-circle> live drag demo */
+.sign-circle-path { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.sign-circle-guide { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; }
+.sign-circle-handle {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 2;
+  cursor: grab;
+  touch-action: none;
+}
+.sign-circle-handle.is-dragging { cursor: grabbing; }
+.sign-circle-value { color: var(--accent); font-weight: 700; }
+.sign-circle-value.is-negative { color: var(--negative); }

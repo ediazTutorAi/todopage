@@ -466,7 +466,122 @@ function renderAnglePlane(el) {
   el.replaceWith(container);
 }
 
+// <sign-circle radius="2" start-angle="35">
+// A point draggable around a circle (plain Pointer Events, no library --
+// setPointerCapture on the handle keeps drag events targeting it even if the
+// pointer outruns it mid-drag, and unifies mouse/touch/pen for free). Built
+// for live lecture use: the instructor drags it in front of the class and
+// narrates the x/y sign flip by quadrant *before* naming the ASTC mnemonic --
+// not a student-facing exercise, so there's no reveal/build gating here, just
+// a live x = ⟨value⟩ / y = ⟨value⟩ readout, colored via the same
+// blue-positive/red-negative convention as <angle-plane>'s arcs.
+//
+// `radius` is a semantic value (what x/y are computed and displayed as,
+// e.g. 2 → range [-2, 2]), independent of the diagram's fixed on-screen pixel
+// size -- so the picture always reads clearly regardless of what radius is
+// authored. Reuses renderAxes/placeOverlay from <triangle> above.
+
+function toSvgPoint(svg, clientX, clientY) {
+  const pt = svg.createSVGPoint();
+  pt.x = clientX;
+  pt.y = clientY;
+  const ctm = svg.getScreenCTM();
+  if (!ctm) return { x: 0, y: 0 };
+  return pt.matrixTransform(ctm.inverse());
+}
+
+function renderSignCircle(el) {
+  const radius = parseFloat(el.getAttribute('radius') || '2');
+  const startAngle = parseFloat(el.getAttribute('start-angle') || '35');
+  const PIXEL_R = 90, AXIS_OVERSHOOT = 25;
+  const size = PIXEL_R + AXIS_OVERSHOOT;
+  const W = size * 2, H = size * 2;
+  const O = { x: size, y: size };
+
+  const container = document.createElement('div');
+  container.className = 'triangle-diagram';
+
+  const figure = document.createElement('div');
+  figure.className = 'triangle-diagram-figure';
+  figure.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+  container.appendChild(figure);
+
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('class', 'triangle-diagram-svg');
+  figure.appendChild(svg);
+
+  renderAxes(svg, figure, {
+    xStart: { x: 0, y: O.y }, xEnd: { x: W, y: O.y },
+    yStart: { x: O.x, y: H }, yEnd: { x: O.x, y: 0 },
+  }, W, H);
+
+  const circle = document.createElementNS(SVG_NS, 'circle');
+  circle.setAttribute('cx', O.x);
+  circle.setAttribute('cy', O.y);
+  circle.setAttribute('r', PIXEL_R);
+  circle.setAttribute('class', 'sign-circle-path');
+  svg.appendChild(circle);
+
+  const guideX = document.createElementNS(SVG_NS, 'line');
+  guideX.setAttribute('class', 'sign-circle-guide');
+  svg.appendChild(guideX);
+  const guideY = document.createElementNS(SVG_NS, 'line');
+  guideY.setAttribute('class', 'sign-circle-guide');
+  svg.appendChild(guideY);
+
+  const dot = document.createElementNS(SVG_NS, 'circle');
+  dot.setAttribute('r', 9);
+  dot.setAttribute('class', 'sign-circle-handle');
+  svg.appendChild(dot);
+
+  const xLabel = placeOverlay(figure, { x: size * 0.32, y: H - 30 }, W, H, 'sign-circle-value', 'x = 0');
+  const yLabel = placeOverlay(figure, { x: size * 0.32, y: H - 12 }, W, H, 'sign-circle-value', 'y = 0');
+
+  function update(angleDeg) {
+    const rad = toRad(angleDeg);
+    const px = O.x + PIXEL_R * Math.cos(rad);
+    const py = O.y - PIXEL_R * Math.sin(rad);
+    dot.setAttribute('cx', px);
+    dot.setAttribute('cy', py);
+    guideX.setAttribute('x1', px); guideX.setAttribute('y1', py);
+    guideX.setAttribute('x2', px); guideX.setAttribute('y2', O.y);
+    guideY.setAttribute('x1', px); guideY.setAttribute('y1', py);
+    guideY.setAttribute('x2', O.x); guideY.setAttribute('y2', py);
+
+    const xVal = round(radius * Math.cos(rad));
+    const yVal = round(radius * Math.sin(rad));
+    xLabel.textContent = `x = ${xVal}`;
+    yLabel.textContent = `y = ${yVal}`;
+    xLabel.classList.toggle('is-negative', xVal < 0);
+    yLabel.classList.toggle('is-negative', yVal < 0);
+  }
+
+  function angleFromEvent(e) {
+    const p = toSvgPoint(svg, e.clientX, e.clientY);
+    return (Math.atan2(-(p.y - O.y), p.x - O.x) * 180) / Math.PI;
+  }
+
+  let dragging = false;
+  dot.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    dot.setPointerCapture(e.pointerId);
+    dot.classList.add('is-dragging');
+    update(angleFromEvent(e));
+    e.preventDefault();
+  });
+  dot.addEventListener('pointermove', (e) => { if (dragging) update(angleFromEvent(e)); });
+  ['pointerup', 'pointercancel'].forEach(evt => dot.addEventListener(evt, () => {
+    dragging = false;
+    dot.classList.remove('is-dragging');
+  }));
+
+  update(startAngle);
+  el.replaceWith(container);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('triangle').forEach(renderTriangle);
   document.querySelectorAll('angle-plane').forEach(renderAnglePlane);
+  document.querySelectorAll('sign-circle').forEach(renderSignCircle);
 });

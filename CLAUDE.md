@@ -247,6 +247,44 @@ confirmed working with no console errors.
 When picking one of these up: run it through the same
 decide-the-interaction-model-first approach used above before writing code.
 
+### `<sign-circle radius="2" start-angle="35">` — the first genuinely interactive tag
+
+Everything above (`<reveal>`, `<triangle>`, `<angle-plane>`, `build`) renders once and
+reveals in discrete clicks. This is different: a point the **instructor drags live**
+around a circle during the lecture, with `x = …` / `y = …` updating continuously and
+colored by sign (same blue/red convention) — built so the class watches cos/sin's sign
+flip by quadrant *before* the ASTC mnemonic names the pattern, rather than being told the
+pattern first. Not a student-facing exercise (no reveal/build gating) — this project is
+instructor-operated presentation software throughout; students watch, the instructor
+drives every interaction, including this one.
+
+**Implementation — plain Pointer Events, deliberately no library.** Considered D3
+(`d3-drag`+`d3-selection`, ~10KB gzipped, the trusted choice for exactly this) but ruled
+it out for scope: one point constrained to one circle is less code than wiring up D3 for
+it, and it keeps the project dependency-free (KaTeX/GeoGebra via CDN are the only
+external loads anywhere on these pages, and GeoGebra is now unused in both trig lessons).
+Revisit D3 only if several more drag-based diagrams are wanted later.
+
+- `dot.setPointerCapture(e.pointerId)` on `pointerdown` keeps `pointermove` targeting the
+  handle even if the cursor outruns it mid-drag — the standard idiom for a draggable
+  handle, and it unifies mouse/touch/pen for free (`touch-action: none` on the handle
+  stops touch-scroll from fighting the drag).
+- Pointer client coordinates are mapped into SVG user space via
+  `svg.createSVGPoint().matrixTransform(svg.getScreenCTM().inverse())` — the correct way
+  to convert screen pixels to SVG coordinates that stays right regardless of the
+  responsive `viewBox` scaling `.triangle-diagram-figure` already relies on.
+- `radius` is a **semantic** value (what `x`/`y` are computed and displayed as, e.g.
+  `radius="2"` → values range `[-2, 2]`), independent of the diagram's fixed on-screen
+  pixel size (`PIXEL_R = 90`, matching the scale of `<triangle>`/`<angle-plane>`) — so the
+  picture reads clearly regardless of what radius number is authored.
+- Reuses `renderAxes`/`placeOverlay` from `<triangle>` directly; x/y labels sit at a fixed
+  corner spot rather than following the point, so they stay legible instead of jumping
+  around or overlapping the point as it's dragged.
+
+Placement: its own step ("Explore: Signs by Quadrant"), inserted immediately before the
+existing ASTC step in `trigonometry/2026/2026-08-23-lesson-04-angles-in-the-coordinate-plane/index.html`
+(now 14 steps total, renumbered sequentially).
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:
