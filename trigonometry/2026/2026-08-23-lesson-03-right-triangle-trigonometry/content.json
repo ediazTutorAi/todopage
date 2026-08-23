@@ -1,0 +1,110 @@
+{
+  "course": "Trigonometry",
+  "semester": "Fall 2026",
+  "date": "2026-08-23",
+  "title": "Introduction to Right Triangle Trigonometry",
+  "subtitle": "Lesson 03",
+  "description": "SOH-CAH-TOA, special angles, and reciprocal ratios via right-triangle diagrams.",
+  "tags": [
+    "Right Triangle Trigonometry"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Introduction to Right Triangle Ratios",
+      "subtitle": "Identifying the sides",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              In any right triangle, there will always be two acute angles. <i>(Why?)</i>\n              We select one of these angles as a reference, \\(\\theta\\). Then we can identify\n              the side opposite this angle as the <reveal>opposite</reveal> side. The side\n              across from the right angle is always called the <reveal>hypotenuse</reveal>.\n              This leaves the remaining side, next to the referenced angle, as our\n              <reveal>adjacent</reveal> side.\n            </p>"
+    },
+    {
+      "tag": "step",
+      "label": "Identifying Sides of a Right Triangle",
+      "subtitle": "Referenced angle \\(\\theta = 30°\\) vs. \\(\\theta = 60°\\)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Using the triangles below, identify the hypotenuse, opposite, and adjacent sides relative to the referenced angle \\(\\theta\\).</p>\n            <triangle type=\"right\" angle=\"30\">\n              <reveal slot=\"hypotenuse\">hyp</reveal>\n              <reveal slot=\"opposite\">opp</reveal>\n              <reveal slot=\"adjacent\">adj</reveal>\n            </triangle>\n            <p class=\"muted small\" style=\"text-align:center;\">Referenced angle \\(\\theta = 30°\\)</p>\n            <triangle type=\"right\" angle=\"60\">\n              <reveal slot=\"hypotenuse\">hyp</reveal>\n              <reveal slot=\"opposite\">opp</reveal>\n              <reveal slot=\"adjacent\">adj</reveal>\n            </triangle>\n            <p class=\"muted small\" style=\"text-align:center;\">Referenced angle \\(\\theta = 60°\\)</p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 1",
+      "subtitle": "Evaluating ratios from a right triangle",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Using \\(\\theta\\) as a reference, evaluate each requested ratio using the right triangle shown here.</p>\n            <triangle type=\"right\" angle=\"30\" adjacent=\"√3\" opposite=\"1\" hypotenuse=\"2\"></triangle>\n            <p>\n              \\(\\theta = 30°,\\ \\dfrac{\\text{opposite}}{\\text{hypotenuse}} = \\) <reveal>\\(\\dfrac{1}{2}\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\theta = 60°,\\ \\dfrac{\\text{opposite}}{\\text{hypotenuse}} = \\) <reveal>\\(\\dfrac{\\sqrt{3}}{2}\\)</reveal>\n            </p>\n            <p>\n              \\(\\theta = 30°,\\ \\dfrac{\\text{adjacent}}{\\text{hypotenuse}} = \\) <reveal>\\(\\dfrac{\\sqrt{3}}{2}\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\theta = 60°,\\ \\dfrac{\\text{adjacent}}{\\text{hypotenuse}} = \\) <reveal>\\(\\dfrac{1}{2}\\)</reveal>\n            </p>\n            <p>\n              \\(\\theta = 30°,\\ \\dfrac{\\text{opposite}}{\\text{adjacent}} = \\) <reveal>\\(\\dfrac{\\sqrt{3}}{3}\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\theta = 60°,\\ \\dfrac{\\text{opposite}}{\\text{adjacent}} = \\) <reveal>\\(\\sqrt{3}\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "step",
+      "label": "Definitions: Sine, Cosine, and Tangent",
+      "subtitle": "Right-triangle based definitions",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n              <tr><td>Sine</td><td>\\(\\sin(\\theta) = \\dfrac{\\text{opposite}}{\\text{hypotenuse}}\\)</td></tr>\n              <tr><td>Cosine</td><td>\\(\\cos(\\theta) = \\dfrac{\\text{adjacent}}{\\text{hypotenuse}}\\)</td></tr>\n              <tr><td>Tangent</td><td>\\(\\tan(\\theta) = \\dfrac{\\text{opposite}}{\\text{adjacent}}\\)</td></tr>\n            </table>\n            <p class=\"muted small\">Note: there are three other (reciprocal) ratios possible — we'll save these for later in this lesson.</p>\n            <p>We can use the acronym, <reveal>SOH-CAH-TOA</reveal>, to help us recall the above ratios.</p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 2",
+      "subtitle": "Using SOH-CAH-TOA",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Using the right triangle trigonometric definitions above, evaluate each of the following.</p>\n            <triangle type=\"right\" angle=\"30\" adjacent=\"√3\" opposite=\"1\" hypotenuse=\"2\"></triangle>\n            <p>\n              \\(\\sin(30°) = \\) <reveal>\\(\\dfrac{1}{2}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\sin(60°) = \\) <reveal>\\(\\dfrac{\\sqrt{3}}{2}\\)</reveal>\n            </p>\n            <p>\n              \\(\\cos(30°) = \\) <reveal>\\(\\dfrac{\\sqrt{3}}{2}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\cos(60°) = \\) <reveal>\\(\\dfrac{1}{2}\\)</reveal>\n            </p>\n            <p>\n              \\(\\tan(30°) = \\) <reveal>\\(\\dfrac{\\sqrt{3}}{3}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\tan(60°) = \\) <reveal>\\(\\sqrt{3}\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 3",
+      "subtitle": "A 45° right triangle",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Using the right triangle trigonometric definitions, find the sine, cosine, and tangent values indicated below.</p>\n            <triangle type=\"right\" angle=\"45\" adjacent=\"1\" opposite=\"1\" hypotenuse=\"√2\"></triangle>\n            <p>\n              \\(\\sin(45°) = \\) <reveal>\\(\\dfrac{\\sqrt{2}}{2}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\cos(45°) = \\) <reveal>\\(\\dfrac{\\sqrt{2}}{2}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\tan(45°) = \\) <reveal>\\(1\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 4",
+      "subtitle": "Trigonometric function values for special angles",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">\n              All sine entries have the form \\(\\sqrt{n}/2\\), \\(n = 0,1,2,3,4\\). Cosine reverses the sine\n              values. Tangent uses the identity \\(\\tan\\theta = \\sin\\theta / \\cos\\theta\\).\n            </p>\n            <table>\n              <thead>\n                <tr><th></th><th>\\(0°\\)</th><th>\\(30°\\)</th><th>\\(45°\\)</th><th>\\(60°\\)</th><th>\\(90°\\)</th></tr>\n              </thead>\n              <tbody>\n                <tr>\n                  <td>\\(\\sin\\theta\\)</td>\n                  <td><reveal>\\(0\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{1}{2}\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{\\sqrt{2}}{2}\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{\\sqrt{3}}{2}\\)</reveal></td>\n                  <td><reveal>\\(1\\)</reveal></td>\n                </tr>\n                <tr>\n                  <td>\\(\\cos\\theta\\)</td>\n                  <td><reveal>\\(1\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{\\sqrt{3}}{2}\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{\\sqrt{2}}{2}\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{1}{2}\\)</reveal></td>\n                  <td><reveal>\\(0\\)</reveal></td>\n                </tr>\n                <tr>\n                  <td>\\(\\tan\\theta\\)</td>\n                  <td><reveal>\\(0\\)</reveal></td>\n                  <td><reveal>\\(\\dfrac{\\sqrt{3}}{3}\\)</reveal></td>\n                  <td><reveal>\\(1\\)</reveal></td>\n                  <td><reveal>\\(\\sqrt{3}\\)</reveal></td>\n                  <td><reveal>undefined</reveal></td>\n                </tr>\n              </tbody>\n            </table>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 5",
+      "subtitle": "Solving for a missing side and evaluating ratios",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Using the provided triangle, evaluate each of the following.</p>\n            <triangle type=\"right\" angle=\"44.42\" label-a=\"α\" label-c=\"β\" adjacent=\"5\" hypotenuse=\"7\">\n              <reveal slot=\"opposite\">\\(2\\sqrt{6}\\)</reveal>\n            </triangle>\n            <p>\n              \\(\\sin(\\alpha) = \\) <reveal>\\(\\dfrac{2\\sqrt{6}}{7}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\cos(\\alpha) = \\) <reveal>\\(\\dfrac{5}{7}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\tan(\\beta) = \\) <reveal>\\(\\dfrac{5}{2\\sqrt{6}}\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "step",
+      "label": "Definitions: Reciprocal Ratios",
+      "subtitle": "Cosecant, secant, and cotangent",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n              <tr><td>\\(\\sin(\\theta) = \\dfrac{\\text{opposite}}{\\text{hypotenuse}}\\)</td><td>&rarr;</td><td>\\(\\csc(\\theta) = \\) <reveal>\\(\\dfrac{\\text{hypotenuse}}{\\text{opposite}}\\)</reveal></td></tr>\n              <tr><td>\\(\\cos(\\theta) = \\dfrac{\\text{adjacent}}{\\text{hypotenuse}}\\)</td><td>&rarr;</td><td>\\(\\sec(\\theta) = \\) <reveal>\\(\\dfrac{\\text{hypotenuse}}{\\text{adjacent}}\\)</reveal></td></tr>\n              <tr><td>\\(\\tan(\\theta) = \\dfrac{\\text{opposite}}{\\text{adjacent}}\\)</td><td>&rarr;</td><td>\\(\\cot(\\theta) = \\) <reveal>\\(\\dfrac{\\text{adjacent}}{\\text{opposite}}\\)</reveal></td></tr>\n            </table>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 7 (a)",
+      "subtitle": "Reciprocal ratios, using the Example 5 triangle",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<triangle type=\"right\" angle=\"44.42\" label-a=\"α\" label-c=\"β\" adjacent=\"5\" opposite=\"2√6\" hypotenuse=\"7\"></triangle>\n            <p>\n              \\(\\csc(\\alpha) = \\) <reveal>\\(\\dfrac{7}{2\\sqrt{6}}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\sec(\\alpha) = \\) <reveal>\\(\\dfrac{7}{5}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\cot(\\beta) = \\) <reveal>\\(\\dfrac{2\\sqrt{6}}{5}\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 6",
+      "subtitle": "Standard position in the coordinate plane",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              Plot the coordinate \\((5,3)\\). With this coordinate and the origin as vertices, construct a right\n              triangle with base along the positive \\(x\\)-axis. Let \\(\\theta\\) be the positive\n              (counterclockwise) acute angle from the positive \\(x\\)-axis to the side formed by the origin and\n              the given coordinate.\n            </p>\n            <geogebra width=\"640\" height=\"480\" perspective=\"2D\">\n              O=(0,0)\n              A=(5,3)\n              B=(5,0)\n              Polygon(O,B,A)\n              theta=Angle(B,O,A)\n            </geogebra>\n            <p>\n              \\(\\sin\\theta = \\) <reveal>\\(\\dfrac{3}{\\sqrt{34}}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\tan\\theta = \\) <reveal>\\(\\dfrac{3}{5}\\)</reveal>\n            </p>\n            <p class=\"muted small\">\n              The line through the origin and \\((5,3)\\) is \\(y = \\dfrac{3}{5}x\\). Notice anything about the slope?\n              <reveal>The slope equals \\(\\tan\\theta\\)!</reveal>\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 7 (b)",
+      "subtitle": "Reciprocal ratios in the coordinate plane",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Consider the right triangle in quadrant I from Example 6, with vertex \\((5,3)\\).</p>\n            <p>\n              \\(\\csc\\theta = \\) <reveal>\\(\\dfrac{\\sqrt{34}}{3}\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\cot\\theta = \\) <reveal>\\(\\dfrac{5}{3}\\)</reveal>\n            </p>\n            <p class=\"muted small\">\n              <b>Looking ahead:</b> any angle formed this way — from the positive \\(x\\)-axis to a ray through the\n              origin — is said to be in <i>standard position</i>. We'll fully develop this idea in an upcoming lesson.\n            </p>"
+    }
+  ],
+  "notes": ""
+}
