@@ -1,5 +1,17 @@
 [
   {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
+    "date": "2026-08-23",
+    "title": "Introduction to Right Triangle Trigonometry",
+    "subtitle": "Lesson 03",
+    "description": "SOH-CAH-TOA, special angles, and reciprocal ratios via right-triangle diagrams.",
+    "tags": [
+      "Right Triangle Trigonometry"
+    ],
+    "url": "trigonometry/2026/2026-08-23-lesson-03-right-triangle-trigonometry/index.html"
+  },
+  {
     "course": "Calculus III",
     "semester": "Spring 2026",
     "date": "2026-03-23",

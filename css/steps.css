@@ -172,3 +172,38 @@ body.slide-mode .card .katex {
 /* Smooth scrolling offsets */
 .card { scroll-padding-block: 12vh; }
 .step { scroll-margin-block: 12vh; }
+
+/* Click-to-reveal primitive (<reveal>), independent of the sequential
+   data-reveal/reveal-inline system above. */
+reveal {
+  display: inline-block;
+  min-width: 2.6em;
+  padding: 0 0.15em;
+  border-bottom: 2px dashed var(--accent);
+  cursor: pointer;
+  text-align: center;
+}
+reveal .reveal-content { visibility: hidden; }
+reveal.is-revealed { border-bottom-style: solid; }
+reveal.is-revealed .reveal-content { visibility: visible; }
+reveal:hover { background: #eef6fc; }
+
+/* <triangle> diagram */
+.step-body .triangle-diagram {
+  position: relative;
+  width: min(420px, 100%);
+  aspect-ratio: var(--triangle-aspect, 1);
+  margin: 0.9rem auto;
+}
+.triangle-diagram-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.triangle-outline { fill: none; stroke: var(--ink); stroke-width: 2; }
+.triangle-right-tick,
+.triangle-equal-tick { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.triangle-overlay {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+.triangle-angle-label { color: var(--accent); font-weight: 700; font-size: 0.85em; }
+.triangle-side-label { background: #fff; padding: 0 0.2em; }

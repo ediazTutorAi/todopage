@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Introduction to Right Triangle Trigonometry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- GeoGebra (inline diagrams via command API) -->
+  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      var ASPECT_RATIO = 1.25;
+      document.querySelectorAll('geogebra').forEach(function (el, i) {
+        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var container = document.createElement('div');
+        container.id = 'geogebra-' + i;
+        container.style.width = '100%';
+        el.replaceWith(container);
+
+        var explicitWidth = el.getAttribute('width');
+        var explicitHeight = el.getAttribute('height');
+        function computeSize() {
+          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
+          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
+          return { w: w, h: h };
+        }
+
+        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
+        var size = computeSize();
+        var ggbApi = null;
+
+        try {
+          var applet = new GGBApplet({
+            id: container.id,
+            width: size.w,
+            height: size.h,
+            showToolBar: false,
+            showMenuBar: false,
+            showAlgebraInput: false,
+            showResetIcon: false,
+            appName: perspective === '3D' ? '3d' : 'classic',
+            appletOnLoad: function (api) {
+              ggbApi = api;
+              commands.forEach(function (cmd) { api.evalCommand(cmd); });
+            }
+          }, true);
+          applet.inject(container.id);
+
+          if (!explicitWidth) {
+            var resizeTimer = null;
+            window.addEventListener('resize', function () {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(function () {
+                if (!ggbApi) return;
+                var s = computeSize();
+                ggbApi.setSize(s.w, s.h);
+              }, 150);
+            });
+          }
+        } catch (err) {
+          container.textContent = 'Diagram error: ' + err.message;
+          container.style.color = '#b00020';
+        }
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Introduction to Right Triangle Trigonometry</h1>
+    <div class="meta">Trigonometry · Lesson 03</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Introduction to Right Triangle Ratios</div>
+          <div class="step-subtitle">Identifying the sides</div>
+          <div class="step-body">
+            <p>
+              In any right triangle, there will always be two acute angles. <i>(Why?)</i>
+              We select one of these angles as a reference, \(\theta\). Then we can identify
+              the side opposite this angle as the <reveal>opposite</reveal> side. The side
+              across from the right angle is always called the <reveal>hypotenuse</reveal>.
+              This leaves the remaining side, next to the referenced angle, as our
+              <reveal>adjacent</reveal> side.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Identifying Sides of a Right Triangle</div>
+          <div class="step-subtitle">Referenced angle \(\theta = 30°\) vs. \(\theta = 60°\)</div>
+          <div class="step-body">
+            <p>Using the triangles below, identify the hypotenuse, opposite, and adjacent sides relative to the referenced angle \(\theta\).</p>
+            <triangle type="right" angle="30">
+              <reveal slot="hypotenuse">hyp</reveal>
+              <reveal slot="opposite">opp</reveal>
+              <reveal slot="adjacent">adj</reveal>
+            </triangle>
+            <p class="muted small" style="text-align:center;">Referenced angle \(\theta = 30°\)</p>
+            <triangle type="right" angle="60">
+              <reveal slot="hypotenuse">hyp</reveal>
+              <reveal slot="opposite">opp</reveal>
+              <reveal slot="adjacent">adj</reveal>
+            </triangle>
+            <p class="muted small" style="text-align:center;">Referenced angle \(\theta = 60°\)</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Evaluating ratios from a right triangle</div>
+          <div class="step-body">
+            <p>Using \(\theta\) as a reference, evaluate each requested ratio using the right triangle shown here.</p>
+            <triangle type="right" angle="30" adjacent="√3" opposite="1" hypotenuse="2"></triangle>
+            <p>
+              \(\theta = 30°,\ \dfrac{\text{opposite}}{\text{hypotenuse}} = \) <reveal>\(\dfrac{1}{2}\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\theta = 60°,\ \dfrac{\text{opposite}}{\text{hypotenuse}} = \) <reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal>
+            </p>
+            <p>
+              \(\theta = 30°,\ \dfrac{\text{adjacent}}{\text{hypotenuse}} = \) <reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\theta = 60°,\ \dfrac{\text{adjacent}}{\text{hypotenuse}} = \) <reveal>\(\dfrac{1}{2}\)</reveal>
+            </p>
+            <p>
+              \(\theta = 30°,\ \dfrac{\text{opposite}}{\text{adjacent}} = \) <reveal>\(\dfrac{\sqrt{3}}{3}\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\theta = 60°,\ \dfrac{\text{opposite}}{\text{adjacent}} = \) <reveal>\(\sqrt{3}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Definitions: Sine, Cosine, and Tangent</div>
+          <div class="step-subtitle">Right-triangle based definitions</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Sine</td><td>\(\sin(\theta) = \dfrac{\text{opposite}}{\text{hypotenuse}}\)</td></tr>
+              <tr><td>Cosine</td><td>\(\cos(\theta) = \dfrac{\text{adjacent}}{\text{hypotenuse}}\)</td></tr>
+              <tr><td>Tangent</td><td>\(\tan(\theta) = \dfrac{\text{opposite}}{\text{adjacent}}\)</td></tr>
+            </table>
+            <p class="muted small">Note: there are three other (reciprocal) ratios possible — we'll save these for later in this lesson.</p>
+            <p>We can use the acronym, <reveal>SOH-CAH-TOA</reveal>, to help us recall the above ratios.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Using SOH-CAH-TOA</div>
+          <div class="step-body">
+            <p>Using the right triangle trigonometric definitions above, evaluate each of the following.</p>
+            <triangle type="right" angle="30" adjacent="√3" opposite="1" hypotenuse="2"></triangle>
+            <p>
+              \(\sin(30°) = \) <reveal>\(\dfrac{1}{2}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\sin(60°) = \) <reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal>
+            </p>
+            <p>
+              \(\cos(30°) = \) <reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos(60°) = \) <reveal>\(\dfrac{1}{2}\)</reveal>
+            </p>
+            <p>
+              \(\tan(30°) = \) <reveal>\(\dfrac{\sqrt{3}}{3}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan(60°) = \) <reveal>\(\sqrt{3}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">A 45° right triangle</div>
+          <div class="step-body">
+            <p>Using the right triangle trigonometric definitions, find the sine, cosine, and tangent values indicated below.</p>
+            <triangle type="right" angle="45" adjacent="1" opposite="1" hypotenuse="√2"></triangle>
+            <p>
+              \(\sin(45°) = \) <reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos(45°) = \) <reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan(45°) = \) <reveal>\(1\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Trigonometric function values for special angles</div>
+          <div class="step-body">
+            <p class="muted small">
+              All sine entries have the form \(\sqrt{n}/2\), \(n = 0,1,2,3,4\). Cosine reverses the sine
+              values. Tangent uses the identity \(\tan\theta = \sin\theta / \cos\theta\).
+            </p>
+            <table>
+              <thead>
+                <tr><th></th><th>\(0°\)</th><th>\(30°\)</th><th>\(45°\)</th><th>\(60°\)</th><th>\(90°\)</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>\(\sin\theta\)</td>
+                  <td><reveal>\(0\)</reveal></td>
+                  <td><reveal>\(\dfrac{1}{2}\)</reveal></td>
+                  <td><reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal></td>
+                  <td><reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal></td>
+                  <td><reveal>\(1\)</reveal></td>
+                </tr>
+                <tr>
+                  <td>\(\cos\theta\)</td>
+                  <td><reveal>\(1\)</reveal></td>
+                  <td><reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal></td>
+                  <td><reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal></td>
+                  <td><reveal>\(\dfrac{1}{2}\)</reveal></td>
+                  <td><reveal>\(0\)</reveal></td>
+                </tr>
+                <tr>
+                  <td>\(\tan\theta\)</td>
+                  <td><reveal>\(0\)</reveal></td>
+                  <td><reveal>\(\dfrac{\sqrt{3}}{3}\)</reveal></td>
+                  <td><reveal>\(1\)</reveal></td>
+                  <td><reveal>\(\sqrt{3}\)</reveal></td>
+                  <td><reveal>undefined</reveal></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">Solving for a missing side and evaluating ratios</div>
+          <div class="step-body">
+            <p>Using the provided triangle, evaluate each of the following.</p>
+            <triangle type="right" angle="44.42" label-a="α" label-c="β" adjacent="5" hypotenuse="7">
+              <reveal slot="opposite">\(2\sqrt{6}\)</reveal>
+            </triangle>
+            <p>
+              \(\sin(\alpha) = \) <reveal>\(\dfrac{2\sqrt{6}}{7}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos(\alpha) = \) <reveal>\(\dfrac{5}{7}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan(\beta) = \) <reveal>\(\dfrac{5}{2\sqrt{6}}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Definitions: Reciprocal Ratios</div>
+          <div class="step-subtitle">Cosecant, secant, and cotangent</div>
+          <div class="step-body">
+            <table>
+              <tr><td>\(\sin(\theta) = \dfrac{\text{opposite}}{\text{hypotenuse}}\)</td><td>&rarr;</td><td>\(\csc(\theta) = \) <reveal>\(\dfrac{\text{hypotenuse}}{\text{opposite}}\)</reveal></td></tr>
+              <tr><td>\(\cos(\theta) = \dfrac{\text{adjacent}}{\text{hypotenuse}}\)</td><td>&rarr;</td><td>\(\sec(\theta) = \) <reveal>\(\dfrac{\text{hypotenuse}}{\text{adjacent}}\)</reveal></td></tr>
+              <tr><td>\(\tan(\theta) = \dfrac{\text{opposite}}{\text{adjacent}}\)</td><td>&rarr;</td><td>\(\cot(\theta) = \) <reveal>\(\dfrac{\text{adjacent}}{\text{opposite}}\)</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 7 (a)</div>
+          <div class="step-subtitle">Reciprocal ratios, using the Example 5 triangle</div>
+          <div class="step-body">
+            <triangle type="right" angle="44.42" label-a="α" label-c="β" adjacent="5" opposite="2√6" hypotenuse="7"></triangle>
+            <p>
+              \(\csc(\alpha) = \) <reveal>\(\dfrac{7}{2\sqrt{6}}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\sec(\alpha) = \) <reveal>\(\dfrac{7}{5}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cot(\beta) = \) <reveal>\(\dfrac{2\sqrt{6}}{5}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Standard position in the coordinate plane</div>
+          <div class="step-body">
+            <p>
+              Plot the coordinate \((5,3)\). With this coordinate and the origin as vertices, construct a right
+              triangle with base along the positive \(x\)-axis. Let \(\theta\) be the positive
+              (counterclockwise) acute angle from the positive \(x\)-axis to the side formed by the origin and
+              the given coordinate.
+            </p>
+            <geogebra width="640" height="480" perspective="2D">
+              O=(0,0)
+              A=(5,3)
+              B=(5,0)
+              Polygon(O,B,A)
+              theta=Angle(B,O,A)
+            </geogebra>
+            <p>
+              \(\sin\theta = \) <reveal>\(\dfrac{3}{\sqrt{34}}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\tan\theta = \) <reveal>\(\dfrac{3}{5}\)</reveal>
+            </p>
+            <p class="muted small">
+              The line through the origin and \((5,3)\) is \(y = \dfrac{3}{5}x\). Notice anything about the slope?
+              <reveal>The slope equals \(\tan\theta\)!</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Example 7 (b)</div>
+          <div class="step-subtitle">Reciprocal ratios in the coordinate plane</div>
+          <div class="step-body">
+            <p>Consider the right triangle in quadrant I from Example 6, with vertex \((5,3)\).</p>
+            <p>
+              \(\csc\theta = \) <reveal>\(\dfrac{\sqrt{34}}{3}\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cot\theta = \) <reveal>\(\dfrac{5}{3}\)</reveal>
+            </p>
+            <p class="muted small">
+              <b>Looking ahead:</b> any angle formed this way — from the positive \(x\)-axis to a ray through the
+              origin — is said to be in <i>standard position</i>. We'll fully develop this idea in an upcoming lesson.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW (unused by the inline <geogebra> command tag above,
+       kept for markup/CSS consistency with other lessons) -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
