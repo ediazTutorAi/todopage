@@ -33,7 +33,11 @@ function inset(at, b1, b2, dist) {
 function layoutRight(el) {
   const angleDeg = parseFloat(el.getAttribute('angle') || '30');
   const labelA = el.getAttribute('label-a') || `${round(angleDeg)}°`;
+  // label-c="" explicitly suppresses the complementary-angle label (vs. the
+  // attribute being absent entirely, which falls back to the numeric default).
+  const showLabelC = !(el.hasAttribute('label-c') && el.getAttribute('label-c') === '');
   const labelC = el.getAttribute('label-c') || `${round(90 - angleDeg)}°`;
+  const pointLabel = el.getAttribute('point-label');
   const showAxes = el.hasAttribute('axes');
   const base = 220;
   const height = Math.max(50, Math.min(320, base * Math.tan(toRad(angleDeg))));
@@ -56,6 +60,7 @@ function layoutRight(el) {
     vertices: { A, B, C },
     rightAngleAt: B,
     point: C,
+    pointLabel,
     sides: {
       adjacent: { p1: A, p2: B, mid: mid(A, B), stage: 2 },
       opposite: { p1: B, p2: C, mid: mid(B, C), stage: 2 },
@@ -63,7 +68,7 @@ function layoutRight(el) {
     },
     angles: [
       { at: inset(A, B, C, 26), label: labelA, stage: 1 },
-      { at: inset(C, A, B, 26), label: labelC, stage: 1 },
+      ...(showLabelC ? [{ at: inset(C, A, B, 26), label: labelC, stage: 1 }] : []),
     ],
   };
 
@@ -212,7 +217,7 @@ function renderTriangle(el) {
   if (!layout) return;
 
   const buildMode = type === 'right' && el.hasAttribute('build');
-  const { vertices, sides, angles, rightAngleAt, ticks, axes, point, viewBox, W, H } = layout;
+  const { vertices, sides, angles, rightAngleAt, ticks, axes, point, pointLabel, viewBox, W, H } = layout;
   const gated = []; // { el, stage } -- only consulted when buildMode is true
   const gate = (node, stage) => { if (buildMode && stage > 0) gated.push({ el: node, stage }); return node; };
 
@@ -250,6 +255,13 @@ function renderTriangle(el) {
     dot.setAttribute('class', 'triangle-point');
     svg.appendChild(dot);
     gate(dot, 1);
+
+    if (pointLabel) {
+      gate(
+        placeOverlay(figure, { x: point.x + 14, y: point.y - 12 }, W, H, 'triangle-point-label', pointLabel),
+        1
+      );
+    }
   }
 
   if (rightAngleAt) gate(renderRightAngleTick(svg, rightAngleAt, 16), 2);

@@ -81,7 +81,11 @@ plus percentage-positioned HTML overlay labels (side lengths, angle measures, mo
 - `type="right"` attributes: `angle` (reference angle, also controls the rendered aspect
   ratio), `adjacent`/`opposite`/`hypotenuse` (static side labels — omit to leave blank or
   supply a `<reveal slot="...">` child instead), `label-a`/`label-c` (override the default
-  numeric `"30°"`-style angle label with e.g. `"α"`/`"β"` for named-angle diagrams), `axes`
+  numeric `"30°"`-style angle label with e.g. `"α"`/`"β"` for named-angle diagrams —
+  `label-c=""` explicitly, an empty string rather than the attribute being absent,
+  suppresses the complementary-angle label entirely when it isn't meaningful),
+  `point-label` (text/KaTeX shown next to the plotted point, e.g. `"\((x_1, y_1)\)"` —
+  only rendered when `axes` is also set, same stage as the point itself), `axes`
   (bare boolean attribute — draws x/y axes with arrowheads through vertex A, so the
   triangle reads as sitting in the coordinate plane, e.g. for "angle in standard position"
   diagrams. Pure SVG, no GeoGebra — use this instead of `<geogebra>` whenever the diagram

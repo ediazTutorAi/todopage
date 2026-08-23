@@ -220,3 +220,4 @@ reveal:hover { background: #eef6fc; }
 }
 .triangle-angle-label { color: var(--accent); font-weight: 700; font-size: 0.85em; }
 .triangle-side-label { background: #fff; padding: 0 0.2em; }
+.triangle-point-label { color: var(--ink); font-size: 0.85em; }
