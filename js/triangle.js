@@ -27,15 +27,24 @@ function layoutRight(el) {
   const angleDeg = parseFloat(el.getAttribute('angle') || '30');
   const labelA = el.getAttribute('label-a') || `${round(angleDeg)}°`;
   const labelC = el.getAttribute('label-c') || `${round(90 - angleDeg)}°`;
+  const showAxes = el.hasAttribute('axes');
   const base = 220;
   const height = Math.max(50, Math.min(320, base * Math.tan(toRad(angleDeg))));
-  const W = base + PAD * 2, H = height + PAD * 2;
 
-  const A = { x: PAD, y: PAD + height };       // reference angle vertex
-  const B = { x: PAD + base, y: PAD + height }; // right-angle vertex
-  const C = { x: PAD + base, y: PAD };          // complementary angle vertex
+  // With axes, vertex A doubles as the plane's origin: give it room for a
+  // negative-direction stub on both axes, and extra room past B/C for the
+  // positive-direction arrowheads to overshoot the triangle.
+  const AXIS_MARGIN = showAxes ? 28 : 0;
+  const AXIS_OVERSHOOT = showAxes ? 26 : 0;
+  const padLeft = PAD + AXIS_MARGIN, padTop = PAD + AXIS_OVERSHOOT;
+  const padRight = PAD + AXIS_OVERSHOOT, padBottom = PAD + AXIS_MARGIN;
+  const W = base + padLeft + padRight, H = height + padTop + padBottom;
 
-  return {
+  const A = { x: padLeft, y: padTop + height };       // reference angle vertex (== origin)
+  const B = { x: padLeft + base, y: padTop + height }; // right-angle vertex
+  const C = { x: padLeft + base, y: padTop };          // complementary angle vertex
+
+  const layout = {
     viewBox: `0 0 ${W} ${H}`, W, H,
     vertices: { A, B, C },
     rightAngleAt: B,
@@ -49,6 +58,17 @@ function layoutRight(el) {
       { at: inset(C, A, B, 26), label: labelC },
     ],
   };
+
+  if (showAxes) {
+    layout.axes = {
+      xStart: { x: A.x - AXIS_MARGIN, y: A.y },
+      xEnd: { x: B.x + AXIS_OVERSHOOT, y: A.y },
+      yStart: { x: A.x, y: A.y + AXIS_MARGIN },
+      yEnd: { x: A.x, y: C.y - AXIS_OVERSHOOT },
+    };
+  }
+
+  return layout;
 }
 
 function layoutIsosceles(el) {
@@ -129,6 +149,41 @@ function renderEqualTick(svg, p1, p2) {
   svg.appendChild(line);
 }
 
+let axisMarkerCounter = 0;
+
+function renderAxes(svg, container, axes, W, H) {
+  const markerId = `triangle-axis-arrow-${++axisMarkerCounter}`;
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  const marker = document.createElementNS(SVG_NS, 'marker');
+  marker.setAttribute('id', markerId);
+  marker.setAttribute('viewBox', '0 0 10 10');
+  marker.setAttribute('refX', '8');
+  marker.setAttribute('refY', '5');
+  marker.setAttribute('markerWidth', '6');
+  marker.setAttribute('markerHeight', '6');
+  marker.setAttribute('orient', 'auto-start-reverse');
+  const arrowhead = document.createElementNS(SVG_NS, 'path');
+  arrowhead.setAttribute('d', 'M0,0 L10,5 L0,10 z');
+  arrowhead.setAttribute('class', 'triangle-axis-arrowhead');
+  marker.appendChild(arrowhead);
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
+  [[axes.xStart, axes.xEnd], [axes.yStart, axes.yEnd]].forEach(([start, end]) => {
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', start.x);
+    line.setAttribute('y1', start.y);
+    line.setAttribute('x2', end.x);
+    line.setAttribute('y2', end.y);
+    line.setAttribute('class', 'triangle-axis');
+    line.setAttribute('marker-end', `url(#${markerId})`);
+    svg.appendChild(line);
+  });
+
+  placeOverlay(container, { x: axes.xEnd.x - 4, y: axes.xEnd.y - 14 }, W, H, 'triangle-axis-label', 'x');
+  placeOverlay(container, { x: axes.yEnd.x + 14, y: axes.yEnd.y + 2 }, W, H, 'triangle-axis-label', 'y');
+}
+
 function placeOverlay(container, point, W, H, cls, text) {
   const span = document.createElement('span');
   span.className = `triangle-overlay ${cls}`;
@@ -146,7 +201,7 @@ function renderTriangle(el) {
   const layout = layoutFn(el);
   if (!layout) return;
 
-  const { vertices, sides, angles, rightAngleAt, ticks, viewBox, W, H } = layout;
+  const { vertices, sides, angles, rightAngleAt, ticks, axes, viewBox, W, H } = layout;
 
   const container = document.createElement('div');
   container.className = 'triangle-diagram';
@@ -155,6 +210,8 @@ function renderTriangle(el) {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', viewBox);
   svg.setAttribute('class', 'triangle-diagram-svg');
+
+  if (axes) renderAxes(svg, container, axes, W, H);
 
   const poly = document.createElementNS(SVG_NS, 'polygon');
   poly.setAttribute('points', Object.values(vertices).map(v => `${v.x},${v.y}`).join(' '));

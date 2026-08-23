@@ -199,6 +199,9 @@ reveal:hover { background: #eef6fc; }
 .triangle-outline { fill: none; stroke: var(--ink); stroke-width: 2; }
 .triangle-right-tick,
 .triangle-equal-tick { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.triangle-axis { stroke: var(--muted); stroke-width: 1.5; }
+.triangle-axis-arrowhead { fill: var(--muted); }
+.triangle-axis-label { color: var(--muted); font-style: italic; font-size: 0.9em; }
 .triangle-overlay {
   position: absolute;
   transform: translate(-50%, -50%);
