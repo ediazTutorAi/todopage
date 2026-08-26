@@ -236,6 +236,7 @@ reveal.triangle-overlay:not(.is-revealed) {
 /* <sign-circle> live drag demo */
 .sign-circle-path { fill: none; stroke: var(--muted); stroke-width: 1.5; }
 .sign-circle-guide { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; }
+.sign-circle-radius { stroke: var(--accent); stroke-width: 2; }
 .sign-circle-handle {
   fill: var(--accent);
   stroke: #fff;

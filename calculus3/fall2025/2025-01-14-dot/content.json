@@ -1,0 +1,78 @@
+{
+  "course": "Calculus III",
+  "semester": "Fall 2025",
+  "date": "2025-01-14",
+  "title": "Dot and Cross Products",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "dot product"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "2.3 The Dot Product",
+      "subtitle": "Definition (Scalar Product)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "For vectors $\\mathbf{u}=\\langle u_1,u_2,u_3\\rangle$ and $\\mathbf{v}=\\langle v_1,v_2,v_3\\rangle$:\n            $$\\mathbf{u}\\cdot\\mathbf{v}=u_1v_1+u_2v_2+u_3v_3.$$\n            The result is a scalar"
+    },
+    {
+      "tag": "step",
+      "label": "2.3 The Dot Product",
+      "subtitle": "Geometric Form (Angle)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If $\\theta$ is the angle between nonzero vectors $\\mathbf{u},\\mathbf{v}$,\n            $$\\mathbf{u}\\cdot\\mathbf{v}=||\\mathbf{u}||\\,||\\mathbf{v}||\\cos\\theta.$$\n            Useful for finding angles."
+    },
+    {
+      "tag": "step",
+      "label": "2.3 The Dot Product",
+      "subtitle": "Orthogonal Vectors",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Vectors are orthogonal iff\n            $$\\mathbf{u}\\cdot\\mathbf{v}=0.$$\n            Useful perpendicularity test."
+    },
+    {
+      "tag": "step",
+      "label": "2.3 The Dot Product",
+      "subtitle": "Projection",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "The projection of $\\mathbf{v}$ onto $\\mathbf{u}$ is\n            $$\\text{proj}_{\\mathbf{u}}\\,\\mathbf{v}=\\frac{\\mathbf{v}\\cdot\\mathbf{u}}{\\mathbf{u}\\cdot\\mathbf{u}}\\mathbf{u}.$$\n            component of one vector along another"
+    },
+    {
+      "tag": "step",
+      "label": "2.4 The Cross Product",
+      "subtitle": "Definition (Vector Product)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "For $\\mathbf{u},\\mathbf{v}\\in\\mathbb{R}^3$,\n            $\\mathbf{u}\\times\\mathbf{v}$ is a vector orthogonal to both $\\mathbf{u}$ & $\\mathbf{v}$.\n            Its direction follows the right-hand rule."
+    },
+    {
+      "tag": "step",
+      "label": "2.4 The Cross Product",
+      "subtitle": "Determinant Formula",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "$$\\mathbf{u}\\times\\mathbf{v}=\\begin{vmatrix}\n            \\mathbf{i} & \\mathbf{j} & \\mathbf{k}\\\\\n            u_1 & u_2 & u_3\\\\\n            v_1 & v_2 & v_3\n            \\end{vmatrix}.$$\n            computational form"
+    },
+    {
+      "tag": "step",
+      "label": "2.4 The Cross Product",
+      "subtitle": "Magnitude (Area)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "$$||\\mathbf{u}\\times\\mathbf{v}||=||\\mathbf{u}||\\,||\\mathbf{v}||\\sin\\theta,$$\n            the area of parallelogram with sides $\\mathbf{u},\\mathbf{v}$."
+    },
+    {
+      "tag": "step",
+      "label": "2.4 The Cross Product",
+      "subtitle": "Special Properties",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If $\\mathbf{u}\\times\\mathbf{v}=0$, then $\\mathbf{u},\\mathbf{v}$ are parallel, zero area.\n            Triple scalar product:\n            $$\\mathbf{u}\\cdot(\\mathbf{v}\\times\\mathbf{w})$$\n            gives volume of parallelepiped."
+    }
+  ],
+  "notes": ""
+}

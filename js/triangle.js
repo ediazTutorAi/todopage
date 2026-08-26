@@ -530,6 +530,12 @@ function renderSignCircle(el) {
   guideY.setAttribute('class', 'sign-circle-guide');
   svg.appendChild(guideY);
 
+  const radiusLine = document.createElementNS(SVG_NS, 'line');
+  radiusLine.setAttribute('x1', O.x);
+  radiusLine.setAttribute('y1', O.y);
+  radiusLine.setAttribute('class', 'sign-circle-radius');
+  svg.appendChild(radiusLine);
+
   const dot = document.createElementNS(SVG_NS, 'circle');
   dot.setAttribute('r', 9);
   dot.setAttribute('class', 'sign-circle-handle');
@@ -544,6 +550,7 @@ function renderSignCircle(el) {
     const py = O.y - PIXEL_R * Math.sin(rad);
     dot.setAttribute('cx', px);
     dot.setAttribute('cy', py);
+    radiusLine.setAttribute('x2', px); radiusLine.setAttribute('y2', py);
     guideX.setAttribute('x1', px); guideX.setAttribute('y1', py);
     guideX.setAttribute('x2', px); guideX.setAttribute('y2', O.y);
     guideY.setAttribute('x1', px); guideY.setAttribute('y1', py);
