@@ -556,8 +556,12 @@ function renderSignCircle(el) {
     dot.setAttribute('cx', px);
     dot.setAttribute('cy', py);
     radiusLine.setAttribute('x2', px); radiusLine.setAttribute('y2', py);
-    arc.setAttribute('points', buildArc(O, angleDeg, ARC_R).points.map(p => `${p.x},${p.y}`).join(' '));
-    arc.classList.toggle('is-negative', angleDeg < 0);
+    // Always swept as a positive (counterclockwise) rotation from the
+    // positive x-axis -- this demo is about the sign of x/y by quadrant, not
+    // about signed/coterminal angles (that's <angle-plane>'s job), so the arc
+    // itself stays blue no matter which way the point was dragged.
+    const arcDeg = ((angleDeg % 360) + 360) % 360;
+    arc.setAttribute('points', buildArc(O, arcDeg, ARC_R).points.map(p => `${p.x},${p.y}`).join(' '));
     guideX.setAttribute('x1', px); guideX.setAttribute('y1', py);
     guideX.setAttribute('x2', px); guideX.setAttribute('y2', O.y);
     guideY.setAttribute('x1', px); guideY.setAttribute('y1', py);
