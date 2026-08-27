@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 2326 — Calculus 3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Vector-Valued Functions and Space Curves</h1>
+    <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">3.1 Vector-Valued Functions</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            A vector-valued function is a function whose domain is a set of real numbers and whose range is a set of
+            vectors. In the plane,
+            $$\mathbf{r}(t) = f(t)\mathbf{i} + g(t)\mathbf{j} = \langle f(t),\,g(t)\rangle,$$
+            and in space,
+            $$\mathbf{r}(t) = f(t)\mathbf{i} + g(t)\mathbf{j} + h(t)\mathbf{k} = \langle f(t),\,g(t),\,h(t)\rangle.$$
+            The real-valued functions $f$, $g$, $h$ are the <b>component functions</b> of $\mathbf{r}$, and $t$ is the
+            <b>parameter</b> — often thought of as time. The domain of $\mathbf{r}$ is the intersection of the
+            domains of $f$, $g$, and $h$.
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">Example 3.1</div>
+          <div class="step-subtitle">Evaluating a Vector-Valued Function</div>
+          <div class="step-body">
+            Let $\mathbf{r}(t) = 4\cos t\,\mathbf{i} + 3\sin t\,\mathbf{j}$.
+            <ul>
+              <li>$\mathbf{r}(0) = $ <reveal>\(4\mathbf{i}\)</reveal></li>
+              <li>$\mathbf{r}(\pi/2) = $ <reveal>\(3\mathbf{j}\)</reveal></li>
+              <li>$\mathbf{r}(2\pi/3) = $ <reveal>\(-2\mathbf{i}+\tfrac{3\sqrt3}{2}\mathbf{j}\)</reveal></li>
+            </ul>
+            Cosine and sine are defined for every real number, so the domain of $\mathbf{r}$ is
+            <reveal>all real numbers</reveal>.
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">Example 3.1 (continued)</div>
+          <div class="step-subtitle">A Restricted Domain</div>
+          <div class="step-body">
+            Now let $\mathbf{r}(t) = 3\tan t\,\mathbf{i} + 4\sec t\,\mathbf{j} + 5t\,\mathbf{k}$.
+            <ul>
+              <li>$\mathbf{r}(0) = $ <reveal>\(4\mathbf{j}\)</reveal></li>
+              <li>$\mathbf{r}(\pi/2)$ is <reveal>undefined</reveal></li>
+              <li>$\mathbf{r}(2\pi/3) = $
+                <reveal>\(-3\sqrt3\,\mathbf{i} - 8\mathbf{j} + \tfrac{10\pi}{3}\mathbf{k}\)</reveal></li>
+            </ul>
+            $\tan t$ and $\sec t$ are undefined wherever $\cos t = 0$, so the domain is
+            <reveal>\(\left\{\, t \;\Big|\; t \neq \dfrac{(2n+1)\pi}{2},\ n \in \mathbb{Z} \,\right\}\)</reveal>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Example 3.2</div>
+          <div class="step-subtitle">Graphing a Vector-Valued Function — Same Curve, Different Speed</div>
+          <div class="step-body">
+            $\mathbf{r}(t) = 4\cos t\,\mathbf{i}+3\sin t\,\mathbf{j}$ for $0\le t\le 2\pi$ traces out an ellipse with
+            semi-axes $4$ (along $x$) and $3$ (along $y$) once around, since $x=4\cos t$, $y=3\sin t$ satisfy
+            $x^2/16+y^2/9=1$.
+            $$\mathbf{r}(t) = 4\cos 2t\,\mathbf{i}+3\sin 2t\,\mathbf{j}, \qquad 0\le t \le \pi$$
+            traces the <i>same</i> ellipse — just twice as fast, since doubling the angular rate means $t$ only has
+            to run to $\pi$ to complete one full loop. A vector-valued function records both the shape of a curve
+            <i>and</i> the speed/direction it's traced with; two different functions can share a shape but not a
+            parametrization.
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Example 3.2 (continued)</div>
+          <div class="step-subtitle">A Helix</div>
+          <div class="step-body">
+            Adding a linearly increasing $\mathbf{k}$-component lifts the circle into a spiral in space:
+            $$\mathbf{r}(t) = 4\cos t\,\mathbf{i}+4\sin t\,\mathbf{j}+t\,\mathbf{k}, \qquad 0\le t\le 4\pi$$
+            Projected onto the $xy$-plane this is a circle of radius $4$; the $z$-coordinate climbs steadily as $t$
+            increases, from $z=0$ up to $z=4\pi$ — tracing a <b>helix</b> (think spring, or a strand of DNA). One
+            full turn of the circle ($t$ increasing by $2\pi$) raises $z$ by $2\pi$, so the helix completes exactly
+            two full turns over $0\le t\le 4\pi$.
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">An Elliptical Helix</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            Replacing the circular cross-section by an ellipse ($x=4\cos t$, $y=3\sin t$) gives the same idea with an
+            elliptical, rather than circular, cross-section:
+            $$\mathbf{r}(t) = 4\cos t\,\mathbf{i}+3\sin t\,\mathbf{j}+t\,\mathbf{k}$$
+            Same construction as before — a plane curve in $x,y$, stretched upward at a constant rate by the
+            $\mathbf{k}$-component — just with a non-circular base curve.
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Limits of Vector-Valued Functions</div>
+          <div class="step-subtitle">Definition &amp; Theorem 3.1</div>
+          <div class="step-body">
+            $\mathbf{r}(t)$ approaches limit $\mathbf{L}$ as $t\to a$, written $\lim_{t\to a}\mathbf{r}(t) =
+            \mathbf{L}$, provided
+            $$\lim_{t\to a}\|\mathbf{r}(t)-\mathbf{L}\|=0.$$
+            In practice we never use this directly — <b>Theorem 3.1</b> says the limit is computed component by
+            component:
+            $$\lim_{t\to a}\mathbf{r}(t) = \Big[\lim_{t\to a}f(t)\Big]\mathbf{i}+\Big[\lim_{t\to
+            a}g(t)\Big]\mathbf{j}+\Big[\lim_{t\to a}h(t)\Big]\mathbf{k}$$
+            provided the three limits on the right all exist.
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Example 3.3</div>
+          <div class="step-subtitle">Evaluating the Limit of a Vector-Valued Function</div>
+          <div class="step-body">
+            $\displaystyle\lim_{t\to 3}\Big[(t^2-3t+4)\mathbf{i}+(4t+3)\mathbf{j}\Big] = $
+            <reveal>\(4\mathbf{i}+15\mathbf{j}\)</reveal>
+            <br><br>
+            $\displaystyle\lim_{t\to
+            3}\left[\frac{2t-4}{t+1}\,\mathbf{i}+\frac{t}{t^2+1}\,\mathbf{j}+(4t-3)\,\mathbf{k}\right] = $
+            <reveal>\(\tfrac12\mathbf{i}+\tfrac{3}{10}\mathbf{j}+9\mathbf{k}\)</reveal>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Continuity of Vector-Valued Functions</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            $\mathbf{r}(t)$ is continuous at $t=a$ provided all three of the following hold:
+            <ul>
+              <li>$\mathbf{r}(a)$ exists</li>
+              <li>$\lim_{t\to a}\mathbf{r}(t)$ exists</li>
+              <li>$\lim_{t\to a}\mathbf{r}(t) = \mathbf{r}(a)$</li>
+            </ul>
+            Just as with scalar functions, $\mathbf{r}$ is continuous at $t=a$ exactly when each component function
+            $f$, $g$, $h$ is continuous at $t=a$.
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Space Curves</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            The set of terminal points traced out by $\mathbf{r}(t)$ as $t$ ranges over its domain is called a
+            <b>plane curve</b> (2D) or <b>space curve</b> (3D). Writing the components out as
+            $$x=f(t), \qquad y=g(t), \qquad z=h(t)$$
+            gives the <b>parametric equations</b> of the curve — the same curve, described without vector notation.
+            Every space curve above (the ellipse, the two helices) is really three ordinary parametric equations
+            packaged into one vector-valued function.
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">Try It</div>
+          <div class="step-subtitle">Checkpoint 3.1 – 3.3</div>
+          <div class="step-body">
+            <b>1.</b> $\mathbf{r}(t) = (t^2-3t)\mathbf{i}+(4t+1)\mathbf{j}$. Find $\mathbf{r}(0)$, $\mathbf{r}(1)$,
+            $\mathbf{r}(-4)$, and the domain.
+            <ul>
+              <li>$\mathbf{r}(0) = $ <reveal>\(\mathbf{i}\)</reveal></li>
+              <li>$\mathbf{r}(1) = $ <reveal>\(-2\mathbf{i}+5\mathbf{j}\)</reveal></li>
+              <li>$\mathbf{r}(-4) = $ <reveal>\(28\mathbf{i}-15\mathbf{j}\)</reveal></li>
+              <li>domain: <reveal>all real numbers</reveal></li>
+            </ul>
+            <b>2.</b> Describe the graph of $\mathbf{r}(t) = (t^2-1)\mathbf{i}+(2t-3)\mathbf{j}$, $0\le t\le 3$.
+            <reveal>A parabolic arc from \((-1,-3)\) to \((8,3)\).</reveal>
+            <br><br>
+            <b>3.</b> $\displaystyle\lim_{t\to
+            -2}\left[(t^2-3t-1)\mathbf{i}+(4t+3)\mathbf{j}+\sin\tfrac{(t+1)\pi}{2}\mathbf{k}\right] = $
+            <reveal>\(9\mathbf{i}-5\mathbf{j}+\mathbf{k}\)</reveal>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

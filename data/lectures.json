@@ -151,6 +151,19 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-01-26",
+    "title": "Vector-Valued Functions and Space Curves",
+    "subtitle": "",
+    "description": "Definitions, domains, limits, and continuity of vector-valued functions; parametric curves in the plane and space curves, including helices.",
+    "tags": [
+      "vector-valued functions",
+      "space curves"
+    ],
+    "url": "calculus3/fall2025/2025-01-26-vector-valued-functions-space-curves/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-02-04",
     "title": "Arc Length, Curvature, and Motion",
     "subtitle": "",
