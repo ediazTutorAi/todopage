@@ -2,6 +2,18 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-08-31",
+    "title": "Introduction to Trigonometric Identities",
+    "subtitle": "Lesson 05",
+    "description": "Ratio, reciprocal, Pythagorean, and cofunction identities — derived from the unit circle and a right triangle, with sign/quadrant reasoning.",
+    "tags": [
+      "Trigonometric Identities"
+    ],
+    "url": "trigonometry/2026/2026-08-31-lesson-05-introduction-to-trigonometric-identities/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-08-23",
     "title": "Angles in the Coordinate Plane",
     "subtitle": "Lesson 04",

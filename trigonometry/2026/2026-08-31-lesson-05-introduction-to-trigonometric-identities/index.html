@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Introduction to Trigonometric Identities</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Introduction to Trigonometric Identities</h1>
+    <div class="meta">Trigonometry · Lesson 05</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">What is an Identity</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            <p>
+              In mathematics, an <b>identity</b> is any equation that holds true for
+              <reveal>all</reveal> values of the variable, provided those values are from
+              the <reveal>domain</reveal>.
+            </p>
+            <p>Examples:</p>
+            <p>
+              \(\dfrac{2x}{4} = \dfrac{x}{2}\), &nbsp;&nbsp;
+              \(2(x+4) = -6x + 4(2+2x)\), &nbsp;&nbsp;
+              \(\log(2x) = \log(2) + \log(x)\)
+            </p>
+            <p class="muted small">
+              On occasion an identity is something apparent, but the more useful ones
+              often express relationships that are not obvious — it can take real effort
+              to verify an equation is an identity, which we'll address later. For now we
+              focus on applying some of the more fundamental identities.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definitions: Ratio and Reciprocal Identities</div>
+          <div class="step-subtitle">Let \(\theta\) be any value for which the functions below are defined</div>
+          <div class="step-body">
+            <table>
+              <tr><td><b>Reciprocal</b></td><td>\(\sin(\theta) = \dfrac{1}{\csc(\theta)}\)</td><td>\(\csc(\theta) = \dfrac{1}{\sin(\theta)}\)</td></tr>
+              <tr><td></td><td>\(\cos(\theta) = \dfrac{1}{\sec(\theta)}\)</td><td>\(\sec(\theta) = \dfrac{1}{\cos(\theta)}\)</td></tr>
+              <tr><td></td><td>\(\tan(\theta) = \dfrac{1}{\cot(\theta)}\)</td><td>\(\cot(\theta) = \dfrac{1}{\tan(\theta)}\)</td></tr>
+              <tr><td><b>Ratio</b></td><td>\(\tan(\theta) = \dfrac{\sin(\theta)}{\cos(\theta)}\)</td><td>\(\cot(\theta) = \dfrac{\cos(\theta)}{\sin(\theta)}\)</td></tr>
+            </table>
+            <p class="muted small">
+              <b>Tips:</b> tangent and cotangent are "cofunctions" (similar names), but
+              don't confuse this with the <i>cofunction identities</i> later in this
+              lesson — entirely separate from reciprocal identities. A reciprocal pair
+              always has <i>differing</i> first letters: cosecant can't pair with cosine
+              (same letter), so cosecant pairs with sine, and cosine pairs with secant.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Finding the remaining four ratios</div>
+          <div class="step-body">
+            <p>
+              Given \(\sin(\theta) = \dfrac{2\sqrt{6}}{7}\) and \(\tan(\theta) = \dfrac{2\sqrt{6}}{5}\),
+              find the remaining four trig ratios.
+            </p>
+            <p>
+              \(\csc(\theta) = \dfrac{1}{\sin(\theta)} = \) <reveal>\(\dfrac{7\sqrt{6}}{12}\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\cot(\theta) = \dfrac{1}{\tan(\theta)} = \) <reveal>\(\dfrac{5\sqrt{6}}{12}\)</reveal>
+            </p>
+            <p>
+              \(\cos(\theta) = \dfrac{\sin(\theta)}{\tan(\theta)} = \) <reveal>\(\dfrac{5}{7}\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\sec(\theta) = \dfrac{1}{\cos(\theta)} = \) <reveal>\(\dfrac{7}{5}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Where is each ratio undefined?</div>
+          <div class="step-body">
+            <p>
+              For \(0° \le \theta < 360°\), \(\sin(0°) = \sin(180°) = \cos(90°) = \cos(270°) = 0\).
+              Using this and the ratio/reciprocal identities, determine where each is undefined.
+            </p>
+            <p><b>(a)</b> \(\tan(\theta) = \dfrac{\sin\theta}{\cos\theta}\) — undefined when \(\cos\theta = 0\):</p>
+            <p><reveal>\(\theta = 90°\) and \(\theta = 270°\)</reveal></p>
+            <p><b>(b)</b> \(\cot(\theta) = \dfrac{\cos\theta}{\sin\theta}\) — undefined when \(\sin\theta = 0\):</p>
+            <p><reveal>\(\theta = 0°\) and \(\theta = 180°\)</reveal></p>
+            <p><b>(c)</b> \(\sec(\theta) = \dfrac{1}{\cos\theta}\) — undefined when \(\cos\theta = 0\):</p>
+            <p><reveal>\(\theta = 90°\) and \(\theta = 270°\)</reveal></p>
+            <p><b>(d)</b> \(\csc(\theta) = \dfrac{1}{\sin\theta}\) — undefined when \(\sin\theta = 0\):</p>
+            <p><reveal>\(\theta = 0°\) and \(\theta = 180°\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 3 (a)–(c)</div>
+          <div class="step-subtitle">The unit circle — sine and cosine as coordinates</div>
+          <div class="step-body">
+            <p>
+              Drag the point around the circle below (radius \(1\) — the <b>unit circle</b>).
+              Pick any point \(P(x,y)\) and imagine the angle \(\theta\), in standard
+              position, whose terminal side passes through \(P\).
+            </p>
+            <sign-circle radius="1" start-angle="40"></sign-circle>
+            <p>
+              Since the radius is \(r = 1\): \(\sin(\theta) = \dfrac{y}{r} = \) <reveal>\(y\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\cos(\theta) = \dfrac{x}{r} = \) <reveal>\(x\)</reveal>
+            </p>
+            <p class="muted small">
+              On the unit circle, the point's coordinates <i>are</i> \((\cos\theta, \sin\theta)\).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 3 (d)–(f)</div>
+          <div class="step-subtitle">The Pythagorean identity, domain &amp; range</div>
+          <div class="step-body">
+            <p>
+              Drop a right triangle from \(P\) to the \(x\)-axis: hypotenuse \(1\) (the
+              radius), legs \(|x|\) and \(|y|\).
+            </p>
+            <triangle type="right" angle="35" label-a="θ" label-c="" adjacent="|x|" opposite="|y|" hypotenuse="1"></triangle>
+            <p><b>(d)</b> By the Pythagorean theorem: \(|x|^2 + |y|^2 = 1^2 \ \Rightarrow\ \) <reveal>\(x^2 + y^2 = 1\)</reveal></p>
+            <p>
+              <b>(e)</b> Substituting \(x = \cos\theta\), \(y = \sin\theta\) from the previous step:
+            </p>
+            <p><reveal>\(\cos^2(\theta) + \sin^2(\theta) = 1\)</reveal> — the <b>Pythagorean identity</b>!</p>
+            <p>
+              <b>(f)</b> \(\theta\) represents any amount of rotation, so its domain is
+              <reveal>\((-\infty, \infty)\)</reveal>. Since \(-1 \le y \le 1\) and
+              \(-1 \le x \le 1\) on the unit circle:
+            </p>
+            <p>
+              \(\sin(\theta) \in \) <reveal>\([-1, 1]\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\cos(\theta) \in \) <reveal>\([-1, 1]\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Definitions: Pythagorean Identities</div>
+          <div class="step-subtitle">Divide the identity above by \(\cos^2\theta\) or \(\sin^2\theta\) to get the other two</div>
+          <div class="step-body">
+            <table>
+              <tr><td>\(\sin^2(\theta) + \cos^2(\theta) = 1\)</td></tr>
+              <tr><td>\(\tan^2(\theta) + 1 = \sec^2(\theta)\)</td></tr>
+              <tr><td>\(\cot^2(\theta) + 1 = \csc^2(\theta)\)</td></tr>
+            </table>
+            <p class="muted small">
+              Dividing \(\sin^2\theta + \cos^2\theta = 1\) through by \(\cos^2\theta\) gives
+              <reveal>\(\tan^2\theta + 1 = \sec^2\theta\)</reveal>; dividing instead by
+              \(\sin^2\theta\) gives <reveal>\(1 + \cot^2\theta = \csc^2\theta\)</reveal>.
+              You only need to remember the first form — the other two follow from it.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Using a Pythagorean identity with quadrant sign</div>
+          <div class="step-body">
+            <p>Let \(\theta\) be an angle in quadrant III such that \(\cos(\theta) = -\dfrac{3}{4}\). Find \(\sin(\theta)\) and \(\cot(\theta)\).</p>
+            <p>
+              \(\sin^2\theta = 1 - \cos^2\theta = 1 - \dfrac{9}{16} = \dfrac{7}{16}\ \Rightarrow\
+              \sin\theta = \pm\sqrt{\dfrac{7}{16}}\). Since \(\theta \in\) QIII, \(\sin\theta < 0\):
+            </p>
+            <p>\(\sin(\theta) = \) <reveal>\(-\dfrac{\sqrt{7}}{4}\)</reveal></p>
+            <p>\(\cot(\theta) = \dfrac{\cos\theta}{\sin\theta} = \) <reveal>\(\dfrac{3\sqrt{7}}{7}\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">A common mistake</div>
+          <div class="step-body">
+            <p>
+              On her exam, Ariel was given \(\tan(\theta) = \dfrac{3}{2}\) and asked to find
+              \(\sin(\theta)\) and \(\cos(\theta)\). She claimed \(\sin(\theta) = 3\) and
+              \(\cos(\theta) = 2\). She got partial credit, but not full marks. Why?
+            </p>
+            <p>
+              <reveal>\(\tan\theta = \sin\theta/\cos\theta\) does <i>not</i> mean the numerator
+              and denominator of a ratio in lowest terms are the actual sine and cosine values
+              — both \(\sin\theta\) and \(\cos\theta\) must lie in \([-1,1]\), so
+              \(\sin\theta = 3\) is impossible. She recognized the ratio form, but not that
+              constraint.</reveal>
+            </p>
+            <p>Correct solution, using \(\tan^2\theta + 1 = \sec^2\theta\):</p>
+            <p>
+              \(\sec\theta = \pm\sqrt{\tan^2\theta+1} = \pm\sqrt{\left(\frac{3}{2}\right)^2+1} = \) <reveal>\(\pm\dfrac{\sqrt{13}}{2}\)</reveal>
+            </p>
+            <p>
+              \(\cos(\theta) = \dfrac{1}{\sec\theta} = \) <reveal>\(\pm\dfrac{2\sqrt{13}}{13}\)</reveal>
+              &nbsp;&nbsp;&nbsp;
+              \(\sin(\theta) = \cos\theta\tan\theta = \) <reveal>\(\pm\dfrac{3\sqrt{13}}{13}\)</reveal>
+            </p>
+            <p class="muted small">No quadrant was given, so both signs are valid (tangent is positive in QI and QIII).</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 6 (a)–(e)</div>
+          <div class="step-subtitle">The cofunction identities — deriving from a right triangle</div>
+          <div class="step-body">
+            <p>
+              Sine &amp; <b>co</b>sine, secant &amp; <b>co</b>secant, tangent &amp;
+              <b>co</b>tangent — let's develop the relationship between each pair.
+            </p>
+            <triangle type="right" angle="35" label-a="θ" label-c="90° - θ" adjacent="a" opposite="b" hypotenuse="c"></triangle>
+            <p><b>(a)</b> The missing angle, labeled above, is \(90° - \theta\) (the two acute angles are complementary).</p>
+            <p>
+              <b>(b)</b> \(\sin(\theta) = \dfrac{b}{c}\). Viewed from the other acute angle, \(b\)
+              is the <i>adjacent</i> side to \(90°-\theta\), so this is also
+              \(\cos(90°-\theta)\): \(\sin(\theta) = \) <reveal>\(\cos(90° - \theta)\)</reveal>
+            </p>
+            <p>
+              <b>(c)</b> \(\sec(\theta) = \dfrac{c}{a}\), and from \(90°-\theta\)'s
+              perspective this is \(\csc(90°-\theta)\): \(\sec(\theta) = \) <reveal>\(\csc(90° - \theta)\)</reveal>
+            </p>
+            <p>
+              <b>(d)</b> \(\tan(\theta) = \dfrac{b}{a}\), which is \(\cot(90°-\theta)\):
+              \(\tan(\theta) = \) <reveal>\(\cot(90° - \theta)\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Definitions: Cofunction Identities</div>
+          <div class="step-subtitle">For any acute angle \(\theta\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>\(\sin(\theta) = \cos(90° - \theta)\)</td><td>\(\cos(\theta) = \sin(90° - \theta)\)</td></tr>
+              <tr><td>\(\sec(\theta) = \csc(90° - \theta)\)</td><td>\(\csc(\theta) = \sec(90° - \theta)\)</td></tr>
+              <tr><td>\(\tan(\theta) = \cot(90° - \theta)\)</td><td>\(\cot(\theta) = \tan(90° - \theta)\)</td></tr>
+            </table>
+            <p class="muted small">Note: \(\theta\) and \(90° - \theta\) are always complementary — they sum to \(90°\).</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Example 6 (f)–(g)</div>
+          <div class="step-subtitle">Applying the cofunction identities</div>
+          <div class="step-body">
+            <p><b>(f)</b> Write \(\sec(10°)\) in terms of its cofunction.</p>
+            <p>\(\sec(10°) = \) <reveal>\(\csc(90° - 10°) = \csc(80°)\)</reveal></p>
+            <p><b>(g)</b> Solve for \(x\): \(\sin(x+8°) = \cos(40° + 2x)\)</p>
+            <p>
+              Matching \(\sin(A) = \cos(90° - A)\), the two angles must be complementary:
+              \((x+8°) + (40° + 2x) = 90°\)
+            </p>
+            <p>
+              \(3x + 48° = 90° \ \Rightarrow\ 3x = 42° \ \Rightarrow\ x = \) <reveal>\(14°\)</reveal>
+            </p>
+            <p class="muted small">
+              Check: \(\sin(14°+8°) = \cos(40°+2(14°)) \Rightarrow \sin(22°) = \cos(68°)\) <reveal>✓ (\(22°+68°=90°\))</reveal>
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW (unused — this lesson has no <geogebra> tags, kept for
+       markup/CSS consistency with other lessons) -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
