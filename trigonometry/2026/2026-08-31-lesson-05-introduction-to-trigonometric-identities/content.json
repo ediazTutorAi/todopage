@@ -1,0 +1,110 @@
+{
+  "course": "Trigonometry",
+  "semester": "Fall 2026",
+  "date": "2026-08-31",
+  "title": "Introduction to Trigonometric Identities",
+  "subtitle": "Lesson 05",
+  "description": "Ratio, reciprocal, Pythagorean, and cofunction identities — derived from the unit circle and a right triangle, with sign/quadrant reasoning.",
+  "tags": [
+    "Trigonometric Identities"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "What is an Identity",
+      "subtitle": "Definition",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              In mathematics, an <b>identity</b> is any equation that holds true for\n              <reveal>all</reveal> values of the variable, provided those values are from\n              the <reveal>domain</reveal>.\n            </p>\n            <p>Examples:</p>\n            <p>\n              \\(\\dfrac{2x}{4} = \\dfrac{x}{2}\\), &nbsp;&nbsp;\n              \\(2(x+4) = -6x + 4(2+2x)\\), &nbsp;&nbsp;\n              \\(\\log(2x) = \\log(2) + \\log(x)\\)\n            </p>\n            <p class=\"muted small\">\n              On occasion an identity is something apparent, but the more useful ones\n              often express relationships that are not obvious — it can take real effort\n              to verify an equation is an identity, which we'll address later. For now we\n              focus on applying some of the more fundamental identities.\n            </p>"
+    },
+    {
+      "tag": "step",
+      "label": "Definitions: Ratio and Reciprocal Identities",
+      "subtitle": "Let \\(\\theta\\) be any value for which the functions below are defined",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n              <tr><td><b>Reciprocal</b></td><td>\\(\\sin(\\theta) = \\dfrac{1}{\\csc(\\theta)}\\)</td><td>\\(\\csc(\\theta) = \\dfrac{1}{\\sin(\\theta)}\\)</td></tr>\n              <tr><td></td><td>\\(\\cos(\\theta) = \\dfrac{1}{\\sec(\\theta)}\\)</td><td>\\(\\sec(\\theta) = \\dfrac{1}{\\cos(\\theta)}\\)</td></tr>\n              <tr><td></td><td>\\(\\tan(\\theta) = \\dfrac{1}{\\cot(\\theta)}\\)</td><td>\\(\\cot(\\theta) = \\dfrac{1}{\\tan(\\theta)}\\)</td></tr>\n              <tr><td><b>Ratio</b></td><td>\\(\\tan(\\theta) = \\dfrac{\\sin(\\theta)}{\\cos(\\theta)}\\)</td><td>\\(\\cot(\\theta) = \\dfrac{\\cos(\\theta)}{\\sin(\\theta)}\\)</td></tr>\n            </table>\n            <p class=\"muted small\">\n              <b>Tips:</b> tangent and cotangent are \"cofunctions\" (similar names), but\n              don't confuse this with the <i>cofunction identities</i> later in this\n              lesson — entirely separate from reciprocal identities. A reciprocal pair\n              always has <i>differing</i> first letters: cosecant can't pair with cosine\n              (same letter), so cosecant pairs with sine, and cosine pairs with secant.\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 1",
+      "subtitle": "Finding the remaining four ratios",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              Given \\(\\sin(\\theta) = \\dfrac{2\\sqrt{6}}{7}\\) and \\(\\tan(\\theta) = \\dfrac{2\\sqrt{6}}{5}\\),\n              find the remaining four trig ratios.\n            </p>\n            <p>\n              \\(\\csc(\\theta) = \\dfrac{1}{\\sin(\\theta)} = \\) <reveal>\\(\\dfrac{7\\sqrt{6}}{12}\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\cot(\\theta) = \\dfrac{1}{\\tan(\\theta)} = \\) <reveal>\\(\\dfrac{5\\sqrt{6}}{12}\\)</reveal>\n            </p>\n            <p>\n              \\(\\cos(\\theta) = \\dfrac{\\sin(\\theta)}{\\tan(\\theta)} = \\) <reveal>\\(\\dfrac{5}{7}\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\sec(\\theta) = \\dfrac{1}{\\cos(\\theta)} = \\) <reveal>\\(\\dfrac{7}{5}\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 2",
+      "subtitle": "Where is each ratio undefined?",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              For \\(0° \\le \\theta < 360°\\), \\(\\sin(0°) = \\sin(180°) = \\cos(90°) = \\cos(270°) = 0\\).\n              Using this and the ratio/reciprocal identities, determine where each is undefined.\n            </p>\n            <p><b>(a)</b> \\(\\tan(\\theta) = \\dfrac{\\sin\\theta}{\\cos\\theta}\\) — undefined when \\(\\cos\\theta = 0\\):</p>\n            <p><reveal>\\(\\theta = 90°\\) and \\(\\theta = 270°\\)</reveal></p>\n            <p><b>(b)</b> \\(\\cot(\\theta) = \\dfrac{\\cos\\theta}{\\sin\\theta}\\) — undefined when \\(\\sin\\theta = 0\\):</p>\n            <p><reveal>\\(\\theta = 0°\\) and \\(\\theta = 180°\\)</reveal></p>\n            <p><b>(c)</b> \\(\\sec(\\theta) = \\dfrac{1}{\\cos\\theta}\\) — undefined when \\(\\cos\\theta = 0\\):</p>\n            <p><reveal>\\(\\theta = 90°\\) and \\(\\theta = 270°\\)</reveal></p>\n            <p><b>(d)</b> \\(\\csc(\\theta) = \\dfrac{1}{\\sin\\theta}\\) — undefined when \\(\\sin\\theta = 0\\):</p>\n            <p><reveal>\\(\\theta = 0°\\) and \\(\\theta = 180°\\)</reveal></p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 3 (a)–(c)",
+      "subtitle": "The unit circle — sine and cosine as coordinates",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              Drag the point around the circle below (radius \\(1\\) — the <b>unit circle</b>).\n              Pick any point \\(P(x,y)\\) and imagine the angle \\(\\theta\\), in standard\n              position, whose terminal side passes through \\(P\\).\n            </p>\n            <sign-circle radius=\"1\" start-angle=\"40\"></sign-circle>\n            <p>\n              Since the radius is \\(r = 1\\): \\(\\sin(\\theta) = \\dfrac{y}{r} = \\) <reveal>\\(y\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\cos(\\theta) = \\dfrac{x}{r} = \\) <reveal>\\(x\\)</reveal>\n            </p>\n            <p class=\"muted small\">\n              On the unit circle, the point's coordinates <i>are</i> \\((\\cos\\theta, \\sin\\theta)\\).\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 3 (d)–(f)",
+      "subtitle": "The Pythagorean identity, domain &amp; range",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              Drop a right triangle from \\(P\\) to the \\(x\\)-axis: hypotenuse \\(1\\) (the\n              radius), legs \\(|x|\\) and \\(|y|\\).\n            </p>\n            <triangle type=\"right\" angle=\"35\" label-a=\"θ\" label-c=\"\" adjacent=\"|x|\" opposite=\"|y|\" hypotenuse=\"1\"></triangle>\n            <p><b>(d)</b> By the Pythagorean theorem: \\(|x|^2 + |y|^2 = 1^2 \\ \\Rightarrow\\ \\) <reveal>\\(x^2 + y^2 = 1\\)</reveal></p>\n            <p>\n              <b>(e)</b> Substituting \\(x = \\cos\\theta\\), \\(y = \\sin\\theta\\) from the previous step:\n            </p>\n            <p><reveal>\\(\\cos^2(\\theta) + \\sin^2(\\theta) = 1\\)</reveal> — the <b>Pythagorean identity</b>!</p>\n            <p>\n              <b>(f)</b> \\(\\theta\\) represents any amount of rotation, so its domain is\n              <reveal>\\((-\\infty, \\infty)\\)</reveal>. Since \\(-1 \\le y \\le 1\\) and\n              \\(-1 \\le x \\le 1\\) on the unit circle:\n            </p>\n            <p>\n              \\(\\sin(\\theta) \\in \\) <reveal>\\([-1, 1]\\)</reveal> &nbsp;&nbsp;&nbsp;\n              \\(\\cos(\\theta) \\in \\) <reveal>\\([-1, 1]\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "step",
+      "label": "Definitions: Pythagorean Identities",
+      "subtitle": "Divide the identity above by \\(\\cos^2\\theta\\) or \\(\\sin^2\\theta\\) to get the other two",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n              <tr><td>\\(\\sin^2(\\theta) + \\cos^2(\\theta) = 1\\)</td></tr>\n              <tr><td>\\(\\tan^2(\\theta) + 1 = \\sec^2(\\theta)\\)</td></tr>\n              <tr><td>\\(\\cot^2(\\theta) + 1 = \\csc^2(\\theta)\\)</td></tr>\n            </table>\n            <p class=\"muted small\">\n              Dividing \\(\\sin^2\\theta + \\cos^2\\theta = 1\\) through by \\(\\cos^2\\theta\\) gives\n              <reveal>\\(\\tan^2\\theta + 1 = \\sec^2\\theta\\)</reveal>; dividing instead by\n              \\(\\sin^2\\theta\\) gives <reveal>\\(1 + \\cot^2\\theta = \\csc^2\\theta\\)</reveal>.\n              You only need to remember the first form — the other two follow from it.\n            </p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 4",
+      "subtitle": "Using a Pythagorean identity with quadrant sign",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Let \\(\\theta\\) be an angle in quadrant III such that \\(\\cos(\\theta) = -\\dfrac{3}{4}\\). Find \\(\\sin(\\theta)\\) and \\(\\cot(\\theta)\\).</p>\n            <p>\n              \\(\\sin^2\\theta = 1 - \\cos^2\\theta = 1 - \\dfrac{9}{16} = \\dfrac{7}{16}\\ \\Rightarrow\\\n              \\sin\\theta = \\pm\\sqrt{\\dfrac{7}{16}}\\). Since \\(\\theta \\in\\) QIII, \\(\\sin\\theta < 0\\):\n            </p>\n            <p>\\(\\sin(\\theta) = \\) <reveal>\\(-\\dfrac{\\sqrt{7}}{4}\\)</reveal></p>\n            <p>\\(\\cot(\\theta) = \\dfrac{\\cos\\theta}{\\sin\\theta} = \\) <reveal>\\(\\dfrac{3\\sqrt{7}}{7}\\)</reveal></p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 5",
+      "subtitle": "A common mistake",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              On her exam, Ariel was given \\(\\tan(\\theta) = \\dfrac{3}{2}\\) and asked to find\n              \\(\\sin(\\theta)\\) and \\(\\cos(\\theta)\\). She claimed \\(\\sin(\\theta) = 3\\) and\n              \\(\\cos(\\theta) = 2\\). She got partial credit, but not full marks. Why?\n            </p>\n            <p>\n              <reveal>\\(\\tan\\theta = \\sin\\theta/\\cos\\theta\\) does <i>not</i> mean the numerator\n              and denominator of a ratio in lowest terms are the actual sine and cosine values\n              — both \\(\\sin\\theta\\) and \\(\\cos\\theta\\) must lie in \\([-1,1]\\), so\n              \\(\\sin\\theta = 3\\) is impossible. She recognized the ratio form, but not that\n              constraint.</reveal>\n            </p>\n            <p>Correct solution, using \\(\\tan^2\\theta + 1 = \\sec^2\\theta\\):</p>\n            <p>\n              \\(\\sec\\theta = \\pm\\sqrt{\\tan^2\\theta+1} = \\pm\\sqrt{\\left(\\frac{3}{2}\\right)^2+1} = \\) <reveal>\\(\\pm\\dfrac{\\sqrt{13}}{2}\\)</reveal>\n            </p>\n            <p>\n              \\(\\cos(\\theta) = \\dfrac{1}{\\sec\\theta} = \\) <reveal>\\(\\pm\\dfrac{2\\sqrt{13}}{13}\\)</reveal>\n              &nbsp;&nbsp;&nbsp;\n              \\(\\sin(\\theta) = \\cos\\theta\\tan\\theta = \\) <reveal>\\(\\pm\\dfrac{3\\sqrt{13}}{13}\\)</reveal>\n            </p>\n            <p class=\"muted small\">No quadrant was given, so both signs are valid (tangent is positive in QI and QIII).</p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 6 (a)–(e)",
+      "subtitle": "The cofunction identities — deriving from a right triangle",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n              Sine &amp; <b>co</b>sine, secant &amp; <b>co</b>secant, tangent &amp;\n              <b>co</b>tangent — let's develop the relationship between each pair.\n            </p>\n            <triangle type=\"right\" angle=\"35\" label-a=\"θ\" label-c=\"90° - θ\" adjacent=\"a\" opposite=\"b\" hypotenuse=\"c\"></triangle>\n            <p><b>(a)</b> The missing angle, labeled above, is \\(90° - \\theta\\) (the two acute angles are complementary).</p>\n            <p>\n              <b>(b)</b> \\(\\sin(\\theta) = \\dfrac{b}{c}\\). Viewed from the other acute angle, \\(b\\)\n              is the <i>adjacent</i> side to \\(90°-\\theta\\), so this is also\n              \\(\\cos(90°-\\theta)\\): \\(\\sin(\\theta) = \\) <reveal>\\(\\cos(90° - \\theta)\\)</reveal>\n            </p>\n            <p>\n              <b>(c)</b> \\(\\sec(\\theta) = \\dfrac{c}{a}\\), and from \\(90°-\\theta\\)'s\n              perspective this is \\(\\csc(90°-\\theta)\\): \\(\\sec(\\theta) = \\) <reveal>\\(\\csc(90° - \\theta)\\)</reveal>\n            </p>\n            <p>\n              <b>(d)</b> \\(\\tan(\\theta) = \\dfrac{b}{a}\\), which is \\(\\cot(90°-\\theta)\\):\n              \\(\\tan(\\theta) = \\) <reveal>\\(\\cot(90° - \\theta)\\)</reveal>\n            </p>"
+    },
+    {
+      "tag": "step",
+      "label": "Definitions: Cofunction Identities",
+      "subtitle": "For any acute angle \\(\\theta\\)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n              <tr><td>\\(\\sin(\\theta) = \\cos(90° - \\theta)\\)</td><td>\\(\\cos(\\theta) = \\sin(90° - \\theta)\\)</td></tr>\n              <tr><td>\\(\\sec(\\theta) = \\csc(90° - \\theta)\\)</td><td>\\(\\csc(\\theta) = \\sec(90° - \\theta)\\)</td></tr>\n              <tr><td>\\(\\tan(\\theta) = \\cot(90° - \\theta)\\)</td><td>\\(\\cot(\\theta) = \\tan(90° - \\theta)\\)</td></tr>\n            </table>\n            <p class=\"muted small\">Note: \\(\\theta\\) and \\(90° - \\theta\\) are always complementary — they sum to \\(90°\\).</p>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 6 (f)–(g)",
+      "subtitle": "Applying the cofunction identities",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p><b>(f)</b> Write \\(\\sec(10°)\\) in terms of its cofunction.</p>\n            <p>\\(\\sec(10°) = \\) <reveal>\\(\\csc(90° - 10°) = \\csc(80°)\\)</reveal></p>\n            <p><b>(g)</b> Solve for \\(x\\): \\(\\sin(x+8°) = \\cos(40° + 2x)\\)</p>\n            <p>\n              Matching \\(\\sin(A) = \\cos(90° - A)\\), the two angles must be complementary:\n              \\((x+8°) + (40° + 2x) = 90°\\)\n            </p>\n            <p>\n              \\(3x + 48° = 90° \\ \\Rightarrow\\ 3x = 42° \\ \\Rightarrow\\ x = \\) <reveal>\\(14°\\)</reveal>\n            </p>\n            <p class=\"muted small\">\n              Check: \\(\\sin(14°+8°) = \\cos(40°+2(14°)) \\Rightarrow \\sin(22°) = \\cos(68°)\\) <reveal>✓ (\\(22°+68°=90°\\))</reveal>\n            </p>"
+    }
+  ],
+  "notes": ""
+}
