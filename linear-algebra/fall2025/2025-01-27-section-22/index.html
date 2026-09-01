@@ -69,6 +69,17 @@
             of $\vec{x}$ onto $L$, denoted $\text{proj}_L(\vec{x})$. If $\vec{w}$ is a nonzero vector parallel to
             $L$, then
             $$\text{proj}_L(\vec{x})=\left(\frac{\vec{x}\cdot\vec{w}}{\vec{w}\cdot\vec{w}}\right)\vec{w}.$$
+            Click each side of the triangle below to reveal what it represents:
+            <triangle type="right" angle="32" label-a="θ" label-c="">
+              <reveal slot="hypotenuse">\(\vec{x}\)</reveal>
+              <reveal slot="adjacent">\(\vec{x}^{\parallel}=\text{proj}_L(\vec{x})\)</reveal>
+              <reveal slot="opposite">\(\vec{x}^{\perp}\)</reveal>
+            </triangle>
+            The horizontal leg lies along $L$: it is $\vec{x}^{\parallel}$, the piece of $\vec{x}$ parallel to $L$
+            (the shadow $\vec{x}$ casts on $L$). The vertical leg is $\vec{x}^{\perp}$, the leftover piece
+            perpendicular to $L$ — and $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$ is exactly the right triangle's
+            two legs summing (as vectors) to the hypotenuse.
+            <br><br>
             In particular, if $\vec{u}=\begin{pmatrix}u_1\\u_2\end{pmatrix}$ is a <em>unit</em> vector parallel to
             $L$, this is a linear transformation with matrix
             $$P=\begin{pmatrix} u_1^2 & u_1u_2 \\ u_1u_2 & u_2^2 \end{pmatrix}.$$
