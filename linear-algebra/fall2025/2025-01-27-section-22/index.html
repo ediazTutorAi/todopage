@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- GeoGebra (inline diagrams via command API, lazy-initialized per current step) -->
+  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
+  <script>
+    (function () {
+      var initialized = [];
+      var ASPECT_RATIO = 1.25;
+
+      function initGgbElement(el) {
+        if (initialized.indexOf(el) >= 0) return;
+        if (typeof GGBApplet === 'undefined') return;
+        initialized.push(el);
+
+        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var container = document.createElement('div');
+        container.id = 'geogebra-' + initialized.length;
+        container.style.width = '100%';
+        el.replaceWith(container);
+
+        var explicitWidth = el.getAttribute('width');
+        var explicitHeight = el.getAttribute('height');
+        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
+        var ggbApi = null;
+
+        function computeSize() {
+          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
+          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
+          return { w: w, h: h };
+        }
+
+        var size = computeSize();
+
+        try {
+          var applet = new GGBApplet({
+            id: container.id,
+            width: size.w,
+            height: size.h,
+            showToolBar: false,
+            showMenuBar: false,
+            showAlgebraInput: false,
+            showResetIcon: true,
+            appName: perspective === '3D' ? '3d' : 'classic',
+            appletOnLoad: function (api) {
+              ggbApi = api;
+              commands.forEach(function (cmd) { api.evalCommand(cmd); });
+            }
+          }, true);
+          applet.inject(container.id);
+
+          if (!explicitWidth) {
+            var resizeTimer = null;
+            window.addEventListener('resize', function () {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(function () {
+                if (!ggbApi) return;
+                var s = computeSize();
+                ggbApi.setSize(s.w, s.h);
+              }, 150);
+            });
+          }
+        } catch (err) {
+          container.textContent = 'Diagram error: ' + err.message;
+          container.style.color = '#b00020';
+        }
+      }
+
+      window._initGgbInStep = function (stepEl) {
+        if (!stepEl) return;
+        stepEl.querySelectorAll('geogebra').forEach(initGgbElement);
+      };
+
+      window.addEventListener('load', function () {
+        var current = document.querySelector('.step.is-current') || document.querySelector('.step.is-visible');
+        if (current) window._initGgbInStep(current);
+      });
+    })();
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>2.2 Linear Transformations in Geometry</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Six matrices acting on the letter L</div>
+          <div class="step-body">
+            Recall the standard letter L: a foot at $\vec{v}_1=(1,0)$ and a back at $\vec{v}_2=(0,2)$. Drag the
+            sliders below to see how a $2\times2$ matrix $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ reshapes the
+            gray L into the blue one, $T(\vec{x})=\begin{pmatrix} a & b \\ c & d \end{pmatrix}\vec{x}$.
+            <ul>
+              <li>$a=2,\ b=0,\ c=0,\ d=2$ — <strong>scaling</strong> by 2</li>
+              <li>$a=1,\ b=0,\ c=0,\ d=0$ — <strong>orthogonal projection</strong> onto the horizontal axis</li>
+              <li>$a=-1,\ b=0,\ c=0,\ d=1$ — <strong>reflection</strong> about the vertical axis</li>
+              <li>$a=0,\ b=1,\ c=-1,\ d=0$ — <strong>rotation</strong> through $-90^\circ$</li>
+              <li>$a=1,\ b=0.2,\ c=0,\ d=1$ — horizontal <strong>shear</strong></li>
+              <li>$a=1,\ b=-1,\ c=1,\ d=1$ — a <strong>rotation combined with a scaling</strong> (through $45^\circ$,
+                scaled by $\sqrt{2}$)</li>
+            </ul>
+            <geogebra width="760" height="480" perspective="2D">
+a=Slider(-2,2,0.1)
+b=Slider(-2,2,0.1)
+c=Slider(-2,2,0.1)
+d=Slider(-2,2,0.1)
+SetValue(a,1)
+SetValue(b,0)
+SetValue(c,0)
+SetValue(d,1)
+SetCoords(a,-4.6,4.6)
+SetCoords(b,-4.6,4.1)
+SetCoords(c,-4.6,3.6)
+SetCoords(d,-4.6,3.1)
+Q2=(1,0)
+Q3=(0,2)
+origFoot=Segment((0,0),Q2)
+origBack=Segment((0,0),Q3)
+SetColor(origFoot,180,180,180)
+SetColor(origBack,180,180,180)
+SetLineThickness(origFoot,6)
+SetLineThickness(origBack,6)
+P2=(a,c)
+P3=(2b,2d)
+newFoot=Segment((0,0),P2)
+newBack=Segment((0,0),P3)
+SetColor(newFoot,30,80,200)
+SetColor(newBack,30,80,200)
+SetLineThickness(newFoot,8)
+SetLineThickness(newBack,8)
+</geogebra>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition 2.2.1</div>
+          <div class="step-subtitle">Orthogonal Projections</div>
+          <div class="step-body">
+            Consider a line $L$ in the coordinate plane, running through the origin. Any vector $\vec{x}$ in
+            $\mathbb{R}^2$ can be written uniquely as $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$, where
+            $\vec{x}^{\parallel}$ is parallel to $L$ and $\vec{x}^{\perp}$ is perpendicular to $L$.<br>
+            The transformation $T(\vec{x})=\vec{x}^{\parallel}$ is called the <strong>orthogonal projection</strong>
+            of $\vec{x}$ onto $L$, denoted $\text{proj}_L(\vec{x})$. If $\vec{w}$ is a nonzero vector parallel to
+            $L$, then
+            $$\text{proj}_L(\vec{x})=\left(\frac{\vec{x}\cdot\vec{w}}{\vec{w}\cdot\vec{w}}\right)\vec{w}.$$
+            In particular, if $\vec{u}=\begin{pmatrix}u_1\\u_2\end{pmatrix}$ is a <em>unit</em> vector parallel to
+            $L$, this is a linear transformation with matrix
+            $$P=\begin{pmatrix} u_1^2 & u_1u_2 \\ u_1u_2 & u_2^2 \end{pmatrix}.$$
+            Drag $\vec{w}$ to change the line $L$ and drag $\vec{x}$ to see $\text{proj}_L(\vec{x})$ (orange) update
+            live — the red point previews the <em>reflection</em> $\text{ref}_L(\vec{x})$ from the next definition.
+            <geogebra width="760" height="480" perspective="2D">
+W=Point({3,4})
+SetPointStyle(W,0)
+SetColor(W,30,80,200)
+SetCaption(W,"w")
+ShowLabel(W,true)
+u=UnitVector(Vector((0,0),W))
+Lline=Line((0,0),W)
+SetColor(Lline,150,150,150)
+X=Point({2,-1})
+SetPointStyle(X,0)
+SetColor(X,0,140,0)
+SetCaption(X,"x")
+ShowLabel(X,true)
+xv=Vector((0,0),X)
+projv=(xv*u)*u
+P=(0,0)+projv
+refv=2*projv-xv
+R=(0,0)+refv
+segX=Segment((0,0),X)
+SetColor(segX,0,140,0)
+segP=Segment((0,0),P)
+SetColor(segP,230,140,0)
+SetLineThickness(segP,5)
+segR=Segment((0,0),R)
+SetColor(segR,190,30,30)
+SetLineThickness(segR,4)
+SetLineStyle(segR,1)
+SetCaption(P,"proj_L(x)")
+ShowLabel(P,true)
+SetCaption(R,"ref_L(x)")
+ShowLabel(R,true)
+</geogebra>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Find the matrix of the projection onto a line</div>
+          <div class="step-body">
+            Find the matrix $P$ of the orthogonal projection onto the line $L$ spanned by
+            $\vec{w}=\begin{pmatrix}3\\4\end{pmatrix}$.
+            <br><br>
+            <strong>Solution.</strong>
+            $$P=\frac{1}{w_1^2+w_2^2}\begin{pmatrix} w_1^2 & w_1w_2 \\ w_1w_2 & w_2^2 \end{pmatrix}
+            =\frac{1}{25}\begin{pmatrix} 9 & 12 \\ 12 & 16 \end{pmatrix}
+            =\begin{pmatrix} 0.36 & 0.48 \\ 0.48 & 0.64 \end{pmatrix}.$$
+            Drag $\vec{w}$ in the applet above to $(3,4)$ to check this against the picture.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Definition 2.2.2</div>
+          <div class="step-subtitle">Reflections</div>
+          <div class="step-body">
+            Consider a line $L$ through the origin and $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$ as before. The
+            <strong>reflection</strong> of $\vec{x}$ about $L$, denoted $\text{ref}_L(\vec{x})$, is
+            $$\text{ref}_L(\vec{x})=\vec{x}^{\parallel}-\vec{x}^{\perp}.$$
+            Adding $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$ and this equation gives $\vec{x}+\text{ref}_L(\vec{x})
+            =2\vec{x}^{\parallel}=2\text{proj}_L(\vec{x})$, so
+            $$\text{ref}_L(\vec{x})=2\text{proj}_L(\vec{x})-\vec{x}=(2P-I_2)\vec{x}.$$
+            The matrix $S=2P-I_2$ is always of the form
+            $$S=\begin{pmatrix} a & b \\ b & -a \end{pmatrix},\qquad a^2+b^2=1,$$
+            and, conversely, any matrix of this form represents a reflection about a line. The red point in the
+            applet above is $\text{ref}_L(\vec{x})$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Projections and Reflections in Space</div>
+          <div class="step-subtitle">Example 3</div>
+          <div class="step-body">
+            The same ideas extend to $\mathbb{R}^3$. If $L^\perp=V$ is the plane through the origin perpendicular to
+            a line $L$ with unit direction $\vec{u}$, then
+            $$\text{proj}_V(\vec{x})=\vec{x}-(\vec{x}\cdot\vec{u})\vec{u}, \qquad
+            \text{ref}_V(\vec{x})=\vec{x}-2(\vec{x}\cdot\vec{u})\vec{u}.$$
+            <br>
+            <strong>Example.</strong> Let $V$ be the plane $2x_1+x_2-2x_3=0$, and let $\vec{x}=\begin{pmatrix}5\\4\\-2
+            \end{pmatrix}$. Find $\text{ref}_V(\vec{x})$.
+            <br><br>
+            <strong>Solution.</strong> The vector $\vec{v}=\begin{pmatrix}2\\1\\-2\end{pmatrix}$ is perpendicular to
+            $V$ (its components are the coefficients of the plane's equation), so
+            $\vec{u}=\frac{1}{3}\begin{pmatrix}2\\1\\-2\end{pmatrix}$ is a unit normal. Then
+            $$\text{ref}_V(\vec{x})=\begin{pmatrix}5\\4\\-2\end{pmatrix}
+            -\frac{2}{9}\left(\begin{pmatrix}5\\4\\-2\end{pmatrix}\cdot\begin{pmatrix}2\\1\\-2\end{pmatrix}\right)
+            \begin{pmatrix}2\\1\\-2\end{pmatrix}
+            =\begin{pmatrix}5\\4\\-2\end{pmatrix}-4\begin{pmatrix}2\\1\\-2\end{pmatrix}
+            =\begin{pmatrix}-3\\0\\6\end{pmatrix}.$$
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Theorem 2.2.3</div>
+          <div class="step-subtitle">Rotations</div>
+          <div class="step-body">
+            The matrix of a counterclockwise rotation in $\mathbb{R}^2$ through an angle $\theta$ is
+            $$\begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}.$$
+            This matrix has the form $\begin{pmatrix} a & -b \\ b & a \end{pmatrix}$ with $a^2+b^2=1$; conversely,
+            any matrix of that form represents a rotation.
+            <br><br>
+            <strong>Example 4.</strong> The matrix of a counterclockwise rotation through $\pi/6$ ($30^\circ$) is
+            $$\begin{pmatrix} \cos(\pi/6) & -\sin(\pi/6) \\ \sin(\pi/6) & \cos(\pi/6) \end{pmatrix}
+            =\frac{1}{2}\begin{pmatrix} \sqrt{3} & -1 \\ 1 & \sqrt{3} \end{pmatrix}.$$
+            Set $a=\cos\theta,\,b=-\sin\theta,\,c=\sin\theta,\,d=\cos\theta$ in the Example 1 applet to watch any
+            rotation in action.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Theorem 2.2.4</div>
+          <div class="step-subtitle">Rotations combined with a scaling</div>
+          <div class="step-body">
+            A matrix of the form $\begin{pmatrix} a & -b \\ b & a \end{pmatrix}$ represents a rotation combined with
+            a scaling. More precisely, if $r$ and $\theta$ are the polar coordinates of the vector
+            $\begin{pmatrix}a\\b\end{pmatrix}$, then
+            $$\begin{pmatrix} a & -b \\ b & a \end{pmatrix}=r\begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta &
+            \cos\theta \end{pmatrix}$$
+            represents a rotation through $\theta$ combined with a scaling by $r$. This is part (f) of Example 1: the
+            matrix $\begin{pmatrix}1 & -1\\ 1 & 1\end{pmatrix}$ has $a=b=1$, so $r=\sqrt{2}$ and $\theta=\pi/4$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Theorem 2.2.5</div>
+          <div class="step-subtitle">Horizontal and vertical shears</div>
+          <div class="step-body">
+            The matrix of a <strong>horizontal shear</strong> is of the form $\begin{pmatrix} 1 & k \\ 0 & 1
+            \end{pmatrix}$, and the matrix of a <strong>vertical shear</strong> is of the form $\begin{pmatrix} 1 & 0
+            \\ k & 1 \end{pmatrix}$, where $k$ is an arbitrary constant.<br>
+            Picture a deck of cards on a ruler: tilting the ruler while the cards stay vertical slides each card up
+            by an amount proportional to its horizontal distance from the pivot — that's a vertical shear. Try
+            $a=1,\,b=0,\,c=k,\,d=1$ in the Example 1 applet for a few values of $k$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">Matrices of the geometric linear transformations of $\mathbb{R}^2$</div>
+          <div class="step-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Transformation</th>
+                  <th>Matrix</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Scaling by $k$</td>
+                  <td>$kI_2=\begin{pmatrix}k&0\\0&k\end{pmatrix}$</td>
+                </tr>
+                <tr>
+                  <td>Orthogonal projection onto line $L$</td>
+                  <td>$\begin{pmatrix}u_1^2&u_1u_2\\u_1u_2&u_2^2\end{pmatrix}$, $\vec{u}=\begin{pmatrix}u_1\\u_2
+                    \end{pmatrix}$ a unit vector parallel to $L$</td>
+                </tr>
+                <tr>
+                  <td>Reflection about a line</td>
+                  <td>$\begin{pmatrix}a&b\\b&-a\end{pmatrix}$, $a^2+b^2=1$</td>
+                </tr>
+                <tr>
+                  <td>Rotation through $\theta$</td>
+                  <td>$\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}$ or
+                    $\begin{pmatrix}a&-b\\b&a\end{pmatrix}$, $a^2+b^2=1$</td>
+                </tr>
+                <tr>
+                  <td>Rotation through $\theta$ combined with scaling by $r$</td>
+                  <td>$\begin{pmatrix}a&-b\\b&a\end{pmatrix}=r\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&
+                    \cos\theta\end{pmatrix}$</td>
+                </tr>
+                <tr>
+                  <td>Horizontal shear</td>
+                  <td>$\begin{pmatrix}1&k\\0&1\end{pmatrix}$</td>
+                </tr>
+                <tr>
+                  <td>Vertical shear</td>
+                  <td>$\begin{pmatrix}1&0\\k&1\end{pmatrix}$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW (unused by the inline <geogebra> command tags above, kept for
+       markup/CSS consistency with other lessons) -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>
