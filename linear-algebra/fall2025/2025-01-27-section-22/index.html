@@ -69,16 +69,35 @@
             of $\vec{x}$ onto $L$, denoted $\text{proj}_L(\vec{x})$. If $\vec{w}$ is a nonzero vector parallel to
             $L$, then
             $$\text{proj}_L(\vec{x})=\left(\frac{\vec{x}\cdot\vec{w}}{\vec{w}\cdot\vec{w}}\right)\vec{w}.$$
-            Click each side of the triangle below to reveal what it represents:
-            <triangle type="right" angle="32" label-a="θ" label-c="">
-              <reveal slot="hypotenuse">\(\vec{x}\)</reveal>
-              <reveal slot="adjacent">\(\vec{x}^{\parallel}=\text{proj}_L(\vec{x})\)</reveal>
-              <reveal slot="opposite">\(\vec{x}^{\perp}\)</reveal>
-            </triangle>
-            The horizontal leg lies along $L$: it is $\vec{x}^{\parallel}$, the piece of $\vec{x}$ parallel to $L$
-            (the shadow $\vec{x}$ casts on $L$). The vertical leg is $\vec{x}^{\perp}$, the leftover piece
-            perpendicular to $L$ — and $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$ is exactly the right triangle's
-            two legs summing (as vectors) to the hypotenuse.
+            Click each part of the diagram below to reveal what it represents:
+            <div class="triangle-diagram">
+              <div class="triangle-diagram-figure" style="--triangle-aspect: 260 / 210;">
+                <svg viewBox="0 0 260 210" class="triangle-diagram-svg">
+                  <line x1="30.98" y1="196.18" x2="205.79" y2="139.38" class="triangle-axis"></line>
+                  <line x1="50" y1="190" x2="124.57" y2="83.5" class="triangle-outline"></line>
+                  <line x1="50" y1="190" x2="148.72" y2="157.92" class="triangle-outline"></line>
+                  <line x1="148.72" y1="157.92" x2="124.57" y2="83.5" class="triangle-outline"
+                    stroke-dasharray="4 3"></line>
+                  <polyline points="139.21,161.01 136.12,151.50 145.63,148.41" class="triangle-right-tick">
+                  </polyline>
+                </svg>
+                <span class="triangle-overlay triangle-point-label" style="left:15.4%; top:94.3%;">O</span>
+                <span class="triangle-overlay triangle-axis-label" style="left:83.5%; top:64.6%;">L</span>
+                <reveal class="triangle-overlay triangle-side-label" style="left:33.6%; top:65.1%;">
+                  \(\vec{x}\)
+                </reveal>
+                <reveal class="triangle-overlay triangle-side-label" style="left:38.2%; top:82.8%;">
+                  \(\vec{x}^{\parallel}=\text{proj}_L(\vec{x})\)
+                </reveal>
+                <reveal class="triangle-overlay triangle-side-label" style="left:52.6%; top:57.5%;">
+                  \(\vec{x}^{\perp}\)
+                </reveal>
+              </div>
+            </div>
+            The leg along $L$ is $\vec{x}^{\parallel}$, the piece of $\vec{x}$ parallel to $L$ (the shadow $\vec{x}$
+            casts on $L$). The other leg is $\vec{x}^{\perp}$, the leftover piece perpendicular to $L$ — and
+            $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$ is exactly the right triangle's two legs summing (as
+            vectors) to the hypotenuse.
             <br><br>
             In particular, if $\vec{u}=\begin{pmatrix}u_1\\u_2\end{pmatrix}$ is a <em>unit</em> vector parallel to
             $L$, this is a linear transformation with matrix
