@@ -111,11 +111,6 @@
           <div class="step-body">
             Find the matrix $P$ of the orthogonal projection onto the line $L$ spanned by
             $\vec{w}=\begin{pmatrix}3\\4\end{pmatrix}$.
-            <br><br>
-            <strong>Solution.</strong>
-            $$P=\frac{1}{w_1^2+w_2^2}\begin{pmatrix} w_1^2 & w_1w_2 \\ w_1w_2 & w_2^2 \end{pmatrix}
-            =\frac{1}{25}\begin{pmatrix} 9 & 12 \\ 12 & 16 \end{pmatrix}
-            =\begin{pmatrix} 0.36 & 0.48 \\ 0.48 & 0.64 \end{pmatrix}.$$
           </div>
         </div>
 
@@ -129,6 +124,41 @@
             Adding $\vec{x}=\vec{x}^{\parallel}+\vec{x}^{\perp}$ and this equation gives $\vec{x}+\text{ref}_L(\vec{x})
             =2\vec{x}^{\parallel}=2\text{proj}_L(\vec{x})$, so
             $$\text{ref}_L(\vec{x})=2\text{proj}_L(\vec{x})-\vec{x}=(2P-I_2)\vec{x}.$$
+            Click each part of the diagram below to reveal what it represents:
+            <div class="triangle-diagram">
+              <div class="triangle-diagram-figure" style="--triangle-aspect: 280 / 220;">
+                <svg viewBox="0 0 280 220" class="triangle-diagram-svg">
+                  <line x1="40.68" y1="155.18" x2="223.89" y2="106.09" class="triangle-axis"></line>
+                  <line x1="60.00" y1="150.00" x2="150.00" y2="42.75" class="triangle-outline"></line>
+                  <line x1="60.00" y1="150.00" x2="170.76" y2="120.32" class="triangle-outline"></line>
+                  <line x1="170.76" y1="120.32" x2="150.00" y2="42.75" class="triangle-outline"
+                    stroke-dasharray="4 3"></line>
+                  <line x1="60.00" y1="150.00" x2="191.56" y2="197.88" class="triangle-outline"></line>
+                  <line x1="170.76" y1="120.32" x2="191.56" y2="197.88" class="triangle-outline"
+                    stroke-dasharray="4 3"></line>
+                  <polyline points="161.10,122.91 158.52,113.25 168.18,110.66" class="triangle-right-tick">
+                  </polyline>
+                </svg>
+                <span class="triangle-overlay triangle-point-label" style="left:15.7%; top:74.6%;">O</span>
+                <span class="triangle-overlay triangle-axis-label" style="left:84.1%; top:46.8%;">L</span>
+                <reveal class="triangle-overlay triangle-side-label" style="left:37.5%; top:43.8%;">
+                  \(\vec{x}\)
+                </reveal>
+                <reveal class="triangle-overlay triangle-side-label" style="left:41.2%; top:61.4%;">
+                  \(\vec{x}^{\parallel}=\text{proj}_L(\vec{x})\)
+                </reveal>
+                <reveal class="triangle-overlay triangle-side-label" style="left:57.3%; top:37.1%;">
+                  \(\vec{x}^{\perp}\)
+                </reveal>
+                <reveal class="triangle-overlay triangle-side-label" style="left:44.9%; top:79.1%;">
+                  \(\text{ref}_L(\vec{x})\)
+                </reveal>
+              </div>
+            </div>
+            Notice how $\text{ref}_L(\vec{x})$ mirrors $\vec{x}$ on the other side of $L$: both are the same
+            distance from $L$, and the segment joining their tips is perpendicular to $L$ and bisected by it — right
+            at $\text{proj}_L(\vec{x})$.
+            <br><br>
             The matrix $S=2P-I_2$ is always of the form
             $$S=\begin{pmatrix} a & b \\ b & -a \end{pmatrix},\qquad a^2+b^2=1,$$
             and, conversely, any matrix of this form represents a reflection about a line.
