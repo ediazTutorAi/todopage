@@ -16,83 +16,6 @@
             {left:'$',  right:'$',  display:false}
           ],throwOnError:false});"></script>
 
-  <!-- GeoGebra (inline diagrams via command API, lazy-initialized per current step) -->
-  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
-  <script>
-    (function () {
-      var initialized = [];
-      var ASPECT_RATIO = 1.25;
-
-      function initGgbElement(el) {
-        if (initialized.indexOf(el) >= 0) return;
-        if (typeof GGBApplet === 'undefined') return;
-        initialized.push(el);
-
-        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-        var container = document.createElement('div');
-        container.id = 'geogebra-' + initialized.length;
-        container.style.width = '100%';
-        el.replaceWith(container);
-
-        var explicitWidth = el.getAttribute('width');
-        var explicitHeight = el.getAttribute('height');
-        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
-        var ggbApi = null;
-
-        function computeSize() {
-          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
-          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
-          return { w: w, h: h };
-        }
-
-        var size = computeSize();
-
-        try {
-          var applet = new GGBApplet({
-            id: container.id,
-            width: size.w,
-            height: size.h,
-            showToolBar: false,
-            showMenuBar: false,
-            showAlgebraInput: false,
-            showResetIcon: true,
-            appName: perspective === '3D' ? '3d' : 'classic',
-            appletOnLoad: function (api) {
-              ggbApi = api;
-              commands.forEach(function (cmd) { api.evalCommand(cmd); });
-            }
-          }, true);
-          applet.inject(container.id);
-
-          if (!explicitWidth) {
-            var resizeTimer = null;
-            window.addEventListener('resize', function () {
-              clearTimeout(resizeTimer);
-              resizeTimer = setTimeout(function () {
-                if (!ggbApi) return;
-                var s = computeSize();
-                ggbApi.setSize(s.w, s.h);
-              }, 150);
-            });
-          }
-        } catch (err) {
-          container.textContent = 'Diagram error: ' + err.message;
-          container.style.color = '#b00020';
-        }
-      }
-
-      window._initGgbInStep = function (stepEl) {
-        if (!stepEl) return;
-        stepEl.querySelectorAll('geogebra').forEach(initGgbElement);
-      };
-
-      window.addEventListener('load', function () {
-        var current = document.querySelector('.step.is-current') || document.querySelector('.step.is-visible');
-        if (current) window._initGgbInStep(current);
-      });
-    })();
-  </script>
-
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -116,9 +39,9 @@
           <div class="step-title">Example 1</div>
           <div class="step-subtitle">Six matrices acting on the letter L</div>
           <div class="step-body">
-            Recall the standard letter L: a foot at $\vec{v}_1=(1,0)$ and a back at $\vec{v}_2=(0,2)$. Drag the
-            sliders below to see how a $2\times2$ matrix $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ reshapes the
-            gray L into the blue one, $T(\vec{x})=\begin{pmatrix} a & b \\ c & d \end{pmatrix}\vec{x}$.
+            Recall the standard letter L: a foot at $\vec{v}_1=(1,0)$ and a back at $\vec{v}_2=(0,2)$. A
+            $2\times2$ matrix $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ reshapes the L via
+            $T(\vec{x})=\begin{pmatrix} a & b \\ c & d \end{pmatrix}\vec{x}$.
             <ul>
               <li>$a=2,\ b=0,\ c=0,\ d=2$ — <strong>scaling</strong> by 2</li>
               <li>$a=1,\ b=0,\ c=0,\ d=0$ — <strong>orthogonal projection</strong> onto the horizontal axis</li>
@@ -128,36 +51,6 @@
               <li>$a=1,\ b=-1,\ c=1,\ d=1$ — a <strong>rotation combined with a scaling</strong> (through $45^\circ$,
                 scaled by $\sqrt{2}$)</li>
             </ul>
-            <geogebra width="760" height="480" perspective="2D">
-a=Slider(-2,2,0.1)
-b=Slider(-2,2,0.1)
-c=Slider(-2,2,0.1)
-d=Slider(-2,2,0.1)
-SetValue(a,1)
-SetValue(b,0)
-SetValue(c,0)
-SetValue(d,1)
-SetCoords(a,-4.6,4.6)
-SetCoords(b,-4.6,4.1)
-SetCoords(c,-4.6,3.6)
-SetCoords(d,-4.6,3.1)
-Q2=(1,0)
-Q3=(0,2)
-origFoot=Segment((0,0),Q2)
-origBack=Segment((0,0),Q3)
-SetColor(origFoot,180,180,180)
-SetColor(origBack,180,180,180)
-SetLineThickness(origFoot,6)
-SetLineThickness(origBack,6)
-P2=(a,c)
-P3=(2b,2d)
-newFoot=Segment((0,0),P2)
-newBack=Segment((0,0),P3)
-SetColor(newFoot,30,80,200)
-SetColor(newBack,30,80,200)
-SetLineThickness(newFoot,8)
-SetLineThickness(newBack,8)
-</geogebra>
           </div>
         </div>
 
@@ -175,41 +68,6 @@ SetLineThickness(newBack,8)
             In particular, if $\vec{u}=\begin{pmatrix}u_1\\u_2\end{pmatrix}$ is a <em>unit</em> vector parallel to
             $L$, this is a linear transformation with matrix
             $$P=\begin{pmatrix} u_1^2 & u_1u_2 \\ u_1u_2 & u_2^2 \end{pmatrix}.$$
-            Drag $\vec{w}$ to change the line $L$ and drag $\vec{x}$ to see $\text{proj}_L(\vec{x})$ (orange) update
-            live — the red point previews the <em>reflection</em> $\text{ref}_L(\vec{x})$ from the next definition.
-            <geogebra width="760" height="480" perspective="2D">
-W=Point({3,4})
-SetPointStyle(W,0)
-SetColor(W,30,80,200)
-SetCaption(W,"w")
-ShowLabel(W,true)
-u=UnitVector(Vector((0,0),W))
-Lline=Line((0,0),W)
-SetColor(Lline,150,150,150)
-X=Point({2,-1})
-SetPointStyle(X,0)
-SetColor(X,0,140,0)
-SetCaption(X,"x")
-ShowLabel(X,true)
-xv=Vector((0,0),X)
-projv=(xv*u)*u
-P=(0,0)+projv
-refv=2*projv-xv
-R=(0,0)+refv
-segX=Segment((0,0),X)
-SetColor(segX,0,140,0)
-segP=Segment((0,0),P)
-SetColor(segP,230,140,0)
-SetLineThickness(segP,5)
-segR=Segment((0,0),R)
-SetColor(segR,190,30,30)
-SetLineThickness(segR,4)
-SetLineStyle(segR,1)
-SetCaption(P,"proj_L(x)")
-ShowLabel(P,true)
-SetCaption(R,"ref_L(x)")
-ShowLabel(R,true)
-</geogebra>
           </div>
         </div>
 
@@ -224,7 +82,6 @@ ShowLabel(R,true)
             $$P=\frac{1}{w_1^2+w_2^2}\begin{pmatrix} w_1^2 & w_1w_2 \\ w_1w_2 & w_2^2 \end{pmatrix}
             =\frac{1}{25}\begin{pmatrix} 9 & 12 \\ 12 & 16 \end{pmatrix}
             =\begin{pmatrix} 0.36 & 0.48 \\ 0.48 & 0.64 \end{pmatrix}.$$
-            Drag $\vec{w}$ in the applet above to $(3,4)$ to check this against the picture.
           </div>
         </div>
 
@@ -240,8 +97,7 @@ ShowLabel(R,true)
             $$\text{ref}_L(\vec{x})=2\text{proj}_L(\vec{x})-\vec{x}=(2P-I_2)\vec{x}.$$
             The matrix $S=2P-I_2$ is always of the form
             $$S=\begin{pmatrix} a & b \\ b & -a \end{pmatrix},\qquad a^2+b^2=1,$$
-            and, conversely, any matrix of this form represents a reflection about a line. The red point in the
-            applet above is $\text{ref}_L(\vec{x})$.
+            and, conversely, any matrix of this form represents a reflection about a line.
           </div>
         </div>
 
@@ -280,8 +136,6 @@ ShowLabel(R,true)
             <strong>Example 4.</strong> The matrix of a counterclockwise rotation through $\pi/6$ ($30^\circ$) is
             $$\begin{pmatrix} \cos(\pi/6) & -\sin(\pi/6) \\ \sin(\pi/6) & \cos(\pi/6) \end{pmatrix}
             =\frac{1}{2}\begin{pmatrix} \sqrt{3} & -1 \\ 1 & \sqrt{3} \end{pmatrix}.$$
-            Set $a=\cos\theta,\,b=-\sin\theta,\,c=\sin\theta,\,d=\cos\theta$ in the Example 1 applet to watch any
-            rotation in action.
           </div>
         </div>
 
@@ -307,8 +161,7 @@ ShowLabel(R,true)
             \end{pmatrix}$, and the matrix of a <strong>vertical shear</strong> is of the form $\begin{pmatrix} 1 & 0
             \\ k & 1 \end{pmatrix}$, where $k$ is an arbitrary constant.<br>
             Picture a deck of cards on a ruler: tilting the ruler while the cards stay vertical slides each card up
-            by an amount proportional to its horizontal distance from the pivot — that's a vertical shear. Try
-            $a=1,\,b=0,\,c=k,\,d=1$ in the Example 1 applet for a few values of $k$.
+            by an amount proportional to its horizontal distance from the pivot — that's a vertical shear.
           </div>
         </div>
 
@@ -371,8 +224,7 @@ ShowLabel(R,true)
     </section>
   </main>
 
-  <!-- FLOATING GEO GEBRA WINDOW (unused by the inline <geogebra> command tags above, kept for
-       markup/CSS consistency with other lessons) -->
+  <!-- FLOATING GEO GEBRA WINDOW -->
   <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
     <div class="ggb-float-header" id="ggb-float-drag">
       <span class="ggb-float-title">GeoGebra Applet</span>
