@@ -2,6 +2,18 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-02",
+    "title": "Evaluating Trigonometric Functions with Reference Angles",
+    "subtitle": "Lesson 06",
+    "description": "Reference angles and the reference angle theorem — estimating θ and θr, a step-by-step procedure for any angle, and evaluating trig functions and solving simple trig equations by quadrant sign.",
+    "tags": [
+      "Reference Angles"
+    ],
+    "url": "trigonometry/2026/2026-09-02-lesson-06-evaluating-trig-functions-using-reference-angles/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-08-31",
     "title": "Introduction to Trigonometric Identities",
     "subtitle": "Lesson 05",

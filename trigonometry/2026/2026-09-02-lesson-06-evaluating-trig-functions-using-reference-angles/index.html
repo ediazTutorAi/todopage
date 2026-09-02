@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Evaluating Trigonometric Functions with Reference Angles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Evaluating Trigonometric Functions with Reference Angles</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Reference Angles</div>
+          <div class="step-subtitle">Definitions</div>
+          <div class="step-body">
+            <p>
+              For an angle \(\theta\), in standard position, we often consider a triangle
+              with hypotenuse along the terminal side of \(\theta\) and base along the
+              \(x\)-axis. A right triangle formed this way is called a
+              <reveal>reference</reveal> triangle.
+            </p>
+            <p>
+              The acute angle formed by the hypotenuse and the \(x\)-axis is called the
+              <reveal>reference</reveal> angle, typically denoted \(\theta_r\) or \(\theta'\).
+            </p>
+            <angle-plane angle="150" label-a="θ" ray-label="terminal side"></angle-plane>
+            <p class="muted small">
+              The reference angle is always the small angle between the terminal side and
+              the nearest part of the \(x\)-axis — never measured from the \(y\)-axis —
+              and it's always positive and acute (between \(0°\) and \(90°\)).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition: Reference (Related) Angles</div>
+          <div class="step-subtitle">For a non-quadrantal angle \(\theta\)</div>
+          <div class="step-body">
+            <p>
+              For a non-quadrantal angle \(\theta\), in standard position, the
+              <reveal>reference</reveal> angle is the positive acute angle formed by the
+              terminal side of \(\theta\) and the \(x\)-axis.
+            </p>
+            <p class="muted small">
+              "Non-quadrantal" means \(\theta\) doesn't land exactly on an axis (not a
+              multiple of \(90°\)) — quadrantal angles (\(0°, 90°, 180°, 270°, \dots\)) have
+              no reference angle.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Estimate \(\theta\), then find its reference angle</div>
+          <div class="step-body">
+            <p>
+              For each angle \(\theta\) below, give a reasonable estimate for \(\theta\),
+              then determine the associated reference angle \(\theta_r\). (Estimates vary —
+              check that your \(\theta_r\) is consistent with your \(\theta\).)
+            </p>
+            <p><b>(a)</b></p>
+            <angle-plane angle="140" label-a="θ"></angle-plane>
+            <p>
+              \(\theta \approx \) <reveal>\(140°\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\theta_r \approx \) <reveal>\(40°\)</reveal>
+              <span class="muted small">(QII: \(180° - \theta\))</span>
+            </p>
+            <p><b>(b)</b></p>
+            <angle-plane angle="240" label-a="θ"></angle-plane>
+            <p>
+              \(\theta \approx \) <reveal>\(240°\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\theta_r \approx \) <reveal>\(60°\)</reveal>
+              <span class="muted small">(QIII: \(\theta - 180°\))</span>
+            </p>
+            <p><b>(c)</b></p>
+            <angle-plane angle="-40" label-a="θ"></angle-plane>
+            <p>
+              \(\theta \approx \) <reveal>\(-40°\)</reveal> &nbsp;&nbsp;&nbsp;
+              \(\theta_r \approx \) <reveal>\(40°\)</reveal>
+              <span class="muted small">(QIV: \(|\theta|\))</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Procedure: Finding the Reference Angle</div>
+          <div class="step-subtitle">For any non-quadrantal angle \(\theta\), in standard position</div>
+          <div class="step-body">
+            <p>
+              <b>Step 1:</b> If \(\theta > 360°\) or \(\theta < 0°\), find a coterminal
+              angle by adding or subtracting \(360°\) as many times as needed to get an
+              angle between \(0°\) and \(360°\).
+            </p>
+            <p>
+              <b>Step 2:</b> If the result from Step 1 is between \(0°\) and \(90°\), that
+              result is \(\theta_r\). If not, subtract \(180°\) and continue to Step 3.
+            </p>
+            <p>
+              <b>Step 3:</b> If the result from Step 2 is between \(0°\) and \(90°\), that
+              result is \(\theta_r\). If it's between \(-90°\) and \(0°\), \(\theta_r\) is
+              its absolute value. If neither, subtract \(180°\) and repeat this step.
+            </p>
+            <p class="muted small">
+              Take a moment to think about <i>why</i> this procedure works — each
+              subtraction of \(180°\) or \(360°\) lands on a coterminal or supplementary
+              angle, walking \(\theta\) back toward the nearest \(x\)-axis.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 2 (a)–(c)</div>
+          <div class="step-subtitle">Applying the procedure</div>
+          <div class="step-body">
+            <p>Given \(\theta\), find \(\theta_r\).</p>
+            <p><b>(a)</b> \(\theta = -32°\)</p>
+            <p><reveal>\(\theta\) is already between \(-90°\) and \(0°\), so \(\theta_r = |-32°| = 32°\)</reveal></p>
+            <p><b>(b)</b> \(\theta = 197°\)</p>
+            <p><reveal>\(197° - 180° = 17°\), between \(0°\) and \(90°\), so \(\theta_r = 17°\)</reveal></p>
+            <p><b>(c)</b> \(\theta = 288°\)</p>
+            <p><reveal>\(288° - 180° = 108°\); not between \(0°\) and \(90°\), so subtract again: \(108° - 180° = -72°\), so \(\theta_r = |-72°| = 72°\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 2 (d)–(f)</div>
+          <div class="step-subtitle">Applying the procedure</div>
+          <div class="step-body">
+            <p><b>(d)</b> \(\theta = 682°\)</p>
+            <p><reveal>\(682° - 360° = 322°\); \(322° - 180° = 142°\); \(142° - 180° = -38°\), so \(\theta_r = 38°\)</reveal></p>
+            <p><b>(e)</b> \(\theta = -730°\)</p>
+            <p><reveal>\(-730° + 360° = -370°\); \(-370° + 360° = -10°\), between \(-90°\) and \(0°\), so \(\theta_r = |-10°| = 10°\)</reveal></p>
+            <p><b>(f)</b> \(\theta = 900°\)</p>
+            <p><reveal>\(900° - 360° = 540°\); \(540° - 360° = 180°\) — a quadrantal angle, so \(\theta_r\) is undefined (DNE)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Theorem: Reference Angle Theorem</div>
+          <div class="step-subtitle">Same reference angle → same trig values, up to sign</div>
+          <div class="step-body">
+            <p>
+              Consider an angle \(\theta\) with reference angle \(\theta_r\), and its
+              "mirror" angles in the other three quadrants sharing that same
+              \(\theta_r\). Each terminal side meets the circle at a point with the same
+              coordinate magnitudes — only the signs of \(x\) and \(y\) change by quadrant:
+            </p>
+            <table>
+              <tr><td>QII: \((-a,\ b)\)</td><td>QI: \((a,\ b)\)</td></tr>
+              <tr><td>QIII: \((-a,\ -b)\)</td><td>QIV: \((a,\ -b)\)</td></tr>
+            </table>
+            <p>
+              <b>Theorem:</b> Let \(\theta\) be any non-quadrantal angle, in standard
+              position, with reference angle \(\theta_r\), and let \(f\) be any
+              trigonometric function. Then \(|f(\theta)| = f(\theta_r)\).
+            </p>
+            <p>
+              That is, <reveal>\(f(\theta)\)</reveal> is equal to
+              <reveal>\(f(\theta_r)\)</reveal>, except for a possible change in sign — that
+              sign is determined by the <reveal>quadrant</reveal> for the angle \(\theta\).
+            </p>
+            <p class="muted small">
+              This sign is exactly the ASTC pattern from Lesson 04: <b>A</b>ll positive in
+              QI, <b>S</b>ine (and csc) positive in QII, <b>T</b>angent (and cot) positive
+              in QIII, <b>C</b>osine (and sec) positive in QIV.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 3 (a)–(b)</div>
+          <div class="step-subtitle">Evaluate using reference angles</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(\cos(210°)\)</p>
+            <angle-plane angle="210" label-a="θ = 210°"></angle-plane>
+            <p>
+              <reveal>\(210° \in\) QIII, where cosine is negative. \(\theta_r = 210° - 180° = 30°\),
+              so \(\cos(210°) = -\cos(30°) = -\dfrac{\sqrt{3}}{2}\)</reveal>
+            </p>
+            <p><b>(b)</b> \(\sin(480°)\)</p>
+            <angle-plane angle="120" label-a="θ = 480°"></angle-plane>
+            <p class="muted small">\(480° - 360° = 120°\) coterminal, shown above.</p>
+            <p>
+              <reveal>\(480°\) is coterminal with \(120° \in\) QII, where sine is positive.
+              \(\theta_r = 180° - 120° = 60°\), so \(\sin(480°) = \sin(60°) = \dfrac{\sqrt{3}}{2}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 3 (c)–(d)</div>
+          <div class="step-subtitle">Evaluate using reference angles</div>
+          <div class="step-body">
+            <p><b>(c)</b> \(\tan(765°)\)</p>
+            <angle-plane angle="45" label-a="θ = 765°"></angle-plane>
+            <p class="muted small">\(765° - 720° = 45°\) coterminal, shown above.</p>
+            <p>
+              <reveal>\(765°\) is coterminal with \(45° \in\) QI, where tangent is positive.
+              \(\theta_r = 45°\), so \(\tan(765°) = \tan(45°) = 1\)</reveal>
+            </p>
+            <p><b>(d)</b> \(\csc(-225°)\)</p>
+            <angle-plane angle="135" label-a="θ = -225°"></angle-plane>
+            <p class="muted small">\(-225° + 360° = 135°\) coterminal, shown above.</p>
+            <p>
+              <reveal>\(-225°\) is coterminal with \(135° \in\) QII, where cosecant
+              (reciprocal of sine) is positive. \(\theta_r = 180° - 135° = 45°\), so
+              \(\csc(-225°) = \csc(45°) = \dfrac{1}{\sin(45°)} = \dfrac{2}{\sqrt{2}} = \sqrt{2}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Solve for \(\theta\), given \(0° \le \theta < 360°\)</div>
+          <div class="step-body">
+            <p>
+              Let \(\theta\) be an angle in standard position, with \(0° \le \theta < 360°\).
+              Find all possible \(\theta\)-values that satisfy each expression.
+            </p>
+            <p><b>(a)</b> \(\cos(\theta) = -\dfrac{\sqrt{3}}{2}\)</p>
+            <p>
+              <reveal>Negative, so \(\theta \in\) QII or QIII. Since \(\cos(30°) = \dfrac{\sqrt{3}}{2}\),
+              \(\theta_r = 30°\), giving \(\theta = 180° - 30° = 150°\) or \(\theta = 180° + 30° = 210°\)</reveal>
+            </p>
+            <p><b>(b)</b> \(\tan(\theta) = \sqrt{3}\)</p>
+            <p>
+              <reveal>Positive, so \(\theta \in\) QI or QIII. Since \(\tan(60°) = \sqrt{3}\),
+              \(\theta_r = 60°\), giving \(\theta = 60°\) or \(\theta = 180° + 60° = 240°\)</reveal>
+            </p>
+            <p><b>(c)</b> \(\csc(\theta) = \sqrt{2}\)</p>
+            <p>
+              <reveal>\(\sin(\theta) = \dfrac{1}{\sqrt{2}} = \dfrac{\sqrt{2}}{2} > 0\), so
+              \(\theta \in\) QI or QII. Since \(\sin(45°) = \dfrac{\sqrt{2}}{2}\), \(\theta_r = 45°\),
+              giving \(\theta = 45°\) or \(\theta = 180° - 45° = 135°\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Looking Ahead</div>
+          <div class="step-subtitle">From reference angles to the unit circle</div>
+          <div class="step-body">
+            <p>
+              Reference angles are a useful tool for evaluating trig functions by hand.
+              Soon we'll build an even more efficient resource: the <b>unit circle</b>,
+              which encodes these same reference-angle/quadrant-sign ideas directly as
+              \((\cos\theta, \sin\theta)\) coordinates around a circle of radius \(1\).
+            </p>
+            <p class="muted small">
+              Constructing the unit circle takes some practice up front, but pays off with
+              faster, more reliable evaluations than re-deriving a reference triangle each
+              time.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
