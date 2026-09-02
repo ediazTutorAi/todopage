@@ -741,8 +741,148 @@ function renderSignCircle(el) {
   el.replaceWith(container);
 }
 
+// <mirror-angles angle="30">
+// Lesson 06's Reference Angle Theorem, live: an angle theta_r in QI and its
+// three "mirror" angles in QII/QIII/QIV all share that same reference angle,
+// with terminal points differing only in the sign of x/y. Dragging is
+// clamped to QI (3 to 87 degrees) -- there's only one point to drag, since
+// the whole point of the diagram is that ONE point in QI drives the other
+// three, not four independently-draggable ones. Reuses
+// renderAxes/placeOverlay/toSvgPoint/buildArcSpan from <triangle>/
+// <angle-plane> above rather than duplicating them.
+
+const MIRROR_QUADRANTS = [
+  { key: 'QI', label: '(a, b)' },
+  { key: 'QII', label: '(-a, b)' },
+  { key: 'QIII', label: '(-a, -b)' },
+  { key: 'QIV', label: '(a, -b)' },
+];
+
+// The absolute standard-position angle of the ray landing in each quadrant
+// with the same reference angle thetaR (0-90, always the QI angle).
+function mirrorRayAngle(key, thetaR) {
+  switch (key) {
+    case 'QI': return thetaR;
+    case 'QII': return 180 - thetaR;
+    case 'QIII': return 180 + thetaR;
+    default: return 360 - thetaR; // QIV
+  }
+}
+
+// The absolute-degree span to sweep each quadrant's own reference-angle arc
+// over -- always toward whichever x-axis is nearest that ray.
+function mirrorRefSpan(key, rayDeg) {
+  switch (key) {
+    case 'QI': return [0, rayDeg];
+    case 'QII': return [rayDeg, 180];
+    case 'QIII': return [180, rayDeg];
+    default: return [rayDeg, 360]; // QIV
+  }
+}
+
+function renderMirrorAngles(el) {
+  const initialTheta = Math.max(3, Math.min(87, parseFloat(el.getAttribute('angle') || '30')));
+  const R = 80, AXIS_OVERSHOOT = 25, LABEL_MARGIN = 30;
+  const size = R + AXIS_OVERSHOOT + LABEL_MARGIN;
+  const W = size * 2, H = size * 2;
+  const O = { x: size, y: size };
+
+  const container = document.createElement('div');
+  container.className = 'triangle-diagram';
+
+  const figure = document.createElement('div');
+  figure.className = 'triangle-diagram-figure';
+  figure.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+  container.appendChild(figure);
+
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('class', 'triangle-diagram-svg');
+  figure.appendChild(svg);
+
+  renderAxes(svg, figure, {
+    xStart: { x: 0, y: O.y }, xEnd: { x: W, y: O.y },
+    yStart: { x: O.x, y: H }, yEnd: { x: O.x, y: 0 },
+  }, W, H);
+
+  const parts = MIRROR_QUADRANTS.map(q => {
+    const ray = document.createElementNS(SVG_NS, 'line');
+    ray.setAttribute('x1', O.x);
+    ray.setAttribute('y1', O.y);
+    ray.setAttribute('class', 'triangle-outline');
+    svg.appendChild(ray);
+
+    const refArc = document.createElementNS(SVG_NS, 'polyline');
+    refArc.setAttribute('class', 'triangle-arc is-reference');
+    svg.appendChild(refArc);
+
+    const isHandle = q.key === 'QI';
+    const dot = document.createElementNS(SVG_NS, 'circle');
+    dot.setAttribute('r', isHandle ? 9 : 3.5);
+    dot.setAttribute('class', isHandle ? 'triangle-point sign-circle-handle' : 'triangle-point');
+    svg.appendChild(dot);
+
+    const pointLabel = placeOverlay(figure, O, W, H, 'triangle-point-label', q.label);
+
+    return { key: q.key, ray, refArc, dot, pointLabel };
+  });
+
+  const readout = document.createElement('p');
+  readout.className = 'muted small';
+  container.appendChild(readout);
+
+  function update(thetaR) {
+    parts.forEach(part => {
+      const rayDeg = mirrorRayAngle(part.key, thetaR);
+      const rad = toRad(rayDeg);
+      const dir = { x: Math.cos(rad), y: -Math.sin(rad) };
+      const perp = { x: -dir.y, y: dir.x };
+      const tip = { x: O.x + R * dir.x, y: O.y + R * dir.y };
+
+      part.ray.setAttribute('x2', tip.x);
+      part.ray.setAttribute('y2', tip.y);
+      part.dot.setAttribute('cx', tip.x);
+      part.dot.setAttribute('cy', tip.y);
+
+      const [from, to] = mirrorRefSpan(part.key, rayDeg);
+      const arc = buildArcSpan(O, from, to, ANGLE_REF_ARC_R);
+      part.refArc.setAttribute('points', arc.points.map(p => `${p.x},${p.y}`).join(' '));
+
+      const labelAt = { x: tip.x + dir.x * 16 + perp.x * 11, y: tip.y + dir.y * 16 + perp.y * 11 };
+      part.pointLabel.style.left = `${(labelAt.x / W) * 100}%`;
+      part.pointLabel.style.top = `${(labelAt.y / H) * 100}%`;
+    });
+    readout.textContent = `θr ≈ ${Math.round(thetaR)}° in every quadrant — only the signs of a and b change.`;
+  }
+
+  function angleFromEvent(e) {
+    const p = toSvgPoint(svg, e.clientX, e.clientY);
+    const raw = (Math.atan2(-(p.y - O.y), p.x - O.x) * 180) / Math.PI;
+    return Math.max(3, Math.min(87, raw));
+  }
+
+  const handle = parts[0].dot; // QI -- the only draggable point
+  let dragging = false;
+  handle.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    handle.setPointerCapture(e.pointerId);
+    handle.classList.add('is-dragging');
+    update(angleFromEvent(e));
+    e.preventDefault();
+  });
+  handle.addEventListener('pointermove', (e) => { if (dragging) update(angleFromEvent(e)); });
+  ['pointerup', 'pointercancel'].forEach(evt => handle.addEventListener(evt, () => {
+    dragging = false;
+    handle.classList.remove('is-dragging');
+  }));
+
+  update(initialTheta);
+  el.replaceWith(container);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('triangle').forEach(renderTriangle);
   document.querySelectorAll('angle-plane').forEach(renderAnglePlane);
   document.querySelectorAll('sign-circle').forEach(renderSignCircle);
+  document.querySelectorAll('mirror-angles').forEach(renderMirrorAngles);
 });
