@@ -210,6 +210,12 @@ reveal:hover { background: #eef6fc; }
 .triangle-arc { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 .triangle-arc.is-negative { stroke: var(--negative); }
 .triangle-angle-label.is-negative { color: var(--negative); }
+/* <angle-plane drag>'s live reference-angle arc/label -- always the acute
+   positive companion, so never colored via the negative-sign convention;
+   dashed and drawn at a smaller radius so it never coincides on-screen with
+   the main rotation arc, even in QI where the two angles are numerically equal. */
+.triangle-arc.is-reference { stroke-dasharray: 3 3; }
+.triangle-angle-label.is-reference { color: var(--ink); font-weight: 600; }
 .triangle-axis-arrowhead { fill: var(--muted); }
 .triangle-axis-label { color: var(--muted); font-style: italic; font-size: 0.9em; }
 .triangle-point { fill: var(--accent); stroke: #fff; stroke-width: 1.5; }

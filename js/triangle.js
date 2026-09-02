@@ -365,11 +365,47 @@ function buildArc(O, deg, radius) {
   return { points, labelAt, isNegative: deg < 0 };
 }
 
+// Like buildArc, but swept between two arbitrary absolute angles rather than
+// always starting at 0° -- used for <angle-plane drag>'s reference-angle arc,
+// which runs from the ray to whichever x-axis it's nearest (not from the
+// positive x-axis the way the main rotation arc always is).
+function buildArcSpan(O, fromDeg, toDeg, radius) {
+  const points = [];
+  const steps = 24;
+  for (let i = 0; i <= steps; i++) {
+    const t = fromDeg + ((toDeg - fromDeg) * i) / steps;
+    const rad = toRad(t);
+    points.push({ x: O.x + radius * Math.cos(rad), y: O.y - radius * Math.sin(rad) });
+  }
+  const bisectorRad = toRad((fromDeg + toDeg) / 2);
+  const labelAt = {
+    x: O.x + (radius + 16) * Math.cos(bisectorRad),
+    y: O.y - (radius + 16) * Math.sin(bisectorRad),
+  };
+  return { points, labelAt };
+}
+
+// The reference-angle procedure from Lesson 06, as a pure function: normalize
+// to [0,360), then walk toward whichever axis is nearest. Returns null for a
+// quadrantal angle (no reference angle), otherwise { value, from, to } -- the
+// numeric reference angle plus the absolute-degree span to sweep an arc over.
+function referenceAngleDeg(deg) {
+  const n = ((deg % 360) + 360) % 360;
+  if (n === 0 || n === 90 || n === 180 || n === 270) return null;
+  if (n < 90) return { value: n, from: 0, to: n };
+  if (n < 180) return { value: 180 - n, from: n, to: 180 };
+  if (n < 270) return { value: n - 180, from: 180, to: n };
+  return { value: 360 - n, from: n, to: 360 };
+}
+
+const ANGLE_ARC_R = 34; // main rotation-arc radius, shared by layoutAnglePlane and <angle-plane drag>'s live redraw
+const ANGLE_REF_ARC_R = 22; // reference-angle arc radius -- drawn inside the main arc so the two never coincide on-screen
+
 function layoutAnglePlane(el) {
   const angleDeg = parseFloat(el.getAttribute('angle') || '0');
   const arcADeg = parseFloat(el.getAttribute('arc-a') || angleDeg);
   const arcBDeg = el.hasAttribute('arc-b') ? parseFloat(el.getAttribute('arc-b')) : null;
-  const R = 95, ARC_R = 34, AXIS_OVERSHOOT = 25;
+  const R = 95, ARC_R = ANGLE_ARC_R, AXIS_OVERSHOOT = 25;
   const size = R + AXIS_OVERSHOOT;
   const W = size * 2, H = size * 2;
   const O = { x: size, y: size };
@@ -403,7 +439,14 @@ function renderAnglePlane(el) {
   const layout = layoutAnglePlane(el);
   const { O, tip, pointLabel, pointLabelAt, arcA, labelA, arcB, labelB, rayLabel, rayLabelAt, axes, viewBox, W, H } = layout;
 
-  const buildMode = el.hasAttribute('build');
+  // `drag` (bare boolean): the ray endpoint becomes a draggable handle (same
+  // Pointer Events idiom as <sign-circle>) instead of a fixed diagram -- for
+  // Lesson 06 Example 1, where the point *is* the exercise ("estimate theta,
+  // then find its reference angle") rather than something to reveal an
+  // answer for. Mutually exclusive with `build`: there's nothing to stage
+  // toward once the diagram is already interactive.
+  const dragMode = el.hasAttribute('drag');
+  const buildMode = !dragMode && el.hasAttribute('build');
   const gated = []; // { el, stage } -- only consulted when buildMode is true
   const gate = (node, stage) => { if (buildMode) gated.push({ el: node, stage }); return node; };
 
@@ -422,13 +465,30 @@ function renderAnglePlane(el) {
 
   renderAxes(svg, figure, axes, W, H); // stage 0: the coordinate plane itself, always shown
 
-  [arcA, arcB].filter(Boolean).forEach(arcInfo => {
-    const arc = document.createElementNS(SVG_NS, 'polyline');
-    arc.setAttribute('points', arcInfo.points.map(p => `${p.x},${p.y}`).join(' '));
-    arc.setAttribute('class', `triangle-arc${arcInfo.isNegative ? ' is-negative' : ''}`);
-    svg.appendChild(arc);
-    gate(arc, 1);
-  });
+  const arcAPoly = document.createElementNS(SVG_NS, 'polyline');
+  arcAPoly.setAttribute('points', arcA.points.map(p => `${p.x},${p.y}`).join(' '));
+  arcAPoly.setAttribute('class', `triangle-arc${arcA.isNegative ? ' is-negative' : ''}`);
+  svg.appendChild(arcAPoly);
+  gate(arcAPoly, 1);
+
+  if (arcB) {
+    const arcBPoly = document.createElementNS(SVG_NS, 'polyline');
+    arcBPoly.setAttribute('points', arcB.points.map(p => `${p.x},${p.y}`).join(' '));
+    arcBPoly.setAttribute('class', `triangle-arc${arcB.isNegative ? ' is-negative' : ''}`);
+    svg.appendChild(arcBPoly);
+    gate(arcBPoly, 1);
+  }
+
+  // Reference-angle arc + label exist only in drag mode -- update() below
+  // keeps both live as the ray moves; buildArcSpan gives the arc no points
+  // yet, so nothing is visible until the first update() call at the bottom.
+  let refArcPoly = null, refLabelNode = null;
+  if (dragMode) {
+    refArcPoly = document.createElementNS(SVG_NS, 'polyline');
+    refArcPoly.setAttribute('class', 'triangle-arc is-reference');
+    svg.appendChild(refArcPoly);
+    refLabelNode = placeOverlay(figure, arcA.labelAt, W, H, 'triangle-angle-label is-reference', '');
+  }
 
   const ray = document.createElementNS(SVG_NS, 'line');
   ray.setAttribute('x1', O.x);
@@ -442,26 +502,109 @@ function renderAnglePlane(el) {
   const dot = document.createElementNS(SVG_NS, 'circle');
   dot.setAttribute('cx', tip.x);
   dot.setAttribute('cy', tip.y);
-  dot.setAttribute('r', 3.5);
-  dot.setAttribute('class', 'triangle-point');
+  dot.setAttribute('r', dragMode ? 9 : 3.5);
+  dot.setAttribute('class', dragMode ? 'triangle-point sign-circle-handle' : 'triangle-point');
   svg.appendChild(dot);
   gate(dot, 1);
 
+  let pointLabelNode = null;
   if (pointLabel) {
-    gate(placeOverlay(figure, pointLabelAt, W, H, 'triangle-point-label', pointLabel), 2);
+    pointLabelNode = gate(placeOverlay(figure, pointLabelAt, W, H, 'triangle-point-label', pointLabel), 2);
   }
 
-  if (labelA) {
+  // In drag mode, label-a is always shown (default "θ") as a live readout --
+  // its author-supplied text (if any) is unused as static content, since the
+  // whole point is that the number changes as the point is dragged.
+  let labelANode = null;
+  if (labelA && !dragMode) {
     const cls = `triangle-angle-label${arcA.isNegative ? ' is-negative' : ''}`;
-    gate(placeOverlay(figure, arcA.labelAt, W, H, cls, labelA), 1);
+    labelANode = gate(placeOverlay(figure, arcA.labelAt, W, H, cls, labelA), 1);
+  } else if (dragMode) {
+    labelANode = placeOverlay(figure, arcA.labelAt, W, H, 'triangle-angle-label', '');
   }
   if (labelB && arcB) {
     const cls = `triangle-angle-label${arcB.isNegative ? ' is-negative' : ''}`;
     gate(placeOverlay(figure, arcB.labelAt, W, H, cls, labelB), 1);
   }
-  if (rayLabel) gate(placeOverlay(figure, rayLabelAt, W, H, 'triangle-point-label', rayLabel), 2);
+  let rayLabelNode = null;
+  if (rayLabel) rayLabelNode = gate(placeOverlay(figure, rayLabelAt, W, H, 'triangle-point-label', rayLabel), 2);
 
   if (buildMode) attachBuildControl(container, gated);
+
+  if (dragMode) {
+    const thetaPrefix = labelA || 'θ';
+
+    function update(angleDeg) {
+      const rad = toRad(angleDeg);
+      const dir = { x: Math.cos(rad), y: -Math.sin(rad) };
+      const perp = { x: -dir.y, y: dir.x };
+      const newTip = { x: O.x + layout.R * dir.x, y: O.y + layout.R * dir.y };
+
+      ray.setAttribute('x2', newTip.x);
+      ray.setAttribute('y2', newTip.y);
+      dot.setAttribute('cx', newTip.x);
+      dot.setAttribute('cy', newTip.y);
+
+      const arc = buildArc(O, angleDeg, ANGLE_ARC_R);
+      arcAPoly.setAttribute('points', arc.points.map(p => `${p.x},${p.y}`).join(' '));
+      arcAPoly.classList.toggle('is-negative', arc.isNegative);
+
+      labelANode.textContent = `${thetaPrefix} ≈ ${Math.round(angleDeg)}°`;
+      labelANode.style.left = `${(arc.labelAt.x / W) * 100}%`;
+      labelANode.style.top = `${(arc.labelAt.y / H) * 100}%`;
+      labelANode.classList.toggle('is-negative', arc.isNegative);
+
+      const ref = referenceAngleDeg(angleDeg);
+      if (ref) {
+        const refArc = buildArcSpan(O, ref.from, ref.to, ANGLE_REF_ARC_R);
+        refArcPoly.setAttribute('points', refArc.points.map(p => `${p.x},${p.y}`).join(' '));
+        refLabelNode.textContent = `θr ≈ ${Math.round(ref.value)}°`;
+        refLabelNode.style.left = `${(refArc.labelAt.x / W) * 100}%`;
+        refLabelNode.style.top = `${(refArc.labelAt.y / H) * 100}%`;
+      } else {
+        // Quadrantal angle -- no reference arc to bisect, so park the label
+        // at a fixed spot near the origin rather than wherever the last real
+        // arc happened to place it (which could land right under theta's
+        // own label).
+        refArcPoly.setAttribute('points', '');
+        refLabelNode.textContent = 'θr: none (quadrantal)';
+        refLabelNode.style.left = `${((O.x + 42) / W) * 100}%`;
+        refLabelNode.style.top = `${((O.y + 20) / H) * 100}%`;
+      }
+
+      if (pointLabelNode) {
+        const at = { x: newTip.x + dir.x * 16 + perp.x * 11, y: newTip.y + dir.y * 16 + perp.y * 11 };
+        pointLabelNode.style.left = `${(at.x / W) * 100}%`;
+        pointLabelNode.style.top = `${(at.y / H) * 100}%`;
+      }
+      if (rayLabelNode) {
+        const at = { x: O.x + (layout.R + 14) * dir.x, y: O.y - (layout.R + 14) * Math.sin(rad) - 10 };
+        rayLabelNode.style.left = `${(at.x / W) * 100}%`;
+        rayLabelNode.style.top = `${(at.y / H) * 100}%`;
+      }
+    }
+
+    function angleFromEvent(e) {
+      const p = toSvgPoint(svg, e.clientX, e.clientY);
+      return (Math.atan2(-(p.y - O.y), p.x - O.x) * 180) / Math.PI;
+    }
+
+    let dragging = false;
+    dot.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      dot.setPointerCapture(e.pointerId);
+      dot.classList.add('is-dragging');
+      update(angleFromEvent(e));
+      e.preventDefault();
+    });
+    dot.addEventListener('pointermove', (e) => { if (dragging) update(angleFromEvent(e)); });
+    ['pointerup', 'pointercancel'].forEach(evt => dot.addEventListener(evt, () => {
+      dragging = false;
+      dot.classList.remove('is-dragging');
+    }));
+
+    update(parseFloat(el.getAttribute('angle') || '0'));
+  }
 
   el.replaceWith(container);
 }
