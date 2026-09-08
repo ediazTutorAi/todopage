@@ -2,6 +2,7 @@ import { loadGeoGebra, openFloat, closeFloat, toggleFloatExpand, enableGgbDrag }
 import { injectStepIcons, injectSlideDots, enterSlideMode, exitSlideMode, nextSlide, prevSlide, setCurrent } from './slideMode.js';
 import './reveal.js';
 import './triangle.js';
+import './curveDiagram.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // add ▶ buttons next to steps with data-ggb-id

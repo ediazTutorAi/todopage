@@ -3,18 +3,26 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 2326 — Calculus 3</title>
+  <title>MATH 2326: Calculus 3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\[', right:'\]', display:true},
-            {left:'\(', right:'\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -26,7 +34,7 @@
 <body>
 
   <header class="site-header">
-    <h1>Arc Length, curvature, and motion</h1>
+    <h1>Arc Length, Curvature, and Motion in Space</h1>
     <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
   </header>
 
@@ -35,80 +43,347 @@
       <div class="card" id="left-card">
 
         <!-- STEPS -->
+
+        <!-- ================= 3.2 CALCULUS OF VECTOR-VALUED FUNCTIONS ================= -->
+
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Theorem 3.4</div>
-          <div class="step-subtitle">Arc-Length Formulas</div>
+          <div class="step-title">3.2 Derivatives of Vector-Valued Functions</div>
+          <div class="step-subtitle">Definition &amp; Theorem 3.2</div>
           <div class="step-body">
-            The arc length of a curve $C$ defined by $\mathbf{r}(t)= f(t)\mathbf{i}+g(t)\mathbf{j}+h(t)\mathbf{k}$ for
-            $a \leq t \leq b$ is given by
-            $$L=\int_a^b \sqrt{f'(t)^2+g'(t)^2+h'(t)^2}dt=\int_a^b \|\mathbf{r}'(t)\|dt$$
+            Just like scalar functions, the derivative of a vector-valued function $\mathbf{r}(t)$ is defined as a
+            limit:
+            $$\mathbf{r}'(t) = \lim_{\Delta t \to 0} \frac{\mathbf{r}(t+\Delta t) - \mathbf{r}(t)}{\Delta t}$$
+            provided the limit exists. In practice we never compute this limit directly. <b>Theorem 3.2</b> says a
+            vector-valued function is differentiated component by component:
+            $$\mathbf{r}(t) = f(t)\mathbf{i}+g(t)\mathbf{j}+h(t)\mathbf{k}
+            \quad\Longrightarrow\quad
+            \mathbf{r}'(t) = f'(t)\mathbf{i}+g'(t)\mathbf{j}+h'(t)\mathbf{k}$$
+            provided $f$, $g$, $h$ are all differentiable at $t$.
+            <curve-diagram variant="derivative"></curve-diagram>
           </div>
         </div>
 
         <div class="step" data-step="2">
-          <div class="step-title">Arc Length Parameterization</div>
-          <div class="step-subtitle">Definition</div>
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Computing Derivatives</div>
           <div class="step-body">
-            A smooth curve $C$ with position vector $\mathbf{r}(t)$, $a \leq t \leq b$, is parameterized by arc length
-            if
-            $$\|\mathbf{r}'(t)\| = 1$$
-            Consider the example of a circle of radius 1 centered at the origin with two different parametrerizations.
+            <b>(a)</b> $\mathbf{r}(t) = (6t+8)\mathbf{i}+(4t^2+2t-3)\mathbf{j}$
+            <br>
+            $\mathbf{r}'(t) = $ <reveal>\(6\mathbf{i}+(8t+2)\mathbf{j}\)</reveal>
+            <br><br>
+            <b>(b)</b> $\mathbf{r}(t) = 3\cos t\,\mathbf{i}+4\sin t\,\mathbf{j}$
+            <br>
+            $\mathbf{r}'(t) = $ <reveal>\(-3\sin t\,\mathbf{i}+4\cos t\,\mathbf{j}\)</reveal>
+            <br><br>
+            <b>(c)</b> $\mathbf{r}(t) = e^t\sin t\,\mathbf{i}+e^t\cos t\,\mathbf{j}-e^{2t}\mathbf{k}$
+            <br>
+            $\mathbf{r}'(t) = $
+            <reveal>\(e^t(\sin t+\cos t)\mathbf{i}+e^t(\cos t-\sin t)\mathbf{j}-2e^{2t}\mathbf{k}\)</reveal>
+            <p class="muted small">(c) needs the product rule on each component. The vector rule is just Theorem
+              3.2 applied three times.</p>
           </div>
         </div>
 
         <div class="step" data-step="3">
-          <div class="step-title">Curvature</div>
-          <div class="step-subtitle">Definition</div>
+          <div class="step-title">Tangent Vectors</div>
+          <div class="step-subtitle">Definition &amp; the Unit Tangent Vector</div>
           <div class="step-body">
-            Let C be a smooth curve in the plane of in space given by $\mathbf{r}(s)$ where $s$ is the arc length
-            parameter. The curvature of C is given by
-            $$\kappa(s) = \|dT/ds\|$$ where $T(s)$ is the unit tangent vector defined as
-            $$T(s) = \frac{dr}{ds}$$
-            <br>
-            <br>
-            The curvature of a curve is a measure of how much the curve bends. Give examples.
+            Geometrically, $\mathbf{r}'(t_0)$ (when it's nonzero) is a vector <b>tangent</b> to the curve $C$ at
+            the point $\mathbf{r}(t_0)$, pointing in the direction of increasing $t$. A curve is called
+            <b>smooth</b> on an interval if $\mathbf{r}'(t)$ is continuous and never $\mathbf{0}$ there (no
+            corners, cusps, or momentary stops).
+            <br><br>
+            Normalizing the tangent vector gives the <b>principal unit tangent vector</b>:
+            $$\mathbf{T}(t) = \frac{\mathbf{r}'(t)}{\|\mathbf{r}'(t)\|}, \qquad \|\mathbf{r}'(t)\| \neq 0$$
+            $\mathbf{T}(t)$ always has length $1$ and points in the direction of travel. It will reappear
+            constantly for the rest of this lecture.
+            <curve-diagram variant="tangent"></curve-diagram>
           </div>
         </div>
 
         <div class="step" data-step="4">
-          <div class="step-title">Alternative Formula for Curvature</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Finding the Unit Tangent Vector</div>
           <div class="step-body">
-            If C is a smooth curve given by $\mathbf{r}(t)$, then the curvature of C is given by
-            $$\kappa(t) = \frac{\|T'(t)\|}{\|r'(t)\|}$$
-            If C is a three-dimensional curve, then the curvature of C is given by
-            $$\kappa(t) = \frac{\|r'(t) \times r''(t)\|}{\|r'(t)\|^3}$$
-            If C is a plane curve given by $y=f(x)$, then the curvature of C is given by
-            $$\kappa(x) = \frac{|f''(x)|}{(1+[f'(x)]^2)^{3/2}}$$
-
-            Give the idea of the proof of the first formula.
+            <b>(a)</b> $\mathbf{r}(t) = \cos t\,\mathbf{i}+\sin t\,\mathbf{j}$ (the unit circle)
+            <br>
+            $\mathbf{r}'(t) = -\sin t\,\mathbf{i}+\cos t\,\mathbf{j}$, and $\|\mathbf{r}'(t)\| = $
+            <reveal>\(\sqrt{\sin^2t+\cos^2t}=1\)</reveal>, so $\mathbf{T}(t) = $
+            <reveal>\(-\sin t\,\mathbf{i}+\cos t\,\mathbf{j}\)</reveal>
+            <p class="muted small">Here $\mathbf{T}(t)=\mathbf{r}'(t)$ already: no rescaling needed, since the
+              unit circle happens to already be traced at unit speed.</p>
+            <b>(b)</b> $\mathbf{u}(t) = (3t^2+2t)\mathbf{i}+(2-4t^3)\mathbf{j}+(6t+5)\mathbf{k}$ at a general $t$:
+            <reveal>\(\dfrac{(6t+2)\mathbf{i}-12t^2\mathbf{j}+6\mathbf{k}}{\sqrt{36t^4+9t^2+6t+10}}\)</reveal>
           </div>
         </div>
 
         <div class="step" data-step="5">
-          <div class="step-title">The normal and binormal vectors</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 3.3: Properties of the Derivative</div>
+          <div class="step-subtitle">Rules for differentiating combinations of vector-valued functions</div>
           <div class="step-body">
-            Let C be a three-dimensional smooth curve represented by $\mathbf{r}(t)$ over an open interval I. If
-            $\vec{T}'(t) \neq 0$, then the principal unit normal vector at t is defined to be
-            $$N(t) = \frac{T'(t)}{\|T'(t)\|}$$
-            The binormal vector at t is defined as
-            $$B(t) = T(t) \times N(t)$$
-            where $T(t)$ is the unit tangent vector.
+            For differentiable $\mathbf{r}(t)$, $\mathbf{u}(t)$, and differentiable scalar function $f(t)$:
+            <ul>
+              <li><b>Scalar multiple:</b> $\dfrac{d}{dt}\big[c\,\mathbf{r}(t)\big] = c\,\mathbf{r}'(t)$</li>
+              <li><b>Sum/difference:</b> $\dfrac{d}{dt}\big[\mathbf{r}(t)\pm\mathbf{u}(t)\big] =
+                \mathbf{r}'(t)\pm\mathbf{u}'(t)$</li>
+              <li><b>Scalar-function product:</b> $\dfrac{d}{dt}\big[f(t)\mathbf{u}(t)\big] =
+                f'(t)\mathbf{u}(t)+f(t)\mathbf{u}'(t)$</li>
+              <li><b>Dot product:</b> $\dfrac{d}{dt}\big[\mathbf{r}(t)\cdot\mathbf{u}(t)\big] =
+                \mathbf{r}'(t)\cdot\mathbf{u}(t)+\mathbf{r}(t)\cdot\mathbf{u}'(t)$</li>
+              <li><b>Cross product:</b> $\dfrac{d}{dt}\big[\mathbf{r}(t)\times\mathbf{u}(t)\big] =
+                \mathbf{r}'(t)\times\mathbf{u}(t)+\mathbf{r}(t)\times\mathbf{u}'(t)$</li>
+              <li><b>Chain rule:</b> $\dfrac{d}{dt}\big[\mathbf{r}(f(t))\big] = \mathbf{r}'(f(t))\cdot f'(t)$</li>
+            </ul>
+            <p class="muted small">All exactly mirror the scalar product/quotient/chain rules. Only the dot and
+              cross product rules are genuinely new, and even those keep the order of $\mathbf{r}$ and
+              $\mathbf{u}$ fixed (crucial for cross products, which don't commute).</p>
           </div>
         </div>
 
         <div class="step" data-step="6">
-          <div class="step-title">Motion in Space</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">A Useful Corollary</div>
           <div class="step-body">
-            For motion in space we just need to remember that the velocity vector is derivative of the position vector
-            and the acceleration vector is the derivative of the velocity vector. And we use Calculus over vector-valued
-            functions as we had consider in previous sections.
+            If $\|\mathbf{r}(t)\|$ is constant, then
+            $$\mathbf{r}(t)\cdot\mathbf{r}'(t) = 0$$
+            <curve-diagram variant="corollary"></curve-diagram>
           </div>
         </div>
 
+        <div class="step" data-step="7">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Applying the Properties</div>
+          <div class="step-body">
+            Let $\mathbf{r}(t) = (6t+8)\mathbf{i}+(4t^2+2t-3)\mathbf{j}+5t\,\mathbf{k}$ and $\mathbf{u}(t) =
+            (t^2-3)\mathbf{i}+(2t+4)\mathbf{j}+(t^3-3t)\mathbf{k}$.
+            <br><br>
+            $\dfrac{d}{dt}\big[\mathbf{r}(t)\cdot\mathbf{u}(t)\big] = $
+            <reveal>\(20t^3+42t^2+26t-16\)</reveal>
+            <br><br>
+            $\dfrac{d}{dt}\big[\mathbf{u}(t)\times\mathbf{u}'(t)\big] = $
+            <reveal>\((12t^2+24t)\mathbf{i}+(12t-4t^3)\mathbf{j}-(4t+8)\mathbf{k}\)</reveal>
+            <p class="muted small">Both follow immediately from Theorem 3.3. No need to expand the dot/cross
+              product first and differentiate term by term, though that would also work.</p>
+          </div>
+        </div>
 
+        <div class="step" data-step="8">
+          <div class="step-title">Integrals of Vector-Valued Functions</div>
+          <div class="step-subtitle">Definition &amp; Example</div>
+          <div class="step-body">
+            Integration is likewise componentwise:
+            $$\int \big[f(t)\mathbf{i}+g(t)\mathbf{j}+h(t)\mathbf{k}\big]\,dt =
+            \Big[\int f(t)\,dt\Big]\mathbf{i}+\Big[\int g(t)\,dt\Big]\mathbf{j}+\Big[\int h(t)\,dt\Big]\mathbf{k}$$
+            (add a constant <i>vector</i> $\mathbf{C}$ for an indefinite integral), and definite integrals work the
+            same way with limits of integration on each component.
+            <br><br>
+            $\displaystyle\int\Big[(3t^2+2t)\mathbf{i}+(3t-6)\mathbf{j}+(6t^3+5t^2-4)\mathbf{k}\Big]dt = $
+            <reveal>\(\left(t^3+t^2\right)\mathbf{i}+\left(\tfrac{3t^2}{2}-6t\right)\mathbf{j}+
+              \left(\tfrac{3t^4}{2}+\tfrac{5t^3}{3}-4t\right)\mathbf{k}+\mathbf{C}\)</reveal>
+            <br><br>
+            $\displaystyle\int_0^{\pi/3}\Big[\sin 2t\,\mathbf{i}+\tan t\,\mathbf{j}+e^{-2t}\mathbf{k}\Big]dt = $
+            <reveal>\(\tfrac34\mathbf{i}+(\ln 2)\mathbf{j}+\left(\tfrac12-\tfrac12e^{-2\pi/3}\right)\mathbf{k}\)</reveal>
+          </div>
+        </div>
+
+        <!-- ================= 3.3 ARC LENGTH AND CURVATURE ================= -->
+
+        <div class="step" data-step="9">
+          <div class="step-title">3.3 Arc Length</div>
+          <div class="step-subtitle">Theorem 3.4 &amp; Example</div>
+          <div class="step-body">
+            The arc length of a curve $C$ defined by $\mathbf{r}(t)= f(t)\mathbf{i}+g(t)\mathbf{j}+h(t)\mathbf{k}$
+            for $a \leq t \leq b$ is
+            $$L=\int_a^b \sqrt{f'(t)^2+g'(t)^2+h'(t)^2}\,dt=\int_a^b \|\mathbf{r}'(t)\|\,dt$$
+            This is exactly the "speed integrated over time" idea from single-variable calculus, now in 3D.
+            <curve-diagram variant="arclength"></curve-diagram>
+            <b>Example:</b> $\mathbf{r}(t) = (3t-2)\mathbf{i}+(4t+5)\mathbf{j}$, $1\le t\le 5$. Here
+            $\mathbf{r}'(t)=3\mathbf{i}+4\mathbf{j}$, a <i>constant</i> velocity of magnitude
+            <reveal>\(\|\mathbf{r}'(t)\|=5\)</reveal>, so
+            $$L=\int_1^5 5\,dt$$
+            $L = $ <reveal>\(20\)</reveal>
+            <p class="muted small">A straight segment traveled at constant speed $5$ for $4$ units of time, so of
+              course the length is $20$. The formula is only interesting once the integrand isn't constant.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Arc Length of a Space Curve</div>
+          <div class="step-body">
+            $\mathbf{r}(t) = \langle t\cos t,\ t\sin t,\ 2t\rangle$, $0\le t\le 2\pi$ (a "conical spiral": it
+            winds around the $z$-axis while its horizontal radius $t$ grows).
+            <br><br>
+            $\mathbf{r}'(t) = \langle \cos t - t\sin t,\ \sin t+t\cos t,\ 2\rangle$, and expanding
+            $\|\mathbf{r}'(t)\|^2$ the cross terms cancel (Pythagorean identity), leaving
+            $$\|\mathbf{r}'(t)\| = \sqrt{t^2+5}$$
+            $$L = \int_0^{2\pi}\sqrt{t^2+5}\,dt$$
+            $L \approx$ <reveal>\(25.343\)</reveal>
+            <p class="muted small">This integral needs a trig-substitution antiderivative (or a numeric estimate).
+              Most arc-length integrals in 3D aren't solvable in closed elementary form by hand, which is exactly
+              why the <i>setup</i> is the skill being tested, not always the antiderivative.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">Arc-Length Parameterization</div>
+          <div class="step-subtitle">Theorem 3.5 &amp; Example</div>
+          <div class="step-body">
+            The <b>arc-length function</b> measures distance traveled along $C$ starting at $t=a$:
+            $$s(t) = \int_a^t \|\mathbf{r}'(u)\|\,du, \qquad \frac{ds}{dt}=\|\mathbf{r}'(t)\|>0$$
+            A curve is <b>parameterized by arc length</b> when $\|\mathbf{r}'(t)\|=1$ for all $t$. Then $t$
+            literally <i>is</i> distance traveled from the start.
+            <curve-diagram variant="parameterization"></curve-diagram>
+            <b>Example:</b> $\mathbf{r}(t) = 4\cos t\,\mathbf{i}+4\sin t\,\mathbf{j}$, $t\ge0$ (circle, radius
+            $4$). Since $\|\mathbf{r}'(t)\|=4$ is constant, $s(t)=4t$, so $t=s/4$. Substituting back:
+            $\mathbf{r}(s) = $ <reveal>\(4\cos(s/4)\,\mathbf{i}+4\sin(s/4)\,\mathbf{j}\)</reveal>, for $s\ge0$
+            <p class="muted small">Same circle, same shape, just re-labeled so that plugging in $s=6$, say, gives
+              the point exactly $6$ units of arc <i>away</i> from the start, instead of "wherever you are after
+              $6$ seconds."</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="12">
+          <div class="step-title">Curvature</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            Let $C$ be a smooth curve with position vector $\mathbf{r}(s)$, parameterized by arc length $s$. The
+            <b>curvature</b> of $C$ is the rate the unit tangent vector turns per unit of distance traveled:
+            $$\kappa = \left\|\frac{d\mathbf{T}}{ds}\right\| = \|\mathbf{T}'(s)\|$$
+            Intuitively: how sharply the curve bends. A straight line has $\kappa=0$ everywhere ($\mathbf{T}$
+            never turns); a circle of radius $r$ has the <i>constant</i> curvature $\kappa = 1/r$: a tighter
+            circle (small $r$) bends more sharply (large $\kappa$).
+            <curve-diagram variant="curvature"></curve-diagram>
+            <p class="muted small">Almost nothing is naturally parameterized by arc length, so the definition
+              above is rarely used directly for computation. That's what the next slide fixes.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="13">
+          <div class="step-title">Theorem 3.6: Alternative Formulas for Curvature</div>
+          <div class="step-subtitle">Computing $\kappa$ from an ordinary parameter $t$</div>
+          <div class="step-body">
+            If $C$ is a smooth curve given by $\mathbf{r}(t)$ (any parameter, not necessarily arc length):
+            $$\kappa(t) = \frac{\|\mathbf{T}'(t)\|}{\|\mathbf{r}'(t)\|}$$
+            If $C$ is a curve in space, an equivalent formula avoids finding $\mathbf{T}(t)$ at all:
+            $$\kappa(t) = \frac{\|\mathbf{r}'(t) \times \mathbf{r}''(t)\|}{\|\mathbf{r}'(t)\|^3}$$
+            If $C$ is a plane curve given explicitly by $y=f(x)$:
+            $$\kappa(x) = \frac{|f''(x)|}{\big(1+[f'(x)]^2\big)^{3/2}}$$
+            <p class="muted small">Same quantity, three formulas: pick whichever fits how the curve is given to
+              you. The cross-product version is usually fastest for a 3D $\mathbf{r}(t)$.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="14">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Curvature of a Helix</div>
+          <div class="step-body">
+            $\mathbf{r}(t) = 4\cos t\,\mathbf{i}+4\sin t\,\mathbf{j}+3t\,\mathbf{k}$.
+            <br><br>
+            $\mathbf{r}'(t) = -4\sin t\,\mathbf{i}+4\cos t\,\mathbf{j}+3\mathbf{k}$, so $\|\mathbf{r}'(t)\|=5$
+            (constant, since this helix is traced at constant speed).
+            <br>
+            $\mathbf{r}''(t) = -4\cos t\,\mathbf{i}-4\sin t\,\mathbf{j}$, and
+            $\mathbf{r}'(t)\times\mathbf{r}''(t) = 12\sin t\,\mathbf{i}-12\cos t\,\mathbf{j}+16\mathbf{k}$, giving
+            $\|\mathbf{r}'\times\mathbf{r}''\| = 20$. Therefore
+            $$\kappa(t) = \frac{20}{5^3}$$
+            so $\kappa(t) = $ <reveal>\(\dfrac{4}{25}\)</reveal>
+            <p class="muted small"><b>Notice $t$ dropped out</b>: this helix bends by exactly the same amount at
+              every point, just like a circle does, since it's a circle "stretched" upward at a constant rate.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="15">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Curvature of a Plane Curve</div>
+          <div class="step-body">
+            $y=f(x)=x^2$. Then $f'(x)=2x$ and $f''(x)=2$, so
+            $$\kappa(x) = \frac{|2|}{(1+4x^2)^{3/2}} = \frac{2}{(1+4x^2)^{3/2}}$$
+            At the vertex, $\kappa(0) = $ <reveal>\(2\)</reveal>, the sharpest bend on the whole parabola.
+            As $|x|\to\infty$, $\kappa(x)\to$ <reveal>\(0\)</reveal>: far from the vertex, the parabola flattens
+            out and looks almost like a straight line.
+          </div>
+        </div>
+
+        <div class="step" data-step="16" data-ggb-id="hjcywzke">
+          <div class="step-title">The Normal and Binormal Vectors</div>
+          <div class="step-subtitle">Definitions &amp; the Osculating Circle</div>
+          <div class="step-body">
+            If $\mathbf{T}'(t)\neq\mathbf{0}$, the <b>principal unit normal vector</b> is
+            $$\mathbf{N}(t) = \frac{\mathbf{T}'(t)}{\|\mathbf{T}'(t)\|}$$
+            It points in the direction the curve is turning, and (since $\|\mathbf{T}(t)\|=1$ is constant) the
+            corollary from Step 6 guarantees $\mathbf{N}(t)\perp\mathbf{T}(t)$ automatically. The
+            <b>binormal vector</b>
+            $$\mathbf{B}(t) = \mathbf{T}(t)\times\mathbf{N}(t)$$
+            is perpendicular to both, completing a moving 3D frame $\{\mathbf{T},\mathbf{N},\mathbf{B}\}$ that
+            travels along the curve (the <b>TNB frame</b>, or Frenet frame).
+            <br><br>
+            The <b>osculating circle</b> at a point $P$ is the circle in the plane of $\mathbf{T}$ and
+            $\mathbf{N}$, on the concave side of the curve, tangent to it at $P$, with radius $1/\kappa$: the
+            circle that best approximates the curve right at $P$.
+            <curve-diagram variant="tnb"></curve-diagram>
+          </div>
+        </div>
+
+        <div class="step" data-step="17">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">Finding N(t) and B(t)</div>
+          <div class="step-body">
+            $\mathbf{r}(t) = (6t+2)\mathbf{i}+5t^2\mathbf{j}-8t\,\mathbf{k}$.
+            <br><br>
+            $\mathbf{r}'(t)=6\mathbf{i}+10t\,\mathbf{j}-8\mathbf{k}$, $\|\mathbf{r}'(t)\|=10\sqrt{t^2+1}$, so
+            $\mathbf{T}(t) = $ <reveal>\(\dfrac{3\mathbf{i}+5t\,\mathbf{j}-4\mathbf{k}}{5\sqrt{t^2+1}}\)</reveal>
+            <br><br>
+            Differentiating $\mathbf{T}(t)$ and normalizing (the algebra is routine but tedious: quotient rule,
+            then simplify):
+            <br>
+            $\mathbf{N}(t) = $ <reveal>\(\dfrac{-3t\,\mathbf{i}-5\mathbf{j}-4t\,\mathbf{k}}{5\sqrt{t^2+1}}\)</reveal>
+            <br>
+            $\mathbf{B}(t) = \mathbf{T}(t)\times\mathbf{N}(t) = $
+            <reveal>\(\dfrac45\mathbf{i}+\dfrac35\mathbf{k}\)</reveal>
+            <p class="muted small">$\mathbf{B}(t)$ came out <i>constant</i>: this curve always bends within
+              parallel planes, all sharing the same normal direction $\mathbf{B}$.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="18">
+          <div class="step-title">Example</div>
+          <div class="step-subtitle">The Osculating Circle</div>
+          <div class="step-body">
+            $y=x^3-3x+1$ at $x=1$. Here $y'=3x^2-3$ and $y''=6x$, so at $x=1$: $y'(1)=0$ and $y''(1)=6$, giving
+            $$\kappa(1) = \frac{|6|}{(1+0)^{3/2}}$$
+            so $\kappa(1) = $ <reveal>\(6\)</reveal>, giving radius $R = \dfrac1\kappa = $
+            <reveal>\(\dfrac16\)</reveal>.
+            <br><br>
+            The point on the curve is $(1, f(1)) = (1,-1)$. Since $y'(1)=0$, the curve is momentarily horizontal
+            there, so the osculating circle's center sits directly above (the curve is concave up at $x=1$,
+            since $y''(1)>0$), a distance $R$ away: center $=$ <reveal>\(\left(1,\ -\dfrac56\right)\)</reveal>,
+            giving
+            $(x-1)^2+\left(y+\dfrac56\right)^2 = $ <reveal>\(\dfrac{1}{36}\)</reveal>
+          </div>
+        </div>
+
+        <!-- ================= 3.4 MOTION IN SPACE ================= -->
+
+        <div class="step" data-step="19">
+          <div class="step-title">3.4 Motion in Space</div>
+          <div class="step-subtitle">Velocity, Acceleration, and Speed</div>
+          <div class="step-body">
+            If $\mathbf{r}(t)$ is the position of an object at time $t$, then exactly as in one-variable motion:
+            <ul>
+              <li><b>Velocity:</b> $\mathbf{v}(t) = \mathbf{r}'(t)$</li>
+              <li><b>Acceleration:</b> $\mathbf{a}(t) = \mathbf{v}'(t) = \mathbf{r}''(t)$</li>
+              <li><b>Speed</b> (a <i>scalar</i>, not a vector): $\|\mathbf{v}(t)\| = \|\mathbf{r}'(t)\| =
+                \dfrac{ds}{dt}$</li>
+            </ul>
+            Nothing new here mathematically. This is just Section 3.2's derivative machinery, applied to a
+            position vector and given physical names.
+            <curve-diagram variant="motion"></curve-diagram>
+          </div>
+        </div>
+
+        <div class="step" data-step="20">
+          <div class="step-title">Projectile Motion</div>
+        </div>
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
