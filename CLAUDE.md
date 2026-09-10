@@ -6,6 +6,18 @@ lesson folders containing a self-contained `index.html`. A hub page (`index.html
 repo root + `js/hub.js`) lists every lecture from `data/lectures.json`
 (course/semester/date/title/subtitle/description/tags/url) with search/filter/favorites.
 
+**`data/lectures.json` is the single source of truth for lesson discovery** — both the
+hub page above *and* the editor-app's lesson list (`editor-app/lib/lectures.js`,
+`listLectures()`) read from it exclusively; neither scans course folders on disk. A
+lesson folder with a real `index.html` but no entry in `data/lectures.json` is invisible
+to both the hub and the editor-app, even though the page itself works fine if you link to
+it directly. **Whenever a new lesson folder is created by hand** (not through the
+editor-app's "new lecture" flow, which writes this entry itself), add a matching object to
+`data/lectures.json` in the same pass — copy the shape of a neighboring entry for that
+course. This bit a hand-authored `linear-algebra` lesson on 2026-09-10: the folder and
+`index.html` existed and rendered correctly, but with no `lectures.json` entry it simply
+didn't show up in the editor-app, which looked like an app bug but wasn't.
+
 ## Runtime architecture
 
 - Each lesson is a step/slide deck: `.step` divs (`data-step`, optional
@@ -49,7 +61,7 @@ separate "reveal all" button, not sequential Next/Prev), after live discussion.
 
 Click-to-toggle hidden content (`js/reveal.js`: click toggles `.is-revealed`; wraps
 content in `.reveal-content` on `DOMContentLoaded` so KaTeX's later `load`-time render
-pass still finds the math text). One primitive, four renderings:
+pass still finds the math text). One primitive, five renderings:
 
 1. **Inline word** — vocabulary blanks in a sentence (e.g. "the side opposite is the
    `<reveal>opposite</reveal>` side"). Renders as a dashed underline; click swaps it for
@@ -61,10 +73,26 @@ pass still finds the math text). One primitive, four renderings:
    length, an angle measure, or a side name (hyp/opp/adj).
 4. **Grid cell** — same primitive inside a `<table>` cell, per-cell granularity (not
    per-row), so the instructor can pause on trickier values mid-table.
+5. **Block solution** — `<reveal class="solution">`, added 2026-09-10 for
+   linear-algebra/calculus lessons whose worked examples are a full paragraph (several
+   sentences, display matrices) rather than a short blank. Renders as a left-aligned card
+   with a "▸ Click to reveal solution" prompt instead of a dashed underline (`css/steps.css`,
+   `reveal.solution` rules). **Must be opted into via the `solution` class, never inferred
+   structurally** (e.g. "reveal is the only element child of its `<p>`") — a short inline
+   reveal like the SOH-CAH-TOA one in the trig lessons is *also* the sole element child of
+   its `<p>`, so a structural selector would wrongly block-ify it too. Use this class only
+   when the reveal content is genuinely paragraph-length; keep short-answer reveals on the
+   plain inline form.
 
 **Deliberately independent of** `data-reveal`/`reveal-inline` in `js/slideMode.js` — that
 older system is sequential and Next/Prev-button-driven, used elsewhere in the codebase.
 Do not conflate the two.
+
+**List styling**: `css/steps.css` gives `.step-body ul/ol/li` real indent, inter-item
+spacing, and an accent-colored `::marker` (added 2026-09-10 — plain `<ul>` inside a
+step used to render as browser-default bullets with no spacing, which read as an
+undifferentiated blob next to dense math). No action needed in lesson HTML — just author
+normal `<ul><li>` and it picks this up automatically.
 
 ### `<triangle type="right"|"isosceles"|"equilateral">`
 
