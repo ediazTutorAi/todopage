@@ -1,0 +1,142 @@
+{
+  "course": "Linear Algebra",
+  "semester": "Fall 2025",
+  "date": "2025-02-03",
+  "title": "Matrix Products",
+  "subtitle": "",
+  "description": "",
+  "tags": [
+    "matrix products"
+  ],
+  "steps": [
+    {
+      "tag": "definition",
+      "label": "Definition 2.3.1",
+      "subtitle": "Matrix multiplication",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "a. Let B be an $n \\times p$ matrix and A be an $q \\times m$ matrix. The product $BA$ is defined if and only\n            if $p = q$.<br>\n            b. If B is $n \\times p$ and A is $p \\times m$, then the product $BA$ is defined as the matrix of the linear\n            transformation $T(\\vec{x}) = B(A\\vec{x})$. This means that $T(\\vec{x}) = B(A\\vec{x})=(B A)\\vec{x}$ for all\n            $\\vec{x}$ in $\\mathbb{R}^m$. The product $BA$ is an $n \\times m$ matrix."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.2",
+      "subtitle": "The columns of the matrix product",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let B be an $n \\times p$ matrix and A be an $p \\times m$ matrix with columns $\\vec{v}_1, \\vec{v}_2, \\ldots,\n            \\vec{v}_m$. Then, the product $BA$ is given by:\n            $$BA = \\begin{pmatrix} B\\vec{v}_1 & B\\vec{v}_2 & \\cdots & B\\vec{v}_m \\end{pmatrix}=\\begin{pmatrix}\n            B\\vec{v}_1 & B\\vec{v}_2 & \\cdots & B\\vec{v}_m \\end{pmatrix}$$. To find the product $BA$, we multiply B by\n            each column of A and combine the resulting vectors."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.3",
+      "subtitle": "Matrix multiplication is non-commutative",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "$AB \\neq BA$, in general. However, at times it does happen that $$AB=BA$$; then we say that $A$ and $B$\n            commute."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.4",
+      "subtitle": "The entries of the matrix product",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $B$ be an $n \\times p$ matrix and $A$ be an $p \\times m$ matrix. Then, the entry in the $i$-th row and\n            $j$-th column of the product $BA$ is given by:\n            $$(BA)_{ij} = \\sum_{k=1}^{p} B_{ik}A_{kj}$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.5",
+      "subtitle": "Multiplying with the identity matrix",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "For an $n \\times n$ identity matrix $I_n$, we have:\n            $$AI_n = A$$\n            $$I_nA = A$$\n            for any $n \\times n$ matrix $A$."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.6",
+      "subtitle": "Matrix multiplication is associative",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $A$ be an $n \\times p$ matrix and $B$ and $C$ be $p \\times m$ matrices. Then:\n            $$A(BC) = (AB)C$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.7",
+      "subtitle": "Matrix multiplication is distributive",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $A$ be an $n \\times p$ matrix and $B$ and $C$ be $p \\times m$ matrices. Then:\n            $$A(B+C) = AB + AC$$\n            $$(B+C)A = BA + CA$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.3.8",
+      "subtitle": "Matrix multiplication is compatible with scalar multiplication",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let $A$ be an $n \\times p$ matrix and $B$ be a $p \\times m$ matrix. Then:\n            $$A(cB) = c(AB) = (cA)B$$\n            for any scalar $c$."
+    },
+    {
+      "tag": "step",
+      "label": "The Inverse of a linear transformation",
+      "subtitle": "Inverse functions",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "A function $T$ from $X$ to $Y$ is called invertible if the equation $T(\\vec{x}) = \\vec{y}$ has a unique\n            solution x in X for every y in Y.<br>\n            In this case, the inverse function $T^{-1}$ from Y to X is defined by $T^{-1}(\\vec{y}) = \\vec{x}$ the unique\n            x in X such that $T(\\vec{x}) = \\vec{y}$.<br>\n            To put it differently, the equation $T(\\vec{x}) = \\vec{y}$ has a unique solution for every y in Y if and\n            only if the equation $T^{-1}(\\vec{y}) = \\vec{x}$ has a unique solution for every x in X.<br>\n            Note that $T^{-1}(T(x))=x$ for all $x$ in $X$ and $T(T^{-1}(y))=y$ for all $y$ in $Y$.<br>\n            Conversely, if $L$ is a function from $Y$ to $X$ such that $L(T(x))=x$ for all $x$ in $X$ and $T(L(y))=y$\n            for all $y$ in $Y$, then $L$ is the inverse function of $T$.<br>\n            If a function $T$ is invertible, then so is $T^{-1}$ and $(T^{-1})^{-1}=T$."
+    },
+    {
+      "tag": "definition",
+      "label": "Definition 2.4.2",
+      "subtitle": "Invertible matrices",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "A square matrix $A$ is said to be invertible if the linear transformation $\\vec{y}=T(\\vec{x})=A\\vec{x}$ is\n            invertible. In this case, the matrix of $T^{-1}$ is denoted by $A^{-1}$. If the linear transformation\n            $\\vec{y}=T(\\vec{x})=A\\vec{x}$ is invertible, then its inverse is $\\vec{x}=T^{-1}(\\vec{y})=A^{-1}\\vec{y}$."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.4.3",
+      "subtitle": "Invertibility",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "An $n \\times n$ matrix $A$ is invertible if and only if $$rref(A)=I_n$$\n            or, equivalently, if $$rank(A)=n$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.4.4",
+      "subtitle": "Invertibility and linear systems",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let A be an $n \\times n$ matrix:\n            a. Consider a vector $\\vec{b}$ in $\\mathbb{R}^n$. If A is invertible, then the system $A\\vec{x}=\\vec{b}$ has\n            a unique solution given by $\\vec{x}=A^{-1}\\vec{b}$. If A is noninvertible, then the system\n            $A\\vec{x}=\\vec{b}$ has either no solution or infinitely many solutions.<br>\n            b. Consider the special case when $\\vec{b}=\\vec{0}$. The system $A\\vec{x}=\\vec{0}$ has $\\vec{x}=\\vec{0}$ as\n            a solution. If A is invertible, then this is the only solution. If A is noninvertible, then the system\n            $A\\vec{x}=\\vec{0}$ has infinitely many solutions."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.4.5",
+      "subtitle": "Finding the inverse of a matrix",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "To find the inverse of an $n \\times n$ matrix A, form the $n \\times 2n$ augmented matrix $$[A|I_n]$$ and\n            compute the reduced row echelon form of this matrix.\n            <ul>\n              <li>If $rref([A|I_n])$ is of the form $[I_n|B]$, then A is invertible and $A^{-1}=B$.</li>\n              <li>If $rref[A|I_n]$ is of another form , then A is noninvertible. Note that the left half of\n                $rref[A|I_n]$ is $rref(A)$</li>\n            </ul>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.4.6",
+      "subtitle": "Multiplying with the inverse",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "For an invertible $n \\times n$ matrix A,\n            $$A A^{-1} = A^{-1} A = I_n$$"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.4.7",
+      "subtitle": "The inverse of a product of matrices",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "If A and B are invertible $n \\times n$ matrices, then BA is invertible and\n            $$(BA)^{-1} = A^{-1}B^{-1}$$\n            Pay attention to the order of the matrices in the product."
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 2.4.8",
+      "subtitle": "A criterion for invertibility",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "Let A and B be two $n \\times n$ matrices such that:\n            $$BA=I_n$$\n            Then:\n            <ul>\n              <li>A and B are both invertible</li>\n              <li>$A^{-1}=B$ and $B^{-1}=A$</li>$</li>\n              <li>$AB=I_n$</li>\n            </ul>"
+    }
+  ],
+  "notes": ""
+}

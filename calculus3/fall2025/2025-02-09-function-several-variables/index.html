@@ -16,66 +16,6 @@
             {left:'$',  right:'$',  display:false}
           ],throwOnError:false});"></script>
 
-  <!-- GeoGebra (inline diagrams via command API) -->
-  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
-  <script defer>
-    window.addEventListener('load', function () {
-      var ASPECT_RATIO = 1.25;
-      document.querySelectorAll('geogebra').forEach(function (el, i) {
-        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-        var container = document.createElement('div');
-        container.id = 'geogebra-' + i;
-        container.style.width = '100%';
-        el.replaceWith(container);
-
-        var explicitWidth = el.getAttribute('width');
-        var explicitHeight = el.getAttribute('height');
-        function computeSize() {
-          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
-          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
-          return { w: w, h: h };
-        }
-
-        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
-        var size = computeSize();
-        var ggbApi = null;
-
-        try {
-          var applet = new GGBApplet({
-            id: container.id,
-            width: size.w,
-            height: size.h,
-            showToolBar: false,
-            showMenuBar: false,
-            showAlgebraInput: false,
-            showResetIcon: false,
-            appName: perspective === '3D' ? '3d' : 'classic',
-            appletOnLoad: function (api) {
-              ggbApi = api;
-              commands.forEach(function (cmd) { api.evalCommand(cmd); });
-            }
-          }, true);
-          applet.inject(container.id);
-
-          if (!explicitWidth) {
-            var resizeTimer = null;
-            window.addEventListener('resize', function () {
-              clearTimeout(resizeTimer);
-              resizeTimer = setTimeout(function () {
-                if (!ggbApi) return;
-                var s = computeSize();
-                ggbApi.setSize(s.w, s.h);
-              }, 150);
-            });
-          }
-        } catch (err) {
-          container.textContent = 'Diagram error: ' + err.message;
-          container.style.color = '#b00020';
-        }
-      });
-    });
-  </script>
-
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -119,13 +59,6 @@
             <p><reveal>The expression under the square root must be nonnegative: $9-x^2-y^2 \ge 0$, i.e.
                 $x^2+y^2 \le 9$ — the closed disk of radius 3 centered at the origin. Since $g$ outputs a square
                 root, the range is $[0,3]$.</reveal></p>
-
-            <div class="step-subtitle">The domain of g, visualized</div>
-            <geogebra width="420" height="420" perspective="2D">
-              region: x^2+y^2<=9
-              SetColor(region, 60, 130, 220)
-              SetFilling(region, 0.25)
-            </geogebra>
           </div>
         </div>
 
@@ -137,14 +70,12 @@
             domain.
 
             <div class="step-subtitle">$g(x,y) = \sqrt{9-x^2-y^2}$ — a hemisphere</div>
-            <geogebra width="380" height="320" perspective="3D">
-              g(x,y)=sqrt(9-x^2-y^2)
-            </geogebra>
+            <p>The graph of every point $(x,y,g(x,y))$ satisfies $x^2+y^2+z^2=9$ with $z\ge0$: the upper half of
+              a sphere of radius 3 centered at the origin.</p>
 
             <div class="step-subtitle">$f(x,y) = x^2+y^2$ — a paraboloid</div>
-            <geogebra width="380" height="320" perspective="3D">
-              f(x,y)=x^2+y^2
-            </geogebra>
+            <p>Every horizontal slice ($z=c>0$) is a circle $x^2+y^2=c$ that grows with $c$: a bowl-shaped
+              paraboloid opening upward, vertex at the origin.</p>
 
             <div class="step-subtitle">A profit function</div>
             <p>A firm's profit (in thousands of dollars) from selling two products is modeled by
@@ -152,10 +83,6 @@
               product sold. Where is profit maximized, and what is the maximum profit?</p>
             <p><reveal>Both squared terms are minimized (at 0) when $x=3$ and $y=2$, giving the maximum
                 $f(3,2)=16$. The vertex of this downward paraboloid is $(3,2,16)$.</reveal></p>
-            <geogebra width="380" height="320" perspective="3D">
-              f(x,y)=16-(x-3)^2-(y-2)^2
-              A=(3,2,f(3,2))
-            </geogebra>
           </div>
         </div>
 
@@ -168,22 +95,14 @@
             of $c$ produces a contour map — the same idea as elevation lines on a topographic map.
 
             <div class="step-subtitle">Level curves of $g(x,y)=\sqrt{9-x^2-y^2}$</div>
-            <p>For $c=0,1,2,3$ the level curves $\sqrt{9-x^2-y^2}=c$ are the concentric circles $x^2+y^2=9-c^2$.</p>
-            <geogebra width="420" height="420" perspective="2D">
-              x^2+y^2=9
-              x^2+y^2=8
-              x^2+y^2=5
-              x^2+y^2=0
-            </geogebra>
+            <p>For $c=0,1,2,3$ the level curves $\sqrt{9-x^2-y^2}=c$ are the concentric circles $x^2+y^2=9-c^2$ —
+              like elevation rings on a topographic map, shrinking toward the origin as $c$ grows.</p>
 
             <div class="step-subtitle">Worked example</div>
             <p>Find the level curve of $f(x,y) = 8+8x-4y-4x^2-y^2$ at $c=0$.</p>
             <p><reveal>Set $8+8x-4y-4x^2-y^2=0$ and complete the square in $x$ and $y$:
                 $$\frac{(x-1)^2}{4} + \frac{(y+2)^2}{16} = 1$$
                 an ellipse centered at $(1,-2)$.</reveal></p>
-            <geogebra width="420" height="320" perspective="2D">
-              (x-1)^2/4+(y+2)^2/16=1
-            </geogebra>
           </div>
         </div>
 
@@ -199,11 +118,6 @@
             <p>What is the trace at $y=0$? At $x=0$?</p>
             <p><reveal>At $y=0$: $f(x,0)=\sin(x)\cos(0)=\sin(x)$ — a sine curve in the $xz$-plane.<br>
                 At $x=0$: $f(0,y)=\sin(0)\cos(y)=0$ — the trace is identically 0, the $y$-axis itself.</reveal></p>
-            <geogebra width="420" height="340" perspective="3D">
-              f(x,y)=sin(x)cos(y)
-              p:y=0
-              Intersect(f,p)
-            </geogebra>
           </div>
         </div>
 
@@ -236,9 +150,6 @@
             <p>Describe the level surface of $f(x,y,z) = 4x^2+9y^2-z^2$ at $c=1$.</p>
             <p><reveal>$4x^2+9y^2-z^2=1$ is a <strong>hyperboloid of one sheet</strong>, opening along the
                 $z$-axis.</reveal></p>
-            <geogebra width="420" height="340" perspective="3D">
-              4x^2+9y^2-z^2=1
-            </geogebra>
           </div>
         </div>
 

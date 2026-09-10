@@ -26,7 +26,7 @@
 <body>
 
   <header class="site-header">
-    <h1>2.3 Matrix Products</h1>
+    <h1>2.4 The Inverse of a Linear Transformation</h1>
     <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
   </header>
 
@@ -36,7 +36,7 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">The Inverse of a linear transformation</div>
+          <div class="step-title">The Inverse of a Linear Transformation</div>
           <div class="step-subtitle">Inverse functions</div>
           <div class="step-body">
             A function $T$ from $X$ to $Y$ is called invertible if the equation $T(\vec{x}) = \vec{y}$ has a unique
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="2">
+        <div class="step" data-step="2">
           <div class="step-title">Definition 2.4.2</div>
           <div class="step-subtitle">Invertible matrices</div>
           <div class="step-body">
@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="3">
+        <div class="step" data-step="3">
           <div class="step-title">Theorem 2.4.3</div>
           <div class="step-subtitle">Invertibility</div>
           <div class="step-body">
@@ -71,7 +71,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="4">
+        <div class="step" data-step="4">
           <div class="step-title">Theorem 2.4.4</div>
           <div class="step-subtitle">Invertibility and linear systems</div>
           <div class="step-body">
@@ -86,7 +86,24 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="5">
+        <div class="step" data-step="5">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Is this matrix invertible?</div>
+          <div class="step-body">
+            <p>Is the matrix $$A=\begin{bmatrix}1&1&1\\2&3&2\\3&8&2\end{bmatrix}$$ invertible?</p>
+            <p><reveal class="solution">Row-reduce A:
+                $$A=\begin{bmatrix}1&1&1\\2&3&2\\3&8&2\end{bmatrix}
+                \;\longrightarrow\;
+                \begin{bmatrix}1&1&1\\0&1&0\\0&5&-1\end{bmatrix}
+                \;\longrightarrow\;
+                \begin{bmatrix}1&0&1\\0&1&0\\0&0&-1\end{bmatrix}
+                \;\longrightarrow\;
+                \begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix}$$
+                Since $rref(A)=I_3$, matrix $A$ is invertible.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
           <div class="step-title">Theorem 2.4.5</div>
           <div class="step-subtitle">Finding the inverse of a matrix</div>
           <div class="step-body">
@@ -98,10 +115,16 @@
                 $rref[A|I_n]$ is $rref(A)$</li>
             </ul>
 
+            <p>Applying this to the matrix $A$ from Example 1:</p>
+            <p><reveal class="solution">
+                $$\left[\begin{array}{ccc|ccc}1&1&1&1&0&0\\2&3&2&0&1&0\\3&8&2&0&0&1\end{array}\right]
+                \;\longrightarrow\;\cdots\;\longrightarrow\;
+                \left[\begin{array}{ccc|ccc}1&0&0&10&-6&1\\0&1&0&-2&1&0\\0&0&1&-7&5&-1\end{array}\right]$$
+                So $$A^{-1}=\begin{bmatrix}10&-6&1\\-2&1&0\\-7&5&-1\end{bmatrix}$$</reveal></p>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="6">
+        <div class="step" data-step="7">
           <div class="step-title">Theorem 2.4.6</div>
           <div class="step-subtitle">Multiplying with the inverse</div>
           <div class="step-body">
@@ -110,7 +133,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="5">
+        <div class="step" data-step="8">
           <div class="step-title">Theorem 2.4.7</div>
           <div class="step-subtitle">The inverse of a product of matrices</div>
           <div class="step-body">
@@ -120,7 +143,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="6">
+        <div class="step" data-step="9">
           <div class="step-title">Theorem 2.4.8</div>
           <div class="step-subtitle">A criterion for invertibility</div>
           <div class="step-body">
@@ -129,16 +152,44 @@
             Then:
             <ul>
               <li>A and B are both invertible</li>
-              <li>$A^{-1}=B$ and $B^{-1}=A$</li>$</li>
+              <li>$A^{-1}=B$ and $B^{-1}=A$</li>
               <li>$AB=I_n$</li>
             </ul>
+
+            <p>This gives a way to check an inverse: for the $A$ and $B=A^{-1}$ from Example 1,</p>
+            <p><reveal class="solution">
+                $$BA=\begin{bmatrix}10&-6&1\\-2&1&0\\-7&5&-1\end{bmatrix}
+                \begin{bmatrix}1&1&1\\2&3&2\\3&8&2\end{bmatrix}
+                =\begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix}=I_3$$
+                confirming $B=A^{-1}$.</reveal></p>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="7">
+        <div class="step" data-step="10">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Using the criterion for invertibility</div>
+          <div class="step-body">
+            <p>Suppose A, B, and C are three $n \times n$ matrices such that $ABC=I_n$. Show that B is invertible, and
+              express $B^{-1}$ in terms of A and C.</p>
+            <p><reveal class="solution">Write $ABC=(AB)C=I_n$. By Theorem 2.4.8, $C(AB)=I_n$ as well. Since matrix multiplication is
+                associative, $(CA)B=I_n$. Applying Theorem 2.4.8 again (with $CA$ playing the role of "A" and $B$
+                playing the role of "B"), we conclude that B is invertible, and $B^{-1}=CA$.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
           <div class="step-title">Theorem 2.4.9</div>
           <div class="step-subtitle">Inverse and determinant of a $2\times 2$ matrix</div>
           <div class="step-body">
+            <p>For $A=\begin{pmatrix} a & b \\ c & d \end{pmatrix}$, compute the product
+              $\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}\begin{pmatrix} a & b \\ c & d \end{pmatrix}$. When is A
+              invertible? If so, what is $A^{-1}$?</p>
+            <p><reveal class="solution">$$\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}\begin{pmatrix} a & b \\ c & d \end{pmatrix}
+                =\begin{pmatrix} ad-bc & 0 \\ 0 & ad-bc \end{pmatrix}=(ad-bc)I_2$$
+                If $ad-bc\ne0$, dividing by $ad-bc$ gives $\left(\frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}\right)A=I_2$,
+                so by Theorem 2.4.8, A is invertible with $A^{-1}=\frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}$.</reveal></p>
+
+            <p>In general:</p>
             a. The $2\times 2$ matrix
             $$A=\begin{pmatrix} a & b \\ c & d \end{pmatrix}$$
             is invertible if and only if $ad-bc \neq 0$. <br>
@@ -152,11 +203,50 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="8">
+        <div class="step" data-step="12">
           <div class="step-title">Theorem 2.4.10</div>
           <div class="step-subtitle">General interpretation of the determinant of a $2\times 2$ matrix</div>
           <div class="step-body">
-            The determinant of a $2\times 2$ matrix $A$ is the area of the parallelogram spanned by the columns of $A$.
+            <p>The determinant of a $2\times 2$ matrix $A=[\vec{v}\;\vec{w}]$ is, up to sign, the area of the
+              parallelogram spanned by the columns of A: $|\det A|=\|\vec{v}\|\,|\sin\theta|\,\|\vec{w}\|$, where
+              $\theta$ is the angle from $\vec{v}$ to $\vec{w}$. It's positive when $\vec{w}$ is a counterclockwise
+              turn from $\vec{v}$, and negative otherwise.</p>
+
+            <div class="step-subtitle">Example 4</div>
+            <p>Is $A=\begin{pmatrix}1&3\\2&1\end{pmatrix}$ invertible? If so, find the inverse and interpret
+              $\det A$ geometrically.</p>
+            <p><reveal class="solution">$\det(A)=1\cdot1-3\cdot2=-5\ne0$, so A is invertible, with
+                $$A^{-1}=\frac{1}{-5}\begin{pmatrix}1&-3\\-2&1\end{pmatrix}
+                =\begin{pmatrix}-\tfrac15&\tfrac35\\[2pt]\tfrac25&-\tfrac15\end{pmatrix}$$
+                The parallelogram spanned by the columns $(1,2)$ and $(3,1)$ has area $|\det A|=5$; the determinant
+                is negative because the angle from $(1,2)$ to $(3,1)$ is a clockwise turn.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step" data-step="13">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">Invertibility depending on a parameter</div>
+          <div class="step-body">
+            <p>For which values of the constant $k$ is the matrix $A=\begin{pmatrix}1-k&2\\4&3-k\end{pmatrix}$
+              invertible?</p>
+            <p><reveal class="solution">$A$ fails to be invertible exactly when $\det A=0$:
+                $$\det A=(1-k)(3-k)-2\cdot4=k^2-4k-5=(k-5)(k+1)=0$$
+                so $k=5$ or $k=-1$. Thus $A$ is invertible for every value of $k$ <em>except</em> $k=5$ and
+                $k=-1$.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step" data-step="14">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">A reflection is its own inverse</div>
+          <div class="step-body">
+            <p>A matrix representing the reflection about a line $L$ through the origin has the form
+              $A=\begin{pmatrix}a&b\\b&-a\end{pmatrix}$ with $a^2+b^2=1$. Use the determinant to verify that $A$ is
+              invertible, and find $A^{-1}$.</p>
+            <p><reveal class="solution">$\det A=a(-a)-b(b)=-(a^2+b^2)=-1\ne0$, so $A$ is invertible, with
+                $$A^{-1}=\frac{1}{-1}\begin{pmatrix}-a&-b\\-b&a\end{pmatrix}=\begin{pmatrix}a&b\\b&-a\end{pmatrix}=A$$
+                A reflection undoes itself: reflecting twice about the same line returns every point to where it
+                started, so $A^{-1}=A$ makes geometric sense.</reveal></p>
           </div>
         </div>
 

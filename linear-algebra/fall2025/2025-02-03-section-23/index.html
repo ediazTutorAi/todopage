@@ -3,18 +3,26 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Matrix Products</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -26,8 +34,8 @@
 <body>
 
   <header class="site-header">
-    <h1>2.3 Matrix Products</h1>
-    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+    <h1>Matrix Products</h1>
+    <div class="meta"></div>
   </header>
 
   <main class="container">
@@ -44,7 +52,6 @@
             b. If B is $n \times p$ and A is $p \times m$, then the product $BA$ is defined as the matrix of the linear
             transformation $T(\vec{x}) = B(A\vec{x})$. This means that $T(\vec{x}) = B(A\vec{x})=(B A)\vec{x}$ for all
             $\vec{x}$ in $\mathbb{R}^m$. The product $BA$ is an $n \times m$ matrix.
-
           </div>
         </div>
 
@@ -57,7 +64,6 @@
             $$BA = \begin{pmatrix} B\vec{v}_1 & B\vec{v}_2 & \cdots & B\vec{v}_m \end{pmatrix}=\begin{pmatrix}
             B\vec{v}_1 & B\vec{v}_2 & \cdots & B\vec{v}_m \end{pmatrix}$$. To find the product $BA$, we multiply B by
             each column of A and combine the resulting vectors.
-
           </div>
         </div>
 
@@ -167,7 +173,6 @@
             b. Consider the special case when $\vec{b}=\vec{0}$. The system $A\vec{x}=\vec{0}$ has $\vec{x}=\vec{0}$ as
             a solution. If A is invertible, then this is the only solution. If A is noninvertible, then the system
             $A\vec{x}=\vec{0}$ has infinitely many solutions.
-
           </div>
         </div>
 
@@ -182,7 +187,6 @@
               <li>If $rref[A|I_n]$ is of another form , then A is noninvertible. Note that the left half of
                 $rref[A|I_n]$ is $rref(A)$</li>
             </ul>
-
           </div>
         </div>
 
@@ -220,7 +224,6 @@
           </div>
         </div>
 
-
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
           <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
@@ -246,9 +249,9 @@
   </div>
   <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
-
   <!-- JS entry (ES modules) -->
   <script type="module" src="/todopage/js/boot.js"></script>
+
 </body>
 
 </html>

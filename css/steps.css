@@ -56,6 +56,32 @@
   line-height: 1.65;
 }
 
+/* Lists: browser defaults render but read as an undifferentiated blob next to
+   dense math -- give them real indent, spacing between items, and an accent
+   marker so they read as a list rather than a wall of text. */
+.step-body ul,
+.step-body ol {
+  margin: 0.6rem 0;
+  padding-left: 1.5em;
+}
+.step-body li {
+  margin-bottom: 0.4rem;
+}
+.step-body li:last-child {
+  margin-bottom: 0;
+}
+.step-body li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* A "step-subtitle" reused inline inside step-body (a mini-heading before a
+   worked example, as opposed to the one directly under step-title) needs its
+   own top margin -- it otherwise sits flush against the preceding paragraph. */
+.step-body .step-subtitle {
+  margin-top: 1.1rem;
+}
+
 .step .step-icon {
   display: inline-flex;
   width: 26px; height: 26px;
@@ -187,6 +213,36 @@ reveal .reveal-content { visibility: hidden; }
 reveal.is-revealed { border-bottom-style: solid; }
 reveal.is-revealed .reveal-content { visibility: visible; }
 reveal:hover { background: #eef6fc; }
+
+/* <reveal class="solution"> -- an explicit opt-in variant for worked-solution
+   reveals that are a full paragraph (multiple sentences, display matrices)
+   rather than a short inline blank. Deliberately a class, not a structural
+   selector like ".step-body p > reveal": a plain <reveal> can also be the
+   sole element child of a <p> for a short inline answer (e.g. the
+   SOH-CAH-TOA reveal in the trig lessons), and that must keep the compact
+   dashed-underline treatment, not this block layout. */
+reveal.solution {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+  border-bottom: none;
+  border: 1px solid #d8e9f5;
+  border-radius: 10px;
+  background: #f3f8fc;
+  padding: 0.7rem 1rem;
+}
+reveal.solution:hover { background: #eaf3fb; }
+reveal.solution.is-revealed {
+  background: #fff;
+  border-color: var(--line);
+}
+reveal.solution:not(.is-revealed) .reveal-content { display: none; }
+reveal.solution:not(.is-revealed)::before {
+  content: "▸ Click to reveal solution";
+  color: var(--accent);
+  font-weight: 600;
+}
 
 /* <triangle> diagram */
 .step-body .triangle-diagram {
