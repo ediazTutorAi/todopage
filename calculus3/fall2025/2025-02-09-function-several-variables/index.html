@@ -16,6 +16,66 @@
             {left:'$',  right:'$',  display:false}
           ],throwOnError:false});"></script>
 
+  <!-- GeoGebra (inline diagrams via command API) -->
+  <script defer src="https://www.geogebra.org/apps/deployggb.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      var ASPECT_RATIO = 1.25;
+      document.querySelectorAll('geogebra').forEach(function (el, i) {
+        var commands = el.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var container = document.createElement('div');
+        container.id = 'geogebra-' + i;
+        container.style.width = '100%';
+        el.replaceWith(container);
+
+        var explicitWidth = el.getAttribute('width');
+        var explicitHeight = el.getAttribute('height');
+        function computeSize() {
+          var w = explicitWidth ? parseInt(explicitWidth, 10) : container.clientWidth;
+          var h = explicitHeight ? parseInt(explicitHeight, 10) : Math.round(w / ASPECT_RATIO);
+          return { w: w, h: h };
+        }
+
+        var perspective = (el.getAttribute('perspective') || '2D').toUpperCase();
+        var size = computeSize();
+        var ggbApi = null;
+
+        try {
+          var applet = new GGBApplet({
+            id: container.id,
+            width: size.w,
+            height: size.h,
+            showToolBar: false,
+            showMenuBar: false,
+            showAlgebraInput: false,
+            showResetIcon: false,
+            appName: perspective === '3D' ? '3d' : 'classic',
+            appletOnLoad: function (api) {
+              ggbApi = api;
+              commands.forEach(function (cmd) { api.evalCommand(cmd); });
+            }
+          }, true);
+          applet.inject(container.id);
+
+          if (!explicitWidth) {
+            var resizeTimer = null;
+            window.addEventListener('resize', function () {
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(function () {
+                if (!ggbApi) return;
+                var s = computeSize();
+                ggbApi.setSize(s.w, s.h);
+              }, 150);
+            });
+          }
+        } catch (err) {
+          container.textContent = 'Diagram error: ' + err.message;
+          container.style.color = '#b00020';
+        }
+      });
+    });
+  </script>
+
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -46,38 +106,152 @@
         </div>
 
         <div class="step" data-step="2">
-          <div class="step-title">Domains and Ranges for Functions of Two Variables</div>
-          <div class="step-subtitle">Definition and Graphing</div>
+          <div class="step-title">Domains and Ranges</div>
+          <div class="step-subtitle">Two Worked Examples</div>
           <div class="step-body">
-            Give some examples of functions of two variables and their domains and ranges.<br>
-            Give examples of graphs of functions in two variables.
+            <p><strong>(a)</strong> $f(x,y) = 3x+5y+2$</p>
+            <p>What are the domain and range?</p>
+            <p><reveal>Domain: all of $\mathbb{R}^2$ (linear in $x$ and $y$, no restrictions). Range: all of
+                $\mathbb{R}$.</reveal></p>
+
+            <p><strong>(b)</strong> $g(x,y) = \sqrt{9-x^2-y^2}$</p>
+            <p>What are the domain and range?</p>
+            <p><reveal>The expression under the square root must be nonnegative: $9-x^2-y^2 \ge 0$, i.e.
+                $x^2+y^2 \le 9$ — the closed disk of radius 3 centered at the origin. Since $g$ outputs a square
+                root, the range is $[0,3]$.</reveal></p>
+
+            <div class="step-subtitle">The domain of g, visualized</div>
+            <geogebra width="420" height="420" perspective="2D">
+              region: x^2+y^2<=9
+              SetColor(region, 60, 130, 220)
+              SetFilling(region, 0.25)
+            </geogebra>
           </div>
         </div>
 
         <div class="step" data-step="3">
-          <div class="step-title">Level Curves</div>
-          <div class="step-subtitle">Definition</div>
+          <div class="step-title">Graphing Functions of Two Variables</div>
+          <div class="step-subtitle">Surfaces in Three Dimensions</div>
           <div class="step-body">
-            Given a function $f(x,y)$ and a number c in the range of f, a level curve of a function of two variables for
-            the value c is defined to be the set of points satisfying the equation $f(x,y)=c$.<br>
-            Another useful tool for understanding the graph of a function of two variables is called a vertical trace,
-            which are the curves obtained by intersecting the graph of f with the xz- or yz-plane, or any plane parellel
-            to them.<br>
-            Definition of vertical trace: Consider a function $z=f(x,y)$ with domain $D \subset \mathbb{R}^2$. A
-            vertical trace of the function can be either the set of points that solves the equation $f(a,y)=z$ for a
-            given constant $x=a$ or $f(x,b)=z$ for a given constant $y=b$.
+            The graph of $z=f(x,y)$ is the surface formed by the set of all points $(x,y,f(x,y))$ for $(x,y)$ in the
+            domain.
 
+            <div class="step-subtitle">$g(x,y) = \sqrt{9-x^2-y^2}$ — a hemisphere</div>
+            <geogebra width="380" height="320" perspective="3D">
+              g(x,y)=sqrt(9-x^2-y^2)
+            </geogebra>
+
+            <div class="step-subtitle">$f(x,y) = x^2+y^2$ — a paraboloid</div>
+            <geogebra width="380" height="320" perspective="3D">
+              f(x,y)=x^2+y^2
+            </geogebra>
+
+            <div class="step-subtitle">A profit function</div>
+            <p>A firm's profit (in thousands of dollars) from selling two products is modeled by
+              $f(x,y) = 16-(x-3)^2-(y-2)^2$, where $x$ and $y$ are the amounts (in hundreds of units) of each
+              product sold. Where is profit maximized, and what is the maximum profit?</p>
+            <p><reveal>Both squared terms are minimized (at 0) when $x=3$ and $y=2$, giving the maximum
+                $f(3,2)=16$. The vertex of this downward paraboloid is $(3,2,16)$.</reveal></p>
+            <geogebra width="380" height="320" perspective="3D">
+              f(x,y)=16-(x-3)^2-(y-2)^2
+              A=(3,2,f(3,2))
+            </geogebra>
           </div>
         </div>
 
         <div class="step" data-step="4">
-          <div class="step-title">Functions of More than two variables</div>
+          <div class="step-title">Level Curves</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            Given a function $f(x,y)$ and a number $c$ in the range of $f$, a <strong>level curve</strong> of $f$ for
+            the value $c$ is the set of points satisfying $f(x,y)=c$. Stacking level curves for evenly spaced values
+            of $c$ produces a contour map — the same idea as elevation lines on a topographic map.
+
+            <div class="step-subtitle">Level curves of $g(x,y)=\sqrt{9-x^2-y^2}$</div>
+            <p>For $c=0,1,2,3$ the level curves $\sqrt{9-x^2-y^2}=c$ are the concentric circles $x^2+y^2=9-c^2$.</p>
+            <geogebra width="420" height="420" perspective="2D">
+              x^2+y^2=9
+              x^2+y^2=8
+              x^2+y^2=5
+              x^2+y^2=0
+            </geogebra>
+
+            <div class="step-subtitle">Worked example</div>
+            <p>Find the level curve of $f(x,y) = 8+8x-4y-4x^2-y^2$ at $c=0$.</p>
+            <p><reveal>Set $8+8x-4y-4x^2-y^2=0$ and complete the square in $x$ and $y$:
+                $$\frac{(x-1)^2}{4} + \frac{(y+2)^2}{16} = 1$$
+                an ellipse centered at $(1,-2)$.</reveal></p>
+            <geogebra width="420" height="320" perspective="2D">
+              (x-1)^2/4+(y+2)^2/16=1
+            </geogebra>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Vertical Traces</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            A <strong>vertical trace</strong> of $z=f(x,y)$ is the curve obtained by intersecting the graph of $f$
+            with a plane parallel to the $xz$- or $yz$-plane: fixing $x=a$ gives the trace solving $f(a,y)=z$, and
+            fixing $y=b$ gives the trace solving $f(x,b)=z$.
+
+            <div class="step-subtitle">Worked example: $f(x,y) = \sin(x)\cos(y)$</div>
+            <p>What is the trace at $y=0$? At $x=0$?</p>
+            <p><reveal>At $y=0$: $f(x,0)=\sin(x)\cos(0)=\sin(x)$ — a sine curve in the $xz$-plane.<br>
+                At $x=0$: $f(0,y)=\sin(0)\cos(y)=0$ — the trace is identically 0, the $y$-axis itself.</reveal></p>
+            <geogebra width="420" height="340" perspective="3D">
+              f(x,y)=sin(x)cos(y)
+              p:y=0
+              Intersect(f,p)
+            </geogebra>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Functions of More than Two Variables</div>
           <div class="step-subtitle"></div>
           <div class="step-body">
-            A function of threee variables is a function of the form $w=f(x,y,z)$. The same definitions of domain and
-            range apply in this case.<br>
-            Definition: Given a function $f(x,y,z)$ and a number c in the range of f, a level surface of a function of
-            three variables is defined to be the set of points satisfying the equation $f(x,y,z)=c$.
+            A function of three variables is a function of the form $w=f(x,y,z)$. The same definitions of domain and
+            range apply in this case.
+
+            <div class="step-subtitle">Domain examples</div>
+            <p><strong>(a)</strong> $f(x,y,z) = \dfrac{3x-4y+2z}{\sqrt{9-x^2-y^2-z^2}}$</p>
+            <p><reveal>Need $9-x^2-y^2-z^2 > 0$ (strictly, since it's in a denominator):
+                $x^2+y^2+z^2 < 9$ — the open ball of radius 3 centered at the origin.</reveal></p>
+
+            <p><strong>(b)</strong> $g(x,y,t) = \dfrac{\sqrt{2t-4}}{x^2-y^2}$</p>
+            <p><reveal>Need $2t-4 \ge 0 \Rightarrow t \ge 2$, and the denominator nonzero:
+                $x^2-y^2 \ne 0 \Rightarrow y \ne \pm x$.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Level Surfaces</div>
+          <div class="step-subtitle">Definition</div>
+          <div class="step-body">
+            Given a function $f(x,y,z)$ and a number $c$ in the range of $f$, a <strong>level surface</strong> of
+            $f$ is the set of points satisfying $f(x,y,z)=c$.
+
+            <div class="step-subtitle">Worked example</div>
+            <p>Describe the level surface of $f(x,y,z) = 4x^2+9y^2-z^2$ at $c=1$.</p>
+            <p><reveal>$4x^2+9y^2-z^2=1$ is a <strong>hyperboloid of one sheet</strong>, opening along the
+                $z$-axis.</reveal></p>
+            <geogebra width="420" height="340" perspective="3D">
+              4x^2+9y^2-z^2=1
+            </geogebra>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Quick Check</div>
+          <div class="step-subtitle">Try these before moving on</div>
+          <div class="step-body">
+            <p><strong>1.</strong> Find the domain of $f(x,y) = \sqrt{36-9x^2-9y^2}$.</p>
+            <p><reveal>Need $36-9x^2-9y^2 \ge 0 \Rightarrow x^2+y^2 \le 4$ — the closed disk of radius 2.</reveal></p>
+
+            <p><strong>2.</strong> Find the level curve of $g(x,y) = x^2+y^2-6x+2y$ at $c=15$.</p>
+            <p><reveal>Complete the square: $(x-3)^2+(y+1)^2=25$ — a circle of radius 5 centered at
+                $(3,-1)$.</reveal></p>
           </div>
         </div>
 
