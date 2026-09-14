@@ -24,6 +24,10 @@
     });
   </script>
 
+  <!-- JSXGraph (only this lesson's <jsx-radian-arc> diagram needs it) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -76,6 +80,12 @@
               of a circle, intercepts an arc with length equal to the radius of that
               circle.
             </p>
+            <p class="muted small">
+              Drag either point around its own circle — watch how the arc length \(s\)
+              and the angle \(\theta\) (in radians) always move together, and how
+              \(s / r\) always comes back to \(\theta\), on both circles.
+            </p>
+            <jsx-radian-arc radius="5"></jsx-radian-arc>
           </div>
         </div>
 

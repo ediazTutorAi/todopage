@@ -325,3 +325,7 @@ reveal.triangle-overlay:not(.is-revealed) {
   border: 1px solid var(--line);
   border-radius: 10px;
 }
+/* Diagrams built from circles (e.g. <jsx-radian-arc>) need keepaspectratio
+   on the board itself just to keep circles round, but a 3:2 container still
+   letterboxes them unnecessarily -- square reads better for these. */
+.jsx-board--square { aspect-ratio: 1 / 1; }
