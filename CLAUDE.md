@@ -313,6 +313,65 @@ Placement: its own step ("Explore: Signs by Quadrant"), inserted immediately bef
 existing ASTC step in `trigonometry/2026/2026-08-23-lesson-04-angles-in-the-coordinate-plane/index.html`
 (now 14 steps total, renumbered sequentially).
 
+## Second diagram engine: JSXGraph (added 2026-09-16)
+
+Everything above (`<triangle>`, `<angle-plane>`, `<sign-circle>`, `<mirror-angles>`) is a
+hand-rolled SVG system (`js/triangle.js`) and **stays exactly as it is** — no existing
+lesson gets touched or migrated. JSXGraph (`js/jsxgraph.js`) is a second engine added
+alongside it, for the one thing plain hand-coded SVG genuinely doesn't do well: plotting
+an arbitrary function curve. Anything a closed-form layout function already covers (a
+triangle, a ray in standard position, a point on a circle) has no reason to move to this
+engine — this was a deliberate "general capability" addition, not driven by a specific
+lesson that needed it yet.
+
+**Naming**: every tag this engine renders is prefixed `jsx-` (currently just
+`<jsx-graph>`), so it's never ambiguous in a lesson's HTML which of the two systems a
+diagram uses. Future JSXGraph-backed tags should keep this prefix.
+
+**Loading is opt-in per lesson**, not global. Unlike KaTeX (loaded unconditionally on
+every lesson), the JSXGraph library itself is only added to the `<head>` of lessons that
+actually use a `<jsx-*>` tag — the same convention `<geogebra>`'s own head script already
+uses. `js/boot.js` imports `js/jsxgraph.js` unconditionally (harmless on every other
+lesson, same reasoning `reveal.js`/`triangle.js` already rely on), but the actual library
+load is manual, per lesson:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+<script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+```
+
+**No error suppression**: if a `<jsx-*>` tag exists on a page that forgot the library
+tags above, `js/jsxgraph.js` throws a clear, visible `console.error` naming the exact fix
+rather than silently rendering an empty box — a blank diagram with no explanation would
+be far more confusing to debug than a loud error. This matches the project's general
+"don't suppress benign console errors" preference.
+
+**Styling**: boards are initialized with `showNavigation:false, showCopyright:false,
+pan:{enabled:false}, zoom:{enabled:false}` so a plotted function reads as a static
+diagram consistent with every other tag's interaction philosophy (instructor-driven,
+not a pan/zoom widget for students to explore unsupervised), not as a foreign embedded
+widget. Axes/grid are recolored from JSXGraph's defaults to the site's own `--ink`/
+`--line` tokens (read via `getComputedStyle` at render time, since JSXGraph needs a
+literal color string, not a live `var(--x)` reference) so a `<jsx-graph>` diagram matches
+the rest of the page rather than looking dropped-in from elsewhere. Container box model
+(`.jsx-diagram`/`.jsx-board` in `css/steps.css`) mirrors `.triangle-diagram`'s
+responsive-width pattern but wider by default (a function plot needs more horizontal
+room to read than a triangle/angle diagram).
+
+**`<jsx-graph fn="…" xmin="…" xmax="…" ymin="…" ymax="…">`**: `fn` is a JS expression in
+`x` (e.g. `fn="Math.sin(x)"`, `fn="x*x - 3"`), built into a real function via `new
+Function('x', ...)` — safe here since lesson content is instructor-authored, not
+untrusted input, the same trust level as any other inline script already on these pages.
+Bounding box defaults to `[-10, 10]` on both axes if omitted; always pass explicit bounds
+for anything trig-scale (e.g. `xmin="-7" xmax="7"` for a period-`2π`-ish curve) since the
+generic default won't frame it usefully.
+
+**No editor-app changes needed**, same reasoning as the original general-purpose tags:
+`boot.js`'s unconditional import is inert with no `<jsx-*>` tags present, so
+`editor-app/templates/lecture-template.js` needed no updates. Hand-authors just need to
+remember the CDN snippet above in a new lesson's own `<head>`, the same manual step
+`<geogebra>` already requires.
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:

@@ -309,3 +309,19 @@ reveal.triangle-overlay:not(.is-revealed) {
 .sign-circle-handle.is-dragging { cursor: grabbing; }
 .sign-circle-value { color: var(--accent); font-weight: 700; }
 .sign-circle-value.is-negative { color: var(--negative); }
+
+/* <jsx-graph> (js/jsxgraph.js) -- the JSXGraph-backed engine, kept visually
+   consistent with the .triangle-diagram box model above even though it's a
+   separate rendering system. Wider than .triangle-diagram by default since a
+   function plot needs more horizontal room to read than a triangle/angle
+   diagram does. */
+.step-body .jsx-diagram {
+  width: min(560px, 100%);
+  margin: 0.9rem auto;
+}
+.jsx-board {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
