@@ -324,8 +324,8 @@ triangle, a ray in standard position, a point on a circle) has no reason to move
 engine — this was a deliberate "general capability" addition, not driven by a specific
 lesson that needed it yet.
 
-**Naming**: every tag this engine renders is prefixed `jsx-` (currently just
-`<jsx-graph>`), so it's never ambiguous in a lesson's HTML which of the two systems a
+**Naming**: every tag this engine renders is prefixed `jsx-` (`<jsx-graph>`,
+`<jsx-radian-arc>`), so it's never ambiguous in a lesson's HTML which of the two systems a
 diagram uses. Future JSXGraph-backed tags should keep this prefix.
 
 **Loading is opt-in per lesson**, not global. Unlike KaTeX (loaded unconditionally on
@@ -350,13 +350,26 @@ be far more confusing to debug than a loud error. This matches the project's gen
 pan:{enabled:false}, zoom:{enabled:false}` so a plotted function reads as a static
 diagram consistent with every other tag's interaction philosophy (instructor-driven,
 not a pan/zoom widget for students to explore unsupervised), not as a foreign embedded
-widget. Axes/grid are recolored from JSXGraph's defaults to the site's own `--ink`/
+widget. Axes are recolored from JSXGraph's defaults to the site's own `--ink`/`--accent`/
 `--line` tokens (read via `getComputedStyle` at render time, since JSXGraph needs a
-literal color string, not a live `var(--x)` reference) so a `<jsx-graph>` diagram matches
-the rest of the page rather than looking dropped-in from elsewhere. Container box model
-(`.jsx-diagram`/`.jsx-board` in `css/steps.css`) mirrors `.triangle-diagram`'s
-responsive-width pattern but wider by default (a function plot needs more horizontal
-room to read than a triangle/angle diagram).
+literal color string, not a live `var(--x)` reference) so a `<jsx-*>` diagram matches the
+rest of the page rather than looking dropped-in from elsewhere.
+
+**Legibility is tuned for classroom projection, not screen reading** (added
+2026-09-16, same day) — these lessons are projected for a room, not read up close, so
+every stroke width, point size, and font size in `js/jsxgraph.js` traces back to one
+named constant near the top of the file (`AXIS_STROKE`, `CURVE_STROKE`, `POINT_SIZE`,
+`READOUT_VALUE_FONT`, etc.) rather than being tuned ad hoc per tag — one edit re-tunes the
+whole engine instead of a hunt through every render function. Two JSXGraph defaults
+needed overriding to get there, both non-obvious enough to be worth naming: (1) a
+default axis's ticks are full-board-spanning (`majorHeight: -1`) with 4 minor ticks
+between each major one — a "graph paper" look read as noise here, fixed by the shared
+`styleAxes()` helper setting `minorTicks: 0` and a finite `majorHeight`; (2) tick label
+font size isn't a board- or axis-level attribute — it's set via
+`axis.defaultTicks.setAttribute({ label: { fontSize, cssStyle } })` on the ticks
+sub-object specifically. `styleAxes()` also enlarges each axis's `lastArrow`, otherwise
+easy to lose from the back of a room. Container width (`.jsx-diagram` in
+`css/steps.css`) is 720px, wider than `.triangle-diagram`'s 420px on the same reasoning.
 
 **`<jsx-graph fn="…" xmin="…" xmax="…" ymin="…" ymax="…">`**: `fn` is a JS expression in
 `x` (e.g. `fn="Math.sin(x)"`, `fn="x*x - 3"`), built into a real function via `new
@@ -366,11 +379,40 @@ Bounding box defaults to `[-10, 10]` on both axes if omitted; always pass explic
 for anything trig-scale (e.g. `xmin="-7" xmax="7"` for a period-`2π`-ish curve) since the
 generic default won't frame it usefully.
 
+**`<jsx-radian-arc radius="5">`** (added 2026-09-16, for Radian Measure's own
+definition step): a fixed unit circle plus a second circle of the given radius, each with
+its own independently-draggable point (a JSXGraph glider, not a click-to-reveal). Both
+points start at angle \(0\) (the outer one literally at `(radius, 0)`), and dragging
+either live-updates that circle's own angle (radians, standard position, normalized to
+\([0, 2\pi)\) since a point's position on a circle can't itself distinguish coterminal
+turns), arc length \(s = r\theta\), and \(s/r\), so the relationship is something a
+student watches update rather than being told as a formula. This needed true
+point-dragging plus a second independent point to compare against — the closest existing
+SVG tag, `<sign-circle>` in `triangle.js`, drags one point around one circle but has no
+notion of arc length or a second circle, and extending it that way would already be most
+of the way to reimplementing JSXGraph's glider/arc primitives by hand. Both circles'
+dynamic elements (glider, radius segment, swept arc) deliberately share one accent color
+rather than being color-coded against each other — they never overlap on screen
+(different radii), each readout block already names its own circle, and a second ad hoc
+color would be a one-off meaning not shared by any other diagram in the codebase (unlike
+the deliberate blue/red sign convention on `<angle-plane>`, used consistently everywhere
+a value's sign matters). Uses the `.jsx-board--square` CSS modifier (aspect-ratio 1/1)
+since `keepaspectratio: true` is required just to keep the circles round, and the
+default 3:2 container would otherwise letterbox them.
+
 **No editor-app changes needed**, same reasoning as the original general-purpose tags:
 `boot.js`'s unconditional import is inert with no `<jsx-*>` tags present, so
 `editor-app/templates/lecture-template.js` needed no updates. Hand-authors just need to
 remember the CDN snippet above in a new lesson's own `<head>`, the same manual step
 `<geogebra>` already requires.
+
+### Reference build
+
+- `trigonometry/2026/2026-09-16-lesson-08-radian-measure/index.html` — first (and so far
+  only) lesson using this engine. Step 2 (Definition: The Radian) uses
+  `<jsx-radian-arc radius="5">` right where the radian is first defined, so the
+  arc-length/radius relationship is explored live before the degree-radian conversion
+  procedure two steps later gives it a formula.
 
 ## editor-app: Electron install gotcha
 

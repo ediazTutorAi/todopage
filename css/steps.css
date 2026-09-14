@@ -314,9 +314,11 @@ reveal.triangle-overlay:not(.is-revealed) {
    consistent with the .triangle-diagram box model above even though it's a
    separate rendering system. Wider than .triangle-diagram by default since a
    function plot needs more horizontal room to read than a triangle/angle
-   diagram does. */
+   diagram does. Sized generously (these lessons are projected in a
+   classroom, not read up close) -- js/jsxgraph.js's own stroke/point/font
+   constants are tuned for this same back-of-the-room legibility. */
 .step-body .jsx-diagram {
-  width: min(560px, 100%);
+  width: min(720px, 100%);
   margin: 0.9rem auto;
 }
 .jsx-board {

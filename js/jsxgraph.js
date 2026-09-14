@@ -32,15 +32,44 @@ function cssVar(name) {
 
 let boardCounter = 0;
 
+// Sizes tuned for classroom projection, not screen reading up close -- a
+// student in the back row needs to make out a line or a number, not just a
+// developer at arm's length from a laptop. Every stroke/point/font size in
+// this file traces back to one of these constants so the whole engine stays
+// legible the same way, and so future tuning is one edit, not a hunt through
+// every render function.
+const AXIS_STROKE = 2.5;
+const AXIS_ARROW_SIZE = 12;
+const TICK_MAJOR_HEIGHT = 12;
+const TICK_LABEL_FONT = 18;
+const GRID_STROKE = 1.5;
+const CURVE_STROKE = 4;
+const REF_CIRCLE_STROKE = 2;
+const RADIUS_SEGMENT_STROKE = 2.5;
+const ARC_STROKE = 5;
+const POINT_SIZE = 8;
+const POINT_STROKE = 3;
+const READOUT_HEADING_FONT = 18;
+const READOUT_VALUE_FONT = 22;
+
 // JSXGraph's default axis ticks are full-board-spanning (majorHeight: -1)
 // with 4 minor ticks between each major one -- a "graph paper" look that
 // reads as visual noise against this site's plainer style. Trim to short,
-// major-only tick marks; a real grid (when wanted) is its own explicit
-// `board.create('grid', ...)` call instead of piggybacking on tick styling.
+// major-only tick marks with large, bold labels; a real grid (when wanted)
+// is its own explicit `board.create('grid', ...)` call instead of
+// piggybacking on tick styling. Also enlarges the arrowhead at each axis's
+// positive end, which is otherwise easy to lose from the back of a room.
 function styleAxes(board, ink) {
   [board.defaultAxes.x, board.defaultAxes.y].forEach((axis) => {
-    axis.setAttribute({ strokeColor: ink, strokeWidth: 1.5, highlight: false });
-    axis.defaultTicks.setAttribute({ minorTicks: 0, majorHeight: 10 });
+    axis.setAttribute({
+      strokeColor: ink, strokeWidth: AXIS_STROKE, highlight: false,
+      lastArrow: { size: AXIS_ARROW_SIZE, type: 1 },
+    });
+    axis.defaultTicks.setAttribute({
+      minorTicks: 0,
+      majorHeight: TICK_MAJOR_HEIGHT,
+      label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+    });
   });
 }
 
@@ -96,9 +125,9 @@ function renderJsxGraph(el) {
   const line = cssVar('--line') || '#e5e7eb';
 
   styleAxes(board, ink);
-  board.create('grid', [], { strokeColor: line, strokeWidth: 1 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
 
-  board.create('functiongraph', [f], { strokeColor: accent, strokeWidth: 2, highlight: false });
+  board.create('functiongraph', [f], { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
 }
 
 // <jsx-radian-arc radius="5">
@@ -137,7 +166,7 @@ function renderJsxRadianArc(el) {
 
   const radius = parseFloat(el.getAttribute('radius') || '5');
   const pad = 1.5;
-  const headroom = 2.6; // room for the live readout text above both circles
+  const headroom = 3.4; // room for the live readout text above both circles
   const side = radius + pad;
   const top = radius + headroom;
   const bottom = -(radius + pad);
@@ -175,17 +204,17 @@ function renderJsxRadianArc(el) {
   // on screen, not just a number in the formula.
   function addCircle(r) {
     const circle = board.create('circle', [center, r], {
-      strokeColor: line, strokeWidth: 1.5, fixed: true, highlight: false, name: '',
+      strokeColor: line, strokeWidth: REF_CIRCLE_STROKE, fixed: true, highlight: false, name: '',
     });
     const zero = board.create('point', [r, 0], { visible: false, fixed: true, name: '' });
     const glider = board.create('glider', [r, 0, circle], {
-      name: '', size: 5, strokeColor: '#fff', fillColor: accent, strokeWidth: 2, highlight: false,
+      name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, highlight: false,
     });
     board.create('segment', [center, glider], {
-      strokeColor: line, strokeWidth: 1, dash: 2, highlight: false,
+      strokeColor: line, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
     });
     board.create('arc', [center, zero, glider], {
-      strokeColor: accent, strokeWidth: 3, highlight: false,
+      strokeColor: accent, strokeWidth: ARC_STROKE, highlight: false,
     });
 
     function angle() {
@@ -202,15 +231,20 @@ function renderJsxRadianArc(el) {
   // naming its own circle so the shared accent color never has to carry
   // that distinction on its own.
   function addReadout(x, heading, reader, r) {
-    const gap = Math.max(0.4, radius * 0.1);
-    let y = top - 0.5;
-    board.create('text', [x, y, () => heading], { fontSize: 14, color: ink, fixed: true });
+    const gap = Math.max(0.55, radius * 0.13);
+    const valueOpts = { fontSize: READOUT_VALUE_FONT, color: accent, fixed: true, cssStyle: 'font-weight:700' };
+    let y = top - 0.6;
+    board.create('text', [x, y, () => heading], {
+      fontSize: READOUT_HEADING_FONT, color: ink, fixed: true, cssStyle: 'font-weight:600',
+    });
     y -= gap;
-    board.create('text', [x, y, () => `θ = ${reader.angle().toFixed(2)} rad`], { fontSize: 15, color: accent, fixed: true });
+    board.create('text', [x, y, () => `θ = ${reader.angle().toFixed(2)} rad`], valueOpts);
     y -= gap;
-    board.create('text', [x, y, () => `s = ${reader.arcLength().toFixed(2)}`], { fontSize: 15, color: accent, fixed: true });
+    board.create('text', [x, y, () => `s = ${reader.arcLength().toFixed(2)}`], valueOpts);
     y -= gap;
-    board.create('text', [x, y, () => `s / r = ${(reader.arcLength() / r).toFixed(2)}`], { fontSize: 15, color: ink, fixed: true });
+    board.create('text', [x, y, () => `s / r = ${(reader.arcLength() / r).toFixed(2)}`], {
+      fontSize: READOUT_VALUE_FONT, color: ink, fixed: true, cssStyle: 'font-weight:700',
+    });
   }
 
   addReadout(-side + 0.2, 'Unit circle (r = 1)', unit, 1);
