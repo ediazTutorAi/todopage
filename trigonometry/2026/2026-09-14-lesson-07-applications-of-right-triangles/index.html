@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Applications of Right Triangles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Applications of Right Triangles</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Applications of Right Triangles</div>
+          <div class="step-subtitle">Calculator Approximations</div>
+          <div class="step-body">
+            <p>
+              When dealing with applications involving trigonometric functions, it's quite
+              rare that we can determine exact values the way we have so far. In these
+              cases, we'll use a calculator's numerical capabilities to determine
+              reasonable approximations.
+            </p>
+            <p>
+              Most calculators evaluate sine, cosine, and tangent directly. Secant,
+              cosecant, and cotangent aren't usually built in, so we first rewrite them as
+              reciprocals: \(\sec(x) = \dfrac{1}{\cos(x)}\), \(\csc(x) = \dfrac{1}{\sin(x)}\),
+              \(\cot(x) = \dfrac{1}{\tan(x)}\).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Approximate each expression, to the nearest hundredth</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(\sin(23°16'22'')\)</p>
+            <p class="muted small">
+              Convert to decimal degrees first: \(23° + \dfrac{16}{60}° + \dfrac{22}{3600}° \approx 23.2728°\)
+            </p>
+            <p><reveal>\(\sin(23.2728°) \approx 0.40\)</reveal></p>
+            <p><b>(b)</b> \(\sec(-95.25°)\)</p>
+            <p><reveal>\(\dfrac{1}{\cos(-95.25°)} \approx -10.93\)</reveal></p>
+            <p><b>(c)</b> \(\cot(45')\)</p>
+            <p class="muted small">45 arcminutes \(= \dfrac{45}{60}° = 0.75°\)</p>
+            <p><reveal>\(\dfrac{1}{\tan(0.75°)} \approx 76.39\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Inverse Trigonometric Functions</div>
+          <div class="step-subtitle">Restricted to acute angles, for now</div>
+          <div class="step-body">
+            <p>
+              Inverse trig functions can get involved in general, so for now we'll only
+              consider them as they apply to acute angles in a right triangle. In general,
+              given a function \(f\) and its inverse \(f^{-1}\), if \(f(a) = b\), then
+              \(a = f^{-1}(b)\), the <b>inverse form</b> of the original statement.
+            </p>
+            <table>
+              <tr><td>\(\sin(x) = y\)</td><td>↔</td><td>\(\sin^{-1}(y) = x\)</td></tr>
+              <tr><td>\(\cos(x) = y\)</td><td>↔</td><td>\(\cos^{-1}(y) = x\)</td></tr>
+              <tr><td>\(\tan(x) = y\)</td><td>↔</td><td>\(\tan^{-1}(y) = x\)</td></tr>
+            </table>
+            <p>
+              One helpful way to think about the statements above: \(x\) is an
+              <reveal>angle measure</reveal> and \(y\) is a <reveal>real number</reveal>
+              representing the function's value at that angle.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 2 (a)–(b)</div>
+          <div class="step-subtitle">Write the inverse form, then solve</div>
+          <div class="step-body">
+            <p>Assume \(x\) is an acute angle, in degrees. Give exact answers when possible.</p>
+            <p><b>(a)</b> \(\sin(x) = \dfrac{\sqrt2}{2}\)</p>
+            <p class="muted small">A special-angle ratio, recognizable from the QI reference chart.</p>
+            <p><reveal>\(\sin^{-1}\left(\dfrac{\sqrt2}{2}\right) = x \ \Rightarrow\ x = 45°\)</reveal></p>
+            <p><b>(b)</b> \(\sec(x) = \dfrac{7}{4}\)</p>
+            <p class="muted small">Rewrite in terms of cosine first: \(\cos(x) = \dfrac{4}{7}\)</p>
+            <p><reveal>\(\cos^{-1}\left(\dfrac{4}{7}\right) = x \ \Rightarrow\ x \approx 55.15°\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 2 (c)–(d)</div>
+          <div class="step-subtitle">Write the inverse form, then solve</div>
+          <div class="step-body">
+            <p><b>(c)</b> \(\cos^{-1}(y) = 60°\)</p>
+            <p class="muted small">A special angle again, recognizable from the QI reference chart.</p>
+            <p><reveal>\(\cos(60°) = y \ \Rightarrow\ y = \dfrac{1}{2}\)</reveal></p>
+            <p><b>(d)</b> \(\tan^{-1}(y) = 32.235°\)</p>
+            <p><reveal>\(\tan(32.235°) = y \ \Rightarrow\ y \approx 0.63\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Solving Right Triangles</div>
+          <div class="step-subtitle">Finding every angle and every side</div>
+          <div class="step-body">
+            <p>
+              To <b>solve</b> a triangle means to find the measures of all
+              <reveal>angles</reveal> and <reveal>sides</reveal>. For a triangle \(ABC\),
+              it's customary to label the side opposite angle \(A\) as side \(a\), the side
+              opposite angle \(B\) as side \(b\), and so on. In a right triangle, we'll
+              often place the right angle at \(C\), with the hypotenuse as side \(c\).
+            </p>
+            <triangle type="right" angle="35" label-a="A" label-c="B" adjacent="b" opposite="a" hypotenuse="c"></triangle>
+            <p class="muted small">
+              The unlabeled right-angle vertex is \(C\); side \(c\) (the hypotenuse) is
+              always opposite it.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 3 (a)</div>
+          <div class="step-subtitle">Wheelchair ramp: the maximum incline angle</div>
+          <div class="step-body">
+            <p>
+              Building codes often regulate the steepness of wheelchair access ramps.
+              Suppose a code requires a maximum vertical rise of \(1\) unit for every
+              \(10\) units of horizontal distance. What's the largest possible incline
+              angle \(\theta\) for the ramp?
+            </p>
+            <triangle type="right" angle="5.71" label-a="θ" label-c="" adjacent="10" opposite="1"></triangle>
+            <p>
+              <reveal>By TOA, \(\tan(\theta) = \dfrac{\text{opp}}{\text{adj}} = \dfrac{1}{10}\),
+              so \(\theta = \tan^{-1}\left(\dfrac{1}{10}\right) \approx 5.7°\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 3 (b)</div>
+          <div class="step-subtitle">Is there enough room for a code-compliant ramp?</div>
+          <div class="step-body">
+            <p>
+              You've been contracted to build the ramp. It must start at a horizontal
+              distance of \(25\) feet from the door's landing, and the landing sits
+              \(2\) feet above the sidewalk. Is there enough space to satisfy the code
+              from Example 3(a)?
+            </p>
+            <p>
+              <reveal>The \(1{:}10\) ratio means a \(2\) ft rise requires at least
+              \(2 \times 10 = 20\) ft of horizontal run. \(25\) ft is available, which
+              is more than enough (\(5\) ft to spare)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 3 (c)</div>
+          <div class="step-subtitle">Design plans: solve the ramp's triangle</div>
+          <div class="step-body">
+            <p>
+              Sketch a right triangle for the ramp design and record every angle and side
+              measure, for the city engineers' permit application.
+            </p>
+            <triangle type="right" angle="4.57" label-a="A" label-c="B" adjacent="25 ft" opposite="2 ft">
+              <reveal slot="hypotenuse">\(c \approx 25.08\) ft</reveal>
+            </triangle>
+            <p class="muted small">Known: \(a = 2\) ft, \(b = 25\) ft, \(C = 90°\).</p>
+            <p>
+              <b>Find \(c\)</b> (Pythagorean theorem):
+              <reveal>\(c^2 = 25^2 + 2^2 = 629 \ \Rightarrow\ c = \sqrt{629} \approx 25.08\) ft</reveal>
+            </p>
+            <p>
+              <b>Find \(A\):</b>
+              <reveal>\(\tan(A) = \dfrac{2}{25} \ \Rightarrow\ A = \tan^{-1}\left(\dfrac{2}{25}\right) \approx 4.57°\)</reveal>
+            </p>
+            <p>
+              <b>Find \(B\)</b> (using the given legs directly):
+              <reveal>\(\tan(B) = \dfrac{25}{2} \ \Rightarrow\ B = \tan^{-1}\left(\dfrac{25}{2}\right) \approx 85.43°\)</reveal>
+            </p>
+            <p class="muted small">
+              <reveal>Check: \(A + B + C = 4.57° + 85.43° + 90° = 180°\) ✓</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Angle of Elevation and Angle of Depression</div>
+          <div class="step-subtitle">Definitions</div>
+          <div class="step-body">
+            <p>
+              Any angle measured from the horizontal is called an <b>angle of
+              elevation</b>: the positive acute angle between the horizontal and the line
+              of sight to an object <i>above</i> it. An object below the horizontal
+              produces a negative angle of elevation instead.
+            </p>
+            <p>
+              A positive acute angle measured from the horizontal <i>downward</i> is
+              called an <b>angle of depression</b>, the magnitude of a negative angle of
+              elevation. We'll restrict "angle of elevation" to positive acute angles
+              only.
+            </p>
+            <p class="muted small">
+              This terminology comes from surveying: before GPS and lasers, a surveyor
+              could estimate elevation with nothing more than a simple clinometer.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Surveying a mountain's elevation</div>
+          <div class="step-body">
+            <p>
+              A surveyor works from a small, flat valley with known elevation \(4500\)
+              ft. Using a clinometer, he measures the angle of elevation to the summit as
+              \(35.8°\). After walking \(1000\) ft directly toward the mountain, he
+              measures it again: \(39.9°\). Find the elevation at the peak.
+            </p>
+            <div class="triangle-diagram" style="width:min(480px,100%)">
+              <div class="triangle-diagram-figure" style="--triangle-aspect: 460 / 200">
+                <svg viewBox="0 0 460 200" class="triangle-diagram-svg">
+                  <line x1="20" y1="170" x2="430" y2="170" class="triangle-outline"></line>
+                  <line x1="430" y1="170" x2="430" y2="20" class="triangle-outline" style="stroke-dasharray:5 4"></line>
+                  <line x1="20" y1="170" x2="430" y2="20" class="triangle-outline"></line>
+                  <line x1="150" y1="170" x2="430" y2="20" class="triangle-outline"></line>
+                  <circle cx="20" cy="170" r="3.5" class="triangle-point"></circle>
+                  <circle cx="150" cy="170" r="3.5" class="triangle-point"></circle>
+                  <circle cx="430" cy="20" r="3.5" class="triangle-point"></circle>
+                  <text x="45" y="158" style="fill:var(--accent);font-weight:700;font-size:13px">35.8°</text>
+                  <text x="168" y="158" style="fill:var(--accent);font-weight:700;font-size:13px">39.9°</text>
+                  <text x="85" y="188" text-anchor="middle" style="fill:var(--ink);font-size:13px">1000 ft</text>
+                  <text x="290" y="188" text-anchor="middle" style="fill:var(--ink);font-size:13px">x</text>
+                  <text x="440" y="98" style="fill:var(--ink);font-size:13px">h</text>
+                </svg>
+              </div>
+            </div>
+            <p class="muted small">(Valley elevation: \(4500\) ft. Not to scale.)</p>
+            <reveal class="solution">
+              <p>
+                Let \(x\) be the remaining horizontal distance from the second
+                measurement to a point directly below the peak, and \(h\) the peak's
+                height above the valley floor. Both sightlines share the same \(h\):
+              </p>
+              <p>
+                \(\tan(35.8°) = \dfrac{h}{1000+x} \ \Rightarrow\ h = (1000+x)\tan(35.8°)\)<br>
+                \(\tan(39.9°) = \dfrac{h}{x} \ \Rightarrow\ h = x\tan(39.9°)\)
+              </p>
+              <p>Setting these equal and solving for \(x\):</p>
+              <p>
+                \(x\tan(39.9°) = 1000\tan(35.8°) + x\tan(35.8°)\)<br>
+                \(x\big(\tan(39.9°) - \tan(35.8°)\big) = 1000\tan(35.8°)\)<br>
+                \(x = \dfrac{1000\tan(35.8°)}{\tan(39.9°)-\tan(35.8°)} \approx 6276.58 \text{ ft}\)
+              </p>
+              <p>
+                \(h \approx 6276.58 \cdot \tan(39.9°) \approx 5248.03\) ft, so the peak's
+                elevation is \(4500 + 5248 = \mathbf{9748}\) ft.
+              </p>
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Looking Ahead</div>
+          <div class="step-subtitle">Beyond right triangles</div>
+          <div class="step-body">
+            <p>
+              Every technique here (calculator approximations, inverse trig functions,
+              angle of elevation/depression) relies on the triangle having a right angle,
+              so SOH-CAH-TOA applies directly. Many real triangles don't have one.
+              Solving those <b>general</b> triangles needs new tools entirely: the
+              Law of Sines and the Law of Cosines.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

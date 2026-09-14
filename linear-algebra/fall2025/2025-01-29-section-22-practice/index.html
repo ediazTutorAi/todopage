@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
+            {left:'$$', right:'$$', display:true},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
+            {left:'$',  right:'$',  display:false}
+          ],throwOnError:false});"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>2.2 Practice — Linear Transformations in Geometry</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Practice Day</div>
+          <div class="step-subtitle">Review before you start</div>
+          <div class="step-body">
+            Before diving in, recall the five families of geometric linear transformations of $\mathbb{R}^2$ from
+            last class:
+            <ul>
+              <li><strong>Scaling</strong> by $k$: matrix $kI_2$</li>
+              <li><strong>Orthogonal projection</strong> onto a line $L$: matrix $\begin{pmatrix}u_1^2&u_1u_2\\
+                u_1u_2&u_2^2\end{pmatrix}$, $\vec{u}$ a unit vector parallel to $L$</li>
+              <li><strong>Reflection</strong> about a line $L$: matrix $\begin{pmatrix}a&b\\b&-a\end{pmatrix}$,
+                $a^2+b^2=1$</li>
+              <li><strong>Rotation</strong> through $\theta$: matrix $\begin{pmatrix}\cos\theta&-\sin\theta\\
+                \sin\theta&\cos\theta\end{pmatrix}$</li>
+              <li><strong>Shear</strong> (horizontal/vertical): matrix $\begin{pmatrix}1&k\\0&1\end{pmatrix}$ or
+                $\begin{pmatrix}1&0\\k&1\end{pmatrix}$</li>
+            </ul>
+            Work each problem below on paper first, then click the solution box to check your answer.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Practice 1</div>
+          <div class="step-subtitle">Orthogonal projection</div>
+          <div class="step-body">
+            Let $L$ be the line spanned by $\vec{w}=\begin{pmatrix}1\\3\end{pmatrix}$.
+            <br><br>
+            <strong>(a)</strong> Find the matrix $P$ of the orthogonal projection onto $L$.<br>
+            <strong>(b)</strong> Use $P$ to find $\text{proj}_L(\vec{x})$ for $\vec{x}=\begin{pmatrix}5\\-1
+            \end{pmatrix}$.
+            <br><br>
+            <reveal class="solution">
+              <strong>Solution.</strong> With $\vec{w}=\begin{pmatrix}1\\3\end{pmatrix}$, $\vec{w}\cdot\vec{w}=1+9=10$,
+              so
+              $$P=\frac{1}{10}\begin{pmatrix}1&3\\3&9\end{pmatrix}.$$
+              For (b), $\vec{x}\cdot\vec{w}=5(1)+(-1)(3)=2$, so
+              $$\text{proj}_L(\vec{x})=\frac{2}{10}\begin{pmatrix}1\\3\end{pmatrix}
+              =\begin{pmatrix}0.2\\0.6\end{pmatrix}.$$
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Practice 2</div>
+          <div class="step-subtitle">Reflection</div>
+          <div class="step-body">
+            Find the matrix $S$ of the reflection about the line $L$ spanned by
+            $\vec{w}=\begin{pmatrix}4\\3\end{pmatrix}$.
+            <br><br>
+            <reveal class="solution">
+              <strong>Solution.</strong> First find the projection matrix: $\vec{w}\cdot\vec{w}=16+9=25$, so
+              $$P=\frac{1}{25}\begin{pmatrix}16&12\\12&9\end{pmatrix}.$$
+              Then $S=2P-I_2$:
+              $$S=\frac{1}{25}\begin{pmatrix}32&24\\24&18\end{pmatrix}-\begin{pmatrix}1&0\\0&1\end{pmatrix}
+              =\frac{1}{25}\begin{pmatrix}7&24\\24&-7\end{pmatrix}.$$
+              Check: $\left(\frac{7}{25}\right)^2+\left(\frac{24}{25}\right)^2=\frac{49+576}{625}=\frac{625}{625}=1$,
+              as expected for a reflection matrix.
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Practice 3</div>
+          <div class="step-subtitle">Rotation</div>
+          <div class="step-body">
+            <strong>(a)</strong> Write the matrix of a counterclockwise rotation through $120^\circ$
+            ($2\pi/3$).<br>
+            <strong>(b)</strong> Apply it to $\vec{x}=\begin{pmatrix}2\\0\end{pmatrix}$.
+            <br><br>
+            <reveal class="solution">
+              <strong>Solution.</strong> With $\theta=120^\circ$, $\cos\theta=-\tfrac12$, $\sin\theta=\tfrac{\sqrt3}2$,
+              so
+              $$\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}
+              =\begin{pmatrix}-\tfrac12&-\tfrac{\sqrt3}2\\[2pt]\tfrac{\sqrt3}2&-\tfrac12\end{pmatrix}.$$
+              Applying it to $\begin{pmatrix}2\\0\end{pmatrix}$ gives
+              $$\begin{pmatrix}-\tfrac12&-\tfrac{\sqrt3}2\\[2pt]\tfrac{\sqrt3}2&-\tfrac12\end{pmatrix}
+              \begin{pmatrix}2\\0\end{pmatrix}=\begin{pmatrix}-1\\\sqrt3\end{pmatrix}.$$
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Practice 4</div>
+          <div class="step-subtitle">Rotation combined with a scaling — working backwards</div>
+          <div class="step-body">
+            The matrix $M=\begin{pmatrix}-1&-\sqrt3\\\sqrt3&-1\end{pmatrix}$ represents a rotation through $\theta$
+            combined with a scaling by $r$. Find $r$ and $\theta$.
+            <br><br>
+            <reveal class="solution">
+              <strong>Solution.</strong> Here $M$ has the form $\begin{pmatrix}a&-b\\b&a\end{pmatrix}$ with $a=-1$,
+              $b=\sqrt3$. Then
+              $$r=\sqrt{a^2+b^2}=\sqrt{1+3}=2,$$
+              and $\theta$ is the polar angle of $\begin{pmatrix}a\\b\end{pmatrix}=\begin{pmatrix}-1\\\sqrt3
+              \end{pmatrix}$, which lies in the second quadrant with reference angle $60^\circ$, so
+              $$\theta=180^\circ-60^\circ=120^\circ.$$
+              So $M$ represents a rotation through $120^\circ$ combined with a scaling by $2$ — a doubled version of
+              Practice 3.
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Practice 5</div>
+          <div class="step-subtitle">Shear</div>
+          <div class="step-body">
+            Apply the horizontal shear with $k=2$, matrix $\begin{pmatrix}1&2\\0&1\end{pmatrix}$, to the unit square
+            with vertices $(0,0)$, $(1,0)$, $(1,1)$, $(0,1)$. Where do the four vertices land?
+            <br><br>
+            <reveal class="solution">
+              <strong>Solution.</strong> Applying $\begin{pmatrix}1&2\\0&1\end{pmatrix}$ to each vertex:
+              $$(0,0)\mapsto(0,0),\quad (1,0)\mapsto(1,0),\quad (1,1)\mapsto(3,1),\quad (0,1)\mapsto(2,1).$$
+              The square becomes a parallelogram with the same base and height, slid sideways — the bottom edge
+              $(0,0)$–$(1,0)$ is unchanged, while the top edge slides right by $k=2$ (from $(0,1)$–$(1,1)$ to
+              $(2,1)$–$(3,1)$).
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Practice 6</div>
+          <div class="step-subtitle">Name that transformation</div>
+          <div class="step-body">
+            Click each blank to reveal what kind of transformation each matrix represents.
+            <ul>
+              <li>$\begin{pmatrix} 3 & 0 \\ 0 & 3 \end{pmatrix}$ — a <reveal>scaling</reveal> by 3</li>
+              <li>$\begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$ — a <reveal>rotation</reveal> through
+                $90^\circ$</li>
+              <li>$\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$ — a <reveal>reflection</reveal> about the
+                horizontal axis</li>
+              <li>$\begin{pmatrix} 1 & 0 \\ 0.5 & 1 \end{pmatrix}$ — a vertical <reveal>shear</reveal></li>
+              <li>$\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ — a <reveal>reflection</reveal> about the line
+                $y=x$</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Practice 7</div>
+          <div class="step-subtitle">Reflection in space</div>
+          <div class="step-body">
+            Let $V$ be the plane $x_1-2x_2+2x_3=0$, and let $\vec{x}=\begin{pmatrix}5\\1\\3\end{pmatrix}$. Find
+            $\text{ref}_V(\vec{x})$.
+            <br><br>
+            <reveal class="solution">
+              <strong>Solution.</strong> The vector $\vec{v}=\begin{pmatrix}1\\-2\\2\end{pmatrix}$ is perpendicular to
+              $V$ (its components are the coefficients of the plane's equation), with $\vec{v}\cdot\vec{v}=1+4+4=9$.
+              Since
+              $$\vec{x}\cdot\vec{v}=5(1)+1(-2)+3(2)=5-2+6=9=\vec{v}\cdot\vec{v},$$
+              the formula $\text{ref}_V(\vec{x})=\vec{x}-2\left(\frac{\vec{x}\cdot\vec{v}}{\vec{v}\cdot\vec{v}}
+              \right)\vec{v}$ simplifies to $\vec{x}-2\vec{v}$:
+              $$\text{ref}_V(\vec{x})=\begin{pmatrix}5\\1\\3\end{pmatrix}-2\begin{pmatrix}1\\-2\\2\end{pmatrix}
+              =\begin{pmatrix}3\\5\\-1\end{pmatrix}.$$
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Nice work</div>
+          <div class="step-subtitle">Next up: 2.3 Matrix Products</div>
+          <div class="step-body">
+            You've now worked a projection, a reflection, a rotation, a rotation-with-scaling (in both directions),
+            a shear, a quick-ID drill, and a reflection in $\mathbb{R}^3$ — every transformation type from Section
+            2.2. If any of these felt shaky, revisit the corresponding definition or theorem from last class before
+            we move on.
+          </div>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+</body>
+
+</html>

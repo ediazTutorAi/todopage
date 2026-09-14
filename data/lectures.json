@@ -2,6 +2,18 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-14",
+    "title": "Applications of Right Triangles",
+    "subtitle": "Lesson 07",
+    "description": "Calculator approximations, inverse trig functions restricted to acute angles, solving right triangles, and angle of elevation/depression, with a wheelchair-ramp design problem and a surveying example.",
+    "tags": [
+      "Applications of Right Triangles"
+    ],
+    "url": "trigonometry/2026/2026-09-14-lesson-07-applications-of-right-triangles/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-02",
     "title": "Evaluating Trigonometric Functions with Reference Angles",
     "subtitle": "Lesson 06",
@@ -490,6 +502,23 @@
       "shears"
     ],
     "url": "linear-algebra/fall2025/2025-01-27-section-22/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
+    "date": "2026-02-05",
+    "title": "2.2 Practice — Linear Transformations in Geometry",
+    "subtitle": "",
+    "description": "",
+    "tags": [
+      "linear transformations",
+      "projections",
+      "reflections",
+      "rotations",
+      "shears",
+      "practice"
+    ],
+    "url": "linear-algebra/fall2025/2025-01-29-section-22-practice/index.html"
   },
   {
     "course": "Linear Algebra",
