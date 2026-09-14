@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Radian Measure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Radian Measure</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Radian Measure</div>
+          <div class="step-subtitle">A circular perspective on angles</div>
+          <div class="step-body">
+            <p>
+              Up to now, every angle measure in this course has been given in degrees, a
+              well-known unit found in applications like navigation and surveying.
+              Mathematics and related fields more often use an alternative:
+              <b>radian measure</b>.
+            </p>
+            <p>
+              Radian measure compares the radius of a circle to the length along the
+              intercepted arc of a central angle (an angle with vertex at the circle's
+              center). In a circle of radius \(1\), a central angle of \(1\) radian
+              intercepts an arc of length \(1\); an angle of \(2\) radians intercepts an
+              arc of length \(2\), and so on.
+            </p>
+            <p class="muted small">
+              As a rule, any angle measure with no units stated is assumed to be in
+              radians.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition: The Radian</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <p>
+              A <b>radian</b> is an angle which, if placed with its vertex at the center
+              of a circle, intercepts an arc with length equal to the radius of that
+              circle.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Graph each angle</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(\theta = 1\)</p>
+            <angle-plane angle="57.30" label-a="θ = 1"></angle-plane>
+            <p><b>(b)</b> \(\theta = 3\)</p>
+            <angle-plane angle="171.89" label-a="θ = 3"></angle-plane>
+            <p class="muted small">Notice \(\theta = 3\) is just shy of \(\pi \approx 3.14\), a half rotation (\(180°\)).</p>
+            <p><b>(c)</b> \(\theta = 6\)</p>
+            <angle-plane angle="343.77" label-a="θ = 6"></angle-plane>
+            <p class="muted small">And \(\theta = 6\) is just shy of \(2\pi \approx 6.28\), a full rotation (\(360°\)).</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Radian-Degree Conversion</div>
+          <div class="step-subtitle">Two well-known angles</div>
+          <div class="step-body">
+            <p>To convert between degree and radian measure, we reference two angles:</p>
+            <p><reveal>\(360\)</reveal>° = <reveal>\(2\pi\)</reveal> radians \(\approx 6.28\) radians</p>
+            <p><reveal>\(180\)</reveal>° = <reveal>\(\pi\)</reveal> radians \(\approx 3.14\) radians</p>
+            <p>
+              Either equation gives a "unit ratio" equal to \(1\):
+              \(\dfrac{180°}{\pi} = \dfrac{\pi}{180°} = 1\)
+            </p>
+            <p>
+              <b>To convert degrees to radians</b>, multiply by \(\dfrac{\pi}{180°}\)
+              (this multiplies "in" the radian measure and divides "out" the degree
+              measure).
+            </p>
+            <p>
+              <b>To convert radians to degrees</b>, multiply by \(\dfrac{180°}{\pi}\)
+              (this multiplies "in" the degree measure and divides "out" the radian
+              measure).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 2 (a)–(b)</div>
+          <div class="step-subtitle">Convert degrees to radians</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(225°\)</p>
+            <p>
+              <reveal>\(225° \left(\dfrac{\pi}{180°}\right) = \dfrac{225}{180}\pi = \dfrac{5}{4}\pi = \dfrac{5\pi}{4}\)</reveal>
+            </p>
+            <p><b>(b)</b> \(-60°\)</p>
+            <p>
+              <reveal>\(-60° \left(\dfrac{\pi}{180°}\right) = -\dfrac{60}{180}\pi = -\dfrac{1}{3}\pi = -\dfrac{\pi}{3}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 2 (c)–(d)</div>
+          <div class="step-subtitle">Convert radians to degrees</div>
+          <div class="step-body">
+            <p><b>(c)</b> \(\dfrac{3\pi}{4}\)</p>
+            <p>
+              <reveal>\(\dfrac{3\pi}{4} \left(\dfrac{180°}{\pi}\right) = \dfrac{3}{4}(180°) = 135°\)</reveal>
+            </p>
+            <p><b>(d)</b> \(\dfrac{7\pi}{12}\)</p>
+            <p>
+              <reveal>\(\dfrac{7\pi}{12} \left(\dfrac{180°}{\pi}\right) = \dfrac{7}{12}(180°) = 105°\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Procedure: Reference Angle, in Radians</div>
+          <div class="step-subtitle">For any non-quadrantal angle \(\theta\), in standard position</div>
+          <div class="step-body">
+            <p>
+              <b>Step 1:</b> If \(\theta > 2\pi\) or \(\theta < 0\), find a coterminal angle
+              by adding or subtracting \(2\pi\) as many times as needed to get an angle
+              between \(0\) and \(2\pi\).
+            </p>
+            <p>
+              <b>Step 2:</b> If the result from Step 1 is between \(0\) and \(\dfrac{\pi}{2}\),
+              that result is \(\theta_r\). If not, subtract \(\pi\) and continue to Step 3.
+            </p>
+            <p>
+              <b>Step 3:</b> If the result from Step 2 is between \(0\) and \(\dfrac{\pi}{2}\),
+              that result is \(\theta_r\). If it's between \(-\dfrac{\pi}{2}\) and \(0\),
+              \(\theta_r\) is its absolute value. If neither, subtract \(\pi\) and repeat
+              this step.
+            </p>
+            <p class="muted small">
+              Identical in spirit to the degree-based procedure from Lesson 06, just
+              rewritten with \(\pi\) and \(2\pi\) standing in for \(180°\) and \(360°\).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 3 (a)–(b)</div>
+          <div class="step-subtitle">Find the reference angle, if possible</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(\theta = \dfrac{5\pi}{3}\)</p>
+            <p>
+              <reveal>Not in \((0, \pi/2)\), so subtract \(\pi\): \(\dfrac{5\pi}{3} - \pi = \dfrac{2\pi}{3}\).
+              Not in \((0,\pi/2)\) either; subtract \(\pi\) again: \(\dfrac{2\pi}{3} - \pi = -\dfrac{\pi}{3}\),
+              between \(-\pi/2\) and \(0\), so \(\theta_r = \dfrac{\pi}{3}\)</reveal>
+            </p>
+            <p><b>(b)</b> \(\theta = \dfrac{7\pi}{6}\)</p>
+            <p>
+              <reveal>Not in \((0,\pi/2)\); subtract \(\pi\): \(\dfrac{7\pi}{6} - \pi = \dfrac{\pi}{6}\),
+              between \(0\) and \(\pi/2\), so \(\theta_r = \dfrac{\pi}{6}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 3 (c)–(d)</div>
+          <div class="step-subtitle">Find the reference angle, if possible</div>
+          <div class="step-body">
+            <p><b>(c)</b> \(\theta = \dfrac{3\pi}{4}\)</p>
+            <p>
+              <reveal>Not in \((0,\pi/2)\); subtract \(\pi\): \(\dfrac{3\pi}{4} - \pi = -\dfrac{\pi}{4}\),
+              between \(-\pi/2\) and \(0\), so \(\theta_r = \dfrac{\pi}{4}\)</reveal>
+            </p>
+            <p><b>(d)</b> \(\theta = 3\pi\)</p>
+            <p><reveal>\(3\pi\) is coterminal with \(\pi\), a quadrantal angle, so \(\theta_r\) is undefined (DNE)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 3 (e)–(f)</div>
+          <div class="step-subtitle">Find the reference angle, if possible</div>
+          <div class="step-body">
+            <p><b>(e)</b> \(\theta = \dfrac{8\pi}{3}\)</p>
+            <p>
+              <reveal>Greater than \(2\pi\); subtract \(2\pi\): \(\dfrac{8\pi}{3} - 2\pi = \dfrac{2\pi}{3}\).
+              Not in \((0,\pi/2)\); subtract \(\pi\): \(\dfrac{2\pi}{3} - \pi = -\dfrac{\pi}{3}\),
+              between \(-\pi/2\) and \(0\), so \(\theta_r = \dfrac{\pi}{3}\)</reveal>
+            </p>
+            <p><b>(f)</b> \(\theta = -\dfrac{19\pi}{6}\)</p>
+            <p>
+              <reveal>Negative; add \(2\pi\) twice: \(-\dfrac{19\pi}{6} + 2\pi = -\dfrac{7\pi}{6}\),
+              still negative, \(-\dfrac{7\pi}{6} + 2\pi = \dfrac{5\pi}{6}\).
+              Not in \((0,\pi/2)\); subtract \(\pi\): \(\dfrac{5\pi}{6} - \pi = -\dfrac{\pi}{6}\),
+              between \(-\pi/2\) and \(0\), so \(\theta_r = \dfrac{\pi}{6}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Construct a first-quadrant chart, in radian measure</div>
+          <div class="step-body">
+            <table>
+              <tr><th></th><th>\(0\)</th><th>\(\pi/6\)</th><th>\(\pi/4\)</th><th>\(\pi/3\)</th><th>\(\pi/2\)</th></tr>
+              <tr>
+                <td>\(\sin\theta\)</td>
+                <td><reveal>\(0\)</reveal></td>
+                <td><reveal>\(\dfrac{1}{2}\)</reveal></td>
+                <td><reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal></td>
+                <td><reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal></td>
+                <td><reveal>\(1\)</reveal></td>
+              </tr>
+              <tr>
+                <td>\(\cos\theta\)</td>
+                <td><reveal>\(1\)</reveal></td>
+                <td><reveal>\(\dfrac{\sqrt{3}}{2}\)</reveal></td>
+                <td><reveal>\(\dfrac{\sqrt{2}}{2}\)</reveal></td>
+                <td><reveal>\(\dfrac{1}{2}\)</reveal></td>
+                <td><reveal>\(0\)</reveal></td>
+              </tr>
+              <tr>
+                <td>\(\tan\theta\)</td>
+                <td><reveal>\(0\)</reveal></td>
+                <td><reveal>\(\dfrac{\sqrt{3}}{3}\)</reveal></td>
+                <td><reveal>\(1\)</reveal></td>
+                <td><reveal>\(\sqrt{3}\)</reveal></td>
+                <td><reveal>undefined</reveal></td>
+              </tr>
+            </table>
+            <p class="muted small">
+              Same values as the degree-based chart from Lesson 03, just with the angles
+              relabeled in radians: \(0°, 30°, 45°, 60°, 90°\) become \(0, \pi/6, \pi/4,
+              \pi/3, \pi/2\).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Example 5 (a)–(b)</div>
+          <div class="step-subtitle">Evaluate using reference angles</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(\sin\left(\dfrac{5\pi}{3}\right)\)</p>
+            <angle-plane angle="300" label-a="θ = 5π/3"></angle-plane>
+            <p>
+              <reveal>\(\dfrac{5\pi}{3} \in\) QIV, where sine is negative. \(\theta_r = \dfrac{\pi}{3}\),
+              so \(\sin\left(\dfrac{5\pi}{3}\right) = -\sin\left(\dfrac{\pi}{3}\right) = -\dfrac{\sqrt{3}}{2}\)</reveal>
+            </p>
+            <p><b>(b)</b> \(\cos\left(\dfrac{7\pi}{6}\right)\)</p>
+            <angle-plane angle="210" label-a="θ = 7π/6"></angle-plane>
+            <p>
+              <reveal>\(\dfrac{7\pi}{6} \in\) QIII, where cosine is negative. \(\theta_r = \dfrac{\pi}{6}\),
+              so \(\cos\left(\dfrac{7\pi}{6}\right) = -\cos\left(\dfrac{\pi}{6}\right) = -\dfrac{\sqrt{3}}{2}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Example 5 (c)–(d)</div>
+          <div class="step-subtitle">Evaluate using reference angles</div>
+          <div class="step-body">
+            <p><b>(c)</b> \(\tan\left(\dfrac{3\pi}{4}\right)\)</p>
+            <angle-plane angle="135" label-a="θ = 3π/4"></angle-plane>
+            <p>
+              <reveal>\(\dfrac{3\pi}{4} \in\) QII, where tangent is negative. \(\theta_r = \dfrac{\pi}{4}\),
+              so \(\tan\left(\dfrac{3\pi}{4}\right) = -\tan\left(\dfrac{\pi}{4}\right) = -1\)</reveal>
+            </p>
+            <p><b>(d)</b> \(\csc\left(\dfrac{8\pi}{3}\right)\)</p>
+            <angle-plane angle="120" label-a="θ = 8π/3"></angle-plane>
+            <p class="muted small">\(\dfrac{8\pi}{3} - 2\pi = \dfrac{2\pi}{3}\) coterminal, shown above.</p>
+            <p>
+              <reveal>\(\dfrac{8\pi}{3}\) is coterminal with \(\dfrac{2\pi}{3} \in\) QII, where
+              cosecant (reciprocal of sine) is positive. \(\theta_r = \dfrac{\pi}{3}\), so
+              \(\csc\left(\dfrac{8\pi}{3}\right) = \csc\left(\dfrac{\pi}{3}\right)
+              = \dfrac{1}{\sin(\pi/3)} = \dfrac{2}{\sqrt{3}} = \dfrac{2\sqrt{3}}{3}\)</reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="14">
+          <div class="step-title">Looking Ahead</div>
+          <div class="step-subtitle">Radians unlock the rest of the toolkit</div>
+          <div class="step-body">
+            <p>
+              With radian measure defined, angles can now be treated as plain real
+              numbers, which is exactly what lets us define the unit circle's
+              coordinates as \((\cos\theta, \sin\theta)\), talk about arc length as
+              \(s = r\theta\), and eventually study the trig functions as functions of a
+              real variable, not just an angle in a triangle.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

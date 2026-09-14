@@ -2,6 +2,18 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-16",
+    "title": "Radian Measure",
+    "subtitle": "Lesson 08",
+    "description": "The radian as an arc-to-radius ratio, degree-radian conversion, the reference-angle procedure and first-quadrant chart rewritten in radians, and evaluating trig functions of radian angles by quadrant sign.",
+    "tags": [
+      "Radian Measure"
+    ],
+    "url": "trigonometry/2026/2026-09-16-lesson-08-radian-measure/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-14",
     "title": "Applications of Right Triangles",
     "subtitle": "Lesson 07",
