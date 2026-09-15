@@ -406,13 +406,100 @@ default 3:2 container would otherwise letterbox them.
 remember the CDN snippet above in a new lesson's own `<head>`, the same manual step
 `<geogebra>` already requires.
 
+### `<jsx-chain-demo>`: instructor-driven parameter cascade (added 2026-09-15)
+
+`<jsx-chain-demo param="t" tmin="0" tmax="6.283185307" var1-label="L" var1-fn="Math.cos(t)"
+var2-label="M" var2-fn="Math.sin(t)" var3-label="K" var3-fn="Math.cos(t) * Math.sin(t)">`
+(`renderJsxChainDemo` in `js/jsxgraph.js`). Built for right after the "From One Variable
+to Several: Motivating the Chain Rule" step (one independent variable: `x=g(t)`,
+`y=h(t)`, `z=f(x,y)`) in
+`calculus3/fall2025/2025-02-11-partial-derivatives/index.html`, so the dependency that
+step motivates in words is something a student watches happen before the theorem states
+it as a formula. One draggable
+JSXGraph `slider` (the parameter, named via `param`) sits above up to three read-only
+"driven" gauges (`var1`/`var2`/`var3`, each with its own `-label`, a JS `-fn` expression
+in the parameter, and an optional `-lo`/`-hi` domain override, default `[-1, 1]`). Only
+the parameter slider is draggable: the driven rows are plain fixed points whose position
+is a function of the slider's current value, matching this project's instructor-driven
+interaction philosophy (same as `<sign-circle>`/`<jsx-radian-arc>`: one thing to grab,
+everything else reacts). No `var{n}-fn` attributes at all renders a working default
+(L = cos t, M = sin t, K = cos t times sin t); passing any `var{n}-fn` replaces the whole
+set with exactly the rows given (1 to 3), so a different lesson can demo a different
+composition without touching `js/jsxgraph.js`.
+
+Each driven row maps its own semantic domain onto one shared fixed-width on-screen track
+(`GAUGE_TRACK_LEN`), the same "semantic value, fixed screen size" split `<sign-circle>`'s
+`radius` attribute already relies on, so the parameter's own domain (radians here, but
+caller-supplied via `tmin`/`tmax`) and the driven rows' differing ranges can share one
+visual layout without any row secretly meaning two different things on screen.
+
+**`combo-fn` (added the same day, right after the tag itself): a 4th row that is a
+function OF the driven rows, not of t directly** (e.g. `combo-label="F"
+combo-fn="L + M**2 + K**3 + 4"`), for the second link in the chain: t moves L/M/K, then
+L/M/K move this combined quantity, mirroring z=f(x,y) sitting on top of x(t)/y(t) in the
+theorem itself rather than depending on t directly. Written using the three driven rows'
+own labels as the formula's parameter names (`new Function(rows[0].label, rows[1].label,
+rows[2].label, ...)`), so it reads like the math on the page instead of needing separate
+generic variable names; only works when there are exactly 3 `var{n}-fn` rows to name (a
+clear `console.error` otherwise, this project's usual no-suppression convention). Its
+gauge domain (`combo-lo`/`combo-hi`) auto-fits to the formula's real min/max sampled over
+`[tmin, tmax]` (200 samples, 5% padding) when not given explicitly, since a combined
+quantity routinely lands on a different scale than the `[-1,1]`-ish rows feeding it (the
+default demo's F ranges about 2.9 to 5.5, nothing like L/M/K's own ranges).
+
+**Per-row Fix button (added the same day, after `combo-fn`)**: every base row (not the
+combo row itself, since isolating a row's contribution only makes sense for the rows a
+combo formula is built from) gets a JSXGraph `button` element that toggles `row.fixed`.
+Fixing a row freezes it at whatever value it holds the instant you click Fix (`row.frozenValue
+= row.f(slider.Value())`) and greys out its dot (`fillColor: '#9aa0a6'`); dragging t
+afterward no longer moves that row at all, only the still-unfixed ones (and, through
+them, the combo row) -- this is how the tag demonstrates holding every other variable
+constant to isolate one intermediate's contribution to the combo quantity, the visual
+equivalent of a partial derivative. **Deliberately not draggable once fixed**: it just
+locks in place at that snapshot; to get a different frozen value, unfix, drag t until the
+row shows the value you want, then fix again. Every row's rendering (`mappedX`, its own
+readout text, and the combo row's own formula) reads `row.value(t)` -- `row.fixed ?
+row.frozenValue : row.f(t)` -- uniformly, rather than special-casing fixed vs. live rows
+at each call site.
+
+Implementation note on the button label: JSXGraph's `button` element is built internally
+on top of a `text` element (`i.create("text", ..., l)`, per its own source), and its
+label argument goes through that same `text` element's `setText`, so passing a function
+(`() => (row.fixed ? 'Unfix' : 'Fix')`) as the label re-evaluates it on every
+`board.update()` exactly like any other dynamic text -- no manual DOM manipulation of the
+button's rendered node needed to flip the label.
+
+One JSXGraph quirk found and fixed while building this: a `slider` shows its own
+"name = value" label near the handle by default, even with `name: ''` set (it still
+prints the bare value), which collided visually with this tag's own readout text placed
+to the right of the track. `withLabel: false` on the slider's own `create()` call turns
+that default label off entirely, leaving just this tag's own readout.
+
+New CSS modifier: `.jsx-board--wide` (aspect-ratio 2.4/1, `css/steps.css`), since this tag
+stacks a slider plus a few gauge rows: short and wide, not a 2D plot, so the default 3:2
+`.jsx-board` box would waste vertical space.
+
+Verified end-to-end with a headless-Chromium (Playwright) script: loaded the lesson,
+advanced Slide Mode to the new step, dragged the parameter slider's actual on-screen
+handle, and confirmed every driven row's readout updates to the correct value with no
+console errors. Also verified the Fix mechanic specifically: fixed M and K's buttons
+(both flipped to "Unfix," both dots greyed out), dragged t from π to 2π, and confirmed
+only L and F changed (L: -1.00 to 1.00, F: 3.00 to 5.00) while M and K's readouts stayed
+exactly put, matching L + 0² + 0³ + 4 at both ends.
+
 ### Reference build
 
-- `trigonometry/2026/2026-09-16-lesson-08-radian-measure/index.html` — first (and so far
-  only) lesson using this engine. Step 2 (Definition: The Radian) uses
-  `<jsx-radian-arc radius="5">` right where the radian is first defined, so the
-  arc-length/radius relationship is explored live before the degree-radian conversion
-  procedure two steps later gives it a formula.
+- `trigonometry/2026/2026-09-16-lesson-08-radian-measure/index.html` — first lesson using
+  this engine. Step 2 (Definition: The Radian) uses `<jsx-radian-arc radius="5">` right
+  where the radian is first defined, so the arc-length/radius relationship is explored
+  live before the degree-radian conversion procedure two steps later gives it a formula.
+- `calculus3/fall2025/2025-02-11-partial-derivatives/index.html` — second lesson, and
+  first use of `<jsx-chain-demo>`. Inserted as its own step ("Explore: Watching the Chain
+  Rule in Motion") right after "From One Variable to Several: Motivating the Chain Rule",
+  before the one-independent-variable theorem. Uses the tag's `combo-fn` row too:
+  `F = L + M² + K³ + 4`, so the step shows both links in the chain, t driving L/M/K and
+  L/M/K driving F, not just the first one. Has an app-managed `content.json` sidecar; the
+  step was mirrored into it by hand.
 
 ## editor-app: Electron install gotcha
 

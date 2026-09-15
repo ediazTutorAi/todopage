@@ -331,3 +331,6 @@ reveal.triangle-overlay:not(.is-revealed) {
    on the board itself just to keep circles round, but a 3:2 container still
    letterboxes them unnecessarily -- square reads better for these. */
 .jsx-board--square { aspect-ratio: 1 / 1; }
+/* <jsx-chain-demo> stacks a slider + a few gauge rows -- short and wide,
+   not a 2D plot -- so the default 3:2 box wastes vertical space. */
+.jsx-board--wide { aspect-ratio: 2.4 / 1; }

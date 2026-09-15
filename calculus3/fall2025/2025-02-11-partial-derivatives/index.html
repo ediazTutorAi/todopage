@@ -29,6 +29,10 @@
   <link rel="stylesheet" href="/todopage/css/steps.css">
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
+  <!-- JSXGraph (for <jsx-chain-demo>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
 </head>
 
 <body>
@@ -183,6 +187,32 @@
         </div>
 
         <div class="step is-visible" data-step="11">
+          <div class="step-title">Explore</div>
+          <div class="step-subtitle">Watching the Chain Rule in Motion</div>
+          <div class="step-body">
+            One parameter, $t$, driving several dependent quantities at once, which is
+            exactly what "$x$ and $y$ are themselves both functions of $t$" means. Drag
+            the slider below and watch $L$, $M$, and $K$ (playing the role of $x(t)$,
+            $y(t)$, and a third intermediate quantity) move together as $t$ moves. Then
+            watch $F=L+M^2+K^3+4$ respond in turn: it doesn't depend on $t$ directly,
+            only on $L$, $M$, and $K$, the same way $z=f(x,y)$ sits on top of $x(t)$ and
+            $y(t)$ in the theorem below. Nothing here is typed in or computed by hand;
+            it's the same two-link dependency (parameter to intermediates, intermediates
+            to the outer quantity) the chain rule you're about to state describes.<br><br>
+            Each row's Fix button freezes it at its current value: fix $M$ and $K$, then
+            drag $t$ again, and only $L$ moves, so $F$'s change now comes from $L$ alone.
+            This is the same idea as holding every other variable constant to isolate one
+            partial derivative's contribution.
+            <jsx-chain-demo param="t" tmin="0" tmax="6.283185307"
+              var1-label="L" var1-fn="Math.cos(t)"
+              var2-label="M" var2-fn="Math.sin(t)"
+              var3-label="K" var3-fn="Math.cos(t) * Math.sin(t)"
+              combo-label="F" combo-fn="L + M**2 + K**3 + 4">
+            </jsx-chain-demo>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
           <div class="step-title">Theorem</div>
           <div class="step-subtitle">Chain Rule for One Independent Variable</div>
           <div class="step-body">
@@ -195,7 +225,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="12">
+        <div class="step is-visible" data-step="13">
           <div class="step-title">Example</div>
           <div class="step-subtitle">Chain Rule for One Independent Variable</div>
           <div class="step-body">
@@ -209,7 +239,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="13">
+        <div class="step is-visible" data-step="14">
           <div class="step-title">Theorem</div>
           <div class="step-subtitle">Chain Rule for Two Independent Variables</div>
           <div class="step-body">
@@ -223,7 +253,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="14">
+        <div class="step is-visible" data-step="15">
           <div class="step-title">Definition</div>
           <div class="step-subtitle">Tree Diagrams</div>
           <div class="step-body">
@@ -243,7 +273,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="15">
+        <div class="step is-visible" data-step="16">
           <div class="step-title">Example</div>
           <div class="step-subtitle">Chain Rule for Two Independent Variables</div>
           <div class="step-body">
@@ -260,7 +290,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="16">
+        <div class="step is-visible" data-step="17">
           <div class="step-title">Definition</div>
           <div class="step-subtitle">The Generalized Chain Rule</div>
           <div class="step-body">
@@ -273,7 +303,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="17">
+        <div class="step is-visible" data-step="18">
           <div class="step-title">Theorem</div>
           <div class="step-subtitle">Implicit Differentiation of a Function of Two Variables</div>
           <div class="step-body">
@@ -287,7 +317,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="18">
+        <div class="step is-visible" data-step="19">
           <div class="step-title">Theorem</div>
           <div class="step-subtitle">Implicit Differentiation of a Function of Three Variables</div>
           <div class="step-body">
@@ -298,7 +328,7 @@
           </div>
         </div>
 
-        <div class="step is-visible" data-step="19">
+        <div class="step is-visible" data-step="20">
           <div class="step-title">Example</div>
           <div class="step-subtitle">Implicit Differentiation</div>
           <div class="step-body">
