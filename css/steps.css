@@ -321,6 +321,15 @@ reveal.triangle-overlay:not(.is-revealed) {
   width: min(720px, 100%);
   margin: 0.9rem auto;
 }
+/* <jsx-unit-circle> packs 16 point labels plus a live six-function readout
+   panel into one board -- at the default 720px width the labels crowd each
+   other. Text is fixed-px (js/jsxgraph.js never scales font size with the
+   board), so a wider container is what actually buys the labels more room:
+   it grows the circle and label spacing in real pixels without growing the
+   text sitting on them. */
+.step-body .jsx-diagram--circle {
+  width: min(920px, 100%);
+}
 .jsx-board {
   width: 100%;
   aspect-ratio: 3 / 2;
@@ -334,3 +343,7 @@ reveal.triangle-overlay:not(.is-revealed) {
 /* <jsx-chain-demo> stacks a slider + a few gauge rows -- short and wide,
    not a 2D plot -- so the default 3:2 box wastes vertical space. */
 .jsx-board--wide { aspect-ratio: 2.4 / 1; }
+/* <jsx-unit-circle> pairs a (roughly square) circle with a readout panel to
+   its right, in one board -- wider than a plain circle but not as wide as
+   <jsx-chain-demo>'s slider stack. */
+.jsx-board--unit-circle { aspect-ratio: 1.75 / 1; }

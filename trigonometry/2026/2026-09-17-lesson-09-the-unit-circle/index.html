@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>The Unit Circle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (this lesson leans heavily on <jsx-unit-circle> as its main manipulative) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>The Unit Circle</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">The Unit Circle</div>
+          <div class="step-subtitle">The most valuable reference tool in this course</div>
+          <div class="step-body">
+            <p>
+              The unit circle is a circle of radius \(1\) centered at the origin. Every
+              point on it corresponds to an angle \(\theta\) in standard position, and to
+              a pair of coordinates \((\cos\theta, \sin\theta)\).
+            </p>
+            <p>
+              Much like the Quadrant I Chart, the unit circle is reference material you'll
+              use for the rest of this course. It does <b>not</b> need to be memorized —
+              with a little practice, you can reconstruct it from just two facts: how to
+              divide a circle into \(6\) pieces, and how to divide it into \(4\).
+            </p>
+            <p class="muted small">
+              Drag the blue point around the circle in every diagram below — the panel to
+              its right updates live with the angle and all six trig function values.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Constructing the Unit Circle</div>
+          <div class="step-subtitle">Click "Build →" to add each step in turn</div>
+          <div class="step-body">
+            <p><b>Step 1:</b> Draw the \(xy\)-axes and a circle of radius \(1\) centered
+              at the origin. Mark \((-1,0)\) as \(\pi\), a reminder that \(180° = \pi\)
+              radians.</p>
+            <p><b>Steps 2–3:</b> Since \(\pi/6\) is an important angle, divide the upper
+              semicircle into \(6\) equal pieces, draw chords through the origin
+              connecting opposite points, and count off the marked points:
+              \(\pi/6, 2\pi/6, 3\pi/6, 4\pi/6, \ldots\)</p>
+            <p><b>Step 4:</b> Repeat the process, this time dividing the upper semicircle
+              into \(4\) equal pieces using \(\pi/4\). Together, the two families give
+              \(16\) points around the circle.</p>
+            <p><b>Step 5:</b> Each point along the circle corresponds to a cosine and a
+              sine value: \((x, y) = (\cos\theta, \sin\theta)\). Using the Quadrant I
+              Chart, label each Quadrant I point this way.</p>
+            <p><b>Step 6 (optional):</b> Label the remaining points using the Quadrant I
+              values and symmetry — the magnitudes repeat every quadrant, only the signs
+              of \(x\) and \(y\) change. This labeling can wait until you actually need
+              it.</p>
+            <p class="muted small">
+              The "Build →" button adds one step at a time, in order; once every step is
+              showing it becomes "↺ Reset." Drag the point around at any stage — the
+              readout panel keeps updating live, even mid-construction.
+            </p>
+            <jsx-unit-circle build start-angle="30"></jsx-unit-circle>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Evaluate each expression using the unit circle</div>
+          <div class="step-body">
+            <jsx-unit-circle show-grid="all" show-labels="all" start-angle="150"></jsx-unit-circle>
+            <p><b>(a)</b> \(\sin\left(\dfrac{5\pi}{6}\right)\)
+              <reveal>\(= \dfrac{1}{2}\) (the \(y\)-value at \(150°\))</reveal></p>
+            <p><b>(b)</b> \(\cos(225°)\)
+              <reveal>\(= -\dfrac{\sqrt{2}}{2}\) (the \(x\)-value at \(225°\))</reveal></p>
+            <p><b>(c)</b> \(\tan\left(\dfrac{11\pi}{6}\right)\)
+              <reveal>\(= \dfrac{-1/2}{\sqrt{3}/2} = -\dfrac{1}{\sqrt{3}} = -\dfrac{\sqrt{3}}{3}\)
+              (\(y\)-value over \(x\)-value at \(330°\))</reveal></p>
+            <p><b>(d)</b> \(\csc\left(\dfrac{4\pi}{3}\right)\)
+              <reveal>\(= \dfrac{1}{\sin(4\pi/3)} = \dfrac{1}{-\sqrt{3}/2} = -\dfrac{2\sqrt{3}}{3}\)</reveal></p>
+            <p><b>(e)</b> \(\cot(180°)\)
+              <reveal>\(= \dfrac{x}{y} = \dfrac{-1}{0}\), undefined</reveal></p>
+            <p class="muted small">
+              Drag the point to \(150°\), \(225°\), \(330°\), \(240°\), and \(180°\) in
+              turn — the readout panel confirms each value above as you go.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Coterminal angles not already on the circle</div>
+          <div class="step-body">
+            <p>
+              Some special angles yield exact values but fall outside a single
+              revolution. Add or subtract \(360°\) (or \(2\pi\)) as many times as needed
+              to land on a coterminal angle that <i>is</i> on the unit circle.
+            </p>
+            <jsx-unit-circle coterminal show-grid="all" show-labels="all" start-angle="-690"></jsx-unit-circle>
+            <p><b>(a)</b> \(\sin\left(-\dfrac{5\pi}{6}\right)\)
+              <reveal>\(-\dfrac{5\pi}{6} + 2\pi = \dfrac{7\pi}{6}\), so this
+              \(= \sin\left(\dfrac{7\pi}{6}\right) = -\dfrac{1}{2}\)</reveal></p>
+            <p><b>(b)</b> \(\cos(-690°)\)
+              <reveal>\(-690° + 360° = -330°\), \(-330° + 360° = 30°\), so this
+              \(= \cos(30°) = \dfrac{\sqrt{3}}{2}\)</reveal></p>
+            <p><b>(c)</b> \(\tan(5\pi)\)
+              <reveal>\(5\pi - 2\pi = 3\pi\), \(3\pi - 2\pi = \pi\), so this
+              \(= \tan(\pi) = \dfrac{0}{-1} = 0\)</reveal></p>
+            <p><b>(d)</b> \(\csc\left(\dfrac{17\pi}{6}\right)\)
+              <reveal>\(\dfrac{17\pi}{6} - 2\pi = \dfrac{5\pi}{6}\), so this
+              \(= \csc\left(\dfrac{5\pi}{6}\right) = \dfrac{1}{1/2} = 2\)</reveal></p>
+            <p><b>(e)</b> \(\sec(1290°)\)
+              <reveal>\(1290° - 360° = 930°\), \(930° - 360° = 570°\), \(570° - 360° = 210°\),
+              so this \(= \sec(210°) = \dfrac{1}{-\sqrt{3}/2} = -\dfrac{2\sqrt{3}}{3}\)</reveal></p>
+            <p class="muted small">
+              The diagram above starts at \(-690°\) (part (b)) — drag it around; the
+              panel shows the raw angle, how many full rotations get removed, and the
+              resulting angle already on the circle.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 3 (a)</div>
+          <div class="step-subtitle">Given one ratio, find the other five</div>
+          <div class="step-body">
+            <p>Assume \(0 \le \theta < 2\pi\). Given \(\cos(\theta) = -\dfrac{1}{2}\),
+              find the values of the other five trigonometric functions.</p>
+            <jsx-unit-circle show-grid="all" show-labels="all" target-x="-0.5" start-angle="120"></jsx-unit-circle>
+            <p class="muted small">
+              The dashed line marks every point with \(x = -1/2\) — drag the point to
+              each of its two intersections with the circle (\(120°\) and \(240°\)).
+            </p>
+            <reveal class="solution">
+              Two angles satisfy \(\cos\theta = -1/2\): \(\theta = 2\pi/3\) (\(120°\)) and
+              \(\theta = 4\pi/3\) (\(240°\)). Since \(\cos\theta\) alone doesn't pin down
+              the quadrant, \(\sin\theta = \pm\sqrt{3}/2\), and every ratio built from it
+              carries the same \(\pm\):
+              \(\sec\theta = -2\), \(\csc\theta = \pm 2\sqrt{3}/3\),
+              \(\tan\theta = \pm\sqrt{3}\), \(\cot\theta = -\sqrt{3}/3\).
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 3 (b)</div>
+          <div class="step-subtitle">Two conditions pin down a single angle</div>
+          <div class="step-body">
+            <p>Given \(\sin(\theta) = -\dfrac{\sqrt{3}}{2}\) and \(\cos(\theta) > 0\),
+              find \(\tan(\theta)\), if possible.</p>
+            <jsx-unit-circle show-grid="all" show-labels="all" target-y="-0.8660254" start-angle="300"></jsx-unit-circle>
+            <p class="muted small">
+              The dashed line marks \(y = -\sqrt{3}/2\) — it crosses the circle twice, but
+              only one crossing also has \(\cos\theta > 0\) (positive \(x\)). Drag to find it.
+            </p>
+            <reveal class="solution">
+              \(y = -\sqrt3/2\) meets the circle at \(240°\) and \(300°\); only \(300°\)
+              (\(5\pi/3\)) has positive \(x\). There,
+              \(\tan(5\pi/3) = \dfrac{-\sqrt3/2}{1/2} = -\sqrt3\).
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 3 (c)</div>
+          <div class="step-subtitle">A squared condition gives four solutions</div>
+          <div class="step-body">
+            <p>Find the exact value(s) for \(\theta\) given that
+              \(\cos^2(\theta) = \dfrac{1}{2}\).</p>
+            <jsx-unit-circle show-grid="four" show-labels="all" target-x="0.70710678,-0.70710678" start-angle="45"></jsx-unit-circle>
+            <p class="muted small">
+              \(\cos\theta = \pm\sqrt{1/2} = \pm\sqrt2/2\) — two dashed lines, each
+              crossing the circle twice, for four solutions total. Drag to each in turn.
+            </p>
+            <reveal class="solution">
+              \(\cos\theta = \sqrt2/2\) at \(\pi/4\) and \(7\pi/4\); \(\cos\theta = -\sqrt2/2\)
+              at \(3\pi/4\) and \(5\pi/4\). So
+              \(\theta \in \{\pi/4,\ 3\pi/4,\ 5\pi/4,\ 7\pi/4\}\).
+            </reveal>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Looking Ahead</div>
+          <div class="step-subtitle">One diagram, every trig identity to come</div>
+          <div class="step-body">
+            <p>
+              Notice the readout panel above always grouped values that behave the same
+              way: \(\sin\)/\(\csc\), \(\cos\)/\(\sec\), and \(\tan\)/\(\cot\) are always
+              reciprocals of each other, and \(\tan\theta\) is always \(\sin\theta /
+              \cos\theta\). These reciprocal and quotient relationships — along with
+              \(\sin^2\theta + \cos^2\theta = 1\), visible in the fact that every point
+              you dragged stayed exactly distance \(1\) from the origin — are exactly the
+              identities the next lesson makes precise.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

@@ -506,8 +506,350 @@ function renderJsxChainDemo(el) {
   });
 }
 
+// <jsx-unit-circle start-angle="60" show-grid show-labels="all" coterminal
+//   target-x="-0.5" target-y="-0.8660254,0.5">
+//
+// One flexible manipulative reused across every step of the Unit Circle
+// lesson (construction, evaluating expressions, coterminal reduction, and
+// "given one ratio find the rest"), rather than a one-off tag per exercise --
+// same reasoning as <triangle>/<angle-plane> being general primitives instead
+// of per-example diagrams. The draggable point is deliberately always
+// SNAPPED to the circle's 16 conventional special angles (multiples of 30°
+// and 45°) -- unlike <sign-circle>, which drags continuously because its
+// whole point is watching a sign flip smoothly, this diagram's whole point
+// *is* those 16 memorizable points, so free continuous dragging would just
+// make it harder to land on the value being taught.
+//
+// Live readout text is plain Unicode ("θ = 60°  (π/3)", "sin θ = √3/2"), not
+// KaTeX -- same convention <jsx-radian-arc>/<jsx-chain-demo> already use for
+// their dynamic text, since a JSXGraph text element rewrites its own DOM
+// node's content on every board update, which would immediately blow away
+// any one-time KaTeX-rendered markup. Exact fraction strings only ever come
+// from the SPECIAL_ANGLES table below (a fixed, hand-checked lookup), never
+// computed at runtime -- there's no general decimal-to-exact-fraction logic
+// here, just 16 known points.
+//
+// `coterminal` (bare boolean) lets the point's angle accumulate across
+// multiple laps instead of resetting every revolution -- `start-angle` can
+// then be an out-of-range value like "-690" or "900", and dragging the point
+// around single-handedly demonstrates "add/subtract 360° until it lands in
+// [0°, 360°)" instead of that being three lines of arithmetic on paper.
+//
+// `target-x`/`target-y` (each a comma-separated list of decimals) draw fixed
+// dashed reference lines at those coordinates, colored by the site's
+// existing blue/red sign convention -- for "given cos(θ) = -1/2, find θ"
+// style problems, so the instructor drags the point to the line's
+// intersections with the circle rather than the diagram giving the answer
+// away.
+const UNIT_CIRCLE_FOUR_COLOR = '#c2740c';
+const UNIT_CIRCLE_RING_ANGLE = 1.32;
+const UNIT_CIRCLE_RING_COORD = 1.7;
+const UNIT_CIRCLE_HALF = 2.05;
+
+// One row per special angle, hand-checked against the standard unit circle
+// (reference angles 30°/45°/60°, signs by quadrant). `family` drives the
+// blue/orange/black grouping from the workbook's own annotation convention
+// (six-fold π/6 divisions vs. four-fold π/4 divisions vs. the axes) --
+// deliberately a third, local color (UNIT_CIRCLE_FOUR_COLOR), not tied to
+// --negative/--accent, since it marks a construction family, not a sign.
+const SPECIAL_ANGLES = [
+  { deg: 0, family: 'axis', rad: '0', cos: '1', sin: '0', tan: '0', csc: 'undefined', sec: '1', cot: 'undefined' },
+  { deg: 30, family: 'six', rad: 'π/6', cos: '√3/2', sin: '1/2', tan: '√3/3', csc: '2', sec: '2√3/3', cot: '√3' },
+  { deg: 45, family: 'four', rad: 'π/4', cos: '√2/2', sin: '√2/2', tan: '1', csc: '√2', sec: '√2', cot: '1' },
+  { deg: 60, family: 'six', rad: 'π/3', cos: '1/2', sin: '√3/2', tan: '√3', csc: '2√3/3', sec: '2', cot: '√3/3' },
+  { deg: 90, family: 'axis', rad: 'π/2', cos: '0', sin: '1', tan: 'undefined', csc: '1', sec: 'undefined', cot: '0' },
+  { deg: 120, family: 'six', rad: '2π/3', cos: '-1/2', sin: '√3/2', tan: '-√3', csc: '2√3/3', sec: '-2', cot: '-√3/3' },
+  { deg: 135, family: 'four', rad: '3π/4', cos: '-√2/2', sin: '√2/2', tan: '-1', csc: '√2', sec: '-√2', cot: '-1' },
+  { deg: 150, family: 'six', rad: '5π/6', cos: '-√3/2', sin: '1/2', tan: '-√3/3', csc: '2', sec: '-2√3/3', cot: '-√3' },
+  { deg: 180, family: 'axis', rad: 'π', cos: '-1', sin: '0', tan: '0', csc: 'undefined', sec: '-1', cot: 'undefined' },
+  { deg: 210, family: 'six', rad: '7π/6', cos: '-√3/2', sin: '-1/2', tan: '√3/3', csc: '-2', sec: '-2√3/3', cot: '√3' },
+  { deg: 225, family: 'four', rad: '5π/4', cos: '-√2/2', sin: '-√2/2', tan: '1', csc: '-√2', sec: '-√2', cot: '1' },
+  { deg: 240, family: 'six', rad: '4π/3', cos: '-1/2', sin: '-√3/2', tan: '√3', csc: '-2√3/3', sec: '-2', cot: '√3/3' },
+  { deg: 270, family: 'axis', rad: '3π/2', cos: '0', sin: '-1', tan: 'undefined', csc: '-1', sec: 'undefined', cot: '0' },
+  { deg: 300, family: 'six', rad: '5π/3', cos: '1/2', sin: '-√3/2', tan: '-√3', csc: '-2√3/3', sec: '2', cot: '-√3/3' },
+  { deg: 315, family: 'four', rad: '7π/4', cos: '√2/2', sin: '-√2/2', tan: '-1', csc: '-√2', sec: '√2', cot: '-1' },
+  { deg: 330, family: 'six', rad: '11π/6', cos: '√3/2', sin: '-1/2', tan: '-√3/3', csc: '-2', sec: '2√3/3', cot: '-√3' },
+];
+
+function polarDeg(r, deg) {
+  const rad = deg * Math.PI / 180;
+  return [r * Math.cos(rad), r * Math.sin(rad)];
+}
+
+function nearestSpecialAngle(deg) {
+  let best = SPECIAL_ANGLES[0];
+  let bestDist = Infinity;
+  for (const entry of SPECIAL_ANGLES) {
+    const d = Math.min(Math.abs(deg - entry.deg), 360 - Math.abs(deg - entry.deg));
+    if (d < bestDist) { bestDist = d; best = entry; }
+  }
+  return { entry: best, dist: bestDist };
+}
+
+function trigValueColor(str, accent, negative, muted) {
+  if (str === 'undefined') return muted;
+  return str.startsWith('-') ? negative : accent;
+}
+
+function renderJsxUnitCircle(el) {
+  if (typeof JXG === 'undefined') {
+    console.error(
+      '<jsx-unit-circle>: JXG is not defined. Add the JSXGraph <link>/<script> tags ' +
+      'to this lesson\'s <head> -- see the comment at the top of js/jsxgraph.js ' +
+      'for the exact snippet.'
+    );
+    return;
+  }
+
+  const startAngle = parseFloat(el.getAttribute('start-angle') || '0');
+  // `build` (bare boolean): instead of the caller picking one fixed
+  // show-grid/show-labels combination, the diagram starts bare (axes + circle
+  // only) and a button steps through the workbook's own four-stage
+  // construction procedure in place, in a single diagram, exactly like
+  // <triangle build> steps through constructing a triangle -- see the
+  // BUILD_STAGE_* constants below for what each stage adds. Forces the grid
+  // and label data to be built for every family/point (gridMode/labelsMode
+  // 'all'); which pieces are actually *visible* is then a function of the
+  // live `stage` variable instead of being decided once at creation time.
+  const buildMode = el.hasAttribute('build');
+  // A bare `show-grid` means "all"; `show-grid="six"`/`"four"` narrows to just
+  // one construction family, so the workbook's own two-pass procedure (first
+  // divide into 6, then separately into 4) can be two lecture steps instead
+  // of dumping the finished grid on screen at once.
+  const gridMode = buildMode ? 'all' : (el.hasAttribute('show-grid') ? (el.getAttribute('show-grid') || 'all') : null);
+  const labelsMode = buildMode ? 'all' : el.getAttribute('show-labels'); // null | "q1" | "all"
+  const coterminal = el.hasAttribute('coterminal');
+  const targetXs = (el.getAttribute('target-x') || '').split(',').map(Number).filter(Number.isFinite);
+  const targetYs = (el.getAttribute('target-y') || '').split(',').map(Number).filter(Number.isFinite);
+
+  const half = UNIT_CIRCLE_HALF;
+  const panelStart = half + 0.35;
+  const panelWidth = 3.1;
+  const rightX = panelStart + panelWidth;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--circle';
+  const boardHost = document.createElement('div');
+  boardHost.className = 'jsx-board jsx-board--unit-circle';
+  boardHost.id = `jsx-board-${++boardCounter}`;
+  container.appendChild(boardHost);
+  el.replaceWith(container);
+
+  const board = JXG.JSXGraph.initBoard(boardHost.id, {
+    boundingbox: [-half, half + 0.1, rightX, -(half + 0.1)],
+    axis: false,
+    showNavigation: false,
+    showCopyright: false,
+    keepaspectratio: true,
+    pan: { enabled: false },
+    zoom: { enabled: false },
+    resize: { enabled: true, throttle: 100 },
+  });
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const lineColor = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+  const muted = cssVar('--muted') || '#6b7280';
+
+  // Short, hand-drawn axes (not board axis:true) that stop before the label
+  // ring / readout panel, rather than JSXGraph's default axis spanning the
+  // full width of the board -- including the panel.
+  board.create('segment', [[-1.15, 0], [1.15, 0]], {
+    strokeColor: ink, strokeWidth: AXIS_STROKE, lastArrow: { size: AXIS_ARROW_SIZE, type: 1 }, fixed: true, highlight: false,
+  });
+  board.create('segment', [[0, -1.15], [0, 1.15]], {
+    strokeColor: ink, strokeWidth: AXIS_STROKE, lastArrow: { size: AXIS_ARROW_SIZE, type: 1 }, fixed: true, highlight: false,
+  });
+
+  const center = board.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+  const circle = board.create('circle', [center, 1], {
+    strokeColor: accent, strokeWidth: REF_CIRCLE_STROKE, fixed: true, highlight: false, name: '',
+  });
+
+  // `stage` only moves (via the Build/Reset button created near the bottom of
+  // this function, once `buildMode` is confirmed) when `build` is set;
+  // outside build mode every gated element below is just given `stage: null`
+  // (always visible), so this declaration is harmless either way. Stages
+  // mirror the workbook's own four-step procedure: 1 = six-fold division
+  // (Steps 2-3), 2 = + four-fold division (Step 4), 3 = + Quadrant I
+  // coordinate labels (Step 5), 4 = + the rest, by symmetry (Step 6).
+  let stage = 0;
+  const BUILD_MAX_STAGE = 4;
+  function familyStage(family) { return family === 'six' ? 1 : family === 'four' ? 2 : 0; }
+
+  function drawChord(deg, color, requiredStage) {
+    const [x1, y1] = polarDeg(1, deg);
+    const [x2, y2] = polarDeg(1, deg + 180);
+    board.create('segment', [[x1, y1], [x2, y2]], {
+      strokeColor: color, strokeWidth: REF_CIRCLE_STROKE, fixed: true, highlight: false,
+      visible: requiredStage == null ? true : () => stage >= requiredStage,
+    });
+  }
+  function drawDot(deg, color, requiredStage) {
+    const [x, y] = polarDeg(1, deg);
+    board.create('point', [x, y], {
+      name: '', size: 4, strokeColor: '#fff', strokeWidth: 1, fillColor: color, fixed: true, highlight: false,
+      visible: requiredStage == null ? true : () => stage >= requiredStage,
+    });
+  }
+  function drawRingText(r, deg, str, color, fontSize, requiredStage) {
+    const [x, y] = polarDeg(r, deg);
+    board.create('text', [x, y, str], {
+      fontSize, color, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:600',
+      visible: requiredStage == null ? true : () => stage >= requiredStage,
+    });
+  }
+
+  // show-grid: the construction picture itself -- the four blue chords that
+  // divide the circle into 6 (multiples of 30°), the two orange chords that
+  // divide it into 4 (multiples of 45°), a dot at each of the 16 resulting
+  // points, and each point's radian measure on the outer ring.
+  if (gridMode) {
+    if (gridMode === 'six' || gridMode === 'all') [30, 60, 120, 150].forEach((d) => drawChord(d, accent, buildMode ? 1 : null));
+    if (gridMode === 'four' || gridMode === 'all') [45, 135].forEach((d) => drawChord(d, UNIT_CIRCLE_FOUR_COLOR, buildMode ? 2 : null));
+    SPECIAL_ANGLES
+      .filter((entry) => entry.family === 'axis' || gridMode === 'all' || entry.family === gridMode)
+      .forEach((entry) => {
+        const color = entry.family === 'four' ? UNIT_CIRCLE_FOUR_COLOR : entry.family === 'six' ? accent : ink;
+        const required = buildMode ? familyStage(entry.family) : null;
+        drawDot(entry.deg, color, required);
+        drawRingText(UNIT_CIRCLE_RING_ANGLE, entry.deg, entry.rad, color, TICK_LABEL_FONT, required);
+      });
+  }
+
+  // show-labels: the (cos θ, sin θ) coordinate pair at each point -- "q1"
+  // mirrors the workbook's Step 5 (reason it out for Quadrant I via the
+  // Quadrant I Chart), "all" mirrors the optional Step 6 (extend by
+  // symmetry) -- two separate lecture slides, not one, matching the PDF.
+  if (labelsMode) {
+    SPECIAL_ANGLES
+      .filter((entry) => labelsMode === 'all' || (entry.deg >= 0 && entry.deg <= 90))
+      .forEach((entry) => {
+        const isQ1 = entry.deg >= 0 && entry.deg <= 90;
+        const required = buildMode ? (isQ1 ? 3 : 4) : null;
+        drawRingText(UNIT_CIRCLE_RING_COORD, entry.deg, `(${entry.cos}, ${entry.sin})`, ink, TICK_LABEL_FONT - 3, required);
+      });
+  }
+
+  targetXs.forEach((x) => {
+    board.create('segment', [[x, -1.3], [x, 1.3]], {
+      strokeColor: x < 0 ? negative : accent, strokeWidth: 2, dash: 2, fixed: true, highlight: false,
+    });
+  });
+  targetYs.forEach((y) => {
+    board.create('segment', [[-1.3, y], [1.3, y]], {
+      strokeColor: y < 0 ? negative : accent, strokeWidth: 2, dash: 2, fixed: true, highlight: false,
+    });
+  });
+
+  // `cumulative` is the raw, possibly out-of-[0,360) angle (what `coterminal`
+  // mode displays and lets grow across laps); `lastPos` is the point's
+  // current on-circle position in [0,360), used only to measure the
+  // shortest-path delta on each drag step so multi-lap dragging accumulates
+  // correctly instead of resetting every revolution.
+  let cumulative = startAngle;
+  let lastPos = ((startAngle % 360) + 360) % 360;
+
+  const [gx, gy] = polarDeg(1, lastPos);
+  const glider = board.create('glider', [gx, gy, circle], {
+    name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, highlight: false,
+  });
+  board.create('segment', [center, glider], {
+    strokeColor: lineColor, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
+  });
+
+  function snapGlider() {
+    const raw = ((Math.atan2(glider.Y(), glider.X()) * 180 / Math.PI) + 360) % 360;
+    const { entry } = nearestSpecialAngle(raw);
+    let delta = entry.deg - lastPos;
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+    cumulative += delta;
+    lastPos = entry.deg;
+    const [sx, sy] = polarDeg(1, entry.deg);
+    glider.setPosition(JXG.COORDS_BY_USER, [sx, sy]);
+  }
+  glider.on('drag', () => { snapGlider(); board.update(); });
+  snapGlider(); // lock the initial position onto its nearest special angle
+
+  function reducedDeg() { return ((cumulative % 360) + 360) % 360; }
+  function currentEntry() { return nearestSpecialAngle(reducedDeg()).entry; }
+
+  // Readout panel: dynamic Unicode text, one row per line, laid out with
+  // even vertical spacing computed from however many rows this particular
+  // configuration needs (coterminal mode adds one extra row) so the panel
+  // always fills the same vertical space the circle itself uses.
+  const rows = [];
+  rows.push({
+    text: () => {
+      if (!coterminal) {
+        const e = currentEntry();
+        return `θ = ${reducedDeg().toFixed(0)}°  (${e.rad})`;
+      }
+      return `θ = ${cumulative.toFixed(0)}°`;
+    },
+    fontSize: READOUT_VALUE_FONT - 4,
+    color: ink,
+  });
+  if (coterminal) {
+    rows.push({
+      text: () => {
+        const rotations = Math.round((cumulative - reducedDeg()) / 360);
+        const e = currentEntry();
+        if (rotations === 0) return `already in [0°, 360°)`;
+        const verb = rotations > 0 ? 'subtract' : 'add';
+        return `${verb} 360° × ${Math.abs(rotations)} → ${reducedDeg().toFixed(0)}°  (${e.rad})`;
+      },
+      fontSize: TICK_LABEL_FONT - 2,
+      color: muted,
+    });
+  }
+  rows.push({
+    text: () => { const e = currentEntry(); return `(cos θ, sin θ) = (${e.cos}, ${e.sin})`; },
+    fontSize: READOUT_VALUE_FONT - 4,
+    color: ink,
+  });
+  [
+    ['sin θ', 'sin'], ['cos θ', 'cos'], ['tan θ', 'tan'],
+    ['csc θ', 'csc'], ['sec θ', 'sec'], ['cot θ', 'cot'],
+  ].forEach(([label, key]) => {
+    rows.push({
+      text: () => `${label} = ${currentEntry()[key]}`,
+      fontSize: READOUT_VALUE_FONT - 6,
+      color: () => trigValueColor(currentEntry()[key], accent, negative, muted),
+    });
+  });
+
+  // Build/Reset button, only in build mode -- placed above the readout rows,
+  // which then get laid out in whatever vertical space remains. Follows
+  // <triangle build>'s own convention exactly: "Build →" while stages
+  // remain, "↺ Reset" once the last stage is showing, single click either
+  // advances one stage or (from the last stage) jumps straight back to 0.
+  const buttonTop = half + 0.05;
+  const rowsTop = buildMode ? buttonTop - 0.55 : buttonTop;
+  if (buildMode) {
+    board.create('button', [
+      panelStart, buttonTop, () => (stage < BUILD_MAX_STAGE ? 'Build →' : '↺ Reset'),
+      () => { stage = stage < BUILD_MAX_STAGE ? stage + 1 : 0; board.update(); },
+    ], {
+      fixed: true, cssStyle: `font-size:${TICK_LABEL_FONT}px; font-weight:600; padding:4px 14px; border-radius:6px;`,
+    });
+  }
+
+  const bottomY = -(half + 0.05);
+  const gap = (rowsTop - bottomY) / (rows.length + 1);
+  rows.forEach((row, i) => {
+    const y = rowsTop - gap * (i + 1);
+    board.create('text', [panelStart, y, row.text], {
+      fontSize: row.fontSize, color: row.color, fixed: true, anchorX: 'left', anchorY: 'middle', cssStyle: 'font-weight:700',
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
   document.querySelectorAll('jsx-chain-demo').forEach(renderJsxChainDemo);
+  document.querySelectorAll('jsx-unit-circle').forEach(renderJsxUnitCircle);
 });

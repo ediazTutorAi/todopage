@@ -14,6 +14,18 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-17",
+    "title": "The Unit Circle",
+    "subtitle": "Lesson 09",
+    "description": "Constructing the unit circle from six-fold and four-fold divisions, reading (cos θ, sin θ) off any of its 16 special points, reducing coterminal angles onto it, and working backward from one ratio to the rest — all via a live, always-snapping draggable JSXGraph manipulative.",
+    "tags": [
+      "Unit Circle"
+    ],
+    "url": "trigonometry/2026/2026-09-17-lesson-09-the-unit-circle/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-14",
     "title": "Applications of Right Triangles",
     "subtitle": "Lesson 07",
