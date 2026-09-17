@@ -15,7 +15,7 @@
       "label": "Theorem 4.12",
       "subtitle": "Directional Derivative of a Function of Two Variables",
       "ggbId": "",
-      "bodyHtml": "Let $z=f(x,y)$ be a function of two variables x and y, and assume that $f_x$ and $f_y$ exist and $f(x,y)$ is\n            differentiable everywhere. Then the directional derivative of $f$ in the direction of\n            $\\vec{u}=cos(\\theta)\\hat{i}+sin(\\theta)\\hat{j}$ is given by\n            $$\n            D_{\\vec{u}}f(x,y) = f_x(x,y)cos(\\theta) + f_y(x,y)sin(\\theta)\n            $$"
+      "bodyHtml": "Let $z=f(x,y)$ be a function of two variables x and y, and assume that $f_x$ and $f_y$ exist and $f(x,y)$ is\n            differentiable everywhere. Then the directional derivative of $f$ in the direction of\n            $\\vec{u}=cos(\\theta)\\hat{i}+sin(\\theta)\\hat{j}$ is given by\n            $$\n            D_{\\vec{u}}f(x,y) = f_x(x,y)cos(\\theta) + f_y(x,y)sin(\\theta)\n            $$\n            <p><a href=\"https://www.geogebra.org/classic/geyh47v2\" target=\"_blank\" rel=\"noopener noreferrer\">Explore this in GeoGebra</a></p>"
     },
     {
       "tag": "step",
