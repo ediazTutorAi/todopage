@@ -880,9 +880,573 @@ function renderMirrorAngles(el) {
   el.replaceWith(container);
 }
 
+// <gears input-radius="2" output-radius="3" input-label="Input" output-label="Output">
+// Lesson 10 Example 4's gearing application, live: two circular gears,
+// pitch-radius tangent so they visually mesh, each with evenly spaced radial
+// teeth (tooth count scales with radius via GEAR_TEETH_PER_UNIT, so both
+// gears share one tooth pitch -- exactly like real meshing gears must, and
+// unlike an arbitrarily-chosen tooth count per gear). Plain SVG + Pointer
+// Events, same idiom as <sign-circle>, not JSXGraph -- this is closed-form
+// circle/tooth geometry plus one drag handler per gear, not a function plot,
+// so it belongs with the hand-rolled engine per this file's own "anything a
+// closed-form layout already covers has no reason to move engines" rule.
+//
+// Each gear has its own draggable handle marking a fixed point on that gear
+// (a "paint mark," same mental model as <sign-circle>'s dot). Dragging
+// either handle sets THAT gear's rotation directly; the other gear's
+// rotation is then recomputed from the physical meshing constraint -- equal
+// arc length swept at the contact point, in opposite rotational directions
+// -- rather than tracked independently. This is deliberately not
+// path-dependent (no accumulated state): each drag recomputes both gears
+// from scratch off whichever handle just moved, so grabbing either one
+// always shows a physically consistent pair, matching Example 4's own
+// question either direction ("how far must the input turn for a given
+// output turn" and vice versa).
+//
+// Teeth are simplified radial notches, not true involute gear teeth -- the
+// same level of stylization as the workbook's own hand-drawn illustration.
+// The rotation coupling is the pedagogical point, not tooth geometry.
+
+const GEAR_SCALE = 45;          // px per semantic radius unit
+const GEAR_TEETH_PER_UNIT = 4;  // teeth count scales with radius so both gears share one tooth pitch
+const GEAR_TOOTH_H = 10;        // px, radial tooth height (beyond the pitch circle)
+const GEAR_TOOTH_FRAC = 0.6;    // fraction of each tooth's own pitch arc the tooth fills; the rest is the gap
+
+function gearPolar(r, deg) {
+  const rad = toRad(deg);
+  return { x: r * Math.cos(rad), y: r * Math.sin(rad) };
+}
+
+// One gear's rotating visual (pitch circle, teeth, a reference spoke, a hub
+// dot), built once as a <g transform="translate(cx,cy) rotate(...)"> so a
+// live rotation update is a single attribute write instead of re-deriving
+// every tooth's points each frame. rotate(-deg), not rotate(deg): raw SVG
+// rotate() is clockwise-positive (SVG's y-axis points down), so negating it
+// makes increasing `deg` read as counterclockwise on screen -- the same
+// positive-CCW convention <sign-circle>/<angle-plane> already use.
+function buildGearGroup(svg, cx, cy, pixelR, teeth, cls) {
+  const g = document.createElementNS(SVG_NS, 'g');
+  g.setAttribute('class', `gear-group ${cls}`);
+
+  const circle = document.createElementNS(SVG_NS, 'circle');
+  circle.setAttribute('r', pixelR);
+  circle.setAttribute('class', 'gear-pitch-circle');
+  g.appendChild(circle);
+
+  const pitchDeg = 360 / teeth;
+  const halfToothDeg = (pitchDeg * GEAR_TOOTH_FRAC) / 2;
+  for (let i = 0; i < teeth; i++) {
+    const center = i * pitchDeg;
+    const pts = [
+      gearPolar(pixelR, center - halfToothDeg),
+      gearPolar(pixelR + GEAR_TOOTH_H, center - halfToothDeg),
+      gearPolar(pixelR + GEAR_TOOTH_H, center + halfToothDeg),
+      gearPolar(pixelR, center + halfToothDeg),
+    ];
+    const tooth = document.createElementNS(SVG_NS, 'polygon');
+    tooth.setAttribute('points', pts.map(p => `${p.x},${p.y}`).join(' '));
+    tooth.setAttribute('class', 'gear-tooth');
+    g.appendChild(tooth);
+  }
+
+  const spoke = document.createElementNS(SVG_NS, 'line');
+  spoke.setAttribute('x1', 0);
+  spoke.setAttribute('y1', 0);
+  spoke.setAttribute('x2', pixelR);
+  spoke.setAttribute('y2', 0);
+  spoke.setAttribute('class', 'gear-spoke');
+  g.appendChild(spoke);
+
+  const hub = document.createElementNS(SVG_NS, 'circle');
+  hub.setAttribute('r', 3);
+  hub.setAttribute('class', 'gear-hub');
+  g.appendChild(hub);
+
+  svg.appendChild(g);
+  const setRotation = (deg) => g.setAttribute('transform', `translate(${cx},${cy}) rotate(${-deg})`);
+  setRotation(0);
+  return { setRotation };
+}
+
+// `editable` (bare boolean): adds two number inputs (one per gear's radius)
+// above the diagram, so "what if the radii were different" is something the
+// instructor can try live rather than only something authored once in the
+// tag's attributes. Changing a radius rebuilds the whole diagram (sizes,
+// teeth counts, mesh position all depend on it) and resets both rotations
+// to 0 -- a changed ratio invalidates whatever arc length was mid-drag
+// anyway, so starting fresh reads more clearly than trying to preserve it.
+function renderGears(el) {
+  let rIn = parseFloat(el.getAttribute('input-radius') || '2');
+  let rOut = parseFloat(el.getAttribute('output-radius') || '3');
+  const labelIn = el.getAttribute('input-label') || 'Input';
+  const labelOut = el.getAttribute('output-label') || 'Output';
+  const unit = el.getAttribute('unit') || 'in';
+  const editable = el.hasAttribute('editable');
+
+  const container = document.createElement('div');
+  container.className = 'triangle-diagram gears-diagram';
+
+  const ratioReadout = document.createElement('p');
+  ratioReadout.className = 'gear-ratio-readout';
+
+  const readout = document.createElement('p');
+  readout.className = 'muted small gear-readout';
+
+  let figure = null; // rebuilt from scratch on every radius change
+
+  function build() {
+    const pxIn = rIn * GEAR_SCALE, pxOut = rOut * GEAR_SCALE;
+    const teethIn = Math.max(6, Math.round(rIn * GEAR_TEETH_PER_UNIT));
+    const teethOut = Math.max(6, Math.round(rOut * GEAR_TEETH_PER_UNIT));
+
+    const MARGIN = GEAR_TOOTH_H + 46; // room for teeth + handle + the label sitting below each gear
+    const maxPx = Math.max(pxIn, pxOut);
+    const O1 = { x: MARGIN + pxIn, y: MARGIN + maxPx };
+    const O2 = { x: O1.x + pxIn + pxOut, y: O1.y }; // tangent: center distance == sum of the two pitch radii
+    const W = O2.x + pxOut + MARGIN;
+    const H = MARGIN * 2 + maxPx * 2;
+
+    if (figure) figure.remove();
+    figure = document.createElement('div');
+    figure.className = 'triangle-diagram-figure';
+    figure.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+    container.insertBefore(figure, ratioReadout);
+
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('class', 'triangle-diagram-svg');
+    figure.appendChild(svg);
+
+    // Marks the tangent point where the two pitch circles meet -- where the
+    // "shared arc length" idea Example 4's algebra relies on actually lives.
+    const meshPt = { x: O1.x + pxIn, y: O1.y };
+    const meshDot = document.createElementNS(SVG_NS, 'circle');
+    meshDot.setAttribute('cx', meshPt.x);
+    meshDot.setAttribute('cy', meshPt.y);
+    meshDot.setAttribute('r', 3);
+    meshDot.setAttribute('class', 'gear-mesh-point');
+    svg.appendChild(meshDot);
+
+    const gearIn = buildGearGroup(svg, O1.x, O1.y, pxIn, teethIn, 'gear-input');
+    const gearOut = buildGearGroup(svg, O2.x, O2.y, pxOut, teethOut, 'gear-output');
+
+    function makeHandle() {
+      const dot = document.createElementNS(SVG_NS, 'circle');
+      dot.setAttribute('r', 8);
+      dot.setAttribute('class', 'triangle-point sign-circle-handle');
+      svg.appendChild(dot);
+      return dot;
+    }
+    const handleIn = makeHandle();
+    const handleOut = makeHandle();
+
+    placeOverlay(figure, { x: O1.x, y: O1.y + pxIn + GEAR_TOOTH_H + 16 }, W, H, 'gear-label', labelIn);
+    placeOverlay(figure, { x: O2.x, y: O2.y + pxOut + GEAR_TOOTH_H + 16 }, W, H, 'gear-label', labelOut);
+
+    ratioReadout.textContent = `${labelIn} : ${labelOut} radius = ${round(rIn)} : ${round(rOut)} (≈ ${round(rIn / rOut)} : 1)`;
+
+    function placeHandle(dot, O, pixelR, deg) {
+      const rad = toRad(deg);
+      dot.setAttribute('cx', O.x + pixelR * Math.cos(rad));
+      dot.setAttribute('cy', O.y - pixelR * Math.sin(rad));
+    }
+
+    // curIn/curOut are the true (unbounded) rotation each gear is currently
+    // at -- distinct from the raw angle a pointer event reports, which
+    // Math.atan2 always folds into (-180°, 180°]. Reading gear rotation
+    // directly off that raw, bounded value (as an earlier version of this
+    // function did) meant that the instant a continuous drag crossed the
+    // +180/-180 seam, the raw angle itself jumped by ~360° in one event even
+    // though the pointer barely moved -- and since the OTHER gear's angle is
+    // a direct scalar multiple of that raw value, the jump showed up there,
+    // scaled by the ratio (e.g. ratio 2:3 turns a 360° seam-jump on the
+    // input into a 240° snap on the output -- a seemingly random teleport;
+    // ratio 3:2 turns it into a 540°, i.e. exactly 180°, snap on the input --
+    // a clean flip to the mirror-image position, much less obviously broken,
+    // which is why dragging one gear could look fine while the other didn't).
+    let curIn = 0, curOut = 0;
+
+    function update(inDeg, outDeg) {
+      curIn = inDeg; curOut = outDeg;
+      gearIn.setRotation(inDeg);
+      gearOut.setRotation(outDeg);
+      placeHandle(handleIn, O1, pxIn, inDeg);
+      placeHandle(handleOut, O2, pxOut, outDeg);
+
+      const s = Math.abs(toRad(inDeg)) * rIn; // shared arc length at the mesh point (magnitude)
+      readout.textContent =
+        `Input: ${Math.round(inDeg)}° (${round(inDeg / 360)} turn)   ·   ` +
+        `Output: ${Math.round(outDeg)}° (${round(outDeg / 360)} turn)   ·   ` +
+        `shared arc length s ≈ ${round(s)} ${unit}`;
+    }
+
+    // Meshing constraint: equal arc length at the contact point, opposite
+    // rotation direction -- r_in * theta_in = r_out * theta_out (magnitudes),
+    // theta_out = -(r_in/r_out) * theta_in.
+    function setFromInput(deg) { update(deg, -(rIn / rOut) * deg); }
+    function setFromOutput(deg) { update(-(rOut / rIn) * deg, deg); }
+
+    function angleFromEvent(O, e) {
+      const p = toSvgPoint(svg, e.clientX, e.clientY);
+      return (Math.atan2(-(p.y - O.y), p.x - O.x) * 180) / Math.PI;
+    }
+
+    // Unwraps a raw (-180°,180°]-bounded reading against the previous one --
+    // the short way around is never more than 180° away, so a naive delta
+    // bigger than that is really the same short step, just folded the long
+    // way by atan2's range. Adding this corrected delta onto the gear's own
+    // running total (rather than replacing it with the raw reading) is what
+    // keeps a full, continuous drag smooth across the seam.
+    function wireHandle(dot, O, getCurrent, onDrag) {
+      let dragging = false;
+      let lastRaw = 0;
+      dot.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        dot.setPointerCapture(e.pointerId);
+        dot.classList.add('is-dragging');
+        lastRaw = angleFromEvent(O, e);
+        e.preventDefault();
+      });
+      dot.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const raw = angleFromEvent(O, e);
+        let delta = raw - lastRaw;
+        if (delta > 180) delta -= 360;
+        else if (delta < -180) delta += 360;
+        lastRaw = raw;
+        onDrag(getCurrent() + delta);
+      });
+      ['pointerup', 'pointercancel'].forEach(evt => dot.addEventListener(evt, () => {
+        dragging = false;
+        dot.classList.remove('is-dragging');
+      }));
+    }
+    wireHandle(handleIn, O1, () => curIn, setFromInput);
+    wireHandle(handleOut, O2, () => curOut, setFromOutput);
+
+    update(0, 0);
+  }
+
+  if (editable) {
+    const controls = document.createElement('div');
+    controls.className = 'gear-controls';
+
+    function makeField(labelText, initial, onChange) {
+      const field = document.createElement('label');
+      field.className = 'gear-control';
+      const span = document.createElement('span');
+      span.textContent = labelText;
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '0.3';
+      input.max = '10';
+      input.step = '0.5';
+      input.value = initial;
+      input.addEventListener('input', () => {
+        const v = parseFloat(input.value);
+        if (Number.isFinite(v) && v >= 0.3 && v <= 10) onChange(v);
+      });
+      field.appendChild(span);
+      field.appendChild(input);
+      return field;
+    }
+
+    controls.appendChild(makeField(`${labelIn} radius (${unit})`, rIn, (v) => { rIn = v; build(); }));
+    controls.appendChild(makeField(`${labelOut} radius (${unit})`, rOut, (v) => { rOut = v; build(); }));
+    container.appendChild(controls);
+  }
+
+  container.appendChild(ratioReadout);
+  container.appendChild(readout);
+  build();
+  el.replaceWith(container);
+}
+
+// <speed-circle radius="10" angular-speed="36" unit="cm" point-label="P">
+// An actual constant-rate animation for the "Linear and Angular Speed"
+// Important Info step. Every other tag in this file is instructor-
+// *positioned* -- a drag sets where something is. v = s/t and omega =
+// theta/t are rate definitions, not positions, and a drag can't show a
+// rate; the one thing missing here is a "when" as well as a "where". So
+// this gets its own tiny Play/Pause/Reset animation loop
+// (requestAnimationFrame + performance.now(), nothing fancier) instead of
+// reusing the Pointer Events drag idiom the rest of this file relies on.
+//
+// Point P sweeps the circle at the fixed rate given by `angular-speed`
+// (degrees/sec -- default 36, i.e. pi/5 rad/sec, matching Example 5's own
+// numbers two steps later, so this previews that example rather than using
+// arbitrary demo numbers). Elapsed time t and swept angle theta accumulate
+// continuously and never reset on their own (multiple laps just keep
+// counting), so the live readout can show theta/t and s/t settling to the
+// exact constant omega/v this step just defined -- watching that RATIO
+// stay fixed while t and theta individually keep growing is the whole
+// point of animating this at all. The visual arc is still drawn mod 360 (a
+// fresh sweep each lap), since a polyline spanning the true accumulated
+// angle would just retrace itself lap after lap -- only the numeric
+// readout keeps the true, un-modded total. Reuses
+// buildArc/placeOverlay/toRad/round from <triangle>/<angle-plane>/
+// <sign-circle> above.
+
+function renderSpeedCircle(el) {
+  const radius = parseFloat(el.getAttribute('radius') || '10');
+  let angularSpeed = parseFloat(el.getAttribute('angular-speed') || '36'); // deg/sec
+  const unit = el.getAttribute('unit') || 'cm';
+  const pointLabel = el.getAttribute('point-label') || 'P';
+  const editable = el.hasAttribute('editable');
+
+  const PIXEL_R = 90, AXIS_OVERSHOOT = 25;
+  const size = PIXEL_R + AXIS_OVERSHOOT;
+  const W = size * 2, H = size * 2;
+  const O = { x: size, y: size };
+
+  const container = document.createElement('div');
+  container.className = 'triangle-diagram speed-circle-diagram';
+
+  // `editable`: two number inputs for the rate itself, one in each unit --
+  // same idea as <gears editable>'s radius inputs ("what if the rate were
+  // different" becomes something to actually try), but offered in both
+  // deg/sec and rad/sec since the Important Info box's own omega formula is
+  // stated in radians while the readout below reads more naturally in
+  // degrees. The two fields stay synced: typing in either one converts and
+  // pushes the equivalent into the other (via a plain .value write, not a
+  // dispatched event, so the two listeners can't cascade into each other).
+  // Either way, changing the rate calls doReset() (defined below, after the
+  // animation state it resets exists) rather than adjusting it mid-flight:
+  // the whole readout is built on theta = angularSpeed * t, a closed-form
+  // function of total elapsed time, which only stays correct if the rate
+  // has been constant since t=0 -- so a live rate change starts a fresh run
+  // rather than silently invalidating theta/s for whatever had already
+  // played. doReset is referenced here via function-declaration hoisting;
+  // it's defined further down once playBtn/rafId/etc. actually exist.
+  if (editable) {
+    const fieldRow = document.createElement('div');
+    fieldRow.className = 'speed-circle-field-row';
+
+    function makeField(labelText) {
+      const field = document.createElement('label');
+      field.className = 'speed-circle-field';
+      const span = document.createElement('span');
+      span.textContent = labelText;
+      const input = document.createElement('input');
+      input.type = 'number';
+      field.appendChild(span);
+      field.appendChild(input);
+      fieldRow.appendChild(field);
+      return input;
+    }
+
+    const degInput = makeField('Angular speed (°/sec)');
+    degInput.min = '1';
+    degInput.max = '360';
+    degInput.step = '1';
+    degInput.value = round(angularSpeed);
+
+    const radInput = makeField('Angular speed (rad/sec)');
+    radInput.step = 'any';
+    radInput.value = round(toRad(angularSpeed));
+
+    degInput.addEventListener('input', () => {
+      const v = parseFloat(degInput.value);
+      if (Number.isFinite(v) && v >= 1 && v <= 360) {
+        angularSpeed = v;
+        radInput.value = round(toRad(v));
+        doReset();
+      }
+    });
+    radInput.addEventListener('input', () => {
+      const v = parseFloat(radInput.value);
+      const deg = (v * 180) / Math.PI;
+      if (Number.isFinite(v) && deg >= 1 && deg <= 360) {
+        angularSpeed = deg;
+        degInput.value = round(deg);
+        doReset();
+      }
+    });
+
+    container.appendChild(fieldRow);
+  }
+
+  const figure = document.createElement('div');
+  figure.className = 'triangle-diagram-figure';
+  figure.style.setProperty('--triangle-aspect', `${W} / ${H}`);
+  container.appendChild(figure);
+
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('class', 'triangle-diagram-svg');
+  figure.appendChild(svg);
+
+  // The circle is centered at the origin, same as the lesson text itself
+  // ("Consider a circle centered at the origin...") -- axes make that
+  // literal instead of just implied, same idiom as <sign-circle>.
+  renderAxes(svg, figure, {
+    xStart: { x: 0, y: O.y }, xEnd: { x: W, y: O.y },
+    yStart: { x: O.x, y: H }, yEnd: { x: O.x, y: 0 },
+  }, W, H);
+
+  const circle = document.createElementNS(SVG_NS, 'circle');
+  circle.setAttribute('cx', O.x);
+  circle.setAttribute('cy', O.y);
+  circle.setAttribute('r', PIXEL_R);
+  circle.setAttribute('class', 'speed-circle-path');
+  svg.appendChild(circle);
+
+  // Swept arc length -- traced along the circle's OWN circumference
+  // (radius PIXEL_R, same as the circle itself), not a small decorative
+  // indicator near the center. This IS s: highlighting the actual portion
+  // of the path P has covered, rather than an abstract angle marker, is
+  // the point of a diagram meant to explain v = s/t.
+  const arc = document.createElementNS(SVG_NS, 'polyline');
+  arc.setAttribute('class', 'speed-circle-arc');
+  svg.appendChild(arc);
+
+  const radiusLine = document.createElementNS(SVG_NS, 'line');
+  radiusLine.setAttribute('x1', O.x);
+  radiusLine.setAttribute('y1', O.y);
+  radiusLine.setAttribute('class', 'speed-circle-radius');
+  svg.appendChild(radiusLine);
+
+  const dot = document.createElementNS(SVG_NS, 'circle');
+  dot.setAttribute('r', 7);
+  dot.setAttribute('class', 'speed-circle-point');
+  svg.appendChild(dot);
+
+  const pointLabelNode = placeOverlay(figure, { x: O.x + PIXEL_R, y: O.y }, W, H, 'triangle-point-label', pointLabel);
+  // r is constant, but its on-screen spot still has to track wherever the
+  // (constantly rotating) radius line currently sits.
+  const radiusLabelNode = placeOverlay(figure, { x: O.x + PIXEL_R / 2, y: O.y }, W, H, 'speed-circle-radius-label', `r = ${round(radius)} ${unit}`);
+  const arcLabelNode = placeOverlay(figure, { x: O.x + PIXEL_R, y: O.y }, W, H, 'speed-circle-arc-label', '');
+
+  const controls = document.createElement('div');
+  controls.className = 'speed-circle-controls';
+  const playBtn = document.createElement('button');
+  playBtn.type = 'button';
+  playBtn.className = 'btn small';
+  playBtn.textContent = '▶ Play';
+  const resetBtn = document.createElement('button');
+  resetBtn.type = 'button';
+  resetBtn.className = 'btn small';
+  resetBtn.textContent = '↺ Reset';
+  controls.appendChild(playBtn);
+  controls.appendChild(resetBtn);
+  container.appendChild(controls);
+
+  const readout1 = document.createElement('p');
+  readout1.className = 'muted small speed-circle-readout';
+  const readout2 = document.createElement('p');
+  readout2.className = 'muted small speed-circle-readout';
+  container.appendChild(readout1);
+  container.appendChild(readout2);
+
+  let elapsedBefore = 0, playStart = 0, playing = false, rafId = null;
+
+  function place(deg) {
+    const rad = toRad(deg);
+    const px = O.x + PIXEL_R * Math.cos(rad);
+    const py = O.y - PIXEL_R * Math.sin(rad);
+    dot.setAttribute('cx', px);
+    dot.setAttribute('cy', py);
+    radiusLine.setAttribute('x2', px);
+    radiusLine.setAttribute('y2', py);
+
+    // "r" sits at the radius line's own midpoint, nudged perpendicular off
+    // the stroke -- constant in value, but its on-screen spot still has to
+    // follow wherever the line currently points.
+    const dir = norm({ x: px - O.x, y: py - O.y });
+    const perp = { x: -dir.y, y: dir.x };
+    const rMidX = (O.x + px) / 2, rMidY = (O.y + py) / 2;
+    radiusLabelNode.style.left = `${((rMidX + perp.x * 13) / W) * 100}%`;
+    radiusLabelNode.style.top = `${((rMidY + perp.y * 13) / H) * 100}%`;
+
+    // Drawn fresh each lap (mod 360), same as the dashed-outline circle's
+    // own full sweep would be -- a polyline spanning the true accumulated
+    // angle would just retrace itself lap after lap. This is "how far P has
+    // come since the start of the CURRENT lap," matching exactly what's
+    // visibly highlighted on the circle; the true accumulated s across
+    // multiple laps is still in the text readout below.
+    const lapDeg = ((deg % 360) + 360) % 360;
+    const swept = buildArc(O, lapDeg, PIXEL_R);
+    arc.setAttribute('points', swept.points.map(p => `${p.x},${p.y}`).join(' '));
+    arcLabelNode.style.left = `${(swept.labelAt.x / W) * 100}%`;
+    arcLabelNode.style.top = `${(swept.labelAt.y / H) * 100}%`;
+    // Hidden right at the start of each lap (lapDeg near 0) -- otherwise its
+    // label sits on the exact same spot as the "P" label at that instant,
+    // and every lap boundary would flash an overlapping "s ≈ 0" over "P".
+    arcLabelNode.textContent = lapDeg > 2 ? `s ≈ ${round(radius * toRad(lapDeg))} ${unit}` : '';
+
+    const lx = O.x + (PIXEL_R + 14) * Math.cos(rad);
+    const ly = O.y - (PIXEL_R + 14) * Math.sin(rad);
+    pointLabelNode.style.left = `${(lx / W) * 100}%`;
+    pointLabelNode.style.top = `${(ly / H) * 100}%`;
+  }
+
+  // The dot itself still moves on the true, continuous elapsed time (so the
+  // animation stays smooth) -- only the READOUT numbers below are computed
+  // from t floored to a whole second, ticking once per second instead of
+  // drifting through decimals. At any whole t, theta = angularSpeed * t
+  // reproduces the input rate exactly when divided back out, which is the
+  // easiest possible number to read the rate off of.
+  function render(t) {
+    place(angularSpeed * t);
+
+    const tFloor = Math.floor(t);
+    if (tFloor <= 0) {
+      readout1.textContent = `t = 0 s   ·   θ = 0°   ·   s = 0 ${unit}`;
+      readout2.textContent = `Click ▶ Play to start ${pointLabel} moving at a constant rate.`;
+      return;
+    }
+    const thetaDeg = angularSpeed * tFloor;
+    const s = radius * toRad(thetaDeg);
+    readout1.textContent =
+      `t ≈ ${tFloor} s   ·   θ ≈ ${Math.round(thetaDeg)}° (${round(thetaDeg / 360)} turns)   ·   s ≈ ${round(s)} ${unit}`;
+    readout2.textContent =
+      `ω = θ/t ≈ ${round(thetaDeg / tFloor)}°/s (${round(toRad(thetaDeg) / tFloor)} rad/s)   ·   v = s/t ≈ ${round(s / tFloor)} ${unit}/s`;
+  }
+
+  // currentElapsed() folds whatever's accrued from a still-running play
+  // segment into elapsedBefore -- called on Pause (to freeze a final total)
+  // and read live by tick() (to animate) without duplicating that math.
+  function currentElapsed() {
+    return elapsedBefore + (playing ? (performance.now() - playStart) / 1000 : 0);
+  }
+
+  function tick() {
+    render(currentElapsed());
+    if (playing) rafId = requestAnimationFrame(tick);
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (playing) {
+      elapsedBefore = currentElapsed();
+      playing = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      playBtn.textContent = '▶ Play';
+    } else {
+      playStart = performance.now();
+      playing = true;
+      playBtn.textContent = '⏸ Pause';
+      tick();
+    }
+  });
+
+  function doReset() {
+    playing = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    elapsedBefore = 0;
+    playBtn.textContent = '▶ Play';
+    render(0);
+  }
+  resetBtn.addEventListener('click', doReset);
+
+  render(0);
+  el.replaceWith(container);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('triangle').forEach(renderTriangle);
   document.querySelectorAll('angle-plane').forEach(renderAnglePlane);
   document.querySelectorAll('sign-circle').forEach(renderSignCircle);
   document.querySelectorAll('mirror-angles').forEach(renderMirrorAngles);
+  document.querySelectorAll('gears').forEach(renderGears);
+  document.querySelectorAll('speed-circle').forEach(renderSpeedCircle);
 });

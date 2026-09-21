@@ -2,6 +2,19 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-21",
+    "title": "Applications Involving Radian Measure",
+    "subtitle": "Lesson 10",
+    "description": "Arc length, angular/linear speed, and sector area, all derived from one ratio-and-proportion idea rather than memorized formulas, with a flight-distance, a gearing, and a revolving-door/step application.",
+    "tags": [
+      "Radian Measure",
+      "Arc Length"
+    ],
+    "url": "trigonometry/2026/2026-09-21-lesson-10-applications-involving-radian-measure/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-16",
     "title": "Radian Measure",
     "subtitle": "Lesson 08",

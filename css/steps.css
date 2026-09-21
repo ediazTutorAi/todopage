@@ -310,6 +310,100 @@ reveal.triangle-overlay:not(.is-revealed) {
 .sign-circle-value { color: var(--accent); font-weight: 700; }
 .sign-circle-value.is-negative { color: var(--negative); }
 
+/* <gears> live drag demo (Example 4) -- wider than the default
+   .triangle-diagram box since it's two circles side by side, not one. */
+.step-body .gears-diagram { width: min(580px, 100%); }
+.gear-pitch-circle { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.gear-tooth { fill: var(--line); stroke: var(--ink); stroke-width: 1; }
+.gear-spoke { stroke: var(--accent); stroke-width: 2.5; }
+.gear-hub { fill: var(--ink); }
+.gear-mesh-point { fill: var(--negative); }
+.gear-label { font-weight: 700; color: var(--ink); font-size: 0.9em; }
+.gear-readout { text-align: center; margin-top: 0.3rem; }
+.gear-ratio-readout { text-align: center; font-weight: 700; color: var(--accent); margin: 0.4rem 0 0; }
+
+/* <gears editable> radius inputs */
+.gear-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.1rem;
+  width: 100%;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+.gear-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+.gear-control input {
+  width: 4.5em;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 1em;
+  color: var(--ink);
+  background: #fff;
+}
+.gear-control input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* <speed-circle> constant-rate animation (Linear/Angular Speed) */
+.speed-circle-path { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+/* The swept-arc-length highlight -- drawn right on the circle's own path
+   (not a small indicator near the center), so it needs to read as clearly
+   thicker than the thin full-circle outline underneath it. */
+.speed-circle-arc { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
+.speed-circle-radius { stroke: var(--accent); stroke-width: 2; }
+.speed-circle-point { fill: var(--accent); stroke: #fff; stroke-width: 2; }
+.speed-circle-radius-label { color: var(--ink); font-size: 0.8em; background: #fff; padding: 0 0.2em; }
+.speed-circle-arc-label { color: var(--accent); font-weight: 700; font-size: 0.85em; }
+.speed-circle-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.2rem 0 0.4rem;
+}
+.speed-circle-readout { text-align: center; margin: 0.15rem 0; }
+
+/* <speed-circle editable> angular-speed inputs (deg/sec and rad/sec, synced) */
+.speed-circle-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.1rem;
+  width: 100%;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+.speed-circle-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+.speed-circle-field input {
+  width: 4.5em;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 1em;
+  color: var(--ink);
+  background: #fff;
+}
+.speed-circle-field input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 /* <jsx-graph> (js/jsxgraph.js) -- the JSXGraph-backed engine, kept visually
    consistent with the .triangle-diagram box model above even though it's a
    separate rendering system. Wider than .triangle-diagram by default since a
