@@ -968,20 +968,25 @@ function renderJsxUnitCircle(el) {
 // the comparison (and, for amplitude, dragging past 0 shows the reflection
 // the Amplitude definition describes, for free).
 //
-// The two modes (sin/cos) share one mechanism instead of being two separate
-// code paths: cos(theta) is just sin(theta - pi/2), so tracing a cosine
-// curve is the exact same glider-on-a-circle geometry as sine -- only the
-// angle used to place the traced point along the curve's x-axis is offset
-// by pi/2 (and the glider starts at the circle's top, not its right, so the
-// initial frame already sits at the cosine curve's own peak). The glider's
-// own y-coordinate is always exactly the (sign-adjusted, see below) output
-// value in both modes, so the connector line needs no special-casing.
+// Both modes start the glider at the circle's right (standard position,
+// angle 0), sweeping counterclockwise -- the same convention as every other
+// unit-circle diagram in this course. An earlier version instead started
+// the cosine glider at the circle's TOP and quietly reused its y-coordinate
+// (numerically valid, since cos(theta) = sin(theta + pi/2)), but that put
+// the point exactly where a student reading standard position would expect
+// angle = 90 deg, i.e. cos = 0 -- backwards from the 1 actually shown, and
+// a real point of confusion once someone looked closely. Cosine mode now
+// reads the glider's own x-coordinate instead, made visible via an actual
+// projection: a dashed "stick" drops from the glider straight down to
+// `foot` on the circle's own horizontal diameter, and that foot -- not the
+// glider itself -- is what the dashed connector runs to the traced point,
+// so the diagram shows the x-to-height conversion happening rather than
+// asserting it.
 //
 // Negative `a` (reflection, e.g. Example 2's y = -3/2 cos x) can't be a
 // circle's actual radius, so the circle is always drawn at radius |a|, and
 // only the traced point's height gets sign-flipped to match -- algebraically
-// exact for every glider position, not just the initial one (a = sign(a) *
-// |a|, distributed through the angle-sum identity above). The background
+// exact for every glider position, not just the initial one. The background
 // curve itself (a plain functiongraph reading a/b directly) already handles
 // negative a correctly on its own, same as <jsx-graph>.
 //
@@ -1127,13 +1132,28 @@ function renderJsxSineTrace(el) {
     strokeColor: line, strokeWidth: REF_CIRCLE_STROKE, fixed: true, highlight: false, name: '',
   });
 
-  const startAngle = fn === 'cos' ? Math.PI / 2 : 0;
-  const glider = board.create('glider', [cx + circleR * Math.cos(startAngle), circleR * Math.sin(startAngle), circle], {
+  const startAngle = 0;
+  const glider = board.create('glider', [cx + circleR, 0, circle], {
     name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, highlight: false,
   });
   board.create('segment', [center, glider], {
     strokeColor: line, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
   });
+
+  // Cosine's projection stick: a perpendicular dropped from the glider
+  // straight down to `foot` on the circle's own horizontal diameter -- the
+  // actual geometric reason the x-coordinate is "cosine," shown rather than
+  // asserted. At theta=0 the glider already sits on the diameter, so the
+  // stick starts at zero length and grows as the glider is dragged up.
+  let foot = null;
+  if (fn === 'cos') {
+    foot = board.create('point', [() => glider.X(), () => center.Y()], {
+      name: '', size: POINT_SIZE - 1, strokeColor: '#fff', fillColor: muted, strokeWidth: POINT_STROKE, highlight: false,
+    });
+    board.create('segment', [glider, foot], {
+      strokeColor: line, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
+    });
+  }
 
   // The angle used to place the traced point is tracked CUMULATIVELY, not
   // recomputed fresh from atan2 on every frame -- atan2 wraps at +-180°, so
@@ -1160,12 +1180,12 @@ function renderJsxSineTrace(el) {
     lastRawAngle = raw;
   });
 
-  // theta, as measured for the CURVE (not the circle): for cosine mode this
-  // is the circle's own standard angle shifted by -pi/2 -- see the file
-  // comment above for why that makes cos(theta) fall out of the same
-  // glider.Y() reading sine already uses directly.
+  // theta, as measured for the CURVE, is just the circle's own standard
+  // angle now -- both modes share it directly, since the glider's starting
+  // position and rotation direction already match the unit circle
+  // convention used everywhere else in this course.
   function thetaForCurve() {
-    return fn === 'cos' ? cumulativeAngle - Math.PI / 2 : cumulativeAngle;
+    return cumulativeAngle;
   }
 
   // Not `trace: true` -- the full curve is already drawn statically below,
@@ -1174,12 +1194,12 @@ function renderJsxSineTrace(el) {
   // without showing anything the static curve doesn't already show.
   const tracePoint = board.create('point', [
     () => thetaForCurve() / bValue(),
-    () => aSign() * glider.Y(),
+    () => aSign() * (fn === 'cos' ? (glider.X() - cx) : glider.Y()),
   ], {
     name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE,
     highlight: false,
   });
-  board.create('segment', [glider, tracePoint], {
+  board.create('segment', [fn === 'cos' ? foot : glider, tracePoint], {
     strokeColor: muted, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
   });
 
