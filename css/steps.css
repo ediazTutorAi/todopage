@@ -424,6 +424,13 @@ reveal.triangle-overlay:not(.is-revealed) {
 .step-body .jsx-diagram--circle {
   width: min(920px, 100%);
 }
+/* <jsx-sine-trace> puts a circle panel and a curve panel side by side in one
+   board -- needs the same extra real-pixel room as <jsx-diagram--circle>,
+   for the same reason (fixed-px text doesn't get more legible from a wider
+   container, but the diagram's own geometry does get more room to breathe). */
+.step-body .jsx-diagram--sine-trace {
+  width: min(920px, 100%);
+}
 .jsx-board {
   width: 100%;
   aspect-ratio: 3 / 2;
@@ -441,3 +448,6 @@ reveal.triangle-overlay:not(.is-revealed) {
    its right, in one board -- wider than a plain circle but not as wide as
    <jsx-chain-demo>'s slider stack. */
 .jsx-board--unit-circle { aspect-ratio: 1.75 / 1; }
+/* <jsx-sine-trace> is a circle panel plus a curve panel side by side --
+   wider than either alone. */
+.jsx-board--sine-trace { aspect-ratio: 2.6 / 1; }

@@ -1,4 +1,5 @@
-// <jsx-graph fn="Math.sin(x)" xmin="-7" xmax="7" ymin="-2" ymax="2">
+// <jsx-graph fn="Math.sin(x)" xmin="-7" xmax="7" ymin="-2" ymax="2"
+//   fn2="Math.cos(x)" label="y = sin x" label2="y = cos x" pi-ticks>
 //
 // Second diagram engine, alongside triangle.js's hand-rolled SVG system
 // (<triangle>/<angle-plane>/<sign-circle>/<mirror-angles>). That system stays
@@ -25,6 +26,38 @@
 // throws a clear, visible console error naming the fix rather than quietly
 // rendering an empty box. Silently no-op-ing here would just look like a
 // broken diagram with no clue why.
+//
+// `pi-ticks`, `fn2`/`label`/`label2` added for Lesson 11 (Graphing Sine and
+// Cosine), this tag's first real use in a lesson:
+//
+// `pi-ticks` (bare boolean): every graph in that lesson has a radian-scale
+// x-axis, so the default axis's auto-generated decimal ticks (1.57, 3.14,
+// ...) would be unreadable. Swaps them for major ticks at every multiple of
+// π/2, labeled as reduced π-fractions ("π/2", "π", "3π/2", "2π", ...) via
+// `piTickLabel` below, and aligns the background grid's vertical spacing to
+// that same π/2 step so the grid lines actually land on the labeled ticks
+// instead of an unrelated 1-unit grid crossing them at arbitrary points.
+//
+// `fn2`/`label`/`label2`: several examples graph two curves on the same axes
+// for direct comparison (an amplitude- or period-scaled curve against its
+// parent sine/cosine) -- one more function on the same board, not a second
+// board, matches how the workbook itself draws them. `fn2` renders dashed in
+// the site's muted gray, distinct from the primary curve's solid accent
+// color; `label`/`label2` are optional plain-text captions (not KaTeX --
+// consistent with every other dynamic jsx-* text) pinned near the top-left
+// corner so the instructor doesn't have to say "the blue one" out loud.
+function piTickLabel(x) {
+  const half = Math.PI / 2;
+  const k = Math.round(x / half);
+  if (k === 0) return '0';
+  let n = k;
+  let d = 2;
+  if (n % 2 === 0) { n = n / 2; d = 1; }
+  const sign = n < 0 ? '-' : '';
+  n = Math.abs(n);
+  const coeff = n === 1 ? '' : String(n);
+  return d === 1 ? `${sign}${coeff}π` : `${sign}${coeff}π/${d}`;
+}
 
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -87,6 +120,10 @@ function renderJsxGraph(el) {
   }
 
   const fnAttr = el.getAttribute('fn') || 'x';
+  const fn2Attr = el.getAttribute('fn2');
+  const piTicks = el.hasAttribute('pi-ticks');
+  const label = el.getAttribute('label');
+  const label2 = el.getAttribute('label2');
   const xmin = parseFloat(el.getAttribute('xmin') || '-10');
   const xmax = parseFloat(el.getAttribute('xmax') || '10');
   const ymin = parseFloat(el.getAttribute('ymin') || '-10');
@@ -99,6 +136,16 @@ function renderJsxGraph(el) {
   } catch (err) {
     console.error(`<jsx-graph>: could not parse fn="${fnAttr}"`, err);
     return;
+  }
+
+  let f2 = null;
+  if (fn2Attr) {
+    try {
+      // eslint-disable-next-line no-new-func -- instructor-authored lesson content, not user input.
+      f2 = new Function('x', `return ${fn2Attr};`);
+    } catch (err) {
+      console.error(`<jsx-graph>: could not parse fn2="${fn2Attr}"`, err);
+    }
   }
 
   const container = document.createElement('div');
@@ -123,11 +170,63 @@ function renderJsxGraph(el) {
   const ink = cssVar('--ink') || '#151515';
   const accent = cssVar('--accent') || '#0f6ab4';
   const line = cssVar('--line') || '#e5e7eb';
+  const muted = cssVar('--muted') || '#6b7280';
 
   styleAxes(board, ink);
-  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  if (piTicks) {
+    // Replace the default axis's own auto numeric ticks with major ticks at
+    // every π/2, labeled as reduced π-fractions -- see piTickLabel above.
+    // A plain numeric `ticksDistance` (JSXGraph's [axis, distance] form) is
+    // NOT enough here: with `insertTicks` off it silently falls back to
+    // whole-number spacing instead of honoring a non-integer distance like
+    // π/2, so the exact tick positions are computed by hand and passed as an
+    // explicit array instead -- the one form of the second `ticks` parent
+    // JSXGraph reliably places exactly where given.
+    board.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+    const half = Math.PI / 2;
+    const kMin = Math.ceil(xmin / half);
+    const kMax = Math.floor(xmax / half);
+    const positions = [];
+    for (let k = kMin; k <= kMax; k++) positions.push(k * half);
+    board.create('ticks', [board.defaultAxes.x, positions], {
+      drawLabels: true,
+      minorTicks: 0,
+      majorHeight: TICK_MAJOR_HEIGHT,
+      strokeColor: ink,
+      strokeWidth: AXIS_STROKE,
+      label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+      generateLabelText: (tick) => piTickLabel(tick.usrCoords[1]),
+    });
+  }
+
+  const gridAttrs = { strokeColor: line, strokeWidth: GRID_STROKE };
+  if (piTicks) gridAttrs.gridX = Math.PI / 2;
+  board.create('grid', [], gridAttrs);
 
   board.create('functiongraph', [f], { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+  if (f2) {
+    board.create('functiongraph', [f2], {
+      strokeColor: muted, strokeWidth: CURVE_STROKE, dash: 2, highlight: false,
+    });
+  }
+
+  // Fixed-position captions naming each curve, so the instructor doesn't
+  // have to say "the blue one" out loud -- pinned near the top-left corner
+  // of the plot area, but nudged right of x=0 and down from the very top
+  // edge so they never sit on top of the y-axis's own tick-label column
+  // (which JSXGraph draws just left of x=0) or the topmost y tick itself.
+  const labelX = Math.max(xmin, 0) + (xmax - xmin) * 0.05;
+  if (label) {
+    board.create('text', [labelX, ymax - (ymax - ymin) * 0.13, label], {
+      fontSize: READOUT_VALUE_FONT - 4, color: accent, fixed: true, cssStyle: 'font-weight:700',
+    });
+  }
+  if (label2 && f2) {
+    board.create('text', [labelX, ymax - (ymax - ymin) * 0.24, label2], {
+      fontSize: READOUT_VALUE_FONT - 4, color: muted, fixed: true, cssStyle: 'font-weight:700',
+    });
+  }
 }
 
 // <jsx-radian-arc radius="5">
@@ -847,9 +946,271 @@ function renderJsxUnitCircle(el) {
   });
 }
 
+// <jsx-sine-trace fn="sin"|"cos" a="1" b="1" a-slider a-min="-3" a-max="3"
+//   b-slider b-min="0.25" b-max="3" fn2="Math.cos(x)" label="y = cos x"
+//   label2="y = -3/2 cos x" xmax="7.5" ymax="3.5">
+//
+// Added for Lesson 11 (Graphing Sine and Cosine), replacing several static
+// <jsx-graph> diagrams with a genuinely dynamic one: a draggable point on a
+// circle (radius = amplitude) on the left, wired to a live point tracing the
+// matching sine/cosine curve on the right, connected by a dashed line at
+// their shared height -- literally the mechanism Lesson 11's own intro step
+// describes in words (angle in, y- or x-value from the circle out), made
+// interactive instead of just narrated. Matches this project's established
+// interaction philosophy: the instructor drags, nothing auto-plays, the same
+// convention <sign-circle>/<jsx-radian-arc> already established.
+//
+// Optional `a-slider`/`b-slider` turn the SAME diagram into the amplitude or
+// period demonstration, replacing what used to be 2-3 separate fixed
+// comparison graphs each: dragging the slider live-rescales both the
+// circle's radius and the background curve, while the draggable point still
+// traces it -- one diagram instead of several, since the slider itself IS
+// the comparison (and, for amplitude, dragging past 0 shows the reflection
+// the Amplitude definition describes, for free).
+//
+// The two modes (sin/cos) share one mechanism instead of being two separate
+// code paths: cos(theta) is just sin(theta - pi/2), so tracing a cosine
+// curve is the exact same glider-on-a-circle geometry as sine -- only the
+// angle used to place the traced point along the curve's x-axis is offset
+// by pi/2 (and the glider starts at the circle's top, not its right, so the
+// initial frame already sits at the cosine curve's own peak). The glider's
+// own y-coordinate is always exactly the (sign-adjusted, see below) output
+// value in both modes, so the connector line needs no special-casing.
+//
+// Negative `a` (reflection, e.g. Example 2's y = -3/2 cos x) can't be a
+// circle's actual radius, so the circle is always drawn at radius |a|, and
+// only the traced point's height gets sign-flipped to match -- algebraically
+// exact for every glider position, not just the initial one (a = sign(a) *
+// |a|, distributed through the angle-sum identity above). The background
+// curve itself (a plain functiongraph reading a/b directly) already handles
+// negative a correctly on its own, same as <jsx-graph>.
+//
+// `fn2` is a plain static comparison curve (dashed, muted, not wired to the
+// trace) -- the same convention <jsx-graph>'s own fn2 already uses -- for
+// the two "graph both on the same axes" examples (Example 2, Example 4),
+// where the point traces the lesson's own function while the parent
+// sine/cosine sits alongside for comparison, undragged. Not combined with
+// a-slider/b-slider in this lesson (nothing stops it, but the two features
+// answer different questions -- "how does this specific pair compare" vs.
+// "watch this one curve change" -- so mixing them would just crowd one
+// diagram with two demonstrations at once).
+function renderJsxSineTrace(el) {
+  if (typeof JXG === 'undefined') {
+    console.error(
+      '<jsx-sine-trace>: JXG is not defined. Add the JSXGraph <link>/<script> tags ' +
+      'to this lesson\'s <head> -- see the comment at the top of js/jsxgraph.js ' +
+      'for the exact snippet.'
+    );
+    return;
+  }
+
+  const fn = el.getAttribute('fn') === 'cos' ? 'cos' : 'sin';
+  const aSliderOn = el.hasAttribute('a-slider');
+  const bSliderOn = el.hasAttribute('b-slider');
+  const aStart = parseFloat(el.getAttribute('a') || '1');
+  const bStart = parseFloat(el.getAttribute('b') || '1');
+  const aMin = parseFloat(el.getAttribute('a-min') || '-3');
+  const aMax = parseFloat(el.getAttribute('a-max') || '3');
+  const bMin = parseFloat(el.getAttribute('b-min') || '0.25');
+  const bMax = parseFloat(el.getAttribute('b-max') || '3');
+  const fn2Attr = el.getAttribute('fn2');
+  const label = el.getAttribute('label');
+  const label2 = el.getAttribute('label2');
+
+  const aCeil = aSliderOn ? Math.max(Math.abs(aMin), Math.abs(aMax)) : Math.abs(aStart);
+  const bFloor = bSliderOn ? bMin : bStart;
+  const xmax = parseFloat(el.getAttribute('xmax') || String((2 * Math.PI) / bFloor + 1));
+  const ymax = parseFloat(el.getAttribute('ymax') || String(aCeil + (aSliderOn || bSliderOn ? 1.6 : 0.6)));
+  const ymin = -ymax;
+
+  const circleR = aCeil;
+  const cx = -(circleR + 0.9);
+  const xmin = cx - circleR - 0.4;
+
+  let f2 = null;
+  if (fn2Attr) {
+    try {
+      // eslint-disable-next-line no-new-func -- instructor-authored lesson content, not user input.
+      f2 = new Function('x', `return ${fn2Attr};`);
+    } catch (err) {
+      console.error(`<jsx-sine-trace>: could not parse fn2="${fn2Attr}"`, err);
+    }
+  }
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--sine-trace';
+  const boardHost = document.createElement('div');
+  boardHost.className = 'jsx-board jsx-board--sine-trace';
+  boardHost.id = `jsx-board-${++boardCounter}`;
+  container.appendChild(boardHost);
+  el.replaceWith(container);
+
+  const board = JXG.JSXGraph.initBoard(boardHost.id, {
+    boundingbox: [xmin, ymax, xmax, ymin],
+    axis: true,
+    showNavigation: false,
+    showCopyright: false,
+    // The circle panel needs true 1:1 x/y scaling to actually look like a
+    // circle (a plain boundingbox stretches it into an ellipse whenever the
+    // container's own aspect ratio -- 2.6:1 via .jsx-board--sine-trace --
+    // doesn't happen to match this bounding box's own width:height ratio).
+    keepaspectratio: true,
+    pan: { enabled: false },
+    zoom: { enabled: false },
+    resize: { enabled: true, throttle: 100 },
+  });
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const muted = cssVar('--muted') || '#6b7280';
+
+  styleAxes(board, ink);
+
+  // Only the curve panel (x >= 0) gets π-fraction ticks -- the circle panel
+  // sits at x < 0 and has no numeric axis meaning of its own.
+  board.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+  const half = Math.PI / 2;
+  const kMax = Math.floor(xmax / half);
+  const positions = [];
+  for (let k = 0; k <= kMax; k++) positions.push(k * half);
+  board.create('ticks', [board.defaultAxes.x, positions], {
+    drawLabels: true,
+    minorTicks: 0,
+    majorHeight: TICK_MAJOR_HEIGHT,
+    strokeColor: ink,
+    strokeWidth: AXIS_STROKE,
+    label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+    generateLabelText: (tick) => piTickLabel(tick.usrCoords[1]),
+  });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE, gridX: half });
+
+  // Optional sliders -- the same short-track pattern <jsx-chain-demo> uses.
+  // The value readout sits just BELOW its track (not above): above would
+  // crowd the board's own top edge, since the track itself already sits
+  // close to ymax to clear the circle/curve underneath it.
+  const sliderY = ymax - 0.5;
+  let aSlider = null;
+  let bSlider = null;
+  if (aSliderOn) {
+    aSlider = board.create('slider', [[cx - circleR, sliderY], [cx + circleR, sliderY], [aMin, aStart, aMax]], {
+      name: '', withLabel: false, snapWidth: 0.05, size: POINT_SIZE,
+      strokeColor: accent, fillColor: accent, strokeWidth: POINT_STROKE,
+      baseline: { strokeColor: line, strokeWidth: RADIUS_SEGMENT_STROKE, highlight: false },
+      highlight: false,
+    });
+    board.create('text', [cx - circleR, sliderY - 0.45, () => `a = ${aSlider.Value().toFixed(2)}`], {
+      fontSize: READOUT_VALUE_FONT - 4, color: accent, fixed: true, cssStyle: 'font-weight:700',
+    });
+  }
+  if (bSliderOn) {
+    const bx0 = 0.4;
+    const bx1 = Math.min(xmax - 0.4, bx0 + 4);
+    bSlider = board.create('slider', [[bx0, sliderY], [bx1, sliderY], [bMin, bStart, bMax]], {
+      name: '', withLabel: false, snapWidth: 0.05, size: POINT_SIZE,
+      strokeColor: accent, fillColor: accent, strokeWidth: POINT_STROKE,
+      baseline: { strokeColor: line, strokeWidth: RADIUS_SEGMENT_STROKE, highlight: false },
+      highlight: false,
+    });
+    board.create('text', [bx0, sliderY - 0.45, () => `b = ${bSlider.Value().toFixed(2)}`], {
+      fontSize: READOUT_VALUE_FONT - 4, color: accent, fixed: true, cssStyle: 'font-weight:700',
+    });
+  }
+
+  const aValue = () => (aSlider ? aSlider.Value() : aStart);
+  const bValue = () => (bSlider ? bSlider.Value() : bStart);
+  const aRadius = () => Math.max(0.001, Math.abs(aValue()));
+  const aSign = () => (aValue() < 0 ? -1 : 1);
+
+  const center = board.create('point', [cx, 0], { visible: false, fixed: true, name: '' });
+  const circle = board.create('circle', [center, aRadius], {
+    strokeColor: line, strokeWidth: REF_CIRCLE_STROKE, fixed: true, highlight: false, name: '',
+  });
+
+  const startAngle = fn === 'cos' ? Math.PI / 2 : 0;
+  const glider = board.create('glider', [cx + circleR * Math.cos(startAngle), circleR * Math.sin(startAngle), circle], {
+    name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, highlight: false,
+  });
+  board.create('segment', [center, glider], {
+    strokeColor: line, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
+  });
+
+  // The angle used to place the traced point is tracked CUMULATIVELY, not
+  // recomputed fresh from atan2 on every frame -- atan2 wraps at +-180°, so
+  // a fresh reading jumps discontinuously from +pi to -pi the instant the
+  // dragged point crosses the circle's leftmost point, which yanked the
+  // traced point clear across the curve panel instead of continuing past
+  // one edge of it. Fixed with the same technique <jsx-unit-circle>'s
+  // coterminal mode already uses -- accumulate the shortest-path delta
+  // between consecutive raw angles -- just applied continuously instead of
+  // only at its 16 snapped special angles. glider.Y() itself (used for the
+  // output height below) never had this problem: it's a plain geometric
+  // coordinate, well-defined at any drag position with no seam to cross.
+  function rawAngle() {
+    return Math.atan2(glider.Y(), glider.X() - cx);
+  }
+  let cumulativeAngle = startAngle;
+  let lastRawAngle = rawAngle();
+  glider.on('drag', () => {
+    const raw = rawAngle();
+    let delta = raw - lastRawAngle;
+    if (delta > Math.PI) delta -= 2 * Math.PI;
+    if (delta < -Math.PI) delta += 2 * Math.PI;
+    cumulativeAngle += delta;
+    lastRawAngle = raw;
+  });
+
+  // theta, as measured for the CURVE (not the circle): for cosine mode this
+  // is the circle's own standard angle shifted by -pi/2 -- see the file
+  // comment above for why that makes cos(theta) fall out of the same
+  // glider.Y() reading sine already uses directly.
+  function thetaForCurve() {
+    return fn === 'cos' ? cumulativeAngle - Math.PI / 2 : cumulativeAngle;
+  }
+
+  // Not `trace: true` -- the full curve is already drawn statically below,
+  // so a fading trail of past positions would only add clutter over a long
+  // live-dragged demo (dragged back and forth many times across a lecture)
+  // without showing anything the static curve doesn't already show.
+  const tracePoint = board.create('point', [
+    () => thetaForCurve() / bValue(),
+    () => aSign() * glider.Y(),
+  ], {
+    name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE,
+    highlight: false,
+  });
+  board.create('segment', [glider, tracePoint], {
+    strokeColor: muted, strokeWidth: RADIUS_SEGMENT_STROKE, dash: 2, highlight: false,
+  });
+
+  board.create('functiongraph', [
+    (x) => aValue() * (fn === 'cos' ? Math.cos(bValue() * x) : Math.sin(bValue() * x)),
+    0, xmax,
+  ], { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+
+  if (f2) {
+    board.create('functiongraph', [f2, 0, xmax], {
+      strokeColor: muted, strokeWidth: CURVE_STROKE, dash: 2, highlight: false,
+    });
+  }
+
+  const labelX = 0.3;
+  if (label) {
+    board.create('text', [labelX, ymax - (ymax - ymin) * 0.08, label], {
+      fontSize: READOUT_VALUE_FONT - 4, color: accent, fixed: true, cssStyle: 'font-weight:700',
+    });
+  }
+  if (label2 && f2) {
+    board.create('text', [labelX, ymax - (ymax - ymin) * 0.16, label2], {
+      fontSize: READOUT_VALUE_FONT - 4, color: muted, fixed: true, cssStyle: 'font-weight:700',
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
   document.querySelectorAll('jsx-chain-demo').forEach(renderJsxChainDemo);
   document.querySelectorAll('jsx-unit-circle').forEach(renderJsxUnitCircle);
+  document.querySelectorAll('jsx-sine-trace').forEach(renderJsxSineTrace);
 });

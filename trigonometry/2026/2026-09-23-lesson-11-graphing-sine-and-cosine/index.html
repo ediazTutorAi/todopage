@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Graphing Sine and Cosine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (this lesson leans on <jsx-graph>/<jsx-sine-trace> for every sine/cosine
+       curve, plus one <jsx-unit-circle> callback to Lesson 09) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Graphing Sine and Cosine</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Graphing Sine and Cosine</div>
+          <div class="step-subtitle">Circular versus rectangular graphs</div>
+          <div class="step-body">
+            <p>
+              Thus far, we've considered a strictly circular graph for the sine and
+              cosine functions: the unit circle. In this lesson we'll transition to the
+              more familiar rectangular perspective typically associated with graphing.
+              To do this, we'll treat our angle \(\theta\) as the input, graphed along
+              the horizontal axis, with the corresponding output graphed along the
+              vertical axis, exactly as usual.
+            </p>
+            <p class="muted small">
+              Every point on the sine and cosine graphs to come is read directly off a
+              point like this one: the angle \(\theta\) gives the position around the
+              circle, and the \(y\)-coordinate (for sine) or \(x\)-coordinate (for
+              cosine) becomes the graph's output.
+            </p>
+            <jsx-unit-circle show-grid="all" show-labels="all" start-angle="60"></jsx-unit-circle>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Graph of the Sine Function</div>
+          <div class="step-subtitle">Angles along the horizontal axis, \(y\)-values along the vertical</div>
+          <div class="step-body">
+            <p>
+              Graph the sine function by plotting angles from the unit circle along the
+              horizontal axis, and the corresponding output (the \(y\)-values from the
+              unit circle) along the vertical axis.
+            </p>
+            <p class="muted small">
+              Drag the point around the circle on the left — the point tracing the curve
+              on the right follows it live, at exactly that angle's \(y\)-value.
+            </p>
+            <jsx-sine-trace fn="sin" a="1" b="1" xmax="7.3"></jsx-sine-trace>
+            <p class="muted small">
+              Each cycle has exactly \(5\) points of interest — the \(y\)-intercept,
+              each \(x\)-intercept, and the peak and valley in between — which partition
+              the period into \(4\) equal subintervals. Watch for that same \(4\)-way
+              split later in this lesson, when sketching a curve from its amplitude and
+              period alone.
+            </p>
+            <table>
+              <tr><td>Domain</td><td><reveal>\((-\infty, \infty)\) — any amount of rotation</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\([-1, 1]\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(1\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>\(y\)-intercepts</td><td><reveal>\((0, 0)\)</reveal></td></tr>
+              <tr><td>\(x\)-intercepts</td><td><reveal>\((\pi k, 0)\), \(k\) any integer</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Graph of the Cosine Function</div>
+          <div class="step-subtitle">Angles along the horizontal axis, \(x\)-values along the vertical</div>
+          <div class="step-body">
+            <p>
+              Graph the cosine function by plotting angles from the unit circle along
+              the horizontal axis, and the corresponding output (the \(x\)-values from
+              the unit circle) along the vertical axis.
+            </p>
+            <p class="muted small">
+              Drag the point around the circle on the left — the point tracing the curve
+              on the right follows it live, at exactly that angle's \(x\)-value.
+            </p>
+            <jsx-sine-trace fn="cos" a="1" b="1" xmax="7.3"></jsx-sine-trace>
+            <table>
+              <tr><td>Domain</td><td><reveal>\((-\infty, \infty)\) — any amount of rotation</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\([-1, 1]\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(1\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>\(y\)-intercepts</td><td><reveal>\((0, 1)\)</reveal></td></tr>
+              <tr><td>\(x\)-intercepts</td><td><reveal>\(\left(\dfrac{\pi}{2} + \pi k,\ 0\right)\), \(k\) any integer</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Important Info: Amplitude</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <p>
+              When graphing trigonometric functions, <b>amplitude</b> is a term that
+              applies only to sine and cosine, referring to the rise and fall the curve
+              makes above and below its own horizontal (sinusoidal) axis.
+            </p>
+            <p>
+              For \(y = a\sin x\) or \(y = a\cos x\), the amplitude is \(|a|\) — that is,
+              amplitude is always a positive value. If \(a < 0\), the graph is reflected
+              across the sinusoidal axis, but the amplitude itself doesn't change sign.
+            </p>
+            <p class="muted small">
+              Drag the slider to change \(a\) in \(y = a\sin x\) — the circle's own
+              radius and the curve rescale together, live. Try dragging \(a\) past \(0\)
+              to see the reflection the paragraph above describes.
+            </p>
+            <jsx-sine-trace fn="sin" a-slider a-min="-3" a-max="3" a="2" b="1" xmax="7.3"></jsx-sine-trace>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 1 (a)&ndash;(b)</div>
+          <div class="step-subtitle">Determine the amplitude</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(y = 3\sin(2x) - 1\)</p>
+            <p><reveal>amp \(= |3| = 3\)</reveal></p>
+            <p><b>(b)</b> \(y = \dfrac{1}{2} - 2\cos(\pi + 3x)\)</p>
+            <p><reveal>amp \(= |{-2}| = 2\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 1 (c)&ndash;(d)</div>
+          <div class="step-subtitle">Read the amplitude off a graph</div>
+          <div class="step-body">
+            <p><b>(c)</b> What is the amplitude of the function graphed below?</p>
+            <jsx-graph fn="1.5*Math.sin(2*x)" xmin="-1" xmax="7.3" ymin="-2" ymax="2" pi-ticks></jsx-graph>
+            <p><reveal>amp \(= 1.5\)</reveal></p>
+            <p><b>(d)</b> What is the amplitude of the function graphed below?</p>
+            <jsx-graph fn="Math.sin(x)+1" fn2="1" xmin="-1" xmax="7.3" ymin="-1" ymax="3" pi-ticks label2="sinusoidal axis"></jsx-graph>
+            <p class="muted small">
+              This one is shifted up off the \(x\)-axis — measure from the dashed
+              sinusoidal axis, not from \(y = 0\).
+            </p>
+            <p><reveal>amp \(= 1\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Graph \(y = -\dfrac{3}{2}\cos x\) and \(y = \cos x\)</div>
+          <div class="step-body">
+            <p>Graph \(y = -\dfrac{3}{2}\cos x\) and \(y = \cos x\) on the same coordinate axes.</p>
+            <p class="muted small">
+              Drag the point around the circle — it traces \(y = -\dfrac{3}{2}\cos x\)
+              live, alongside the plain \(y = \cos x\) reference curve.
+            </p>
+            <jsx-sine-trace fn="cos" a="-1.5" b="1" fn2="Math.cos(x)" label="y = -3/2 cos x" label2="y = cos x" xmax="7.3"></jsx-sine-trace>
+            <p>
+              <reveal>
+                period \(= 2\pi\), step \(= \dfrac{\text{period}}{4} = \dfrac{2\pi}{4} =
+                \dfrac{\pi}{2}\), amp \(= \left|-\dfrac{3}{2}\right| = \dfrac{3}{2}\)
+                (reflected across the horizontal axis, since \(a < 0\))
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Important Info: Period</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+            <p>
+              Functions like sine and cosine are cyclic, with a definite repeating
+              pattern — these are called <b>periodic functions</b>, and <b>period</b> is
+              the term we'll use to describe this behavior: the horizontal length it
+              takes to complete one full cycle.
+            </p>
+            <p>
+              For \(y = \sin(bx)\) or \(y = \cos(bx)\), with \(b > 0\), the period is
+              equal to \(\dfrac{2\pi}{b}\).
+            </p>
+            <p class="muted small">
+              Drag the slider to change \(b\) in \(y = \sin(bx)\) — watch the period
+              shrink as \(b\) grows and stretch as \(b\) shrinks, live.
+            </p>
+            <jsx-sine-trace fn="sin" b-slider b-min="0.25" b-max="3" b="1" a="1" xmax="13.2"></jsx-sine-trace>
+            <p class="muted small">
+              A few values of \(b\) worth checking by hand against the slider above:
+              \(b=1\) gives period \(2\pi\); \(b=2\) gives period
+              \(\dfrac{2\pi}{2} = \pi\); \(b = \dfrac{1}{2}\) gives period
+              \(\dfrac{2\pi}{1/2} = 4\pi\).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 3 (a)&ndash;(b)</div>
+          <div class="step-subtitle">Determine the period</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(y = 3\sin(2x) - 1\)</p>
+            <p><reveal>period \(= \dfrac{2\pi}{2} = \pi\)</reveal></p>
+            <p><b>(b)</b> \(y = \dfrac{1}{2} - 2\cos(\pi + 3x)\)</p>
+            <p><reveal>period \(= \dfrac{2\pi}{3}\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 3 (c)&ndash;(d)</div>
+          <div class="step-subtitle">Read the period off a graph</div>
+          <div class="step-body">
+            <p><b>(c)</b> What is the period of the function graphed below?</p>
+            <jsx-graph fn="Math.cos(2*x)" xmin="-1.8" xmax="7.3" ymin="-2" ymax="2" pi-ticks></jsx-graph>
+            <p><reveal>period \(= \pi\)</reveal></p>
+            <p><b>(d)</b> What is the period of the function graphed below?</p>
+            <jsx-graph fn="1+Math.cos(x)" xmin="-1.8" xmax="8.4" ymin="-1" ymax="3" pi-ticks></jsx-graph>
+            <p><reveal>period \(= 2\pi\)</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Graph \(y = \sin(3x)\) and \(y = \sin(x)\)</div>
+          <div class="step-body">
+            <p>Graph \(y = \sin(3x)\) and \(y = \sin(x)\) on the same coordinate axes.</p>
+            <p class="muted small">
+              Drag the point around the circle — it traces \(y = \sin(3x)\) live,
+              alongside the plain \(y = \sin x\) reference curve. Notice it completes a
+              full cycle three times as fast.
+            </p>
+            <jsx-sine-trace fn="sin" a="1" b="3" fn2="Math.sin(x)" label="y = sin(3x)" label2="y = sin x" xmax="7.3"></jsx-sine-trace>
+            <p>
+              <reveal>
+                \(y = \sin(x)\): period \(= 2\pi\), step \(= \dfrac{2\pi}{4} =
+                \dfrac{\pi}{2} = \dfrac{3\pi}{6}\) (common denominator). &nbsp;
+                \(y = \sin(3x)\): period \(= \dfrac{2\pi}{3}\), step \(=
+                \dfrac{2\pi/3}{4} = \dfrac{2\pi}{12} = \dfrac{\pi}{6}\)
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Example 5 (a)</div>
+          <div class="step-subtitle">Identify amplitude and period, then graph</div>
+          <div class="step-body">
+            <p><b>(a)</b> \(y = -3\sin(4x)\)</p>
+            <jsx-graph fn="-3*Math.sin(4*x)" xmin="-0.3" xmax="3.5" ymin="-3.5" ymax="3.5" pi-ticks label="y = -3 sin(4x)"></jsx-graph>
+            <p>
+              <reveal>
+                period \(= \dfrac{2\pi}{4} = \dfrac{\pi}{2}\), step \(=
+                \dfrac{\pi/2}{4} = \dfrac{\pi}{8}\), amp \(= |{-3}| = 3\)
+                (reflected across the horizontal axis)
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Example 5 (b)</div>
+          <div class="step-subtitle">Identify amplitude and period, then graph</div>
+          <div class="step-body">
+            <p><b>(b)</b> \(f(\theta) = 5\cos\left(\dfrac{\theta}{2}\right)\)</p>
+            <jsx-graph fn="5*Math.cos(x/2)" xmin="-0.5" xmax="13.2" ymin="-6" ymax="6" pi-ticks label="f(θ) = 5 cos(θ/2)"></jsx-graph>
+            <p>
+              <reveal>
+                period \(= \dfrac{2\pi}{1/2} = 4\pi\), step \(= \dfrac{4\pi}{4} =
+                \pi\), amp \(= |5| = 5\)
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="14">
+          <div class="step-title">Looking Ahead</div>
+          <div class="step-subtitle">From the parent curves to full transformations</div>
+          <div class="step-body">
+            <p>
+              Every graph in this lesson was built from just two numbers: amplitude
+              (the vertical stretch, from the multiplier out front) and period (the
+              horizontal stretch, from the multiplier on \(x\)). The same \(4\)-way
+              split of one period into quarter-period steps is exactly how a curve gets
+              sketched by hand, without plotting point by point. From here, the next
+              natural step is combining amplitude and period changes with horizontal
+              and vertical shifts — and eventually graphing the other four trig
+              functions the same way.
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
