@@ -48,6 +48,40 @@
                 W$</li>
             </ul>
             Properties (2) and (3) together mean that W is closed under linear combinations.
+            <p>In fact, the only subspaces of $\mathbb{R}^2$ are $\{\vec{0}\}$, the lines through the origin, and
+              $\mathbb{R}^2$ itself; the only subspaces of $\mathbb{R}^3$ are $\{\vec{0}\}$, the lines through the
+              origin, the planes through the origin, and $\mathbb{R}^3$ itself:</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Dimension</th>
+                  <th>Subspaces of $\mathbb{R}^2$</th>
+                  <th>Subspaces of $\mathbb{R}^3$</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>3</td>
+                  <td>—</td>
+                  <td>$\mathbb{R}^3$</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>$\mathbb{R}^2$</td>
+                  <td>Planes through $\vec{0}$</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Lines through $\vec{0}$</td>
+                  <td>Lines through $\vec{0}$</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>$\{\vec{0}\}$</td>
+                  <td>$\{\vec{0}\}$</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -60,6 +94,16 @@
               <li>$\text{Im}(T)$ is a subspace of $\mathbb{R}^n$</li>
               <li>$\text{Ker}(T)$ is a subspace of $\mathbb{R}^m$</li>
             </ul>
+            <p>A subspace is usually given either as a kernel (the solution set of a homogeneous system) or as an
+              image (the span of some vectors), and it's often necessary to convert between the two. For example,
+              consider the plane $V$ in $\mathbb{R}^3$ given by $x_1+2x_2+3x_3=0$.<br>
+              a. Find a matrix $A$ such that $V=\text{Ker}(A)$.<br>
+              b. Find a matrix $B$ such that $V=\text{Im}(B)$.</p>
+            <p><reveal class="solution">a. Write the equation as $\begin{bmatrix}1&2&3\end{bmatrix}
+                \begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}=0$, so $V=\text{Ker}\begin{bmatrix}1&2&3\end{bmatrix}$.<br>
+                b. The image of a matrix is the span of its columns, so we need two nonparallel vectors in $V$ — for
+                example $\begin{bmatrix}-2\\1\\0\end{bmatrix}$ and $\begin{bmatrix}-3\\0\\1\end{bmatrix}$. Thus
+                $V=\text{Im}\begin{bmatrix}-2&-3\\1&0\\0&1\end{bmatrix}$.</reveal></p>
           </div>
         </div>
 
@@ -68,7 +112,7 @@
           <div class="step-subtitle">Redundant vectors; linear independence; basis</div>
           <div class="step-body">
             Consider vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_k$ in $\mathbb{R}^n$.<br>
-            a. We say that a vector $\vec{v}_i$ in the list $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ is redundatn if
+            a. We say that a vector $\vec{v}_i$ in the list $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ is redundant if
             $\vec{v}_i$ is a linear combination of the preceding vectors $\vec{v}_1, \vec{v}_2, \ldots,
             \vec{v}_{i-1}$.<br>
             b. The vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ are called linearly independent if none of them is
@@ -76,6 +120,13 @@
             redundant)<br>
             c. We say that the vectors $\vec{v}_1, \vec{v}_2, \ldots, \vec{v}_m$ in a subspace $V$ of $\mathbb{R}^n$
             form a basis for $V$ if they span $V$ and are linearly independent.
+            <p>For example, consider $A=\begin{bmatrix}1&2&1&2\\1&2&2&3\\1&2&3&4\end{bmatrix}$ with columns
+              $\vec{v}_1,\vec{v}_2,\vec{v}_3,\vec{v}_4$. Which columns are redundant, and what basis of
+              $\text{Im}(A)$ does that leave?</p>
+            <p><reveal class="solution">$\vec{v}_2=2\vec{v}_1$ and $\vec{v}_4=\vec{v}_1+\vec{v}_3$, so $\vec{v}_2$ and
+                $\vec{v}_4$ are redundant. The remaining vectors $\vec{v}_1=\begin{bmatrix}1\\1\\1\end{bmatrix}$ and
+                $\vec{v}_3=\begin{bmatrix}1\\2\\3\end{bmatrix}$ are linearly independent and still span the same
+                image, so they form a basis of $\text{Im}(A)$.</reveal></p>
           </div>
         </div>
 
@@ -97,6 +148,15 @@
             if each of the vectors $\vec{v}_i$ for $i \geq 2$ has a nonzero entry in a component where all preceding
             vectors $\vec{v}_1,\ldots,\vec{v}_{i-1}$ have a 0, then the vectors $\vec{v}_1, \vec{v}_2, \ldots,
             \vec{v}_m$ are linearly independent.
+            <p>This settles Theorem 3.2.4's question whenever a helpful zero pattern exists. When it doesn't — for
+              example, are $\vec{v}_1=\begin{bmatrix}1\\2\\3\end{bmatrix}$, $\vec{v}_2=\begin{bmatrix}4\\5\\6\end{bmatrix}$,
+              $\vec{v}_3=\begin{bmatrix}7\\8\\9\end{bmatrix}$ linearly independent? — row-reduce instead.</p>
+            <p><reveal class="solution">None of these vectors has a zero entry, so Theorem 3.2.5 doesn't apply. To test
+                whether $\vec{v}_3$ is redundant, solve $\vec{v}_3=c_1\vec{v}_1+c_2\vec{v}_2$ by row-reducing the
+                augmented matrix $M=\begin{bmatrix}1&4&7\\2&5&8\\3&6&9\end{bmatrix}$:
+                $\text{rref}(M)=\begin{bmatrix}1&0&-1\\0&1&2\\0&0&0\end{bmatrix}$, giving $c_1=-1,c_2=2$. So
+                $\vec{v}_3=-\vec{v}_1+2\vec{v}_2$ is redundant, and $\vec{v}_1,\vec{v}_2,\vec{v}_3$ are linearly
+                dependent. In general: row-reduce to find which columns are redundant.</reveal></p>
           </div>
         </div>
 
@@ -108,7 +168,7 @@
             $$c_1\vec{v}_1 + c_2\vec{v}_2 + \cdots + c_m\vec{v}_m = \vec{0}$$
             where $c_1, c_2, \ldots, c_m$ are scalars, is called a linear relation among the vectors. There is always
             the trivial relation, with $c_1 = c_2 = \cdots = c_m = 0$. Nontrivial relations (where at least one
-            coefficient $c_i$ is nonzero) may or many not exist among the vectors $\vec{v}_1,\ldots,\vec{v}_m$
+            coefficient $c_i$ is nonzero) may or may not exist among the vectors $\vec{v}_1,\ldots,\vec{v}_m$
           </div>
         </div>
 
@@ -144,8 +204,8 @@
             equivalent:
             <ul>
               <li>The vectors are linearly independent.</li>
-              <li>None of the vectos is redundant, meaning that none of them is linear combination of the preceding
-                vectors</li>
+              <li>None of the vectors is redundant, meaning that none of them is a linear combination of the
+                preceding vectors</li>
               <li>None of the vectors is a linear combination of the other vectors in the list</li>
               <li>The only linear relation among the vectors is the trivial relation</li>
               <li>The kernel of the matrix $A$ whose columns are the vectors $\vec{v}_1, \ldots, \vec{v}_m$ is

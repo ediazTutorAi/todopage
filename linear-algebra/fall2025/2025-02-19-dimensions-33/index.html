@@ -11,8 +11,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
             {left:'$$', right:'$$', display:true},
-            {left:'\[', right:'\]', display:true},
-            {left:'\(', right:'\)', display:false},
+            {left:'\\[', right:'\\]', display:true},
+            {left:'\\(', right:'\\)', display:false},
             {left:'$',  right:'$',  display:false}
           ],throwOnError:false});"></script>
 
@@ -36,8 +36,8 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Definition 3.3.1</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Theorem 3.3.1</div>
+          <div class="step-subtitle">Independent vs. spanning vectors</div>
           <div class="step-body">
             Consider vectors $\vec{v}_1,\ldots,\vec{v}_p$ in a subspace $V$ of $\mathbb{R}^n$. If the vectors
             $\vec{v}_1,\ldots,\vec{v}_p$ are linearly independent and the vectors $\vec{w}_1,\ldots,\vec{w}_q$ span $V$,
@@ -69,10 +69,24 @@
             Consider a subspace $V$ of $\mathbb{R}^n$ with $\dim(V) = m$.
             <ol>
               <li>We can find at most m linearly independent vectors in $V$.</li>
-              <li>We need at leas m vectors to span $V$.</li>
+              <li>We need at least m vectors to span $V$.</li>
               <li>If m vectors in $V$ are linearly independent, then they form a basis of $V$.</li>
               <li>If m vectors in $V$ span $V$, then they form a basis of $V$.</li>
             </ol>
+            <p>For example, consider $A=\begin{bmatrix}1&2&2&-5&6\\-1&-2&-1&1&-1\\4&8&5&-8&9\\3&6&1&5&-7\end{bmatrix}$.
+              (a) Find a basis of $\text{Ker}(A)$, and thus $\dim(\text{Ker}(A))$. (b) Find a basis of
+              $\text{Im}(A)$, and thus $\dim(\text{Im}(A))$.</p>
+            <p><reveal class="solution">a. $\text{rref}(A)=\begin{bmatrix}1&2&0&3&-4\\0&0&1&-4&5\\0&0&0&0&0\\0&0&0&0&0\end{bmatrix}$,
+                so $\text{Ker}(A)$ consists of vectors $x_1=-2s-3t+4r,\ x_2=s,\ x_3=4t-5r,\ x_4=t,\ x_5=r$ (free
+                variables $s,t,r$). This gives the basis
+                $\begin{bmatrix}-2\\1\\0\\0\\0\end{bmatrix},\begin{bmatrix}-3\\0\\4\\1\\0\end{bmatrix},
+                \begin{bmatrix}4\\0\\-5\\0\\1\end{bmatrix}$ of $\text{Ker}(A)$ — linearly independent by Theorem 3.2.5,
+                since each has a 1 in a free-variable component where the others have a 0. So
+                $\dim(\text{Ker}(A))=3$.<br>
+                b. The redundant columns of $\text{rref}(A)$ are $\vec{b}_2=2\vec{b}_1$, $\vec{b}_4=3\vec{b}_1-4\vec{b}_3$,
+                $\vec{b}_5=-4\vec{b}_1+5\vec{b}_3$; the same relations hold among the columns of $A$ itself. So the
+                nonredundant columns $\begin{bmatrix}1\\-1\\4\\3\end{bmatrix}$ and $\begin{bmatrix}2\\-1\\5\\1\end{bmatrix}$
+                form a basis of $\text{Im}(A)$, and $\dim(\text{Im}(A))=2$.</reveal></p>
           </div>
         </div>
 
@@ -88,11 +102,12 @@
               <li>The nonredundant column vectors of A form a basis of the image of A.</li>
               <li>The redundant columns of A correspond to those of rref(A)</li>
               <li>The nonredundant column vectors of rref(A) are those containing the leading 1's.</li>
+            </ol>
           </div>
         </div>
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">Definition 3.3.6</div>
+          <div class="step-title">Theorem 3.3.6</div>
           <div class="step-subtitle">Dimension of the Image</div>
           <div class="step-body">
             For any matrix A,
@@ -110,6 +125,12 @@
             $\dim(\text{Im}(A)) = \text{rank}(A)$. Thus we can write the preceding equation alternatively as
             $$\text{rank}(A) + \text{nullity}(A) = m$$
             Some authors go so far as to call this the fundamental theorem of linear algebra.
+            <p>For example, let $T$ be the orthogonal projection onto a plane $V$ in $\mathbb{R}^3$. What are
+              $\dim(\text{Ker}(T))$ and $\dim(\text{Im}(T))$, and how do they relate to $m=3$?</p>
+            <p><reveal class="solution">$\text{Ker}(T)$ is the line $V^\perp$ orthogonal to $V$, so
+                $\dim(\text{Ker}(T))=1$: one dimension "collapses" under the projection. $\text{Im}(T)=V$, a plane, so
+                $\dim(\text{Im}(T))=2$: two dimensions "survive." Indeed $m-\dim(\text{Ker}(T))=3-1=2=\dim(\text{Im}(T))$,
+                confirming the rank-nullity theorem.</reveal></p>
           </div>
         </div>
 
@@ -122,24 +143,45 @@
             corresponding relation, $-c_1\vec{v}_1 - \cdots - c_{i-1}\vec{v}_{i-1} + \vec{v}_i = \vec{0}$; and generate
             the vector:
             $$\vec{w}_i = \begin{bmatrix} -c_1 \\ \vdots \\ -c_{i-1} \\ 1 \\ 0 \\ \vdots \\ 0 \end{bmatrix}$$
-            in the kernel of A. The vectors so constructed form a basis of the kernal of A.
+            in the kernel of A. The vectors so constructed form a basis of the kernel of A.
             <br>
             The nonredundant columns of A form a basis of the image of A.
+            <p>For example, consider $A=\begin{bmatrix}1&2&0&1&2\\1&2&0&2&3\\1&2&0&3&4\\1&2&0&4&5\end{bmatrix}$. Spot
+              the redundant columns by inspection and use them to build bases of $\text{Im}(A)$ and $\text{Ker}(A)$.</p>
+            <p><reveal class="solution">By inspection, $\vec{v}_2=2\vec{v}_1$, $\vec{v}_3=\vec{0}$, and
+                $\vec{v}_5=\vec{v}_1+\vec{v}_4$. The nonredundant columns $\vec{v}_1=\begin{bmatrix}1\\1\\1\\1\end{bmatrix}$
+                and $\vec{v}_4=\begin{bmatrix}1\\2\\3\\4\end{bmatrix}$ form a basis of $\text{Im}(A)$, so
+                $\dim(\text{Im}(A))=2$.<br>
+                Writing each redundant column's relation as $-c_1\vec{v}_1-\cdots+\vec{v}_i=\vec{0}$ and reading off
+                the coefficients (the "Kyle numbers") gives one kernel vector per redundant column:
+                $-2\vec{v}_1+\vec{v}_2=\vec{0}\Rightarrow\vec{w}_2=\begin{bmatrix}-2\\1\\0\\0\\0\end{bmatrix}$;
+                $\vec{v}_3=\vec{0}\Rightarrow\vec{w}_3=\begin{bmatrix}0\\0\\1\\0\\0\end{bmatrix}$;
+                $-\vec{v}_1-\vec{v}_4+\vec{v}_5=\vec{0}\Rightarrow\vec{w}_5=\begin{bmatrix}-1\\0\\0\\-1\\1\end{bmatrix}$.
+                By Theorem 3.2.5 these three are linearly independent, and since
+                $\dim(\text{Ker}(A))=5-\dim(\text{Im}(A))=3$ by the rank-nullity theorem, $\vec{w}_2,\vec{w}_3,\vec{w}_5$
+                form a basis of $\text{Ker}(A)$.</reveal></p>
           </div>
         </div>
 
         <div class="step is-visible" data-step="9">
-          <div class="step-title">Summary 3.3.9</div>
+          <div class="step-title">Theorem 3.3.9</div>
           <div class="step-subtitle">Bases of $\mathbb{R}^n$</div>
           <div class="step-body">
             The vectors $\vec{v}_1, \ldots, \vec{v}_n$ form a basis of $\mathbb{R}^n$ if and only if the matrix:
             $$\begin{bmatrix} \vec{v}_1 & \cdots & \vec{v}_n \end{bmatrix}$$
             is invertible
+            <p>For example, for which values of the constant $k$ do
+              $\begin{bmatrix}1\\1\\1\end{bmatrix},\begin{bmatrix}1\\-1\\1\end{bmatrix},\begin{bmatrix}1\\k\\k^2\end{bmatrix}$
+              form a basis of $\mathbb{R}^3$?</p>
+            <p><reveal class="solution">We need $\begin{bmatrix}1&1&1\\1&-1&k\\1&1&k^2\end{bmatrix}$ to be invertible.
+                Row-reducing gives $\begin{bmatrix}1&1&1\\0&1&(1-k)/2\\0&0&k^2-1\end{bmatrix}$, which reduces all the
+                way to $I_3$ if and only if $k^2-1\neq0$. So the three vectors form a basis of $\mathbb{R}^3$ if and
+                only if $k$ is neither $1$ nor $-1$.</reveal></p>
           </div>
         </div>
 
         <div class="step is-visible" data-step="10">
-          <div class="step-title">Theorem 3.3.10</div>
+          <div class="step-title">Summary 3.3.10</div>
           <div class="step-subtitle">Various characterizations of invertible matrices</div>
           <div class="step-body">
             For an $n \times n$ matrix $A$, the following statements are equivalent:

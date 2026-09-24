@@ -67,7 +67,7 @@
             a global maximum, also called an absolute maximum at $(x_0,y_0)$.<br>
             The function $f$ has a local minimum at $(x_0,y_0)$ if
             $$f(x_0,y_0)\leq f(x,y)$$
-            for all points $(x,y)$ withing some disk centered at $(x_0,y_0)$. The number $f(x_0,y_0)$ is called a local
+            for all points $(x,y)$ within some disk centered at $(x_0,y_0)$. The number $f(x_0,y_0)$ is called a local
             minimum value. If the preceding inequality holds for every point $(x,y)$ in the domain of $f$, then $f$ has
             a global minimum, also called an absolute minimum at $(x_0,y_0)$.<br><br>
             If $f(x_0,y_0)$ is either a local maximum or local minimum value, then it is called a local extremum.
@@ -99,25 +99,28 @@
           <div class="step-body">
             Let $z=f(x,y)$ be a function of two variables for which the first- and second-order partial derivatives are
             continuous on some disk containing the point $(x_0,y_0)$. Suppose $f_x(x_0,y_0)=0$ and $f_y(x_0,y_0)=0$.
-            Define the quantity.
+            Define the quantity
             $$D=f_{xx}(x_0,y_0)f_{yy}(x_0,y_0)-(f_{xy}(x_0,y_0))^2$$
-  
-            i. If $D\geq 0$ and $f_{xx}(x_0,y_0)\geq 0$, then $f$ has a local minimum at $(x_0,y_0)$<br>
-            ii. If $D\geq 0$ and $f_{xx}(x_0,y_0)\leq 0$, then $f$ has a local maximum at $(x_0,y_0)$<br>
-            iii. If $D\leq 0$, then $f$ has a saddle point at $(x_0,y_0)$<br>
+
+            i. If $D> 0$ and $f_{xx}(x_0,y_0)> 0$, then $f$ has a local minimum at $(x_0,y_0)$<br>
+            ii. If $D> 0$ and $f_{xx}(x_0,y_0)< 0$, then $f$ has a local maximum at $(x_0,y_0)$<br>
+            iii. If $D< 0$, then $f$ has a saddle point at $(x_0,y_0)$<br>
             iv. If $D=0$, then the test is inconclusive
           </div>
         </div>
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">Theorem 4.19</div>
-          <div class="step-subtitle">Finding Extrem Values of a Function of Two Variables</div>
+          <div class="step-title">Problem-Solving Strategy</div>
+          <div class="step-subtitle">Using the Second Derivative Test</div>
           <div class="step-body">
-            Assume $z=f(x,y)$ is a differentiable function of two variables defined on a closed, bounded set D. Then f
-            will attain the absolute maximum value and the absolute minimum value, which are, respectively, the largest
-            and smalles values found among the following:<br>
-            i. The values of $f$ at the critical points of $f$ in $D$<br>
-            ii. The values of $f$ on the boundary of $D$.
+            <ol>
+              <li>Determine the critical points of $f$ where $f_x(x_0,y_0)=f_y(x_0,y_0)=0$, discarding any point where
+                $f_x$ or $f_y$ does not exist.</li>
+              <li>Calculate the discriminant $D=f_{xx}(x_0,y_0)f_{yy}(x_0,y_0)-\left(f_{xy}(x_0,y_0)\right)^2$ for each
+                critical point of $f$.</li>
+              <li>Apply Theorem 4.17 to determine whether each critical point is a local maximum, local minimum, or
+                saddle point, or whether the test is inconclusive.</li>
+            </ol>
           </div>
         </div>
 
@@ -125,11 +128,23 @@
           <div class="step-title">Example 4.39</div>
           <div class="step-subtitle">Using the Second Derivative Test</div>
           <div class="step-body">
-            Find the critical points for each of the following functions, and use the second derivative test to find the local extrema:
-  <ol type="a">
-  <li>\(f(x,y)=4x^2+9y^2+8x-36y+24\)</li>
-    <li>\(g(x,y)=\frac{1}{3}x^3+y^2+2xy-6x-3y+4\)</li>
-</ol>
+            Find the critical points for each of the following functions, and use the second derivative test to find
+            the local extrema:
+            <ol type="a">
+              <li>$f(x,y)=4x^2+9y^2+8x-36y+24$</li>
+              <li>$g(x,y)=\frac{1}{3}x^3+y^2+2xy-6x-3y+4$</li>
+            </ol>
+            <p><reveal class="solution">a. $f_x=8x+8$ and $f_y=18y-36$. Setting both to zero gives the critical point
+                $(-1,2)$. The second partials are $f_{xx}=8$, $f_{xy}=0$, $f_{yy}=18$, so
+                $D=(8)(18)-0^2=144>0$ and $f_{xx}=8>0$. By Theorem 4.17, $f$ has a local minimum at $(-1,2)$, with
+                value $f(-1,2)=-16$.<br><br>
+                b. $g_x=x^2+2y-6$ and $g_y=2x+2y-3$. Solving $g_x=g_y=0$ simultaneously gives $y=\frac{6-x^2}{2}$ and
+                $y=\frac{3-2x}{2}$; setting these equal gives $x^2-2x-3=0$, so $x=-1$ or $x=3$, yielding the critical
+                points $(-1,\frac{5}{2})$ and $(3,-\frac{3}{2})$. The second partials are $g_{xx}=2x$, $g_{xy}=2$,
+                $g_{yy}=2$.<br>
+                At $(-1,\frac{5}{2})$: $D=(-2)(2)-2^2=-8<0$, so $g$ has a saddle point there.<br>
+                At $(3,-\frac{3}{2})$: $D=(6)(2)-2^2=8>0$ and $g_{xx}=6>0$, so $g$ has a local minimum
+                there.</reveal></p>
           </div>
         </div>
 
@@ -137,7 +152,8 @@
           <div class="step-title">Theorem 4.18</div>
           <div class="step-subtitle">Extreme Value Theorem</div>
           <div class="step-body">
-            A continuous function \(f(x,y)\) on a close and bounded set D in the plane attains an absolute maximum at some point of d and an absolute minimum value at some point of D.
+            A continuous function $f(x,y)$ on a closed and bounded set $D$ in the plane attains an absolute maximum at
+            some point of $D$ and an absolute minimum value at some point of $D$.
           </div>
         </div>
 
@@ -145,11 +161,55 @@
           <div class="step-title">Theorem 4.19</div>
           <div class="step-subtitle">Finding Extreme Values of a Function of Two Variables</div>
           <div class="step-body">
-            Assume \(z=f(x,y)\) is a differentiable function of two variables defined on a closed, bounded set D. Then f will attain the absolute maximum value and the absolute minimum value, which are, respectively, the largest and smallest values found among the following:
-  <ol>
-  <li>The values of f at the critical points of f in D</li>
-    <li>The values of f on the boundary of D</li>
-</ol>
+            Assume $z=f(x,y)$ is a differentiable function of two variables defined on a closed, bounded set $D$.
+            Then $f$ will attain the absolute maximum value and the absolute minimum value, which are, respectively,
+            the largest and smallest values found among the following:<br>
+            i. The values of $f$ at the critical points of $f$ in $D$<br>
+            ii. The values of $f$ on the boundary of $D$.
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Problem-Solving Strategy</div>
+          <div class="step-subtitle">Finding Absolute Maximum and Minimum Values</div>
+          <div class="step-body">
+            <ol>
+              <li>Determine the critical points of $f$ in $D$.</li>
+              <li>Calculate $f$ at each of these critical points.</li>
+              <li>Determine the maximum and minimum values of $f$ on the boundary of $D$.</li>
+              <li>The maximum and minimum values of $f$ occur at one of the values found in steps 2 and 3.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 4.40</div>
+          <div class="step-subtitle">Finding Absolute Extrema</div>
+          <div class="step-body">
+            Find the absolute extrema of each function on the given region:
+            <ol type="a">
+              <li>$f(x,y)=x^2-2xy+4y^2-4x-2y+24$ on the region $0\leq x\leq 4,\ 0\leq y\leq 2$</li>
+              <li>$g(x,y)=x^2+y^2+4x-6y$ on the region $x^2+y^2\leq 16$</li>
+            </ol>
+            <p><reveal class="solution">a. Interior critical point: $f_x=2x-2y-4=0$ and $f_y=-2x+8y-2=0$ give
+                $(3,1)$, with $f(3,1)=17$.<br>
+                Checking the boundary (the four edges of the rectangle): along $y=0$ and $y=2$, and along $x=0$ and
+                $x=4$, each edge reduces to a single-variable function of the remaining coordinate. Evaluating at the
+                interior critical points of each edge and at the four corners gives the candidate values
+                $f(0,0)=24$, $f(4,0)=24$, $f(4,2)=20$, $f(0,2)=36$ (the largest of the boundary values), plus smaller
+                edge-interior values that don't beat these.<br>
+                Comparing all candidates: the absolute maximum is $36$ at $(0,2)$, and the absolute minimum is $17$ at
+                the interior critical point $(3,1)$.<br><br>
+                b. Interior critical point: $g_x=2x+4=0$ and $g_y=2y-6=0$ give $(-2,3)$, which lies inside the disk
+                since $(-2)^2+3^2=13\leq16$, with $g(-2,3)=-13$.<br>
+                The boundary is the circle $x^2+y^2=16$; parametrize it as $x=4\cos t,\ y=4\sin t$. Substituting,
+                $$h(t)=g(4\cos t,4\sin t)=16+16\cos t-24\sin t.$$
+                Setting $h'(t)=-16\sin t-24\cos t=0$ gives $\tan t=-\frac{3}{2}$, with two solutions in $[0,2\pi)$.
+                Since $h(t)=16+R\cos(t+\varphi)$ with $R=\sqrt{16^2+24^2}=8\sqrt{13}$, the boundary extreme values are
+                $16\pm8\sqrt{13}\approx44.844$ and $\approx-12.844$.<br>
+                Comparing the interior value $-13$ with the boundary values: the absolute minimum is $-13$ at
+                $(-2,3)$, and the absolute maximum is $\approx44.844$, attained at
+                $\left(\frac{8\sqrt{13}}{13},-\frac{12\sqrt{13}}{13}\right)$ on the boundary.</reveal></p>
           </div>
         </div>
 
