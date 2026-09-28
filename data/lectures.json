@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-28",
+    "title": "Translating Sine and Cosine Graphs",
+    "subtitle": "Lesson 12",
+    "description": "Vertical and horizontal translations of sine and cosine, combined with amplitude and period into y = a sin[b(x + c)] + d, with animated shifts, live sliders, graph-to-rule matching, and step-by-step sketching of one period.",
+    "tags": [
+      "Graphing",
+      "Translations",
+      "Phase Shift"
+    ],
+    "url": "trigonometry/2026/2026-09-28-lesson-12-translating-sine-and-cosine-graphs/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-23",
     "title": "Graphing Sine and Cosine",
     "subtitle": "Lesson 11",

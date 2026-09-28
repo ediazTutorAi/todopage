@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Translating Sine and Cosine Graphs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (this lesson is built almost entirely on <jsx-transform>: Play
+       animations, sliders, and the staged graph-one-period sketch) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Translating Sine and Cosine Graphs</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Translating Sine and Cosine Graphs</div>
+          <div class="step-subtitle">Sliding a graph up, down, left, and right</div>
+          <div class="step-body">
+            <p>
+              Like any function, the graphs of sine and cosine (and the other four
+              trigonometric functions) can be translated up, down, left, and right
+              using addition and subtraction.
+            </p>
+            <p class="muted small">
+              Press Play: watch the curve slide onto its new position, one translation
+              at a time. The chips above the graph light up for whichever part of the
+              rule is moving.
+            </p>
+            <jsx-transform fn="sin" c="pi/2" d="1" play="c d" xmin="-4" xmax="7.6" ymin="-2" ymax="3" arrows></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Vertical Translations</div>
+          <div class="step-subtitle">Important info</div>
+          <div class="step-body">
+            <p>
+              Given the value \(d > 0\) and any function \(f(x)\), the graph of
+              \(y = f(x) + d\) is a translation \(d\) units <b>upward</b> from the graph
+              of \(y = f(x)\). Likewise, the graph of \(y = f(x) - d\) is a translation
+              \(d\) units <b>downward</b>.
+            </p>
+            <p class="muted small">
+              Drag \(d\) both ways. Every red arrow is the same length, exactly
+              \(|d|\), and always vertical.
+            </p>
+            <jsx-transform fn="sin" sliders="d" arrows xmin="-1" xmax="7.6" ymin="-4" ymax="4"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Vertical Translation Example</div>
+          <div class="step-subtitle">\(y = \sin x + 2\)</div>
+          <div class="step-body">
+            <p>Compare \(y = \sin x\) with \(y = \sin x + 2\).</p>
+            <jsx-transform fn="sin" d="2" play="d" arrows xmin="-1" xmax="7.6" ymin="-1.5" ymax="3.5"></jsx-transform>
+            <table>
+              <tr><td>Direction and distance</td><td><reveal>up \(2\)</reveal></td></tr>
+              <tr><td>Sinusoidal axis</td><td><reveal>moves from \(y = 0\) to \(y = 2\)</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\([1, 3]\)</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Vertical Translation Example</div>
+          <div class="step-subtitle">\(y = -\dfrac{1}{2} + \sin x\)</div>
+          <div class="step-body">
+            <p>Compare \(y = \sin x\) with \(y = -\dfrac{1}{2} + \sin x\).</p>
+            <jsx-transform fn="sin" d="-0.5" play="d" arrows xmin="-1" xmax="7.6" ymin="-2.5" ymax="2"></jsx-transform>
+            <table>
+              <tr><td>Direction and distance</td><td><reveal>down \(\dfrac{1}{2}\)</reveal></td></tr>
+              <tr><td>Sinusoidal axis</td><td><reveal>moves from \(y = 0\) to \(y = -\dfrac{1}{2}\)</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\(\left[-\dfrac{3}{2}, \dfrac{1}{2}\right]\)</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Horizontal Translations</div>
+          <div class="step-subtitle">Important info</div>
+          <div class="step-body">
+            <p>
+              Given the value \(c > 0\) and any function \(f(x)\), the graph of
+              \(y = f(x + c)\) is a translation \(c\) units <b>left</b> from the graph of
+              \(y = f(x)\). Likewise, the graph of \(y = f(x - c)\) is a translation
+              \(c\) units <b>right</b>.
+            </p>
+            <p class="muted small">
+              Drag \(c\). Adding moves the graph left and subtracting moves it right,
+              the opposite of what the sign seems to say. Every red arrow is horizontal
+              and exactly \(|c|\) long.
+            </p>
+            <jsx-transform fn="sin" sliders="c" arrows xmin="-7" xmax="7.6" ymin="-2" ymax="2"></jsx-transform>
+            <p>Why does adding \(c\) move the graph <i>left</i>?</p>
+            <p>
+              <reveal>
+                The point that used to sit at \(x = 0\) now needs \(x + c = 0\) to give
+                the same output, so it lands at \(x = -c\). Every point arrives \(c\)
+                units <i>earlier</i>.
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Horizontal Translation Example</div>
+          <div class="step-subtitle">\(y = \sin\left(\dfrac{\pi}{2} + x\right)\)</div>
+          <div class="step-body">
+            <p>Compare \(y = \sin x\) with \(y = \sin\left(\dfrac{\pi}{2} + x\right)\).</p>
+            <jsx-transform fn="sin" c="pi/2" play="c" arrows xmin="-3.5" xmax="7.6" ymin="-1.8" ymax="1.8"></jsx-transform>
+            <table>
+              <tr><td>Direction and distance</td><td><reveal>left \(\dfrac{\pi}{2}\)</reveal></td></tr>
+              <tr><td>The peak that was at \(x = \dfrac{\pi}{2}\)</td><td><reveal>is now at \(x = 0\)</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Horizontal Translation Example</div>
+          <div class="step-subtitle">\(y = \sin\left(x - \dfrac{\pi}{4}\right)\)</div>
+          <div class="step-body">
+            <p>Compare \(y = \sin x\) with \(y = \sin\left(x - \dfrac{\pi}{4}\right)\).</p>
+            <jsx-transform fn="sin" c="-pi/4" play="c" arrows xmin="-3.5" xmax="7.6" ymin="-1.8" ymax="1.8" tick-den="4"></jsx-transform>
+            <table>
+              <tr><td>Direction and distance</td><td><reveal>right \(\dfrac{\pi}{4}\)</reveal></td></tr>
+              <tr><td>The peak that was at \(x = \dfrac{\pi}{2}\)</td><td><reveal>is now at \(x = \dfrac{3\pi}{4}\)</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 1 (a)</div>
+          <div class="step-subtitle">Identify the translations</div>
+          <div class="step-body">
+            <p>Identify any horizontal and/or vertical translation for \(y = 3\sin(x - \pi) - 1\).</p>
+            <table>
+              <tr><td>Horizontal</td><td><reveal>right \(\pi\) units</reveal></td></tr>
+              <tr><td>Vertical</td><td><reveal>down \(1\) unit</reveal></td></tr>
+            </table>
+            <p class="muted small">
+              The \(3\) is a stretch, not a translation. Only the numbers <i>added or
+              subtracted</i> slide the graph.
+            </p>
+            <jsx-transform fn="sin" a="3" c="-pi" d="-1" play="a c d" xmin="-1" xmax="10.5" ymin="-5" ymax="4.5"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 1 (b)</div>
+          <div class="step-subtitle">Identify the translations</div>
+          <div class="step-body">
+            <p>Identify any horizontal and/or vertical translation for \(y = \dfrac{1}{2} - 2\cos\left(\dfrac{\pi}{2} + x\right)\).</p>
+            <table>
+              <tr><td>Horizontal</td><td><reveal>left \(\dfrac{\pi}{2}\) units</reveal></td></tr>
+              <tr><td>Vertical</td><td><reveal>up \(\dfrac{1}{2}\) unit</reveal></td></tr>
+            </table>
+            <p class="muted small">
+              The \(-2\) flips and stretches the cosine, so it is not a translation
+              either.
+            </p>
+            <jsx-transform fn="cos" a="-2" c="pi/2" d="0.5" play="a c d" xmin="-3.5" xmax="7.6" ymin="-3" ymax="3"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Combining Transformations</div>
+          <div class="step-subtitle">Summary of transformations</div>
+          <div class="step-body">
+            <p>
+              Consider \(y = a\sin[b(x + c)] + d\) or \(y = a\cos[b(x + c)] + d\), with
+              \(b > 0\).
+            </p>
+            <table>
+              <tr><td><b>Amplitude</b></td><td>The value \(|a|\) is the amplitude. If \(a < 0\), the graph is reflected across the sinusoidal axis.</td></tr>
+              <tr><td><b>Period</b></td><td>The value \(2\pi / b\) is the period.</td></tr>
+              <tr><td><b>Horizontal shift</b></td><td>If \(c > 0\), the graph is shifted left \(c\) units. If \(c < 0\), it is shifted right \(|c|\) units. (Some texts call this the <i>phase shift</i>.)</td></tr>
+              <tr><td><b>Vertical shift</b></td><td>If \(d > 0\), the graph is shifted up \(d\) units. If \(d < 0\), it is shifted down \(|d|\) units.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Explore: All Four Together</div>
+          <div class="step-subtitle">\(y = a\sin[b(x + c)] + d\)</div>
+          <div class="step-body">
+            <p class="muted small">
+              Drag each slider and watch which chip changes. Try to hit each target:
+              (1) upside down, (2) period \(\pi\), (3) starts its cycle at
+              \(x = \dfrac{\pi}{2}\), (4) sinusoidal axis at \(y = 2\).
+            </p>
+            <jsx-transform fn="sin" sliders="a b c d" xmin="-7" xmax="10" ymin="-5" ymax="5" tick-den="2"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Complete the table</div>
+          <div class="step-body">
+            <table>
+              <thead>
+                <tr><th>Function</th><th>Parent</th><th>Period</th><th>Amplitude</th><th>H. Shift</th><th>V. Shift</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>\(y = 2 + \cos\left(\dfrac{1}{2}\theta\right)\)</td>
+                  <td><reveal>\(y = \cos\theta\)</reveal></td>
+                  <td><reveal>\(\dfrac{2\pi}{1/2} = 4\pi\)</reveal></td>
+                  <td><reveal>\(1\)</reveal></td>
+                  <td><reveal>n/a</reveal></td>
+                  <td><reveal>up \(2\)</reveal></td>
+                </tr>
+                <tr>
+                  <td>\(y = -1 - \sin\left(\theta - \dfrac{\pi}{7}\right)\)</td>
+                  <td><reveal>\(y = \sin\theta\)</reveal></td>
+                  <td><reveal>\(2\pi\)</reveal></td>
+                  <td><reveal>\(1\), reflected over the horizontal axis</reveal></td>
+                  <td><reveal>right \(\dfrac{\pi}{7}\)</reveal></td>
+                  <td><reveal>down \(1\)</reveal></td>
+                </tr>
+                <tr>
+                  <td>\(y = \dfrac{1}{3}\sin(2\theta + \pi) + 4\)</td>
+                  <td><reveal>\(y = \sin\theta\)</reveal></td>
+                  <td><reveal>\(\dfrac{2\pi}{2} = \pi\)</reveal></td>
+                  <td><reveal>\(\dfrac{1}{3}\)</reveal></td>
+                  <td><reveal>left \(\dfrac{\pi}{2}\)</reveal></td>
+                  <td><reveal>up \(4\)</reveal></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="muted small">
+              The third row hides a trap. The next step shows why its shift is
+              \(\dfrac{\pi}{2}\) and not \(\pi\).
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Factor Out \(b\) First</div>
+          <div class="step-subtitle">Why \(\sin(2\theta + \pi)\) does not shift by \(\pi\)</div>
+          <div class="step-body">
+            <p>
+              The shift \(c\) only reads correctly when the inside looks like
+              \(b(x + c)\). Rewrite \(\sin(2x + \pi)\) by factoring out the \(2\):
+            </p>
+            <p>\(\sin(2x + \pi) = \sin\left(2\left(x + \dfrac{\pi}{2}\right)\right)\)</p>
+            <p class="muted small">
+              Press Play: the period squeezes first, then the inside term \(\pi\) slides
+              in. The shift chip reports \(c \div b\), the true distance moved. Then drag
+              \(b\) and \(c\) yourself.
+            </p>
+            <jsx-transform fn="sin" form="raw" b="2" c="pi" play="b c" sliders="b c" arrows xmin="-4" xmax="7.6" ymin="-1.8" ymax="1.8"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="14">
+          <div class="step-title">Example 3 (a)</div>
+          <div class="step-subtitle">Write both a sine and a cosine rule</div>
+          <div class="step-body">
+            <p class="muted small">
+              Answers vary: a sine curve and a cosine curve differ only by a horizontal
+              shift, so one graph has many correct rules.
+            </p>
+            <table>
+              <tr><td>Period</td><td><reveal>\(\pi\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(1.5\)</reveal></td></tr>
+              <tr><td>Cosine rule</td><td><reveal>\(y = -1.5\cos(2x)\), since the curve starts at its <i>minimum</i></reveal></td></tr>
+              <tr><td>Sine rule</td><td><reveal>\(y = 1.5\sin\left(2\left(x - \dfrac{\pi}{4}\right)\right)\)</reveal></td></tr>
+            </table>
+            <p class="muted small">Cosine rule: flip, then squeeze.</p>
+            <jsx-transform fn="cos" a="-1.5" b="2" ghost play="a b" play-label="&#9654; Build the cosine rule" xmin="-1" xmax="7.6" ymin="-2.4" ymax="2.4" tick-den="4"></jsx-transform>
+            <p class="muted small">Sine rule: stretch, squeeze, then slide right.</p>
+            <jsx-transform fn="sin" a="1.5" b="2" c="-pi/4" ghost play="a b c" play-label="&#9654; Build the sine rule" xmin="-1" xmax="7.6" ymin="-2.4" ymax="2.4" tick-den="4"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="15">
+          <div class="step-title">Example 3 (b)</div>
+          <div class="step-subtitle">Write both a sine and a cosine rule</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(1\)</reveal></td></tr>
+              <tr><td>Vertical shift</td><td><reveal>up \(1\), so the sinusoidal axis is \(y = 1\)</reveal></td></tr>
+              <tr><td>Sine rule</td><td><reveal>\(y = \sin x + 1\)</reveal></td></tr>
+              <tr><td>Cosine rule</td><td><reveal>\(y = -\cos\left(x + \dfrac{\pi}{2}\right) + 1\)</reveal></td></tr>
+            </table>
+            <p class="muted small">Sine rule: just lift it.</p>
+            <jsx-transform fn="sin" d="1" ghost play="d" play-label="&#9654; Build the sine rule" xmin="-1.8" xmax="7.6" ymin="-1.5" ymax="3.2"></jsx-transform>
+            <p class="muted small">Cosine rule: flip, slide left, then lift.</p>
+            <jsx-transform fn="cos" a="-1" c="pi/2" d="1" ghost play="a c d" play-label="&#9654; Build the cosine rule" xmin="-1.8" xmax="7.6" ymin="-1.5" ymax="3.2"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="16">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Graph one period of \(f(x) = 4\sin\left(x - \dfrac{\pi}{2}\right) + 1\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Amplitude</td><td><reveal>\(4\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{2\pi}{4} = \dfrac{\pi}{2}\)</reveal></td></tr>
+              <tr><td>Horizontal shift</td><td><reveal>right \(\dfrac{\pi}{2}\)</reveal></td></tr>
+              <tr><td>Vertical shift</td><td><reveal>up \(1\), so the horizontal axis is \(y = 1\)</reveal></td></tr>
+            </table>
+            <jsx-transform fn="sin" a="4" c="-pi/2" d="1" sketch eq="f(x) = 4 sin(x − π/2) + 1" xmin="-2" xmax="8.6" ymin="-4.6" ymax="6.4"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="17">
+          <div class="step-title">Complications Involving Horizontal Translation</div>
+          <div class="step-subtitle">Choosing a horizontal scale</div>
+          <div class="step-body">
+            <p>
+              Graphing a trigonometric function with a horizontal translation can be
+              challenging, and choosing a good horizontal scale is often the problem.
+              Weigh three things:
+            </p>
+            <ul>
+              <li>the <b>period</b>,</li>
+              <li>the horizontal <b>spacing</b> between points of interest (maximums, minimums, intercepts), and</li>
+              <li>the amount of horizontal <b>translation</b>.</li>
+            </ul>
+            <p>
+              One good practice: write each of these quantities using a
+              <b>common denominator</b>, then let that denominator set the tick spacing.
+            </p>
+            <p class="muted small">
+              Watch for it in the next two examples: every tick on the axis is one
+              <i>step</i>, and the shift is a whole number of steps.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="18">
+          <div class="step-title">Example 5 (a)</div>
+          <div class="step-subtitle">Identify all transformations and graph \(f(x) = \sin(3x - \pi)\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Factor out \(b\)</td><td><reveal>\(f(x) = \sin\left(3\left(x - \dfrac{\pi}{3}\right)\right)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(1\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(\dfrac{2\pi}{3}\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{2\pi/3}{4} = \dfrac{2\pi}{12} = \dfrac{\pi}{6}\)</reveal></td></tr>
+              <tr><td>Horizontal shift</td><td><reveal>right \(\dfrac{\pi}{3} = \dfrac{2\pi}{6} = 2\left(\dfrac{\pi}{6}\right)\), two steps</reveal></td></tr>
+            </table>
+            <jsx-transform fn="sin" b="3" c="-pi/3" sketch eq="f(x) = sin(3x − π)" tick-den="6" xmin="-1.7" xmax="3.9" ymin="-1.8" ymax="1.8"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="19">
+          <div class="step-title">Example 5 (b)</div>
+          <div class="step-subtitle">Identify all transformations and graph \(f(x) = 2\cos\left(\dfrac{\pi}{3} + \dfrac{x}{2}\right)\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Factor out \(b\)</td><td><reveal>\(f(x) = 2\cos\left(\dfrac{1}{2}\left(x + \dfrac{2\pi}{3}\right)\right)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(2\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(\dfrac{2\pi}{1/2} = 4\pi\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{4\pi}{4} = \pi = \dfrac{3\pi}{3} = 3\left(\dfrac{\pi}{3}\right)\)</reveal></td></tr>
+              <tr><td>Horizontal shift</td><td><reveal>left \(\dfrac{2\pi}{3} = 2\left(\dfrac{\pi}{3}\right)\)</reveal></td></tr>
+            </table>
+            <jsx-transform fn="cos" a="2" b="0.5" c="2*pi/3" sketch eq="f(x) = 2 cos(π/3 + x/2)" tick-den="3" xmin="-3.4" xmax="11.4" ymin="-2.9" ymax="2.9"></jsx-transform>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="20">
+          <div class="step-title">Recipe and Practice</div>
+          <div class="step-subtitle">Graphing \(y = a\sin[b(x + c)] + d\) or \(y = a\cos[b(x + c)] + d\)</div>
+          <div class="step-body">
+            <ol>
+              <li><b>Factor</b> so the inside reads \(b(x + c)\).</li>
+              <li><b>Sinusoidal axis:</b> draw \(y = d\).</li>
+              <li><b>Amplitude:</b> mark \(y = d + |a|\) and \(y = d - |a|\). If \(a < 0\), the pattern flips.</li>
+              <li><b>Period and step:</b> period \(= \dfrac{2\pi}{b}\), step \(= \dfrac{\text{period}}{4}\), using a common denominator.</li>
+              <li><b>Shift:</b> the cycle starts at \(x = -c\).</li>
+              <li><b>Five points, one smooth curve,</b> then repeat.</li>
+            </ol>
+            <p class="muted small">
+              Practice: set the sliders to \(a = -2\), \(b = 2\), \(c = \dfrac{\pi}{4}\),
+              \(d = 1\), and predict the five key points before checking them on the graph.
+            </p>
+            <jsx-transform fn="cos" sliders="a b c d" xmin="-4" xmax="8" ymin="-5" ymax="5" tick-den="4"></jsx-transform>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

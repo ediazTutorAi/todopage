@@ -1227,10 +1227,566 @@ function renderJsxSineTrace(el) {
   }
 }
 
+// <jsx-transform fn="sin" a="1" b="1" c="0" d="0" ...>
+//
+// The translation/transformation demo for y = a f(b(x + c)) + d (Lesson 12,
+// Translating Sine and Cosine Graphs). One tag, four ways to drive it, all
+// instructor-operated like every other jsx-* tag:
+//
+//   play="d c"     a "Play" button that tweens each listed parameter, IN THAT
+//                  ORDER, from its parent value (a=1, b=1, c=0, d=0) to the
+//                  value given by the a/b/c/d attributes. Bare `play` animates
+//                  every non-identity parameter in a, b, c, d order. Parameters
+//                  with a non-identity target that are NOT listed sit at their
+//                  target from the start (a fixed baseline).
+//   sliders="c d"  native range inputs for the listed parameters (ranges via
+//                  `c-min`/`c-max`, etc.). Dragging one cancels any animation.
+//   arrows         red arrows from each of the parent's 5 key points to where
+//                  it lands on the transformed curve, like the workbook's
+//                  hand-drawn red arrows. Only meaningful for pure shifts.
+//   ghost          draws the FINAL curve as a thick faint underlay from the
+//                  start, so Play visibly morphs the parent onto a given graph
+//                  (the "write a rule for this graph" examples). `play-label`
+//                  renames the button.
+//   sketch         a different mode: a stage-by-stage "graph one period" build
+//                  (sinusoidal axis, max/min lines, start point, quarter-period
+//                  steps, key points popping in, curve drawing itself, dashed
+//                  continuation) driven by a Next button. Uses a/b/c/d as the
+//                  fixed final function; readout chips appear as each quantity
+//                  is used.
+//
+// Other attributes: `form="raw"` (inner term is bx + c instead of b(x + c), to
+// show why the shift is c/b), `tick-den` (x ticks every π/den, default 2),
+// `xmin/xmax/ymin/ymax`, `eq` (static equation text overriding the live one),
+// `start="final"`, `no-keypoints`, `no-readout`, `no-parent`. Numeric
+// attributes accept `pi`, e.g. c="-pi/4".
+
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+// x as a reduced fraction of π with the given denominator grid, e.g. (5π/6).
+function piFractionLabel(x, den) {
+  const k = Math.round(x / (Math.PI / den));
+  if (k === 0) return '0';
+  const g = gcd(Math.abs(k), den);
+  const n = k / g;
+  const d = den / g;
+  const sign = n < 0 ? '-' : '';
+  const coeff = Math.abs(n) === 1 ? '' : String(Math.abs(n));
+  return d === 1 ? `${sign}${coeff}π` : `${sign}${coeff}π/${d}`;
+}
+
+// v as a clean multiple of π (denominator up to 12), or null if it isn't one.
+function fmtPiMultiple(v, tol = 1e-6) {
+  const m = v / Math.PI;
+  if (Math.abs(m) < tol) return '0';
+  for (let den = 1; den <= 12; den++) {
+    if (Math.abs(m * den - Math.round(m * den)) < tol * den) return piFractionLabel(v, den);
+  }
+  return null;
+}
+
+function fmtNum(v) {
+  const r = Math.round(v * 100) / 100;
+  return String(Object.is(r, -0) ? 0 : r);
+}
+
+const fmtAngle = (v) => fmtPiMultiple(v) ?? fmtNum(v);
+
+function evalNumAttr(el, name, dflt, tag) {
+  const raw = el.getAttribute(name);
+  if (raw === null || raw.trim() === '') return dflt;
+  try {
+    // eslint-disable-next-line no-new-func -- instructor-authored lesson content, not user input.
+    const v = new Function('pi', `return (${raw});`)(Math.PI);
+    if (!Number.isFinite(v)) throw new Error('not a finite number');
+    return v;
+  } catch (err) {
+    console.error(`<${tag}>: could not parse ${name}="${raw}"`, err);
+    return dflt;
+  }
+}
+
+const TRANSFORM_KEYS = ['a', 'b', 'c', 'd'];
+const TRANSFORM_IDENT = { a: 1, b: 1, c: 0, d: 0 };
+const TRANSFORM_CAPTION = {
+  a: 'Vertical stretch (and flip): the multiplier out front',
+  b: 'Horizontal squeeze or stretch: the multiplier on x',
+  c: 'Horizontal shift: slide left or right',
+  d: 'Vertical shift: slide up or down',
+};
+
+function renderJsxTransform(el) {
+  const TAG = 'jsx-transform';
+  if (typeof JXG === 'undefined') {
+    console.error(
+      `<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags ` +
+      'to this lesson\'s <head> -- see the comment at the top of js/jsxgraph.js ' +
+      'for the exact snippet.'
+    );
+    return;
+  }
+
+  const num = (name, dflt) => evalNumAttr(el, name, dflt, TAG);
+  const fnName = el.getAttribute('fn') === 'cos' ? 'cos' : 'sin';
+  const trig = fnName === 'cos' ? Math.cos : Math.sin;
+  const raw = el.getAttribute('form') === 'raw';
+  const sketch = el.hasAttribute('sketch');
+  const ghost = el.hasAttribute('ghost');
+  const arrows = el.hasAttribute('arrows');
+  const showKeyPoints = !el.hasAttribute('no-keypoints');
+  const showParent = !el.hasAttribute('no-parent') && !sketch;
+  const showReadout = !el.hasAttribute('no-readout');
+  const eqOverride = el.getAttribute('eq');
+  const tickDen = Math.max(1, Math.round(num('tick-den', 2)));
+  const xmin = num('xmin', -3.5);
+  const xmax = num('xmax', 7.6);
+  const ymin = num('ymin', -3);
+  const ymax = num('ymax', 3);
+
+  const target = {};
+  TRANSFORM_KEYS.forEach((k) => { target[k] = num(k, TRANSFORM_IDENT[k]); });
+  if (target.b <= 0) {
+    console.error(`<${TAG}>: b must be positive (got ${target.b})`);
+    return;
+  }
+
+  const sliderKeys = sketch ? [] : (el.getAttribute('sliders') || '')
+    .split(/[\s,]+/).filter((k) => TRANSFORM_KEYS.includes(k));
+  const hasPlay = el.hasAttribute('play') && !sketch;
+  let playOrder = [];
+  if (hasPlay) {
+    const listed = (el.getAttribute('play') || '').split(/[\s,]+/).filter((k) => TRANSFORM_KEYS.includes(k));
+    playOrder = listed.length ? listed : TRANSFORM_KEYS.filter((k) => target[k] !== TRANSFORM_IDENT[k]);
+  }
+  const playLabel = el.getAttribute('play-label') || '▶ Play';
+
+  const RANGE = {
+    a: [-3, 3, 0.25], b: [0.25, 3, 0.25], c: [-2 * Math.PI, 2 * Math.PI, Math.PI / 12], d: [-3, 3, 0.25],
+  };
+  const rangeOf = (k) => [num(`${k}-min`, RANGE[k][0]), num(`${k}-max`, RANGE[k][1]), RANGE[k][2]];
+
+  // Live parameter state.
+  const p = { ...TRANSFORM_IDENT };
+  function baseline() {
+    if (sketch || el.getAttribute('start') === 'final') return { ...target };
+    const b = { ...TRANSFORM_IDENT };
+    TRANSFORM_KEYS.forEach((k) => {
+      if (!playOrder.includes(k) && !sliderKeys.includes(k)) b[k] = target[k];
+    });
+    return b;
+  }
+  Object.assign(p, baseline());
+
+  const shiftOf = (q) => (raw ? -q.c / q.b : -q.c);
+  const valueAt = (q, x) => q.a * trig(raw ? q.b * x + q.c : q.b * (x + q.c)) + q.d;
+
+  // ---- DOM ----
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+
+  let eqEl = null;
+  let captionEl = null;
+  const chipEls = {};
+  if (showReadout) {
+    const readout = document.createElement('div');
+    readout.className = 'jsx-transform-readout';
+    eqEl = document.createElement('div');
+    eqEl.className = 'jsx-transform-eq';
+    readout.appendChild(eqEl);
+    const chips = document.createElement('div');
+    chips.className = 'jsx-transform-chips';
+    const CHIP_NAME = { a: 'Amplitude', b: 'Period', c: 'Horizontal shift', d: 'Vertical shift' };
+    TRANSFORM_KEYS.forEach((k) => {
+      const relevant = sliderKeys.includes(k) || target[k] !== TRANSFORM_IDENT[k];
+      if (!relevant) return;
+      const chip = document.createElement('span');
+      chip.className = 'jsx-chip';
+      chip.innerHTML = `<b>${CHIP_NAME[k]}</b> <span class="jsx-chip-val"></span>`;
+      chips.appendChild(chip);
+      chipEls[k] = chip;
+    });
+    readout.appendChild(chips);
+    captionEl = document.createElement('div');
+    captionEl.className = 'jsx-transform-caption';
+    readout.appendChild(captionEl);
+    container.appendChild(readout);
+  }
+
+  const boardHost = document.createElement('div');
+  boardHost.className = 'jsx-board jsx-board--transform';
+  boardHost.id = `jsx-board-${++boardCounter}`;
+  container.appendChild(boardHost);
+
+  if (ghost) {
+    const legend = document.createElement('div');
+    legend.className = 'jsx-legend';
+    legend.innerHTML =
+      '<span><i class="sw sw-ghost"></i>the given graph</span>' +
+      `<span><i class="sw sw-parent"></i>y = ${fnName} x</span>` +
+      '<span><i class="sw sw-curve"></i>your rule, so far</span>';
+    container.appendChild(legend);
+  }
+
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.appendChild(controls);
+  el.replaceWith(container);
+
+  // ---- board ----
+  const board = JXG.JSXGraph.initBoard(boardHost.id, {
+    boundingbox: [xmin, ymax, xmax, ymin],
+    axis: true,
+    showNavigation: false,
+    showCopyright: false,
+    keepaspectratio: false,
+    pan: { enabled: false },
+    zoom: { enabled: false },
+    resize: { enabled: true, throttle: 100 },
+  });
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const muted = cssVar('--muted') || '#6b7280';
+  const negative = cssVar('--negative') || '#c0392b';
+
+  styleAxes(board, ink);
+  const step = Math.PI / tickDen;
+  board.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+  const tickPositions = [];
+  for (let k = Math.ceil(xmin / step); k <= Math.floor(xmax / step); k++) tickPositions.push(k * step);
+  board.create('ticks', [board.defaultAxes.x, tickPositions], {
+    drawLabels: true,
+    minorTicks: 0,
+    majorHeight: TICK_MAJOR_HEIGHT,
+    strokeColor: ink,
+    strokeWidth: AXIS_STROKE,
+    label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+    generateLabelText: (tick) => piFractionLabel(tick.usrCoords[1], tickDen),
+  });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE, gridX: step });
+
+  const K = [0, 1, 2, 3, 4].map((i) => (i * Math.PI) / 2);
+  const finalFn = (x) => valueAt(target, x);
+  const liveFn = (x) => valueAt(p, x);
+  const hide = (o) => { if (o) o.setAttribute({ visible: false }); };
+  const show = (o) => { if (o) o.setAttribute({ visible: true }); };
+
+  if (ghost) {
+    board.create('functiongraph', [finalFn], {
+      strokeColor: accent, strokeOpacity: 0.2, strokeWidth: CURVE_STROKE + 10, highlight: false,
+    });
+  }
+
+  // Sinusoidal axis. Live in transform mode, fixed at the target in sketch.
+  const midline = board.create('line', [[0, () => p.d], [1, () => p.d]], {
+    strokeColor: negative, strokeWidth: RADIUS_SEGMENT_STROKE + 0.5, dash: 2, highlight: false,
+    visible: false, fixed: true,
+  });
+  const midLabel = board.create('text', [
+    xmax - (xmax - xmin) * 0.015, () => p.d + (ymax - ymin) * 0.015,
+    () => (sketch ? `sinusoidal axis: y = ${fmtNum(p.d)}` : `y = ${fmtNum(p.d)}`),
+  ], {
+    anchorX: 'right', anchorY: 'bottom', fontSize: READOUT_VALUE_FONT - 4, color: negative,
+    fixed: true, cssStyle: 'font-weight:700', visible: false,
+  });
+
+  if (showParent) {
+    board.create('functiongraph', [trig], {
+      strokeColor: muted, strokeWidth: CURVE_STROKE, dash: 2, highlight: false,
+    });
+  }
+
+  // Sketch mode draws the curve progressively via a moving right-hand domain
+  // bound; transform mode just draws it whole.
+  const x0 = shiftOf(target);
+  const periodT = (2 * Math.PI) / target.b;
+  let prog = 1;
+  if (sketch) {
+    prog = 0;
+    board.create('functiongraph', [finalFn, xmin, xmax], {
+      strokeColor: accent, strokeOpacity: 0.55, strokeWidth: CURVE_STROKE - 1, dash: 3,
+      highlight: false, visible: false, name: 'continuation',
+    });
+  }
+  const curve = board.create('functiongraph', sketch
+    ? [finalFn, () => x0, () => x0 + periodT * prog]
+    : [liveFn], { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+  const continuation = sketch ? board.objectsList.find((o) => o.name === 'continuation') : null;
+
+  // Key points: parent (muted) and image (accent), plus workbook-style arrows.
+  const parentPts = K.map((t) => board.create('point', [t, trig(t)], {
+    name: '', fixed: true, size: POINT_SIZE - 3, strokeColor: '#fff', fillColor: muted,
+    strokeWidth: POINT_STROKE, highlight: false, visible: arrows,
+  }));
+  const imgX = (t) => t / p.b + shiftOf(p);
+  const imgY = (t) => p.a * trig(t) + p.d;
+  const imgPts = K.map((t) => board.create('point', [() => imgX(t), () => imgY(t)], {
+    name: '', fixed: true, size: POINT_SIZE, strokeColor: '#fff', fillColor: accent,
+    strokeWidth: POINT_STROKE, highlight: false, visible: !sketch && showKeyPoints,
+  }));
+  const arrowEls = arrows ? K.map((t, i) => board.create('arrow', [parentPts[i], imgPts[i]], {
+    strokeColor: negative, strokeWidth: 3.5, lastArrow: { size: 8 }, highlight: false, fixed: true, visible: false,
+  })) : [];
+
+  // ---- readout ----
+  function eqString() {
+    const absA = Math.abs(p.a);
+    const near = (v, t) => Math.abs(v - t) < 1e-9;
+    const hasB = !near(p.b, 1);
+    const hasC = !near(p.c, 0);
+    const cAbs = fmtAngle(Math.abs(p.c));
+    const sgn = p.c < 0 ? '−' : '+';
+    let inner;
+    if (raw) {
+      inner = `${hasB ? fmtNum(p.b) : ''}x${hasC ? ` ${sgn} ${cAbs}` : ''}`;
+    } else {
+      const shifted = `x ${sgn} ${cAbs}`;
+      if (hasB) inner = `${fmtNum(p.b)}${hasC ? `(${shifted})` : 'x'}`;
+      else inner = hasC ? shifted : 'x';
+    }
+    const wrapped = (hasB || hasC) ? `(${inner})` : ` ${inner}`;
+    const dTxt = near(p.d, 0) ? '' : ` ${p.d < 0 ? '−' : '+'} ${fmtNum(Math.abs(p.d))}`;
+    return `y = ${p.a < 0 ? '−' : ''}${near(absA, 1) ? '' : fmtNum(absA)}${fnName}${wrapped}${dTxt}`;
+  }
+
+  const chipText = {
+    a: () => `${fmtNum(Math.abs(p.a))}${p.a < 0 ? ' (reflected)' : ''}`,
+    b: () => fmtAngle((2 * Math.PI) / p.b),
+    c: () => {
+      const s = shiftOf(p);
+      return Math.abs(s) < 1e-9 ? 'none' : `${s > 0 ? 'right' : 'left'} ${fmtAngle(Math.abs(s))}`;
+    },
+    d: () => (Math.abs(p.d) < 1e-9 ? 'none' : `${p.d > 0 ? 'up' : 'down'} ${fmtNum(Math.abs(p.d))}`),
+  };
+  let liveKey = null;
+  let sketchStage = 0;
+  const SKETCH_CHIP_STAGE = { d: 1, a: 2, c: 3, b: 4 };
+
+  function updateReadout() {
+    if (!showReadout) return;
+    eqEl.textContent = eqOverride ?? eqString();
+    TRANSFORM_KEYS.forEach((k) => {
+      const chip = chipEls[k];
+      if (!chip) return;
+      chip.querySelector('.jsx-chip-val').textContent = chipText[k]();
+      const changed = Math.abs(p[k] - TRANSFORM_IDENT[k]) > 1e-9;
+      chip.classList.toggle('is-active', sketch ? true : changed);
+      chip.classList.toggle('is-live', liveKey === k);
+      chip.classList.toggle('is-hidden', sketch && sketchStage < SKETCH_CHIP_STAGE[k]);
+    });
+  }
+
+  // ---- shared refresh ----
+  let lastArrowState = [];
+  function refresh() {
+    updateReadout();
+    if (!sketch) {
+      const midOn = Math.abs(p.d) > 1e-9;
+      if (midOn) { show(midline); show(midLabel); } else { hide(midline); hide(midLabel); }
+    }
+    arrowEls.forEach((arrow, i) => {
+      const moved = Math.hypot(imgX(K[i]) - K[i], imgY(K[i]) - trig(K[i])) > 0.04;
+      if (lastArrowState[i] !== moved) {
+        lastArrowState[i] = moved;
+        arrow.setAttribute({ visible: moved });
+      }
+    });
+    sliderKeys.forEach((k) => {
+      const input = controls.querySelector(`input[data-p="${k}"]`);
+      if (input && Math.abs(parseFloat(input.value) - p[k]) > 1e-9) input.value = p[k];
+      const out = controls.querySelector(`[data-out="${k}"]`);
+      if (out) out.textContent = fmtAngle(p[k]);
+    });
+    board.update();
+  }
+
+  // ---- animation plumbing ----
+  let raf = null;
+  let timers = [];
+  const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+  function stopAll() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    timers.forEach(clearTimeout);
+    timers = [];
+    liveKey = null;
+  }
+  function tween(ms, onStep, onDone) {
+    const t0 = performance.now();
+    const tick = (now) => {
+      const u = Math.min(1, (now - t0) / ms);
+      const e = u < 0.5 ? 4 * u * u * u : 1 - ((-2 * u + 2) ** 3) / 2;
+      onStep(e);
+      if (u < 1) { raf = requestAnimationFrame(tick); } else { raf = null; if (onDone) onDone(); }
+    };
+    raf = requestAnimationFrame(tick);
+  }
+  const makeButton = (label, title) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'btn';
+    b.textContent = label;
+    if (title) b.title = title;
+    // Hand keyboard focus back so Space/arrows keep driving Slide Mode.
+    b.addEventListener('pointerup', () => b.blur());
+    controls.appendChild(b);
+    return b;
+  };
+
+  // ---- transform mode: Play / Reset / sliders ----
+  if (!sketch) {
+    let playBtn = null;
+    if (hasPlay) {
+      playBtn = makeButton(playLabel);
+      playBtn.addEventListener('click', () => {
+        stopAll();
+        Object.assign(p, baseline());
+        playOrder.forEach((k) => { p[k] = TRANSFORM_IDENT[k]; });
+        playBtn.textContent = '⏳ Playing';
+        if (captionEl) captionEl.textContent = '';
+        refresh();
+        let i = 0;
+        const next = () => {
+          if (i >= playOrder.length) {
+            liveKey = null;
+            playBtn.textContent = '↺ Replay';
+            if (captionEl) captionEl.textContent = '';
+            refresh();
+            return;
+          }
+          const k = playOrder[i++];
+          liveKey = k;
+          if (captionEl) captionEl.textContent = TRANSFORM_CAPTION[k];
+          refresh();
+          later(() => tween(1700, (e) => {
+            p[k] = TRANSFORM_IDENT[k] + (target[k] - TRANSFORM_IDENT[k]) * e;
+            refresh();
+          }, () => {
+            p[k] = target[k];
+            refresh();
+            later(next, 800);
+          }), 600);
+        };
+        next();
+      });
+    }
+    const resetBtn = makeButton('Reset', 'Back to the parent graph');
+    resetBtn.addEventListener('click', () => {
+      stopAll();
+      Object.assign(p, baseline());
+      if (playBtn) playBtn.textContent = playLabel;
+      if (captionEl) captionEl.textContent = '';
+      refresh();
+    });
+    const NAME = {
+      a: 'a', b: 'b', c: raw ? 'c' : 'c', d: 'd',
+    };
+    const HINT = {
+      a: 'stretch / flip', b: 'squeeze / stretch', c: raw ? 'inside term' : 'horizontal shift', d: 'vertical shift',
+    };
+    sliderKeys.forEach((k) => {
+      const [lo, hi, st] = rangeOf(k);
+      const row = document.createElement('label');
+      row.className = 'jsx-slider-row';
+      row.innerHTML =
+        `<span class="jsx-slider-name">${NAME[k]} <small>${HINT[k]}</small></span>` +
+        `<input type="range" data-p="${k}" min="${lo}" max="${hi}" step="${st}" value="${p[k]}">` +
+        `<span class="jsx-slider-val" data-out="${k}"></span>`;
+      const input = row.querySelector('input');
+      input.addEventListener('input', () => {
+        stopAll();
+        if (playBtn) playBtn.textContent = playLabel;
+        if (captionEl) captionEl.textContent = '';
+        p[k] = parseFloat(input.value);
+        refresh();
+      });
+      input.addEventListener('pointerup', () => input.blur());
+      controls.appendChild(row);
+    });
+    refresh();
+    return;
+  }
+
+  // ---- sketch mode: staged "graph one period" ----
+  const range = ymax - ymin;
+  const dashStyle = { strokeColor: muted, strokeWidth: 2, dash: 3, highlight: false, visible: false, fixed: true };
+  const top = target.d + Math.abs(target.a);
+  const bottom = target.d - Math.abs(target.a);
+  const ampLines = [top, bottom].map((y) => board.create('line', [[0, y], [1, y]], dashStyle));
+  const ampLabels = [[top, 'max'], [bottom, 'min']].map(([y, w], i) => board.create('text', [
+    xmax - (xmax - xmin) * 0.015, y + range * (i === 0 ? 0.015 : -0.015), `${w}: y = ${fmtNum(y)}`,
+  ], {
+    anchorX: 'right', anchorY: i === 0 ? 'bottom' : 'top', fontSize: READOUT_VALUE_FONT - 4, color: muted,
+    fixed: true, cssStyle: 'font-weight:700', visible: false,
+  }));
+  const stepXs = K.map((t) => t / target.b + x0);
+  const stepLines = stepXs.map((x) => board.create('line', [[x, 0], [x, 1]], dashStyle));
+  const stepLabel = board.create('text', [
+    (stepXs[1] + stepXs[2]) / 2, ymin + range * 0.07, `step = ${fmtAngle(periodT / 4)}`,
+  ], {
+    anchorX: 'middle', fontSize: READOUT_VALUE_FONT - 4, color: negative,
+    fixed: true, cssStyle: 'font-weight:700', visible: false,
+  });
+
+  const heightWord = (t) => {
+    const y = target.a * trig(t);
+    if (Math.abs(y) < 1e-9) return 'on the axis';
+    return y > 0 ? 'max' : 'min';
+  };
+  const CAPTIONS = [
+    'A blank grid. Press Start and we build the graph piece by piece.',
+    `Vertical shift ${chipText.d()}: the sinusoidal axis is y = ${fmtNum(target.d)}.`,
+    `Amplitude ${fmtNum(Math.abs(target.a))}: the curve reaches y = ${fmtNum(top)} and y = ${fmtNum(bottom)}.`,
+    `Horizontal shift ${chipText.c()}: one cycle starts at x = ${fmtAngle(x0)}.`,
+    `Period ${fmtAngle(periodT)}, so each step is period ÷ 4 = ${fmtAngle(periodT / 4)}.`,
+    `Plot the five key points: ${K.map(heightWord).join(', ')}.`,
+    'Connect them with one smooth curve.',
+    'The pattern repeats in both directions.',
+  ];
+  const LAST = CAPTIONS.length - 1;
+
+  const backBtn = makeButton('◀ Back');
+  const nextBtn = makeButton('Start →');
+  let ptsShown = 0;
+
+  function applyStage() {
+    updateReadout();
+    if (captionEl) captionEl.textContent = CAPTIONS[sketchStage];
+    const on = (cond, ...objs) => objs.flat().forEach((o) => (cond ? show(o) : hide(o)));
+    on(sketchStage >= 1, midline);
+    // With d = 0 the axis IS the x-axis; its label would sit on the tick labels.
+    on(sketchStage >= 1 && Math.abs(target.d) > 1e-9, midLabel);
+    on(sketchStage >= 2, ampLines, ampLabels);
+    on(sketchStage >= 4, stepLines, stepLabel);
+    imgPts.forEach((pt, i) => on(i < ptsShown, pt));
+    on(sketchStage >= 7, continuation);
+    backBtn.disabled = sketchStage === 0;
+    nextBtn.textContent = sketchStage === 0 ? 'Start →' : sketchStage === LAST ? '↺ Reset' : 'Next →';
+    board.update();
+  }
+
+  function gotoStage(n) {
+    stopAll();
+    sketchStage = n;
+    ptsShown = n < 3 ? 0 : n < 5 ? 1 : 5;
+    prog = n >= 7 ? 1 : 0;
+    if (n === 5) {
+      for (let i = 2; i <= 5; i++) later(() => { ptsShown = i; applyStage(); }, 550 * (i - 1));
+    }
+    if (n === 6) tween(2200, (e) => { prog = e; board.update(); }, () => { prog = 1; board.update(); });
+    applyStage();
+  }
+  nextBtn.addEventListener('click', () => gotoStage(sketchStage >= LAST ? 0 : sketchStage + 1));
+  backBtn.addEventListener('click', () => gotoStage(Math.max(0, sketchStage - 1)));
+  gotoStage(0);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
   document.querySelectorAll('jsx-chain-demo').forEach(renderJsxChainDemo);
   document.querySelectorAll('jsx-unit-circle').forEach(renderJsxUnitCircle);
   document.querySelectorAll('jsx-sine-trace').forEach(renderJsxSineTrace);
+  document.querySelectorAll('jsx-transform').forEach(renderJsxTransform);
 });

@@ -451,3 +451,43 @@ reveal.triangle-overlay:not(.is-revealed) {
 /* <jsx-sine-trace> is a circle panel plus a curve panel side by side --
    wider than either alone. */
 .jsx-board--sine-trace { aspect-ratio: 2.6 / 1; }
+/* <jsx-transform> (js/jsxgraph.js): live equation + property chips above the
+   board, Play/Reset/slider controls below. Sized for the back of a room, like
+   the rest of the jsx-* engine. */
+.step-body .jsx-diagram--transform { width: min(920px, 100%); }
+.jsx-board--transform { aspect-ratio: 2.3 / 1; }
+.jsx-transform-readout { margin-bottom: 0.5rem; }
+.jsx-transform-eq {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.01em;
+  min-height: 1.3em;
+}
+.jsx-transform-chips { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; margin-top: 0.35rem; }
+.jsx-chip {
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 0.15rem 0.8rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+  transition: background 0.2s, border-color 0.2s, color 0.2s, opacity 0.3s;
+}
+.jsx-chip b { font-weight: 600; margin-right: 0.25em; }
+.jsx-chip.is-active { border-color: var(--accent); color: var(--ink); background: #eaf3fb; }
+.jsx-chip.is-live { border-color: var(--negative); background: #fdecea; animation: jsx-chip-pulse 0.9s ease-in-out infinite; }
+.jsx-chip.is-hidden { opacity: 0; }
+@keyframes jsx-chip-pulse { 50% { box-shadow: 0 0 0 5px rgba(192, 57, 43, 0.18); } }
+.jsx-transform-caption { min-height: 1.5em; margin-top: 0.3rem; font-size: 1.1rem; color: var(--negative); font-weight: 600; }
+.jsx-transform-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; margin-top: 0.6rem; }
+.jsx-transform-controls .btn { font-size: 1.05rem; padding: 0.4rem 1rem; }
+.jsx-slider-row { display: flex; align-items: center; gap: 0.7rem; flex: 1 1 100%; font-size: 1.1rem; }
+.jsx-slider-name { min-width: 11em; font-weight: 700; }
+.jsx-slider-name small { font-weight: 400; color: var(--muted); }
+.jsx-slider-row input[type="range"] { flex: 1; min-width: 160px; accent-color: var(--accent); }
+.jsx-slider-val { min-width: 4.5em; font-weight: 700; color: var(--accent); text-align: right; }
+.jsx-legend { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; margin-top: 0.4rem; font-size: 1rem; color: var(--muted); }
+.jsx-legend .sw { display: inline-block; width: 1.8em; height: 0; margin-right: 0.4em; vertical-align: middle; }
+.jsx-legend .sw-ghost { border-top: 9px solid rgba(15, 106, 180, 0.2); }
+.jsx-legend .sw-parent { border-top: 3px dashed var(--muted); }
+.jsx-legend .sw-curve { border-top: 4px solid var(--accent); }

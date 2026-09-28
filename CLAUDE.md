@@ -501,6 +501,36 @@ exactly put, matching L + 0² + 0³ + 4 at both ends.
   L/M/K driving F, not just the first one. Has an app-managed `content.json` sidecar; the
   step was mirrored into it by hand.
 
+### `<jsx-transform>`: translations and full transformations (added 2026-09-28)
+
+`<jsx-transform fn="sin|cos" a b c d ...>` (`renderJsxTransform` in `js/jsxgraph.js`), built
+for Lesson 12 (Translating Sine and Cosine Graphs). Models `y = a f(b(x + c)) + d` with a
+live equation and property chips (amplitude, period, horizontal/vertical shift) above the
+board and controls below. Four instructor-driven modes, combinable:
+
+- `play="d c"`: a Play button that tweens each listed parameter from its parent value to
+  the target given by the `a/b/c/d` attributes, in that order (bare `play` = every
+  non-identity parameter). The chip for the moving parameter pulses red and a caption names
+  it. Non-identity targets not listed sit at their target from the start.
+- `sliders="a b c d"`: native range inputs (`c-min`, `c-max`, etc. override ranges);
+  dragging cancels any running animation.
+- `arrows`: workbook-style red arrows from the parent's 5 key points to their images.
+  Only meaningful for pure shifts.
+- `ghost` (+ `play-label`): the final curve as a thick faint underlay, so Play morphs the
+  parent onto a given graph ("write a sine and a cosine rule for this graph").
+- `sketch`: a staged graph-one-period builder (sinusoidal axis, max/min lines, start point,
+  quarter-period step lines, key points popping in, curve drawing itself, dashed
+  continuation) driven by Next/Back. Chips appear as each quantity is used. `eq="..."`
+  shows the original (unfactored) equation statically so it doesn't spoil reveal answers.
+
+Also: `form="raw"` (inner term `bx + c`, so the shift chip shows `c/b`, the "factor out b
+first" lesson), `tick-den` (x ticks every pi/den, default 2, for the common-denominator
+examples), `xmin/xmax/ymin/ymax`, `no-keypoints`, `no-readout`, `no-parent`, `start="final"`.
+Numeric attributes accept `pi` (e.g. `c="-pi/4"`). Reference build:
+`trigonometry/2026/2026-09-28-lesson-12-translating-sine-and-cosine-graphs/index.html`.
+Verified in Chrome: Play tween, chips, ghost morph, and the sketch stages all run with no
+console errors.
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:
