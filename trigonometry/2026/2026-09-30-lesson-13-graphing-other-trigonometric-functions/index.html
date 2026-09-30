@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Graphing Other Trigonometric Functions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (this lesson is built on <jsx-trig-graph>: unit-circle trace, probe,
+       Play animations, sliders, and the staged sketch for tan/cot/sec/csc) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Graphing Other Trigonometric Functions</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Graphing Other Trigonometric Functions</div>
+          <div class="step-subtitle">Tangent, cotangent, secant, and cosecant</div>
+          <div class="step-body">
+            <p>
+              We already graphed sine and cosine by following the angle around the unit
+              circle. The other four functions are built from those two, so the same
+              unit circle builds their graphs too.
+            </p>
+            <p class="muted small">Recall each definition in terms of sine and cosine.</p>
+            <table>
+              <tr><td>\(\tan\theta\)</td><td><reveal>\(\dfrac{\sin\theta}{\cos\theta} = \dfrac{y}{x}\)</reveal></td></tr>
+              <tr><td>\(\cot\theta\)</td><td><reveal>\(\dfrac{\cos\theta}{\sin\theta} = \dfrac{x}{y}\)</reveal></td></tr>
+              <tr><td>\(\sec\theta\)</td><td><reveal>\(\dfrac{1}{\cos\theta} = \dfrac{1}{x}\)</reveal></td></tr>
+              <tr><td>\(\csc\theta\)</td><td><reveal>\(\dfrac{1}{\sin\theta} = \dfrac{1}{y}\)</reveal></td></tr>
+            </table>
+            <p>Each of these is a fraction, so each one breaks when its denominator is zero.</p>
+            <p><b>When is each function undefined?</b></p>
+            <table>
+              <tr><td>\(\tan\theta\) and \(\sec\theta\)</td><td><reveal>when \(\cos\theta = 0\), at \(\theta = \dfrac{\pi}{2} + \pi k\)</reveal></td></tr>
+              <tr><td>\(\cot\theta\) and \(\csc\theta\)</td><td><reveal>when \(\sin\theta = 0\), at \(\theta = \pi k\)</reveal></td></tr>
+            </table>
+            <p class="muted small">Those input values become the <b>vertical asymptotes</b> of each graph.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Graphing Tangent</div>
+          <div class="step-subtitle">Building \(y = \tan x\) from the unit circle</div>
+          <div class="step-body">
+            <p>
+              We use the angle \(\theta\) as the input, graphed along the horizontal axis.
+              The output is the \(y/x\) value from the unit circle.
+            </p>
+            <p class="muted small">
+              Press Play, or drag \(\theta\). The ray through the point meets the line
+              \(x = 1\) at height \(\tan\theta\), because \(\dfrac{y}{x} = \dfrac{\text{height}}{1}\).
+              That height is the value plotted. Watch what happens near \(\dfrac{\pi}{2}\).
+            </p>
+            <jsx-trig-graph fn="tan" trace></jsx-trig-graph>
+            <p>Why does the graph shoot off to infinity at \(\dfrac{\pi}{2}\)?</p>
+            <p>
+              <reveal>
+                At \(\dfrac{\pi}{2}\) the point is \((0, 1)\), so \(x = 0\) and \(\dfrac{y}{x}\) is
+                undefined. The ray is now parallel to the line \(x = 1\) and never meets it.
+                Just before it, the ray meets the line very high up.
+              </reveal>
+            </p>
+            <p>Why does the graph come back from \(-\infty\) just after \(\dfrac{\pi}{2}\)?</p>
+            <p>
+              <reveal>
+                Past \(\dfrac{\pi}{2}\), \(x\) is negative while \(y\) is positive, so
+                \(\dfrac{y}{x}\) is a large negative number that shrinks toward \(0\).
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Tangent: Key Values</div>
+          <div class="step-subtitle">Place the points, then draw the asymptotes</div>
+          <div class="step-body">
+            <p class="muted small">
+              Drag \(x\), or use the snap buttons, and watch the quotient
+              \(\dfrac{\sin x}{\cos x}\) build the height. Try \(\dfrac{\pi}{2}\).
+            </p>
+            <jsx-trig-graph fn="tan" probe xmin="-3.5" xmax="3.5" ymin="-4" ymax="4"></jsx-trig-graph>
+            <table>
+              <thead><tr><th>\(x\)</th><th>\(-\dfrac{\pi}{2}\)</th><th>\(-\dfrac{\pi}{4}\)</th><th>\(0\)</th><th>\(\dfrac{\pi}{4}\)</th><th>\(\dfrac{\pi}{2}\)</th></tr></thead>
+              <tbody>
+                <tr><td>\(\tan x\)</td><td><reveal>undefined</reveal></td><td><reveal>\(-1\)</reveal></td><td><reveal>\(0\)</reveal></td><td><reveal>\(1\)</reveal></td><td><reveal>undefined</reveal></td></tr>
+              </tbody>
+            </table>
+            <p class="muted small">
+              Three points and two asymptotes frame one full branch. The next branch is
+              the same picture, one period over.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Tangent: Properties</div>
+          <div class="step-subtitle">Reading \(y = \tan x\)</div>
+          <div class="step-body">
+            <jsx-trig-graph fn="tan" no-readout xmin="-3.5" xmax="3.5" ymin="-4" ymax="4"></jsx-trig-graph>
+            <table>
+              <tr><td>Domain</td><td><reveal>\(x \neq \dfrac{\pi}{2} + \pi k\), \(k\) any integer</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\((-\infty, \infty)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>n/a</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(\pi\)</reveal></td></tr>
+              <tr><td>\(y\)-intercept</td><td><reveal>\((0, 0)\)</reveal></td></tr>
+              <tr><td>\(x\)-intercepts</td><td><reveal>\((\pi k, 0)\), \(k\) any integer</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Graphing Cotangent</div>
+          <div class="step-subtitle">Building \(y = \cot x\) from the unit circle</div>
+          <div class="step-body">
+            <p>
+              Cotangent uses the reciprocal ratio, \(\dfrac{x}{y}\). The ray now meets the
+              horizontal line \(y = 1\), and the <i>horizontal</i> distance it lands from the
+              center is \(\cot\theta\).
+            </p>
+            <p class="muted small">
+              Press Play. The asymptotes show up where the ray goes parallel to
+              \(y = 1\), at \(0, \pi, 2\pi\). Notice how the curve falls as \(\theta\) grows.
+            </p>
+            <jsx-trig-graph fn="cot" trace></jsx-trig-graph>
+            <p>Where does the cotangent graph cross the \(x\)-axis?</p>
+            <p>
+              <reveal>
+                Where \(x = 0\) on the circle, at \(\dfrac{\pi}{2}\) and \(\dfrac{3\pi}{2}\). The fraction
+                \(\dfrac{x}{y}\) is \(0\) when its numerator is \(0\). These are exactly the asymptotes of tangent.
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Cotangent: Key Values and Properties</div>
+          <div class="step-subtitle">Reading \(y = \cot x\)</div>
+          <div class="step-body">
+            <p class="muted small">
+              Drag \(x\) and compare with tangent. Where one is undefined, the other is zero.
+            </p>
+            <jsx-trig-graph fn="cot" probe xmin="-3.5" xmax="3.5" ymin="-4" ymax="4"></jsx-trig-graph>
+            <table>
+              <tr><td>Domain</td><td><reveal>\(x \neq \pi k\), \(k\) any integer</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\((-\infty, \infty)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>n/a</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(\pi\)</reveal></td></tr>
+              <tr><td>\(y\)-intercept</td><td><reveal>none</reveal></td></tr>
+              <tr><td>\(x\)-intercepts</td><td><reveal>\(\left(\dfrac{\pi}{2} + \pi k, 0\right)\), \(k\) any integer</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Combining Transformations</div>
+          <div class="step-subtitle">Summary of transformations for tangent and cotangent</div>
+          <div class="step-body">
+            <p>
+              Consider \(y = a\tan[b(x + c)] + d\) or \(y = a\cot[b(x + c)] + d\), with \(b > 0\).
+            </p>
+            <table>
+              <tr><td><b>Vertical stretch / compression</b></td><td>The value \(|a|\) is the vertical stretch or compression. If \(a < 0\), the graph is reflected across the horizontal axis.</td></tr>
+              <tr><td><b>Period</b></td><td>The value \(\dfrac{\pi}{b}\) is the period.</td></tr>
+              <tr><td><b>Horizontal shift</b></td><td>If \(c > 0\), the graph is shifted left \(c\) units. If \(c < 0\), it is shifted right \(|c|\) units. (Some texts call this the <i>phase shift</i>.)</td></tr>
+              <tr><td><b>Vertical shift</b></td><td>If \(d > 0\), the graph is shifted up \(d\) units. If \(d < 0\), it is shifted down \(|d|\) units.</td></tr>
+            </table>
+            <p class="muted small">
+              The only change from sine and cosine: the period is \(\pi / b\), not \(2\pi / b\),
+              because tangent and cotangent repeat twice as fast.
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Explore: Transformations of Tangent and Cotangent</div>
+          <div class="step-subtitle">\(y = a\tan[b(x + c)] + d\)</div>
+          <div class="step-body">
+            <p class="muted small">
+              Drag each slider and watch which chip changes. Flip between tangent and
+              cotangent with the buttons. Notice that the asymptotes move with \(b\)
+              and \(c\), and never move with \(a\) or \(d\).
+            </p>
+            <jsx-trig-graph fn="tan" switch="tan cot" sliders="a b c d" xmin="-6.4" xmax="6.4" ymin="-5" ymax="5" tick-den="2"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Example 5 (a)</div>
+          <div class="step-subtitle">Graph \(y = \tan\left(x + \dfrac{\pi}{2}\right)\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Period</td><td><reveal>\(\pi\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{\pi}{4}\)</reveal></td></tr>
+              <tr><td>Horizontal shift</td><td><reveal>left \(\dfrac{\pi}{2} = \dfrac{2\pi}{4}\), two steps</reveal></td></tr>
+              <tr><td>Center of the branch</td><td><reveal>\(x = -\dfrac{\pi}{2}\), where the graph crosses the axis</reveal></td></tr>
+            </table>
+            <jsx-trig-graph fn="tan" c="pi/2" sketch eq="y = tan(x + π/2)" tick-den="4" xmin="-4.2" xmax="4.2" ymin="-4" ymax="4"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Example 5 (b)</div>
+          <div class="step-subtitle">Graph \(y = -\cot(x)\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Period</td><td><reveal>\(\pi\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{\pi}{4}\)</reveal></td></tr>
+              <tr><td>Transformation</td><td><reveal>reflect across the horizontal axis</reveal></td></tr>
+            </table>
+            <jsx-trig-graph fn="cot" a="-1" sketch eq="y = −cot(x)" tick-den="4" xmin="-4.2" xmax="4.2" ymin="-4" ymax="4"></jsx-trig-graph>
+            <p><b>Same graph!</b> Press Play to reflect \(\cot x\) and watch it land on \(\tan\left(x + \dfrac{\pi}{2}\right)\).</p>
+            <jsx-trig-graph fn="cot" a="-1" ghost ghost-fn="tan" ghost-c="pi/2" play="a" play-label="&#9654; Reflect cot x" tick-den="4" xmin="-4.2" xmax="4.2" ymin="-4" ymax="4"></jsx-trig-graph>
+            <p>
+              <reveal>
+                Both are the same function:
+                \(\tan\left(x + \dfrac{\pi}{2}\right) = -\cot x\). Shifting tangent left
+                \(\dfrac{\pi}{2}\) and flipping cotangent land on one graph.
+              </reveal>
+            </p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Match each graph with its corresponding equation</div>
+          <div class="step-body">
+            <table>
+              <tr><td>\(y = \tan(x)\)</td><td><reveal>D</reveal></td><td>\(y = 2\tan(x)\)</td><td><reveal>F</reveal></td><td>\(y = \tan(2x) + 1\)</td><td><reveal>C</reveal></td></tr>
+              <tr><td>\(y = \cot(x)\)</td><td><reveal>A</reveal></td><td>\(y = \cot(x) - 1\)</td><td><reveal>E</reveal></td><td>\(y = \cot\left(x - \dfrac{\pi}{4}\right)\)</td><td><reveal>B</reveal></td></tr>
+            </table>
+            <p class="muted small">
+              Reveal a graph's clue to check it. Ask first: which way do the graphs fall?
+              What is the period? Is there a shift up, down, left, or right?
+            </p>
+            <div class="jsx-trig-grid">
+              <figure>
+                <div class="letter">A</div>
+                <jsx-trig-graph mini fn="cot" xmin="-pi" xmax="pi" ymin="-6" ymax="6" tick-den="2" grid-den="4"></jsx-trig-graph>
+                <figcaption><reveal>period \(\pi\), no shift</reveal></figcaption>
+              </figure>
+              <figure>
+                <div class="letter">B</div>
+                <jsx-trig-graph mini fn="cot" c="-pi/4" xmin="-pi" xmax="pi" ymin="-6" ymax="6" tick-den="2" grid-den="4"></jsx-trig-graph>
+                <figcaption><reveal>\(\cot\) shifted right \(\dfrac{\pi}{4}\)</reveal></figcaption>
+              </figure>
+              <figure>
+                <div class="letter">C</div>
+                <jsx-trig-graph mini fn="tan" b="2" d="1" xmin="-pi" xmax="pi" ymin="-6" ymax="6" tick-den="2" grid-den="4"></jsx-trig-graph>
+                <figcaption><reveal>period \(\dfrac{\pi}{2}\), up \(1\)</reveal></figcaption>
+              </figure>
+              <figure>
+                <div class="letter">D</div>
+                <jsx-trig-graph mini fn="tan" xmin="-pi" xmax="pi" ymin="-6" ymax="6" tick-den="2" grid-den="4"></jsx-trig-graph>
+                <figcaption><reveal>period \(\pi\), rises through the origin</reveal></figcaption>
+              </figure>
+              <figure>
+                <div class="letter">E</div>
+                <jsx-trig-graph mini fn="cot" d="-1" xmin="-pi" xmax="pi" ymin="-6" ymax="6" tick-den="2" grid-den="4"></jsx-trig-graph>
+                <figcaption><reveal>\(\cot\) down \(1\)</reveal></figcaption>
+              </figure>
+              <figure>
+                <div class="letter">F</div>
+                <jsx-trig-graph mini fn="tan" a="2" xmin="-pi" xmax="pi" ymin="-6" ymax="6" tick-den="2" grid-den="4"></jsx-trig-graph>
+                <figcaption><reveal>vertical stretch by \(2\)</reveal></figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Graphing Secant and Cosecant</div>
+          <div class="step-subtitle">Reciprocals of cosine and sine</div>
+          <div class="step-body">
+            <p>
+              After practice with sine and cosine, the graphs of cosecant and secant are
+              closely related. They are reciprocals, so we use what we know about sine and
+              cosine. When asked for a sketch, <b>always begin with the related sine or
+              cosine function first</b>.
+            </p>
+            <p class="muted small">Complete each statement.</p>
+            <table>
+              <tr><td>If \(\sin\theta = 1\), then \(\csc\theta =\)</td><td><reveal>\(1\)</reveal></td><td>If \(\cos\theta = 1\), then \(\sec\theta =\)</td><td><reveal>\(1\)</reveal></td></tr>
+              <tr><td>If \(\sin\theta = -1\), then \(\csc\theta =\)</td><td><reveal>\(-1\)</reveal></td><td>If \(\cos\theta = -1\), then \(\sec\theta =\)</td><td><reveal>\(-1\)</reveal></td></tr>
+              <tr><td>If \(\sin\theta = 0\), then \(\csc\theta =\)</td><td><reveal>undefined</reveal></td><td>If \(\cos\theta = 0\), then \(\sec\theta =\)</td><td><reveal>undefined</reveal></td></tr>
+            </table>
+            <p>What happens to \(\csc\theta\) when \(\sin\theta\) is a small positive number like \(0.01\)?</p>
+            <p><reveal>\(\dfrac{1}{0.01} = 100\), a huge value. As \(\sin\theta \to 0\) the reciprocal grows without bound, which is the asymptote.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="13">
+          <div class="step-title">Cosecant: Exploring \(y = \csc x\)</div>
+          <div class="step-subtitle">Watch the reciprocal of sine</div>
+          <div class="step-body">
+            <p class="muted small">
+              The dashed curve is \(\sin x\). Drag \(x\) and compare the two heights.
+              When the dashed curve is near \(0\), the solid curve is far away.
+              Try \(\dfrac{\pi}{2}\), then \(\pi\).
+            </p>
+            <jsx-trig-graph fn="csc" probe xmin="-3.6" xmax="6.9" ymin="-4" ymax="4" tick-den="2"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="14">
+          <div class="step-title">Cosecant: Sketch and Properties</div>
+          <div class="step-subtitle">Graph \(y = \sin x\) and \(y = \csc x\) on the same axes</div>
+          <div class="step-body">
+            <jsx-trig-graph fn="csc" sketch eq="y = csc(x)" xmin="-3.6" xmax="6.9" ymin="-4" ymax="4" tick-den="2"></jsx-trig-graph>
+            <table>
+              <tr><td>Domain</td><td><reveal>\(x \neq \pi k\), \(k\) any integer</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\((-\infty, -1] \cup [1, \infty)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>n/a</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>\(y\)-intercept</td><td><reveal>none</reveal></td></tr>
+              <tr><td>\(x\)-intercepts</td><td><reveal>none</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="15">
+          <div class="step-title">Secant: Exploring \(y = \sec x\)</div>
+          <div class="step-subtitle">Watch the reciprocal of cosine</div>
+          <div class="step-body">
+            <p class="muted small">
+              This time the dashed curve is \(\cos x\). Where does the secant graph touch it?
+              Where does it disappear?
+            </p>
+            <jsx-trig-graph fn="sec" probe xmin="-3.6" xmax="6.9" ymin="-4" ymax="4" tick-den="2" probe-x="0.9"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="16">
+          <div class="step-title">Secant: Sketch and Properties</div>
+          <div class="step-subtitle">Graph \(y = \cos x\) and \(y = \sec x\) on the same axes</div>
+          <div class="step-body">
+            <jsx-trig-graph fn="sec" sketch eq="y = sec(x)" xmin="-3.6" xmax="6.9" ymin="-4" ymax="4" tick-den="2"></jsx-trig-graph>
+            <table>
+              <tr><td>Domain</td><td><reveal>\(x \neq \dfrac{\pi}{2} + \pi k\), \(k\) any integer</reveal></td></tr>
+              <tr><td>Range</td><td><reveal>\((-\infty, -1] \cup [1, \infty)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>n/a</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>\(y\)-intercept</td><td><reveal>\((0, 1)\)</reveal></td></tr>
+              <tr><td>\(x\)-intercepts</td><td><reveal>none</reveal></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="17">
+          <div class="step-title">Example 3 (a)</div>
+          <div class="step-subtitle">Sketch \(y = 2\sec\left(x + \dfrac{\pi}{2}\right)\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Related cosine function</td><td><reveal>\(y = 2\cos\left(x + \dfrac{\pi}{2}\right)\)</reveal></td></tr>
+              <tr><td>Amplitude of the cosine</td><td><reveal>\(2\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(2\pi\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{2\pi}{4} = \dfrac{\pi}{2}\)</reveal></td></tr>
+              <tr><td>Horizontal shift</td><td><reveal>left \(\dfrac{\pi}{2}\), one step</reveal></td></tr>
+            </table>
+            <jsx-trig-graph fn="sec" a="2" c="pi/2" sketch eq="y = 2 sec(x + π/2)" xmin="-3.6" xmax="6.9" ymin="-5" ymax="5" tick-den="2"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="18">
+          <div class="step-title">Example 3 (b)</div>
+          <div class="step-subtitle">Sketch \(y = 1 - \csc(2x)\)</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Related sine function</td><td><reveal>\(y = 1 - \sin(2x)\)</reveal></td></tr>
+              <tr><td>Amplitude</td><td><reveal>\(1\), reflected across the sinusoidal axis</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(\dfrac{2\pi}{2} = \pi\)</reveal></td></tr>
+              <tr><td>Step</td><td><reveal>\(\dfrac{\pi}{4}\)</reveal></td></tr>
+              <tr><td>Vertical shift</td><td><reveal>up \(1\), so the horizontal axis is \(y = 1\)</reveal></td></tr>
+            </table>
+            <jsx-trig-graph fn="csc" a="-1" b="2" d="1" sketch eq="y = 1 − csc(2x)" xmin="-2.4" xmax="4.6" ymin="-3" ymax="5" tick-den="4"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="19">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Write an equation for the graph shown here</div>
+          <div class="step-body">
+            <table>
+              <tr><td>Amplitude of the related sine</td><td><reveal>\(1\)</reveal></td></tr>
+              <tr><td>Period</td><td><reveal>\(4\), so \(b = \dfrac{2\pi}{4} = \dfrac{\pi}{2}\)</reveal></td></tr>
+              <tr><td>Vertical shift</td><td><reveal>down \(1\), the horizontal axis is \(y = -1\)</reveal></td></tr>
+              <tr><td>Sine equation</td><td><reveal>\(y = \sin\left(\dfrac{\pi}{2}x\right) - 1\)</reveal></td></tr>
+              <tr><td>Cosecant equation</td><td><reveal>\(y = \csc\left(\dfrac{\pi}{2}x\right) - 1\)</reveal></td></tr>
+            </table>
+            <p class="muted small">
+              The faint graph is the one we were given. Press Play to squeeze the period
+              down to \(4\), then drop the graph by \(1\).
+            </p>
+            <jsx-trig-graph fn="csc" b="pi/2" d="-1" ghost play="b d" play-label="&#9654; Build the equation" x-step="1" xmin="-4.5" xmax="4.5" ymin="-4.5" ymax="4" no-parent></jsx-trig-graph>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="20">
+          <div class="step-title">Recipe and Practice</div>
+          <div class="step-subtitle">Graphing the four reciprocal-style functions</div>
+          <div class="step-body">
+            <ol>
+              <li><b>Tangent and cotangent:</b> mark the midline \(y = d\), the center point, and the asymptotes half a period either side. Period \(= \dfrac{\pi}{b}\), step \(= \dfrac{\text{period}}{4}\). Plot one step left and right of the center, then draw one branch.</li>
+              <li><b>Secant and cosecant:</b> sketch the related cosine or sine first (dashed), period \(\dfrac{2\pi}{b}\). Draw asymptotes where it crosses the midline, mark vertices where it peaks or bottoms out, then draw branches away from the midline.</li>
+            </ol>
+            <table>
+              <thead><tr><th>Function</th><th>Period</th><th>Undefined at</th><th>Range</th></tr></thead>
+              <tbody>
+                <tr><td>\(\tan x\)</td><td><reveal>\(\pi\)</reveal></td><td><reveal>\(\dfrac{\pi}{2} + \pi k\)</reveal></td><td><reveal>all reals</reveal></td></tr>
+                <tr><td>\(\cot x\)</td><td><reveal>\(\pi\)</reveal></td><td><reveal>\(\pi k\)</reveal></td><td><reveal>all reals</reveal></td></tr>
+                <tr><td>\(\sec x\)</td><td><reveal>\(2\pi\)</reveal></td><td><reveal>\(\dfrac{\pi}{2} + \pi k\)</reveal></td><td><reveal>\((-\infty, -1] \cup [1, \infty)\)</reveal></td></tr>
+                <tr><td>\(\csc x\)</td><td><reveal>\(2\pi\)</reveal></td><td><reveal>\(\pi k\)</reveal></td><td><reveal>\((-\infty, -1] \cup [1, \infty)\)</reveal></td></tr>
+              </tbody>
+            </table>
+            <p class="muted small">
+              Practice: pick a function and set \(a = -2\), \(b = 2\), \(c = \dfrac{\pi}{4}\), \(d = 1\).
+              Predict where the asymptotes land before checking the graph.
+            </p>
+            <jsx-trig-graph fn="sec" switch="tan cot sec csc" sliders="a b c d" xmin="-6.4" xmax="6.4" ymin="-6" ymax="6" tick-den="4"></jsx-trig-graph>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

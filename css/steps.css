@@ -491,3 +491,32 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-legend .sw-ghost { border-top: 9px solid rgba(15, 106, 180, 0.2); }
 .jsx-legend .sw-parent { border-top: 3px dashed var(--muted); }
 .jsx-legend .sw-curve { border-top: 4px solid var(--accent); }
+
+/* <jsx-trig-graph> (js/jsxgraph.js, Lesson 13): tan/cot/sec/csc graphs. Reuses the
+   <jsx-transform> readout/controls classes above; these are the extras. */
+.jsx-board--trig-trace { aspect-ratio: 2 / 1; }
+.jsx-board--mini { aspect-ratio: 1.45 / 1; }
+.step-body .jsx-diagram--mini { width: 100%; margin: 0.3rem 0; }
+.jsx-trace-readout { display: flex; flex-wrap: wrap; gap: 0.4rem 0.6rem; margin-bottom: 0.5rem; }
+.jsx-trace-chip {
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 0.15rem 0.8rem;
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+.jsx-trace-chip b { color: var(--accent); }
+.jsx-trace-main { border-color: var(--accent); background: #eaf3fb; font-weight: 600; }
+.jsx-trace-main.is-undef { border-color: var(--negative); background: #fdecea; }
+.jsx-trace-main.is-undef b, .jsx-probe-readout .is-undef { color: var(--negative); }
+.jsx-probe-readout { margin-top: 0.5rem; font-size: 1.25rem; min-height: 1.6em; }
+.jsx-probe-readout b { color: var(--accent); }
+.jsx-switch { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.jsx-switch .btn.is-on { background: var(--accent); color: #fff; border-color: var(--accent); }
+/* Matching grid (Example 2): lettered mini graphs, each with a reveal-able clue. */
+.jsx-trig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem 1rem; margin-top: 0.8rem; }
+.jsx-trig-grid figure { margin: 0; }
+.jsx-trig-grid .letter { font-weight: 800; font-size: 1.4rem; color: var(--accent); }
+.jsx-trig-grid figcaption { font-size: 1rem; min-height: 1.6em; }
+@media (max-width: 900px) { .jsx-trig-grid { grid-template-columns: repeat(2, 1fr); } }
+.jsx-trig-grid > figure, .jsx-trig-grid .jsx-diagram { min-width: 0; }

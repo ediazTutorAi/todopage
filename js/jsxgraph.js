@@ -1782,6 +1782,863 @@ function renderJsxTransform(el) {
   gotoStage(0);
 }
 
+// <jsx-trig-graph fn="tan|cot|sec|csc" a b c d ...>
+//
+// Graphs of the four "other" trigonometric functions (Lesson 13), with the same
+// y = a f(b(x + c)) + d transformation model <jsx-transform> uses for sin/cos.
+// Everything here is instructor-driven. Modes (combinable unless noted):
+//
+//   trace          (tan/cot only, separate renderer) unit circle on the left, graph on
+//                  the right: a ray through the dragged angle meets the tangent line
+//                  x = 1 (tan) or the line y = 1 (cot), and that height/offset is the
+//                  value plotted. Slider + Play, curve draws itself as theta grows,
+//                  asymptotes appear the moment the ray goes parallel to the line.
+//   play="d c"     Play button tweening each listed parameter from its parent value to
+//                  the a/b/c/d target, in order (same contract as <jsx-transform>).
+//   sliders="a b"  native range inputs for the listed parameters.
+//   ghost          final curve as a thick faint underlay (Play morphs onto it).
+//                  `ghost-fn` + `ghost-a/b/c/d` make the underlay a *different*
+//                  function (e.g. show that -cot x is tan(x + pi/2)).
+//   arrows         red arrows from the parent's key points to their images.
+//   sketch         staged "graph one period" builder driven by Next/Back. tan/cot:
+//                  midline, center point, asymptotes + step, key points, branch.
+//                  sec/csc: midline, related sin/cos guide, asymptotes where the guide
+//                  crosses the midline, vertices at its extremes, branches.
+//   probe          a draggable x with a live readout of the reciprocal/quotient
+//                  (tan x = sin x / cos x = ...), special-angle snap buttons, Sweep.
+//                  Use with the default a/b/c/d (identity).
+//   switch="tan cot sec csc"   buttons that swap the function live.
+//   mini           compact static board (no readout/controls) for matching grids.
+//
+// Other attributes: `tick-den` (x tick every pi/den, default 2), `grid-den`,
+// `x-step` (numeric x ticks every x-step instead of pi fractions), `xmin/xmax/ymin/ymax`,
+// `eq` (static equation text), `start="final"`, `no-keypoints`, `no-parent`,
+// `no-guide`, `no-readout`, `play-label`, `probe-x`. Numeric attributes accept `pi`.
+//
+// Curves are drawn as one `curve` with NaN breaks at every asymptote (a plain
+// functiongraph would join the two branches with a false vertical line), y clamped to
+// just outside the viewport so branches leave the board steeply.
+
+const TRIG = {
+  tan: { f: Math.tan, period: Math.PI, asym0: Math.PI / 2, startU: -Math.PI / 2, spanU: Math.PI, keyU: [-Math.PI / 4, 0, Math.PI / 4], recip: false },
+  cot: { f: (u) => 1 / Math.tan(u), period: Math.PI, asym0: 0, startU: 0, spanU: Math.PI, keyU: [Math.PI / 4, Math.PI / 2, (3 * Math.PI) / 4], recip: false },
+  sec: { f: (u) => 1 / Math.cos(u), period: 2 * Math.PI, asym0: Math.PI / 2, startU: Math.PI / 2, spanU: 2 * Math.PI, keyU: [Math.PI, 2 * Math.PI], recip: true, guide: Math.cos, guideName: 'cos' },
+  csc: { f: (u) => 1 / Math.sin(u), period: 2 * Math.PI, asym0: 0, startU: 0, spanU: 2 * Math.PI, keyU: [Math.PI / 2, (3 * Math.PI) / 2], recip: true, guide: Math.sin, guideName: 'sin' },
+};
+const TRIG_IDENT = { a: 1, b: 1, c: 0, d: 0 };
+
+function sampleTrig(fn, q, lo, hi, vmin, vmax) {
+  const T = TRIG[fn];
+  const xs = [];
+  const ys = [];
+  const n = 1600;
+  const span = vmax - vmin;
+  let lastK = null;
+  for (let i = 0; i <= n; i++) {
+    const x = lo + ((hi - lo) * i) / n;
+    const u = q.b * (x + q.c);
+    const k = Math.floor((u - T.asym0) / Math.PI);
+    if (lastK !== null && k !== lastK) { xs.push(NaN); ys.push(NaN); }
+    lastK = k;
+    let y = q.a * T.f(u) + q.d;
+    if (!Number.isFinite(y)) continue;
+    y = Math.max(vmin - span, Math.min(vmax + span, y));
+    xs.push(x);
+    ys.push(y);
+  }
+  return { xs, ys };
+}
+
+function makeDataCurve(board, getData, style) {
+  const c = board.create('curve', [[0], [0]], style);
+  c.updateDataArray = function updateDataArray() {
+    const d = getData();
+    this.dataX = d.xs;
+    this.dataY = d.ys;
+  };
+  board.update();
+  return c;
+}
+
+function renderJsxTrigTrace(el) {
+  const TAG = 'jsx-trig-graph';
+  const PI = Math.PI;
+  const fnName = el.getAttribute('fn') === 'cot' ? 'cot' : 'tan';
+  const isTan = fnName === 'tan';
+  const xmin = -3.4;
+  const xmax = 2 * PI + 0.55;
+  const ymax = 2.55;
+  const ymin = -ymax;
+  const cx = -2;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  container.appendChild(readout);
+  const boardHost = document.createElement('div');
+  boardHost.className = 'jsx-board jsx-board--trig-trace';
+  boardHost.id = `jsx-board-${++boardCounter}`;
+  container.appendChild(boardHost);
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.appendChild(controls);
+  el.replaceWith(container);
+
+  const board = JXG.JSXGraph.initBoard(boardHost.id, {
+    boundingbox: [xmin, ymax, xmax, ymin],
+    axis: true,
+    showNavigation: false,
+    showCopyright: false,
+    keepaspectratio: true,
+    pan: { enabled: false },
+    zoom: { enabled: false },
+    resize: { enabled: true, throttle: 100 },
+  });
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const muted = cssVar('--muted') || '#6b7280';
+  const negative = cssVar('--negative') || '#c0392b';
+  styleAxes(board, ink);
+
+  board.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+  const half = PI / 2;
+  const positions = [];
+  for (let k = 1; k <= 4; k++) positions.push(k * half);
+  board.create('ticks', [board.defaultAxes.x, positions], {
+    drawLabels: true, minorTicks: 0, majorHeight: TICK_MAJOR_HEIGHT, strokeColor: ink, strokeWidth: AXIS_STROKE,
+    label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+    generateLabelText: (tick) => piTickLabel(tick.usrCoords[1]),
+  });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE, gridX: half });
+
+  // Circle panel.
+  board.create('segment', [[cx, -1.35], [cx, 1.35]], { strokeColor: ink, strokeWidth: 2, highlight: false, fixed: true });
+  board.create('circle', [[cx, 0], 1], { strokeColor: muted, strokeWidth: REF_CIRCLE_STROKE + 1, fixed: true, highlight: false, name: '' });
+  const tanLine = isTan
+    ? board.create('segment', [[cx + 1, -2.45], [cx + 1, 2.45]], { strokeColor: accent, strokeWidth: 3.5, highlight: false, fixed: true })
+    : board.create('segment', [[cx - 1.35, 1], [cx + 1.35, 1]], { strokeColor: accent, strokeWidth: 3.5, highlight: false, fixed: true });
+  board.create('text', isTan ? [cx + 0.92, 2.25, 'line x = 1'] : [cx - 1.3, 1.22, 'line y = 1'], {
+    anchorX: isTan ? 'right' : 'left', fontSize: TICK_LABEL_FONT - 2, color: accent, fixed: true, cssStyle: 'font-weight:700',
+  });
+
+  let theta = 0.6;
+  const gx = () => cx + Math.cos(theta);
+  const gy = () => Math.sin(theta);
+  const hitX = () => (isTan ? cx + 1 : cx + 1 / Math.tan(theta));
+  const hitY = () => (isTan ? Math.tan(theta) : 1);
+  const hitOn = () => {
+    const v = isTan ? hitY() : hitX() - cx;
+    const lim = isTan ? 2.4 : 1.35;
+    return Number.isFinite(v) && Math.abs(v) < lim;
+  };
+  const curveVal = () => (isTan ? Math.tan(theta) : 1 / Math.tan(theta));
+
+  const foot = board.create('point', [() => gx(), 0], { name: '', visible: false, fixed: true });
+  board.create('segment', [[cx, 0], foot], { strokeColor: muted, strokeWidth: 4, highlight: false, fixed: true });
+  board.create('segment', [foot, [gx, gy]], { strokeColor: muted, strokeWidth: 4, highlight: false, fixed: true });
+  board.create('text', [() => (cx + gx()) / 2, () => (gy() >= 0 ? -0.2 : 0.2), 'x'], {
+    anchorX: 'middle', anchorY: 'middle', fontSize: TICK_LABEL_FONT, color: muted, fixed: true, cssStyle: 'font-weight:700',
+  });
+  board.create('text', [() => gx() + (Math.cos(theta) >= 0 ? 0.12 : -0.12), () => gy() / 2, 'y'], {
+    anchorX: () => (Math.cos(theta) >= 0 ? 'left' : 'right'), anchorY: 'middle', fontSize: TICK_LABEL_FONT, color: muted, fixed: true, cssStyle: 'font-weight:700',
+  });
+  board.create('segment', [[cx, 0], [gx, gy]], { strokeColor: ink, strokeWidth: RADIUS_SEGMENT_STROKE, highlight: false, fixed: true });
+  const ray = board.create('segment', [[gx, gy], [hitX, hitY]], {
+    strokeColor: negative, strokeWidth: 3.5, highlight: false, fixed: true,
+  });
+  const hit = board.create('point', [hitX, hitY], {
+    name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: negative, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  });
+  makeDataCurve(board, () => {
+    const t = Math.max(theta, 0.001);
+    const xs = []; const ys = [];
+    for (let i = 0; i <= 60; i++) { const a = (t * i) / 60; xs.push(cx + 0.3 * Math.cos(a)); ys.push(0.3 * Math.sin(a)); }
+    return { xs, ys };
+  }, { strokeColor: accent, strokeWidth: ARC_STROKE - 1, highlight: false });
+  board.create('point', [gx, gy], {
+    name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  });
+
+  // Graph panel.
+  const asyms = [];
+  for (let k = 0; k <= 4; k++) {
+    const x = TRIG[fnName].asym0 + k * PI;
+    if (x > 0.01 && x < 2 * PI + 0.02) {
+      asyms.push({ x, el: board.create('line', [[x, 0], [x, 1]], {
+        strokeColor: negative, strokeWidth: RADIUS_SEGMENT_STROKE + 0.5, dash: 2, highlight: false, fixed: true, visible: false,
+      }) });
+    }
+  }
+  makeDataCurve(board, () => sampleTrig(fnName, TRIG_IDENT, 0, Math.max(theta, 1e-6), ymin, ymax), {
+    strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false,
+  });
+  const traceDot = board.create('point', [() => theta, curveVal], {
+    name: '', size: POINT_SIZE, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  });
+  const connector = board.create('segment', [[hitX, hitY], [() => theta, curveVal]], {
+    strokeColor: negative, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true,
+  });
+
+  const fmt2 = (v) => fmtNum(v).replace('-', '−');
+  function updateReadout() {
+    const c = Math.cos(theta);
+    const s = Math.sin(theta);
+    const num = isTan ? s : c;
+    const den = isTan ? c : s;
+    const nName = isTan ? 'y' : 'x';
+    const dName = isTan ? 'x' : 'y';
+    const und = Math.abs(den) < 1e-3;
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">θ = <b>${fmtAngle(theta)}</b></span>` +
+      `<span class="jsx-trace-chip">x = <b>${fmt2(c)}</b></span>` +
+      `<span class="jsx-trace-chip">y = <b>${fmt2(s)}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main ${und ? 'is-undef' : ''}">${fnName} θ = ${nName}/${dName} = ` +
+      (und ? '<b>undefined</b>' : `<b>${fmt2(num / den)}</b>`) + '</span>';
+  }
+  function refresh() {
+    const und = !Number.isFinite(curveVal()) || Math.abs(curveVal()) > 1e6;
+    const on = hitOn();
+    [ray, hit].forEach((o) => o.setAttribute({ visible: on }));
+    const dotOn = !und && Math.abs(curveVal()) < ymax - 0.05;
+    traceDot.setAttribute({ visible: dotOn });
+    connector.setAttribute({ visible: on && dotOn });
+    asyms.forEach((a) => a.el.setAttribute({ visible: theta >= a.x - 0.03 }));
+    updateReadout();
+    slider.value = theta;
+    board.update();
+  }
+
+  // Controls.
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = '<span class="jsx-slider-name">θ <small>drag the angle</small></span>' +
+    `<input type="range" min="0" max="${2 * PI}" step="0.01" value="${theta}">`;
+  const slider = row.querySelector('input');
+  let raf = null;
+  const playBtn = document.createElement('button');
+  playBtn.type = 'button'; playBtn.className = 'btn'; playBtn.textContent = '▶ Play';
+  const resetBtn = document.createElement('button');
+  resetBtn.type = 'button'; resetBtn.className = 'btn'; resetBtn.textContent = 'Reset';
+  [playBtn, resetBtn].forEach((b) => b.addEventListener('pointerup', () => b.blur()));
+  controls.append(playBtn, resetBtn, row);
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    playBtn.textContent = '▶ Play';
+  }
+  slider.addEventListener('input', () => { stop(); theta = parseFloat(slider.value); refresh(); });
+  slider.addEventListener('pointerup', () => slider.blur());
+  playBtn.addEventListener('click', () => {
+    if (raf) { stop(); return; }
+    if (theta >= 2 * PI - 0.02) theta = 0;
+    playBtn.textContent = '⏸ Pause';
+    let last = performance.now();
+    const tick = (now) => {
+      theta = Math.min(2 * PI, theta + ((now - last) / 1000) * (2 * PI / 14));
+      last = now;
+      refresh();
+      if (theta < 2 * PI) raf = requestAnimationFrame(tick); else stop();
+    };
+    raf = requestAnimationFrame(tick);
+  });
+  resetBtn.addEventListener('click', () => { stop(); theta = 0; refresh(); });
+  refresh();
+  return TAG;
+}
+
+function renderJsxTrigGraph(el) {
+  const TAG = 'jsx-trig-graph';
+  if (typeof JXG === 'undefined') {
+    console.error(
+      `<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags ` +
+      'to this lesson\'s <head> -- see the comment at the top of js/jsxgraph.js ' +
+      'for the exact snippet.'
+    );
+    return;
+  }
+  if (el.hasAttribute('trace')) { renderJsxTrigTrace(el); return; }
+
+  const PI = Math.PI;
+  const num = (name, dflt) => evalNumAttr(el, name, dflt, TAG);
+  const list = (name) => (el.getAttribute(name) || '').split(/[\s,]+/).filter(Boolean);
+  let fnName = el.getAttribute('fn') || 'tan';
+  if (!TRIG[fnName]) {
+    console.error(`<${TAG}>: fn must be tan, cot, sec or csc (got "${fnName}")`);
+    return;
+  }
+  const switchFns = list('switch').filter((f) => TRIG[f]);
+  const sketch = el.hasAttribute('sketch');
+  const probe = el.hasAttribute('probe');
+  const ghost = el.hasAttribute('ghost');
+  const arrows = el.hasAttribute('arrows');
+  const mini = el.hasAttribute('mini');
+  const showReadout = !el.hasAttribute('no-readout') && !mini;
+  const showKeyPoints = !el.hasAttribute('no-keypoints') && !mini;
+  const showParent = !el.hasAttribute('no-parent') && !sketch && !mini;
+  const showGuide = !el.hasAttribute('no-guide');
+  const eqOverride = el.getAttribute('eq');
+  const tickDen = Math.max(1, Math.round(num('tick-den', 2)));
+  const gridDen = Math.max(1, Math.round(num('grid-den', tickDen)));
+  const xStep = num('x-step', 0);
+  const xmin = num('xmin', -PI);
+  const xmax = num('xmax', PI);
+  const ymin = num('ymin', -4);
+  const ymax = num('ymax', 4);
+  const range = ymax - ymin;
+
+  const KEYS = ['a', 'b', 'c', 'd'];
+  const target = {};
+  KEYS.forEach((k) => { target[k] = num(k, TRIG_IDENT[k]); });
+  if (target.b <= 0) { console.error(`<${TAG}>: b must be positive (got ${target.b})`); return; }
+
+  const sliderKeys = sketch || mini ? [] : list('sliders').filter((k) => KEYS.includes(k));
+  const hasPlay = el.hasAttribute('play') && !sketch && !mini;
+  let playOrder = [];
+  if (hasPlay) {
+    const listed = list('play').filter((k) => KEYS.includes(k));
+    playOrder = listed.length ? listed : KEYS.filter((k) => target[k] !== TRIG_IDENT[k]);
+  }
+  const playLabel = el.getAttribute('play-label') || '▶ Play';
+  const RANGE = { a: [-3, 3, 0.25], b: [0.25, 3, 0.25], c: [-PI, PI, PI / 12], d: [-3, 3, 0.25] };
+  const rangeOf = (k) => [num(`${k}-min`, RANGE[k][0]), num(`${k}-max`, RANGE[k][1]), RANGE[k][2]];
+
+  const p = { ...TRIG_IDENT };
+  function baseline() {
+    if (sketch || mini || el.getAttribute('start') === 'final') return { ...target };
+    const b = { ...TRIG_IDENT };
+    KEYS.forEach((k) => { if (!playOrder.includes(k) && !sliderKeys.includes(k)) b[k] = target[k]; });
+    return b;
+  }
+  Object.assign(p, baseline());
+
+  const T = () => TRIG[fnName];
+  const valueAt = (q, x) => q.a * T().f(q.b * (x + q.c)) + q.d;
+  const shiftOf = (q) => -q.c;
+  const hasGhostFn = el.hasAttribute('ghost-fn');
+  const ghostFn = hasGhostFn && TRIG[el.getAttribute('ghost-fn')] ? el.getAttribute('ghost-fn') : fnName;
+  const ghostQ = hasGhostFn
+    ? { a: num('ghost-a', 1), b: num('ghost-b', 1), c: num('ghost-c', 0), d: num('ghost-d', 0) }
+    : target;
+
+  // ---- DOM ----
+  const container = document.createElement('div');
+  container.className = `jsx-diagram jsx-diagram--transform${mini ? ' jsx-diagram--mini' : ''}`;
+  let eqEl = null;
+  let captionEl = null;
+  const chipEls = {};
+  if (showReadout) {
+    const readout = document.createElement('div');
+    readout.className = 'jsx-transform-readout';
+    eqEl = document.createElement('div');
+    eqEl.className = 'jsx-transform-eq';
+    readout.appendChild(eqEl);
+    const chips = document.createElement('div');
+    chips.className = 'jsx-transform-chips';
+    const CHIP_NAME = { a: 'Vertical stretch', b: 'Period', c: 'Horizontal shift', d: 'Vertical shift' };
+    KEYS.forEach((k) => {
+      if (!(sliderKeys.includes(k) || target[k] !== TRIG_IDENT[k] || (sketch && k === 'b'))) return;
+      const chip = document.createElement('span');
+      chip.className = 'jsx-chip';
+      chip.innerHTML = `<b>${CHIP_NAME[k]}</b> <span class="jsx-chip-val"></span>`;
+      chips.appendChild(chip);
+      chipEls[k] = chip;
+    });
+    readout.appendChild(chips);
+    captionEl = document.createElement('div');
+    captionEl.className = 'jsx-transform-caption';
+    readout.appendChild(captionEl);
+    container.appendChild(readout);
+  }
+  const boardHost = document.createElement('div');
+  boardHost.className = `jsx-board ${mini ? 'jsx-board--mini' : 'jsx-board--transform'}`;
+  boardHost.id = `jsx-board-${++boardCounter}`;
+  container.appendChild(boardHost);
+  if (ghost && !mini) {
+    const legend = document.createElement('div');
+    legend.className = 'jsx-legend';
+    legend.innerHTML =
+      '<span><i class="sw sw-ghost"></i>the given graph</span>' +
+      '<span><i class="sw sw-parent"></i>the parent graph</span>' +
+      '<span><i class="sw sw-curve"></i>your rule, so far</span>';
+    container.appendChild(legend);
+  }
+  let probeEl = null;
+  if (probe) {
+    probeEl = document.createElement('div');
+    probeEl.className = 'jsx-probe-readout';
+    container.appendChild(probeEl);
+  }
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  if (!mini) container.appendChild(controls);
+  el.replaceWith(container);
+
+  // ---- board ----
+  const board = JXG.JSXGraph.initBoard(boardHost.id, {
+    boundingbox: [xmin, ymax, xmax, ymin],
+    axis: true,
+    showNavigation: false,
+    showCopyright: false,
+    keepaspectratio: false,
+    pan: { enabled: false },
+    zoom: { enabled: false },
+    resize: { enabled: true, throttle: 100 },
+  });
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const muted = cssVar('--muted') || '#6b7280';
+  const negative = cssVar('--negative') || '#c0392b';
+  styleAxes(board, ink);
+
+  board.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+  if (mini) board.defaultAxes.y.defaultTicks.setAttribute({ insertTicks: false, ticksDistance: 2 });
+  const step = xStep > 0 ? xStep : PI / tickDen;
+  const tickPositions = [];
+  for (let k = Math.ceil(xmin / step - 1e-9); k <= Math.floor(xmax / step + 1e-9); k++) tickPositions.push(k * step);
+  board.create('ticks', [board.defaultAxes.x, tickPositions], {
+    drawLabels: true, minorTicks: 0, majorHeight: TICK_MAJOR_HEIGHT, strokeColor: ink, strokeWidth: AXIS_STROKE,
+    label: { fontSize: mini ? TICK_LABEL_FONT - 3 : TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+    generateLabelText: (tick) => (xStep > 0 ? fmtNum(tick.usrCoords[1]) : piFractionLabel(tick.usrCoords[1], tickDen)),
+  });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE, gridX: xStep > 0 ? xStep : PI / gridDen });
+
+  const hide = (o) => { if (o) o.setAttribute({ visible: false }); };
+  const show = (o) => { if (o) o.setAttribute({ visible: true }); };
+  const setVis = (cond, ...objs) => objs.flat().forEach((o) => (cond ? show(o) : hide(o)));
+
+  if (ghost) {
+    makeDataCurve(board, () => sampleTrig(ghostFn, ghostQ, xmin, xmax, ymin, ymax), {
+      strokeColor: accent, strokeOpacity: 0.2, strokeWidth: CURVE_STROKE + 10, highlight: false,
+    });
+  }
+
+  // Sinusoidal midline (only when shifted vertically).
+  const midline = board.create('line', [[0, () => p.d], [1, () => p.d]], {
+    strokeColor: negative, strokeWidth: RADIUS_SEGMENT_STROKE + 0.5, dash: 2, highlight: false, visible: false, fixed: true,
+  });
+  const midLabel = board.create('text', [
+    xmax - (xmax - xmin) * 0.015, () => p.d + range * 0.015, () => `y = ${fmtNum(p.d)}`,
+  ], {
+    anchorX: 'right', anchorY: 'bottom', fontSize: READOUT_VALUE_FONT - 4, color: negative,
+    fixed: true, cssStyle: 'font-weight:700', visible: false,
+  });
+
+  const parentCurve = showParent
+    ? makeDataCurve(board, () => sampleTrig(fnName, TRIG_IDENT, xmin, xmax, ymin, ymax), {
+      strokeColor: muted, strokeWidth: CURVE_STROKE, dash: 2, highlight: false,
+    })
+    : null;
+  // sec/csc: the related sin/cos curve (dashed), the thing students sketch first.
+  const guideCurve = board.create('functiongraph', [(x) => (T().recip ? p.a * T().guide(p.b * (x + p.c)) + p.d : NaN)], {
+    strokeColor: muted, strokeWidth: CURVE_STROKE - 1, dash: 3, highlight: false, visible: false,
+  });
+
+  // Asymptotes: a pool of vertical lines positioned from the current b, c.
+  const bCeil = Math.max(target.b, sliderKeys.includes('b') ? rangeOf('b')[1] : 0, 1);
+  const poolN = Math.min(80, Math.ceil(((xmax - xmin) * bCeil) / PI) + 3);
+  const asymX = (i) => {
+    const sp = PI / p.b;
+    const first = T().asym0 / p.b - p.c;
+    const k0 = Math.ceil((xmin - first) / sp - 1e-9);
+    return first + (k0 + i) * sp;
+  };
+  const asymLines = [];
+  for (let i = 0; i < poolN; i++) {
+    asymLines.push(board.create('line', [[() => asymX(i), 0], [() => asymX(i), 1]], {
+      strokeColor: negative, strokeWidth: RADIUS_SEGMENT_STROKE + 0.5, dash: 2, highlight: false, fixed: true,
+      visible: !sketch,
+    }));
+  }
+
+  // Sketch window: one period, starting at an asymptote.
+  const winLo = () => (T().startU) / p.b - p.c;
+  const winSpan = () => T().spanU / p.b;
+  let prog = 1;
+  let continuation = null;
+  if (sketch) {
+    prog = 0;
+    continuation = makeDataCurve(board, () => sampleTrig(fnName, p, xmin, xmax, ymin, ymax), {
+      strokeColor: accent, strokeOpacity: 0.55, strokeWidth: CURVE_STROKE - 1, dash: 3, highlight: false, visible: false,
+    });
+  }
+  makeDataCurve(board, () => (sketch
+    ? (prog <= 0 ? { xs: [NaN], ys: [NaN] } : sampleTrig(fnName, p, winLo(), winLo() + winSpan() * prog, ymin, ymax))
+    : sampleTrig(fnName, p, xmin, xmax, ymin, ymax)), {
+    strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false,
+  });
+
+  // Key points: parent (muted) and image (accent), with workbook-style arrows.
+  const keyU = (i) => (i < T().keyU.length ? T().keyU[i] : NaN);
+  const parentPts = [0, 1, 2].map((i) => board.create('point', [() => keyU(i), () => T().f(keyU(i))], {
+    name: '', fixed: true, size: POINT_SIZE - 3, strokeColor: '#fff', fillColor: muted,
+    strokeWidth: POINT_STROKE, highlight: false, visible: false,
+  }));
+  const imgX = (i) => keyU(i) / p.b - p.c;
+  const imgY = (i) => p.a * T().f(keyU(i)) + p.d;
+  const imgPts = [0, 1, 2].map((i) => board.create('point', [() => imgX(i), () => imgY(i)], {
+    name: '', fixed: true, size: POINT_SIZE, strokeColor: '#fff', fillColor: accent,
+    strokeWidth: POINT_STROKE, highlight: false, visible: false,
+  }));
+  const arrowEls = arrows ? [0, 1, 2].map((i) => board.create('arrow', [parentPts[i], imgPts[i]], {
+    strokeColor: negative, strokeWidth: 3.5, lastArrow: { size: 8 }, highlight: false, fixed: true, visible: false,
+  })) : [];
+
+  // ---- probe ----
+  let px = num('probe-x', 0.5);
+  let probeLine = null;
+  let probeDot = null;
+  let probeGuideDot = null;
+  if (probe) {
+    probeLine = board.create('line', [[() => px, 0], [() => px, 1]], {
+      strokeColor: ink, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true,
+    });
+    probeGuideDot = board.create('point', [() => px, () => (T().recip ? T().guide(px) : NaN)], {
+      name: '', fixed: true, size: POINT_SIZE, strokeColor: '#fff', fillColor: muted, strokeWidth: POINT_STROKE, highlight: false,
+    });
+    probeDot = board.create('point', [() => px, () => T().f(px)], {
+      name: '', fixed: true, size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, highlight: false,
+    });
+  }
+  function probeHtml() {
+    const s = Math.sin(px);
+    const c = Math.cos(px);
+    const f2 = (v) => fmtNum(v).replace('-', '−');
+    const spec = {
+      tan: ['sin x', s, 'cos x', c], cot: ['cos x', c, 'sin x', s], sec: ['1', 1, 'cos x', c], csc: ['1', 1, 'sin x', s],
+    }[fnName];
+    const [nName, nVal, dName, dVal] = spec;
+    const head = `x = <b>${fmtPiMultiple(px) ?? f2(px)}</b> ≈ ${f2(px)}`;
+    if (Math.abs(dVal) < 1e-3) {
+      return `${head} &nbsp;→&nbsp; ${fnName} x = ${nName} / ${dName} = ${f2(nVal)} / 0 : <b class="is-undef">undefined, vertical asymptote</b>`;
+    }
+    const dDisplay = T().recip ? `${dName} = ${f2(dVal)},&nbsp; so ` : '';
+    return `${head} &nbsp;→&nbsp; ${dDisplay}${fnName} x = ${nName} / ${dName} = ${f2(nVal)} / ${f2(dVal)} = <b>${f2(nVal / dVal)}</b>`;
+  }
+
+  // ---- readout ----
+  function eqString() {
+    const absA = Math.abs(p.a);
+    const near = (v, t) => Math.abs(v - t) < 1e-9;
+    const hasB = !near(p.b, 1);
+    const hasC = !near(p.c, 0);
+    const cAbs = fmtAngle(Math.abs(p.c));
+    const sgn = p.c < 0 ? '−' : '+';
+    const shifted = `x ${sgn} ${cAbs}`;
+    let inner;
+    if (hasB) inner = `${fmtNum(p.b)}${hasC ? `(${shifted})` : 'x'}`;
+    else inner = hasC ? shifted : 'x';
+    const wrapped = (hasB || hasC) ? `(${inner})` : ` ${inner}`;
+    const dTxt = near(p.d, 0) ? '' : ` ${p.d < 0 ? '−' : '+'} ${fmtNum(Math.abs(p.d))}`;
+    return `y = ${p.a < 0 ? '−' : ''}${near(absA, 1) ? '' : fmtNum(absA)}${fnName}${wrapped}${dTxt}`;
+  }
+  const chipText = {
+    a: () => `${fmtNum(Math.abs(p.a))}${p.a < 0 ? ' (reflected)' : ''}`,
+    b: () => fmtAngle(T().period / p.b),
+    c: () => {
+      const s = shiftOf(p);
+      return Math.abs(s) < 1e-9 ? 'none' : `${s > 0 ? 'right' : 'left'} ${fmtAngle(Math.abs(s))}`;
+    },
+    d: () => (Math.abs(p.d) < 1e-9 ? 'none' : `${p.d > 0 ? 'up' : 'down'} ${fmtNum(Math.abs(p.d))}`),
+  };
+  const CAPTION = {
+    a: 'Vertical stretch (and flip): the multiplier out front',
+    b: 'Horizontal squeeze or stretch: the multiplier on x',
+    c: 'Horizontal shift: slide left or right',
+    d: 'Vertical shift: slide up or down',
+  };
+  let liveKey = null;
+  let sketchStage = 0;
+  const sketchChipStage = () => (T().recip ? { d: 1, a: 2, c: 3, b: 3 } : { d: 1, c: 2, b: 3, a: 4 });
+
+  function updateReadout() {
+    if (!showReadout) return;
+    eqEl.textContent = eqOverride ?? eqString();
+    KEYS.forEach((k) => {
+      const chip = chipEls[k];
+      if (!chip) return;
+      chip.querySelector('.jsx-chip-val').textContent = chipText[k]();
+      const changed = Math.abs(p[k] - TRIG_IDENT[k]) > 1e-9;
+      chip.classList.toggle('is-active', sketch ? true : changed);
+      chip.classList.toggle('is-live', liveKey === k);
+      chip.classList.toggle('is-hidden', sketch && sketchStage < sketchChipStage()[k]);
+    });
+  }
+
+  let lastArrowState = [];
+  function refresh() {
+    updateReadout();
+    const recip = T().recip;
+    if (!sketch) {
+      setVis(Math.abs(p.d) > 1e-9, midline);
+      setVis(Math.abs(p.d) > 1e-9 && !mini, midLabel);
+      if (parentCurve) setVis(!recip, parentCurve);
+      setVis(recip && showGuide, guideCurve);
+      const n = T().keyU.length;
+      parentPts.forEach((pt, i) => setVis(arrows && i < n, pt));
+      imgPts.forEach((pt, i) => setVis(showKeyPoints && i < n, pt));
+    }
+    arrowEls.forEach((arrow, i) => {
+      const moved = i < T().keyU.length && Math.hypot(imgX(i) - keyU(i), imgY(i) - T().f(keyU(i))) > 0.04;
+      if (lastArrowState[i] !== moved) { lastArrowState[i] = moved; arrow.setAttribute({ visible: moved }); }
+    });
+    sliderKeys.forEach((k) => {
+      const input = controls.querySelector(`input[data-p="${k}"]`);
+      if (input && Math.abs(parseFloat(input.value) - p[k]) > 1e-9) input.value = p[k];
+      const out = controls.querySelector(`[data-out="${k}"]`);
+      if (out) out.textContent = fmtAngle(p[k]);
+    });
+    if (probe) {
+      probeEl.innerHTML = probeHtml();
+      const v = T().f(px);
+      setVis(Number.isFinite(v) && v > ymin - 0.2 && v < ymax + 0.2, probeDot);
+      setVis(recip && Math.abs(T().guide(px)) <= ymax, probeGuideDot);
+      const input = controls.querySelector('input[data-probe]');
+      if (input && Math.abs(parseFloat(input.value) - px) > 1e-9) input.value = px;
+    }
+    board.update();
+  }
+
+  // ---- animation plumbing ----
+  let raf = null;
+  let timers = [];
+  const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+  function stopAll() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    timers.forEach(clearTimeout);
+    timers = [];
+    liveKey = null;
+    if (sweepBtn) sweepBtn.textContent = '▶ Sweep x';
+  }
+  function tween(ms, onStep, onDone) {
+    const t0 = performance.now();
+    const tick = (now) => {
+      const u = Math.min(1, (now - t0) / ms);
+      const e = u < 0.5 ? 4 * u * u * u : 1 - ((-2 * u + 2) ** 3) / 2;
+      onStep(e);
+      if (u < 1) { raf = requestAnimationFrame(tick); } else { raf = null; if (onDone) onDone(); }
+    };
+    raf = requestAnimationFrame(tick);
+  }
+  const makeButton = (label, title) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'btn';
+    b.textContent = label;
+    if (title) b.title = title;
+    b.addEventListener('pointerup', () => b.blur());
+    controls.appendChild(b);
+    return b;
+  };
+  let sweepBtn = null;
+
+  // Function switch buttons (live swap of tan/cot/sec/csc).
+  if (switchFns.length > 1 && !sketch && !mini) {
+    const group = document.createElement('div');
+    group.className = 'jsx-switch';
+    switchFns.forEach((f) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'btn';
+      b.dataset.fn = f;
+      b.textContent = f;
+      b.addEventListener('pointerup', () => b.blur());
+      b.addEventListener('click', () => { stopAll(); fnName = f; syncSwitch(); refresh(); });
+      group.appendChild(b);
+    });
+    controls.appendChild(group);
+  }
+  function syncSwitch() {
+    controls.querySelectorAll('.jsx-switch .btn').forEach((b) => b.classList.toggle('is-on', b.dataset.fn === fnName));
+  }
+  syncSwitch();
+
+  if (probe) {
+    const row = document.createElement('label');
+    row.className = 'jsx-slider-row';
+    row.innerHTML = '<span class="jsx-slider-name">x <small>drag the input</small></span>' +
+      `<input type="range" data-probe min="${xmin}" max="${xmax}" step="0.01" value="${px}">`;
+    const input = row.querySelector('input');
+    input.addEventListener('input', () => { stopAll(); px = parseFloat(input.value); refresh(); });
+    input.addEventListener('pointerup', () => input.blur());
+    sweepBtn = makeButton('▶ Sweep x');
+    sweepBtn.addEventListener('click', () => {
+      if (raf) { stopAll(); return; }
+      if (px >= xmax - 0.02) px = xmin;
+      sweepBtn.textContent = '⏸ Pause';
+      let last = performance.now();
+      const tick = (now) => {
+        px = Math.min(xmax, px + ((now - last) / 1000) * ((xmax - xmin) / 14));
+        last = now;
+        refresh();
+        if (px < xmax) raf = requestAnimationFrame(tick); else stopAll();
+      };
+      raf = requestAnimationFrame(tick);
+    });
+    const snaps = document.createElement('div');
+    snaps.className = 'jsx-switch';
+    [['0', 0], ['π/6', PI / 6], ['π/4', PI / 4], ['π/3', PI / 3], ['π/2', PI / 2], ['π', PI], ['3π/2', 1.5 * PI], ['−π/4', -PI / 4], ['−π/2', -PI / 2]]
+      .filter(([, v]) => v >= xmin - 1e-9 && v <= xmax + 1e-9)
+      .forEach(([label, v]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn small';
+        b.textContent = label;
+        b.addEventListener('pointerup', () => b.blur());
+        b.addEventListener('click', () => { stopAll(); px = v; refresh(); });
+        snaps.appendChild(b);
+      });
+    controls.appendChild(snaps);
+    controls.appendChild(row);
+  }
+
+  // ---- transform mode: Play / Reset / sliders ----
+  if (!sketch) {
+    let playBtn = null;
+    if (hasPlay) {
+      playBtn = makeButton(playLabel);
+      playBtn.addEventListener('click', () => {
+        stopAll();
+        Object.assign(p, baseline());
+        playOrder.forEach((k) => { p[k] = TRIG_IDENT[k]; });
+        playBtn.textContent = '⏳ Playing';
+        if (captionEl) captionEl.textContent = '';
+        refresh();
+        let i = 0;
+        const next = () => {
+          if (i >= playOrder.length) {
+            liveKey = null;
+            playBtn.textContent = '↺ Replay';
+            if (captionEl) captionEl.textContent = '';
+            refresh();
+            return;
+          }
+          const k = playOrder[i++];
+          liveKey = k;
+          if (captionEl) captionEl.textContent = CAPTION[k];
+          refresh();
+          later(() => tween(1700, (e) => {
+            p[k] = TRIG_IDENT[k] + (target[k] - TRIG_IDENT[k]) * e;
+            refresh();
+          }, () => { p[k] = target[k]; refresh(); later(next, 800); }), 600);
+        };
+        next();
+      });
+    }
+    if (hasPlay || sliderKeys.length) {
+      const resetBtn = makeButton('Reset', 'Back to the parent graph');
+      resetBtn.addEventListener('click', () => {
+        stopAll();
+        Object.assign(p, baseline());
+        if (playBtn) playBtn.textContent = playLabel;
+        if (captionEl) captionEl.textContent = '';
+        refresh();
+      });
+    }
+    const HINT = { a: 'stretch / flip', b: 'squeeze / stretch', c: 'horizontal shift', d: 'vertical shift' };
+    sliderKeys.forEach((k) => {
+      const [lo, hi, st] = rangeOf(k);
+      const row = document.createElement('label');
+      row.className = 'jsx-slider-row';
+      row.innerHTML =
+        `<span class="jsx-slider-name">${k} <small>${HINT[k]}</small></span>` +
+        `<input type="range" data-p="${k}" min="${lo}" max="${hi}" step="${st}" value="${p[k]}">` +
+        `<span class="jsx-slider-val" data-out="${k}"></span>`;
+      const input = row.querySelector('input');
+      input.addEventListener('input', () => {
+        stopAll();
+        if (playBtn) playBtn.textContent = playLabel;
+        if (captionEl) captionEl.textContent = '';
+        p[k] = parseFloat(input.value);
+        refresh();
+      });
+      input.addEventListener('pointerup', () => input.blur());
+      controls.appendChild(row);
+    });
+    refresh();
+    return;
+  }
+
+  // ---- sketch mode: staged "graph one period" ----
+  const dashStyle = { strokeColor: muted, strokeWidth: 2, dash: 3, highlight: false, visible: false, fixed: true };
+  const top = target.d + Math.abs(target.a);
+  const bottom = target.d - Math.abs(target.a);
+  const ampLines = [top, bottom].map((y) => board.create('line', [[0, y], [1, y]], dashStyle));
+  const ampLabels = [[top, 'max'], [bottom, 'min']].map(([y, w], i) => board.create('text', [
+    xmax - (xmax - xmin) * 0.015, y + range * (i === 0 ? 0.015 : -0.015), `${w}: y = ${fmtNum(y)}`,
+  ], {
+    anchorX: 'right', anchorY: i === 0 ? 'bottom' : 'top', fontSize: READOUT_VALUE_FONT - 4, color: muted,
+    fixed: true, cssStyle: 'font-weight:700', visible: false,
+  }));
+  const periodX = T().period / target.b;
+  const xc = TRIG[fnName].keyU[TRIG[fnName].recip ? 0 : 1] / target.b - target.c;
+  const stepX = periodX / 4;
+  const stepXs = [-1, 1].map((s) => xc + s * stepX);
+  const stepLines = stepXs.map((x) => board.create('line', [[x, 0], [x, 1]], dashStyle));
+  const stepLabel = board.create('text', [xc + stepX / 2, ymin + range * 0.07, `step = ${fmtAngle(stepX)}`], {
+    anchorX: 'middle', fontSize: READOUT_VALUE_FONT - 4, color: negative,
+    fixed: true, cssStyle: 'font-weight:700', visible: false,
+  });
+
+  const recipKind = T().recip;
+  const gName = recipKind ? T().guideName : '';
+  const yAt = (x) => fmtNum(valueAt(target, x));
+  const CAPTIONS = recipKind ? [
+    'A blank grid. Press Start and we build the graph piece by piece.',
+    `Vertical shift ${chipText.d()}: the midline is y = ${fmtNum(target.d)}.`,
+    `Sketch the related ${gName} curve first (dashed). It runs from y = ${fmtNum(bottom)} to y = ${fmtNum(top)}.`,
+    `Wherever the ${gName} curve crosses the midline, the reciprocal is undefined: draw a vertical asymptote.`,
+    `Wherever the ${gName} curve peaks or bottoms out, the ${fnName} curve touches it: mark those vertices.`,
+    'Each branch starts at a vertex and bends toward the asymptotes on either side.',
+    `The pattern repeats every period, ${fmtAngle(periodX)}.`,
+  ] : [
+    'A blank grid. Press Start and we build the graph piece by piece.',
+    `Vertical shift ${chipText.d()}: the midline is y = ${fmtNum(target.d)}.`,
+    `Horizontal shift ${chipText.c()}: the graph crosses its midline at x = ${fmtAngle(xc)}.`,
+    `Period ${fmtAngle(periodX)}: the asymptotes sit half a period either side of the center, and each step is period ÷ 4 = ${fmtAngle(stepX)}.`,
+    `One step left of center the graph is at y = ${yAt(stepXs[0])}, one step right it is at y = ${yAt(stepXs[1])}.`,
+    'Draw one branch through the three points, bending toward each asymptote without touching it.',
+    `The pattern repeats every period, ${fmtAngle(periodX)}.`,
+  ];
+  const LAST = CAPTIONS.length - 1;
+
+  const backBtn = makeButton('◀ Back');
+  const nextBtn = makeButton('Start →');
+  let ptsShown = 0;
+
+  function applyStage() {
+    updateReadout();
+    if (captionEl) captionEl.textContent = CAPTIONS[sketchStage];
+    setVis(sketchStage >= 1 && Math.abs(target.d) > 1e-9, midline);
+    setVis(sketchStage >= 1 && Math.abs(target.d) > 1e-9, midLabel);
+    asymLines.forEach((l) => setVis(sketchStage >= 3, l));
+    if (recipKind) {
+      setVis(sketchStage >= 2, guideCurve, ampLines, ampLabels);
+      imgPts.forEach((pt, i) => setVis(sketchStage >= 4 && i < T().keyU.length, pt));
+    } else {
+      setVis(sketchStage >= 3, stepLines, stepLabel);
+      imgPts.forEach((pt, i) => setVis((i === 1 && sketchStage >= 2) || sketchStage >= 4, pt));
+    }
+    setVis(sketchStage >= 6, continuation);
+    backBtn.disabled = sketchStage === 0;
+    nextBtn.textContent = sketchStage === 0 ? 'Start →' : sketchStage === LAST ? '↺ Reset' : 'Next →';
+    board.update();
+  }
+  function gotoStage(n) {
+    stopAll();
+    sketchStage = n;
+    prog = n >= 6 ? 1 : 0;
+    if (n === 5) tween(2400, (e) => { prog = e; board.update(); }, () => { prog = 1; board.update(); });
+    applyStage();
+  }
+  nextBtn.addEventListener('click', () => gotoStage(sketchStage >= LAST ? 0 : sketchStage + 1));
+  backBtn.addEventListener('click', () => gotoStage(Math.max(0, sketchStage - 1)));
+  gotoStage(0);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -1789,4 +2646,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-unit-circle').forEach(renderJsxUnitCircle);
   document.querySelectorAll('jsx-sine-trace').forEach(renderJsxSineTrace);
   document.querySelectorAll('jsx-transform').forEach(renderJsxTransform);
+  document.querySelectorAll('jsx-trig-graph').forEach(renderJsxTrigGraph);
 });

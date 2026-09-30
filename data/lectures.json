@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-09-30",
+    "title": "Graphing Other Trigonometric Functions",
+    "subtitle": "Lesson 13",
+    "description": "Tangent and cotangent traced live from the unit circle, secant and cosecant built from their sine and cosine guides, then combined with shifts, stretches, and period changes through probes, sliders, and staged sketches.",
+    "tags": [
+      "Graphing",
+      "Tangent",
+      "Reciprocal Functions"
+    ],
+    "url": "trigonometry/2026/2026-09-30-lesson-13-graphing-other-trigonometric-functions/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-28",
     "title": "Translating Sine and Cosine Graphs",
     "subtitle": "Lesson 12",

@@ -531,6 +531,27 @@ Numeric attributes accept `pi` (e.g. `c="-pi/4"`). Reference build:
 Verified in Chrome: Play tween, chips, ghost morph, and the sketch stages all run with no
 console errors.
 
+### `<jsx-trig-graph>`: tan/cot/sec/csc (added 2026-09-30)
+
+`<jsx-trig-graph fn="tan|cot|sec|csc" a b c d ...>` (`renderJsxTrigGraph` in
+`js/jsxgraph.js`), built for Lesson 13 (Graphing Other Trigonometric Functions). Same
+`y = a f(b(x + c)) + d` model as `<jsx-transform>`, but period is `pi/b` for tan/cot and
+`2pi/b` for sec/csc. Curves are one `curve` with NaN breaks at every asymptote (a plain
+functiongraph would draw a false vertical line joining branches); asymptotes are a pool of
+vertical lines repositioned from the live `b`, `c`. Modes: `trace` (tan/cot unit-circle
+trace: ray meets line x=1 or y=1, curve draws itself, asymptotes appear when the ray goes
+parallel), `probe` (draggable x, quotient/reciprocal readout, snap buttons, Sweep),
+`sketch` (staged builder; tan/cot: midline, center, asymptotes+step, key points, branch;
+sec/csc: midline, dashed related sin/cos guide, asymptotes at guide/midline crossings,
+vertices, branches), `play`/`sliders`/`ghost`/`arrows` as in `<jsx-transform>`,
+`ghost-fn` + `ghost-a/b/c/d` (faint underlay of a *different* function, e.g. show
+`-cot x` = `tan(x + pi/2)`), `switch="tan cot ..."` (live function swap), `mini`
+(compact static board for the Example 2 matching grid, `.jsx-trig-grid` in `css/steps.css`),
+`x-step` (numeric x ticks instead of pi fractions). Reference build:
+`trigonometry/2026/2026-09-30-lesson-13-graphing-other-trigonometric-functions/index.html`.
+Checked in Chrome: trace, probe, sketch (tan and csc), and the matching grid render with no
+console errors.
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:
