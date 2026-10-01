@@ -24,6 +24,10 @@
     });
   </script>
 
+  <!-- JSXGraph (interactive diagrams on this page) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -44,50 +48,187 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Theorem 4.20</div>
-          <div class="step-subtitle">Method of Lagrange Multipliers: One Constraint</div>
+          <div class="step-title">Optimization with a Constraint</div>
+          <div class="step-subtitle">Why we need a new method</div>
           <div class="step-body">
-            Let f and g be functions of two variables with continuous partial derivatives at every point of some open set containing the smooth curve \(g(x,y)=0\). Suppose that f, when restricted to points on the curve \(g(x,y)=0\), has a local extremum at the point $(x_0,y_0)$ and that $\nabla g(x_0,y_0)\neq 0$. Then there is a number $\lambda$ called the Lagrange multiplier, for which <br>
-          $$\nabla f(x_{0},y_{0})=\lambda\nabla g(x_{0},y_{0})$$.
+<p>
+  In the max/min lesson we hunted for the highest or lowest point of \(f(x,y)\) <i>anywhere</i>.
+  Real problems rarely allow that. A company has a fixed budget. A fence has a fixed length.
+  A point must stay on a given curve. We still want the best value of \(f\), but only among
+  the points that obey a rule.
+</p>
+<p>We write the rule as a <b>constraint</b> \(g(x,y)=0\):</p>
+<p>$$\text{maximize or minimize } f(x,y) \quad\text{subject to}\quad g(x,y)=0.$$</p>
+<p>What does "subject to \(g(x,y)=0\)" do to the search, geometrically?</p>
+<p><reveal>
+  It shrinks the list of candidates from a whole region of the plane to the points on one
+  <i>curve</i>. We are no longer searching across the plane, only along the curve \(g=0\).
+</reveal></p>
+<p class="muted small">
+  One option is to solve the constraint for one variable and substitute, which works for easy
+  constraints. Lagrange's method is for when that is messy, and it also explains <i>why</i>
+  the answer looks the way it does.
+</p>
           </div>
         </div>
 
         <div class="step is-visible" data-step="2">
-          <div class="step-title">Steps for Using Lagrange Multipliers</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Explore: Walk Along the Constraint</div>
+          <div class="step-subtitle">Maximize \(f(x,y)=xy\) on the circle \(x^2+y^2=8\)</div>
           <div class="step-body">
-            1. Determine the objective function $f(x,y)$ and the constraint function $g(x,y)$. Does the optimization problem involve maximizing or minimizing the objective function?<br>
-          2. Set up a system of equations using the following template:
-          $$\nabla f(x_0,y_0)=\lambda \nabla g(x_0,y_0)$$
-          $$g(x_0,y_0)=0$$
-          3. Solve for $x_0$ and $y_0$<br>
-          4. The largest of the values of f at the solutions found in step 3 maximizes f; the smallest of those values minimizes f.
+<p class="muted small">
+  The thick black curve is the constraint. The faint curves are contours of \(f\). The blue
+  curve is the contour of \(f\) through the point \(P\) you are sliding. Press Sweep, or drag
+  \(t\), and watch the arrows \(\nabla f\) (blue) and \(\nabla g\) (red), the readout, and the
+  strip graph underneath.
+</p>
+<jsx-lagrange f="x*y" g="x*x+y*y-8" curve-x="sqrt(8)*cos(t)" curve-y="sqrt(8)*sin(t)"
+  tmin="0" tmax="2*pi" t="0.3" xmin="-6" xmax="6" ymin="-3" ymax="3"
+  levels="-4 -2 2 4" crit="pi/4 3*pi/4 5*pi/4 7*pi/4"></jsx-lagrange>
+<table>
+  <tr><td>Where is \(f\) largest on the circle? Smallest?</td><td><reveal>Largest at \((2,2)\) and \((-2,-2)\), where \(f=4\). Smallest at \((-2,2)\) and \((2,-2)\), where \(f=-4\).</reveal></td></tr>
+  <tr><td>What do you notice about the blue contour at those spots?</td><td><reveal>It just touches the circle and does not cross it. The two curves share a tangent line there.</reveal></td></tr>
+  <tr><td>What do you notice about the arrows at those spots?</td><td><reveal>\(\nabla f\) and \(\nabla g\) lie on the same line. They are parallel (the readout turns green).</reveal></td></tr>
+  <tr><td>What does the strip graph do there?</td><td><reveal>It has a peak or a valley: \(f\), measured along the circle, stops rising and starts falling.</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="3" data-ggb-id="npeqnccv">
-          <div class="step-title">Problems with Two Constraints</div>
-          <div class="step-subtitle"></div>
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Theorem 4.20 and Why It Works</div>
+          <div class="step-subtitle">Method of Lagrange Multipliers: One Constraint</div>
           <div class="step-body">
-            The method of Lagrange multipliers can be applied to problems with more than one constraint. In this case the optimization function, w is a function of three variables:
-          $$w=f(x,y,z)$$ and it is subject to two constraints:
-          $$g(x,y,z)=0\text{ and } h(x,y,z)=0$$
-          There are two Lagrange multipliers, $\lambda_1$ and $\lambda_2$, and the system of equations becomes
-          $$\nabla f(x_0,y_0,z_0)=\lambda_1\nabla g(x_0,y_0,z_0)+\lambda_2\nabla h(x_0,y_0,z_0)$$
-          $$g(x_0,y_0,z_0)=0$$
-          $$h(x_0,y_0,z_0)=0$$
+<p>
+  Let \(f\) and \(g\) be functions of two variables with continuous partial derivatives at every
+  point of some open set containing the smooth curve \(g(x,y)=0\). Suppose \(f\), restricted to
+  points on that curve, has a local extremum at \((x_0,y_0)\), and \(\nabla g(x_0,y_0)\neq \mathbf 0\).
+  Then there is a number \(\lambda\), called the <b>Lagrange multiplier</b>, for which
+</p>
+$$\nabla f(x_0,y_0)=\lambda\,\nabla g(x_0,y_0).$$
+<p>What is the geometric meaning of "\(\nabla f\) is a multiple of \(\nabla g\)"?</p>
+<p><reveal>The two gradient vectors point along the same line (same or opposite direction). The number \(\lambda\) says how many times longer \(\nabla f\) is, and a negative \(\lambda\) means opposite directions.</reveal></p>
+
+<table>
+  <tr><td>A gradient \(\nabla f\) is perpendicular to what?</td><td><reveal>the contour (level curve) of \(f\) through that point</reveal></td></tr>
+  <tr><td>\(\nabla g\) is perpendicular to what?</td><td><reveal>the constraint curve \(g=0\) itself, since that curve is the contour \(g=0\)</reveal></td></tr>
+  <tr><td>At a constrained extremum, how do the contour of \(f\) and the constraint curve meet?</td><td><reveal>They touch and share a tangent line. If the contour crossed the curve, we could slide along the curve to a bigger or smaller contour value, so \(f\) would not be at an extremum.</reveal></td></tr>
+  <tr><td>So what can we say about \(\nabla f\) and \(\nabla g\)?</td><td><reveal>Both are perpendicular to the same tangent line, so they are parallel: \(\nabla f=\lambda\nabla g\).</reveal></td></tr>
+</table>
+
           </div>
         </div>
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">Example</div>
-          <div class="step-subtitle">Lagrange Multipliers Excercises</div>
+          <div class="step-title">Steps for Using Lagrange Multipliers</div>
+          <div class="step-subtitle">Problem-solving strategy</div>
           <div class="step-body">
-            <ol>
-  <li>Use the method of Lagrange multipliers to find the minimum value of \(f(x,y)=x^2+4y^2-2x+8y\) subject to the constraint \(x+2y=7\)</li>
-    <li>Find the minimum of the function \(f(x,y,z)=x^2+y^2+z^2\) subject to the constraint \(x+y+z=1\)</li>
-    <li>Find the local extreme values of the function \(f(x,y,z)=x^2+y^2+z^2\) subject to the constraints \(z^2=x^2+y^2\) and \(x+y-z+1=0\)</li>
+<ol>
+  <li><b>Identify</b> the objective function \(f(x,y)\) and the constraint \(g(x,y)=0\). Are we maximizing or minimizing?</li>
+  <li><b>Set up</b> the system
+    $$\nabla f(x_0,y_0)=\lambda\nabla g(x_0,y_0),\qquad g(x_0,y_0)=0.$$</li>
+  <li><b>Solve</b> for \(x_0\), \(y_0\), and \(\lambda\).</li>
+  <li><b>Compare</b> the values of \(f\) at every solution. The largest value is the maximum, the smallest is the minimum.</li>
 </ol>
+<p class="muted small">
+  Two unknowns plus \(\lambda\) is three unknowns, and the system has three equations: one for each
+  component of the gradient equation, plus the constraint.
+</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 4.42</div>
+          <div class="step-subtitle">Minimize \(f(x,y)=x^2+4y^2-2x+8y\) subject to \(x+2y=7\)</div>
+          <div class="step-body">
+<jsx-lagrange f="x*x+4*y*y-2*x+8*y" g="x+2*y-7" curve-x="7-2*t" curve-y="t"
+  tmin="-1.5" tmax="4" t="2.8" xmin="-3" xmax="9" ymin="-1" ymax="3"
+  levels="0 27 60" crit="1"></jsx-lagrange>
+<table>
+  <tr><td>Constraint function</td><td><reveal>\(g(x,y)=x+2y-7=0\)</reveal></td></tr>
+  <tr><td>\(\nabla f\)</td><td><reveal>\(\langle 2x-2,\; 8y+8\rangle\)</reveal></td></tr>
+  <tr><td>\(\nabla g\)</td><td><reveal>\(\langle 1,\; 2\rangle\)</reveal></td></tr>
+  <tr><td>The system</td><td><reveal>\(2x_0-2=\lambda,\quad 8y_0+8=2\lambda,\quad x_0+2y_0-7=0\)</reveal></td></tr>
+  <tr><td>Eliminate \(\lambda\)</td><td><reveal>\(8y_0+8=2(2x_0-2)\) gives \(x_0=2y_0+3\)</reveal></td></tr>
+  <tr><td>Use the constraint</td><td><reveal>\((2y_0+3)+2y_0=7\), so \(y_0=1\) and \(x_0=5\). Also \(\lambda=8\).</reveal></td></tr>
+  <tr><td>Minimum value</td><td><reveal>\(f(5,1)=25+4-10+8=\mathbf{27}\)</reveal></td></tr>
+  <tr><td>Sanity check</td><td><reveal>\(f(7,0)=35\) and \(f(0,3.5)=77\) are larger, and the strip graph bottoms out at \(27\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Example 4.43</div>
+          <div class="step-subtitle">Golf ball production: maximize \(z=48x+96y-x^2-2xy-9y^2\) subject to \(20x+4y=216\)</div>
+          <div class="step-body">
+<p class="muted small">
+  Profit is in thousands of dollars, \(x\) and \(y\) are production levels of two kinds of ball, and
+  the constraint is the budget. Divide the budget equation by \(4\) to simplify it.
+</p>
+<jsx-lagrange f="48*x+96*y-x*x-2*x*y-9*y*y" g="5*x+y-54" curve-x="t" curve-y="54-5*t"
+  tmin="9" tmax="11" t="9.3" xmin="2" xmax="22" ymin="-3" ymax="9"
+  levels="300 450" crit="10"></jsx-lagrange>
+<table>
+  <tr><td>Constraint function</td><td><reveal>\(g(x,y)=5x+y-54=0\)</reveal></td></tr>
+  <tr><td>\(\nabla f\) and \(\nabla g\)</td><td><reveal>\(\nabla f=\langle 48-2x-2y,\; 96-2x-18y\rangle\), \(\nabla g=\langle 5,\,1\rangle\)</reveal></td></tr>
+  <tr><td>The system</td><td><reveal>\(48-2x_0-2y_0=5\lambda,\quad 96-2x_0-18y_0=\lambda,\quad 5x_0+y_0-54=0\)</reveal></td></tr>
+  <tr><td>Eliminate \(\lambda\)</td><td><reveal>Substitute the second into the first: \(x_0=54-11y_0\)</reveal></td></tr>
+  <tr><td>Use the constraint</td><td><reveal>\(5(54-11y_0)+y_0=54\) gives \(y_0=4\), so \(x_0=10\)</reveal></td></tr>
+  <tr><td>Maximum profit</td><td><reveal>\(f(10,4)=480+384-100-80-144=540\), that is <b>\$540,000</b></reveal></td></tr>
+  <tr><td>Endpoint check</td><td><reveal>\(f(10.8,0)=401.76\) and \(f(0,54)=-21{,}060\), both smaller</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Three Variables and Two Constraints</div>
+          <div class="step-subtitle">Example 4.44, then the two-multiplier system</div>
+          <div class="step-body">
+<p class="muted small">
+  Nothing changes with a third variable, except that the gradient has three components and the
+  constraint is now a <i>surface</i> (here, a plane). Picture a sphere growing from the origin
+  until it first touches the plane \(x+y+z=1\).
+</p>
+<table>
+  <tr><td>\(\nabla f\) and \(\nabla g\)</td><td><reveal>\(\nabla f=\langle 2x,2y,2z\rangle\), \(\nabla g=\langle 1,1,1\rangle\), with \(g=x+y+z-1\)</reveal></td></tr>
+  <tr><td>The equations</td><td><reveal>\(2x_0=2y_0=2z_0=\lambda\), so \(x_0=y_0=z_0\); the constraint gives \(x_0=\tfrac13\)</reveal></td></tr>
+  <tr><td>Minimum value</td><td><reveal>\(f\left(\tfrac13,\tfrac13,\tfrac13\right)=\mathbf{\tfrac13}\)</reveal></td></tr>
+</table>
+<p><b>Two constraints</b> \(g=0\) and \(h=0\): one multiplier each, and
+\(\nabla f=\lambda_1\nabla g+\lambda_2\nabla h\) together with both constraints. Geometrically, \(\nabla f\)
+must lie in the plane spanned by \(\nabla g\) and \(\nabla h\), so \(f\) is not changing along the curve where the
+two surfaces meet. (Example 4.45 works this out for a cone cut by a plane.)</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Problems from the Text</div>
+          <div class="step-subtitle">OpenStax Section 4.8 exercises (numbers as in the book)</div>
+          <div class="step-body">
+<p class="muted small">Work each one with \(\nabla f=\lambda\nabla g\), then reveal.</p>
+<table>
+  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>375</td><td>Minimize \(f(x,y)=x^2+y^2\) subject to \(x+2y-5=0\).</td><td><reveal>\(\nabla f=\lambda\langle1,2\rangle\) gives \(y=2x\); then \(5x=5\). Minimum \(f(1,2)=\mathbf{5}\).</reveal></td></tr>
+  <tr><td>360</td><td>Find the extreme values of \(f(x,y)=xy\) subject to \(4x^2+8y^2=16\).</td><td><reveal>\(y=8\lambda x,\; x=16\lambda y\) gives \(x^2=2y^2\); the constraint gives \(y=\pm1\), \(x=\pm\sqrt2\). Maximum \(\mathbf{\sqrt2}\), minimum \(\mathbf{-\sqrt2}\).</reveal></td></tr>
+  <tr><td>358</td><td>Find the extreme values of \(f(x,y)=x^2y\) subject to \(x^2+2y^2=6\).</td><td><reveal>\(2xy=2\lambda x\) and \(x^2=4\lambda y\). If \(x\neq0\): \(y=\lambda\), \(x^2=4y^2\), so \(6y^2=6\), \(y=\pm1\), \(x=\pm2\). Also \(x=0\) gives \(f=0\). Maximum \(\mathbf{4}\) at \((\pm2,1)\), minimum \(\mathbf{-4}\) at \((\pm2,-1)\).</reveal></td></tr>
+  <tr><td>374</td><td>Maximize the utility \(U(x,y)=8x^{4/5}y^{1/5}\) subject to \(4x+2y=12\).</td><td><reveal>\(\tfrac{32}{5}x^{-1/5}y^{1/5}=4\lambda,\;\tfrac85x^{4/5}y^{-4/5}=2\lambda\) gives \(y=\tfrac12x\). Then \(5x=12\): \(x=\tfrac{12}{5}\), \(y=\tfrac65\), \(U\approx\mathbf{16.71}\).</reveal></td></tr>
+  </tbody>
+</table>
+<p class="muted small">Unless noted, the same constraint types appear throughout the exercise set (spheres, ellipses, hyperbolas, budget lines).</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Problem</b></td><td>optimize \(f\) subject to \(g=0\)</td></tr>
+  <tr><td><b>Idea</b></td><td>at an extremum the contour of \(f\) touches the constraint, so \(\nabla f\parallel\nabla g\)</td></tr>
+  <tr><td><b>Equations</b></td><td>\(\nabla f=\lambda\nabla g\) and \(g=0\) (with two constraints: \(\nabla f=\lambda_1\nabla g+\lambda_2\nabla h\))</td></tr>
+  <tr><td><b>Finish</b></td><td>evaluate \(f\) at every solution and compare</td></tr>
+  <tr><td><b>Bonus</b></td><td>\(\lambda\) is the rate of change of the optimal value with the constraint level</td></tr>
+</table>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import './reveal.js';
 import './triangle.js';
 import './curveDiagram.js';
 import './jsxgraph.js';
+import './riemann.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // add ▶ buttons next to steps with data-ggb-id

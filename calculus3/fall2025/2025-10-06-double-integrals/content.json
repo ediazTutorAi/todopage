@@ -4,91 +4,93 @@
   "date": "2026-03-02",
   "title": "Double Integrals",
   "subtitle": "",
-  "description": "",
+  "description": "Double integrals over rectangles built from boxes you can rotate and refine, sample-point rules, Fubini by slicing with either order, properties, and area, volume and average value.",
   "tags": [
-    "double Integrals"
+    "double Integrals",
+    "Riemann sums",
+    "Fubini"
   ],
+  "notes": "",
   "steps": [
     {
       "tag": "step",
-      "label": "5.1 Double Integration over Rectangular Regions",
-      "subtitle": "Definition",
+      "label": "Double Integrals over Rectangular Regions",
+      "subtitle": "How much volume is under a surface?",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "The double integral of the function $f(x,y)$ over the rectangular region R in the xy-plane is defined\n            $$\\iint_{R} f(x,y) \\, dV \\, dA=\\lim_{m,n \\to \\infty}\\sum_{i=1}^m\\sum_{j=1}^n f(x_i^*,y_j^*)\\delta A $$\n            But what do all of these mean?"
-    },
-    {
-      "tag": "step",
-      "label": "Rectangular Division",
-      "subtitle": "",
-      "ggbId": "g8xftbbf",
-      "reveal": false,
-      "bodyHtml": "Observe that our domain is a rectangle in the xy-plane. We have divided this rectangle into several smaller\n            sub-rectangles. For each of these sub-rectangles, we select a representative point, which we’ll denote by\n            $(x_j, y_j)$. At that point, we evaluate our function $f(x, y)$. The value $f(x_j, y_j)$ gives us the height\n            of a rectangular “box” built above that small region.<br>\n            By multiplying this height $f(x_j, y_j)$ by the area of the base sub-rectangle, we obtain the volume of that\n            small box.<br>\n            If we repeat this process for every sub-rectangle and then add up all those small volumes, we get an\n            approximation for the total volume under the surface $z = f(x, y)$ and above the rectangular region in the\n            plane.<br>\n            As we make the subdivisions finer and finer, this approximation becomes more accurate and in the limit, it\n            becomes the double integral of $f(x, y)$ over the region."
-    },
-    {
-      "tag": "step",
-      "label": "Double Integral",
-      "subtitle": "Visualization in 3D",
-      "ggbId": "naebkqfv",
-      "reveal": false,
-      "bodyHtml": "In this GeoGebra visualization, you can see how each of the small boxes is formed above the sub-rectangles\n            of our domain. This picture helps us visualize how the double integral is constructed, by summing up the\n            volumes of all these tiny boxes.<br>\n            You can think of the double integral as representing the total volume under the surface $z = f(x, y)$.\n            Notice, however, that this interpretation works directly only when the surface lies above the xy-plane,\n            since in that case the function values are positive and the volume makes sense as a positive quantity."
-    },
-    {
-      "tag": "step",
-      "label": "Double Integral",
-      "subtitle": "for General Regions",
-      "ggbId": "tz3wuxkj",
-      "reveal": false,
-      "bodyHtml": "In this GeoGebra visualization, we are looking at a more general region, which we have divided into\n            rectangular strips. (We are not showing the smaller subdivisions this time.)<br>\n            Notice that, to cover the entire region, these strips extend from the left to the right across the x-values\n            of the region. The height of each strip goes from the bottom curve up to the top curve.<br>\n            As we imagine taking finer and finer strips, their width becomes smaller and smaller — approaching zero.\n            However, since the width never actually reaches zero, we represent it symbolically as dx."
-    },
-    {
-      "tag": "step",
-      "label": "Visualization of a Double Integral over a general region",
-      "subtitle": "",
-      "ggbId": "d26andr7",
-      "reveal": false,
-      "bodyHtml": "Visualization of a Double Integral over a general region"
-    },
-    {
-      "tag": "theorem",
-      "label": "Theorem 5.1 Properties of Double Integrals",
-      "subtitle": "",
-      "ggbId": "",
-      "reveal": false,
-      "bodyHtml": "Assume that the functions $f(x,y)$ and $g(x,y)$ are integrable over the rectangular region R; S and T are\n            subregions; and assume that m and M are real numbers.<br>\n            i. The sum $f(x,y)+g(x,y)$ is integrable and<br>\n            $$\\iint_{R}[f(x,y)+g(x,y)]dA=\\iint_{R}f(x,y)dA+\\iint_{R}g(x,y)dA$$\n            ii. If c is a constant, then $cf(x,y)$ is integrable and\n            $$\\iint_{R}cf(x,y)dA=c\\iint_{R}f(x,y)dA$$\n            iii. If $R=S\\cup T$ and $S\\cap T=\\emptyset$ except an overlap on the boundaries, then\n            $$\\iint_{R}f(x,y)dA=\\iint_{S}f(x,y)dA+\\iint_{T}f(x,y)dA$$\n            iv.If $f(x,y)\\geq g(x,y)$ for $(x,y)$ in R, then\n            $$\\iint_{R}f(x,y)dA \\geq \\iint_{R}g(x,y)dA$$\n            v. If $m\\leq f(x,y) \\leq M $, then\n            $$m\\times A(R) \\leq \\iint_{R}f(x,y)dA\\leq M\\times A(R)$$\n            vi. In the case where $f(x,y)$ can be factored as a product of a function $g(x)$ of x only and a function\n            $h(y)$ of y only, then over the region $R=\\{(x,y)|a\\leq x \\leq b, c\\leq y \\leq d\\}$, the double integral can\n            be written\n            $$\\iint_{R}f(x,y)dA=\\left(\\int_{a}^{b}g(x)dx\\right)\\left(\\int_c^d h(y)dy\\right)$$"
+      "bodyHtml": "<p>\n  A single integral \\(\\int_a^b f(x)\\,dx\\) gives the area under a curve by adding up thin rectangles.\n  For a function of two variables, the same idea gives <b>volume</b> under a surface \\(z=f(x,y)\\)\n  above a rectangle \\(R=[a,b]\\times[c,d]\\) in the \\(xy\\)-plane, by adding up thin <i>boxes</i>.\n</p>\n<p class=\"muted small\">\n  The surface here is \\(z=27-2x^2-y^2\\) over \\([0,3]\\times[0,3]\\). Start with one box, then press\n  Refine (or drag the slider) and watch the stack of boxes hug the surface. Drag the picture to rotate it.\n</p>\n<riemann-boxes f=\"27 - 2*x*x - y*y\" xmin=\"0\" xmax=\"3\" ymin=\"0\" ymax=\"3\" m=\"1\" n=\"1\" rule=\"mid\" sliders square play max=\"20\"></riemann-boxes>\n<p>What happens to the Riemann sum, and to the error, as the boxes get thinner?</p>\n<p><reveal>The sum settles toward one number, \\(162\\), and the error shrinks toward \\(0\\). That limiting number is the double integral, the volume under the surface.</reveal></p>"
     },
     {
       "tag": "definition",
       "label": "Definition",
-      "subtitle": "Iterated Integrals",
+      "subtitle": "The double integral as a limit of Riemann sums",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "Assume a,b,c and d are real numbers. We define an iterated integral for a function $f(x,y)$ over the\n            rectangular region $R=[a,b]\\times [c,d]$ as <br>\n            a. $$\\int_a^b \\int_c^d f(x,y)dydx=\\int_a^b \\left[\\int_c^d f(x,y)dy\\right]dx$$\n            b. $$\\int_c^d \\int_a^b f(x,y)dydx=\\int_c^d \\left[\\int_a^b f(x,y)dy\\right]dx$$"
-    },
-    {
-      "tag": "theorem",
-      "label": "Theorem 5.2",
-      "subtitle": "Fubini's Theorem",
-      "ggbId": "",
-      "reveal": false,
-      "bodyHtml": "Suppose that $f(x,y)$ is a function of two variables that is continuous over a rectangular region\n            $R=\\{(x,y)\\in\\mathbb{R}^2|a\\leq x\\leq b, c\\leq y \\leq d\\}$. Then the double integral of f over the region\n            equals any of the iterated integrals.<br>\n            More generally, Fubini's theorem is true if f is bounded on R and f is discontinuous only on a finite number\n            of continuous curves. In other words, f has to be integrable over R."
-    },
-    {
-      "tag": "theorem",
-      "label": "Theorem 5.4",
-      "subtitle": "Fubini's Theorem Strong Form",
-      "ggbId": "",
-      "reveal": false,
-      "bodyHtml": "For a function $f(x,y)$ that is continuous on a region D of Type 1 (a region that lies between two vertical\n            lines), we have<br>\n            $$\\iint_{D}f(x,y)dA=\\iint_{D}f(x,y)dydx=\\int_a^b\\left[\\int_{g_1(x)}^{g_2(x)}f(x,y)dy\\right]dx$$\n            Similarly, for a function $f(x,y)$ that is continuous on a region D of Type II (a region that lies between\n            two horizontal lines) we have\n            $$\\iint_{D}f(x,y)dA=\\iint_{D}f(x,y)dxdy=\\int_c^d\\left[\\int_{h_1(y)}^{h_2(y)}f(x,y)dx\\right]dy$$"
+      "bodyHtml": "<p>\n  Split \\(R=[a,b]\\times[c,d]\\) into \\(m\\times n\\) sub-rectangles, each of width \\(\\Delta x=\\dfrac{b-a}{m}\\) and\n  height \\(\\Delta y=\\dfrac{d-c}{n}\\). Pick a <b>sample point</b> \\((x_{ij}^*,y_{ij}^*)\\) in each. The\n  <b>double integral</b> of \\(f\\) over \\(R\\) is\n</p>\n$$\\iint_R f(x,y)\\,dA=\\lim_{m,n\\to\\infty}\\sum_{i=1}^{m}\\sum_{j=1}^{n} f(x_{ij}^*,y_{ij}^*)\\,\\Delta A,\\qquad \\Delta A=\\Delta x\\,\\Delta y.$$\n<p class=\"muted small\">Match each piece of the formula to the picture.</p>\n<table>\n  <tr><td>\\(\\Delta A\\)</td><td><reveal>the area of one sub-rectangle, the footprint of one box</reveal></td></tr>\n  <tr><td>\\(f(x_{ij}^*,y_{ij}^*)\\)</td><td><reveal>the height of that box, read from the surface at the sample point</reveal></td></tr>\n  <tr><td>\\(f(x_{ij}^*,y_{ij}^*)\\,\\Delta A\\)</td><td><reveal>the volume of one box (height times base area)</reveal></td></tr>\n  <tr><td>\\(\\sum_i\\sum_j\\)</td><td><reveal>add the volumes of all \\(m\\cdot n\\) boxes</reveal></td></tr>\n  <tr><td>\\(\\lim_{m,n\\to\\infty}\\)</td><td><reveal>make the boxes infinitely thin so the stack matches the solid exactly</reveal></td></tr>\n</table>\n<p class=\"muted small\">If \\(f\\) goes below the \\(xy\\)-plane, those boxes count as <i>negative</i> volume. The double integral is a signed volume.</p>"
     },
     {
       "tag": "example",
-      "label": "Example 5.15",
-      "subtitle": "Changing the order of integration",
+      "label": "Example 5.1: Approximating with Different Sample Points",
+      "subtitle": "\\(f(x,y)=3x^2-y\\) over \\(R=[0,2]\\times[0,2]\\), with \\(m=n=2\\)",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "Changing the order of itegration is one of the typical exercises to assess understanting of double\n            integrals."
+      "bodyHtml": "<p class=\"muted small\">\n  Switch between the sample-point rules below. Each box now has side \\(1\\), so \\(\\Delta A=1\\). Red boxes are\n  negative (the surface dips below the plane).\n</p>\n<riemann-boxes f=\"3*x*x - y\" xmin=\"0\" xmax=\"2\" ymin=\"0\" ymax=\"2\" m=\"2\" n=\"2\" rule=\"ur\" sliders square rules max=\"16\"></riemann-boxes>\n<table>\n  <tr><td>Upper-right corners: \\((1,1),(2,1),(1,2),(2,2)\\)</td><td><reveal>\\(f=2,\\;11,\\;1,\\;10\\), so the sum is \\(24\\)</reveal></td></tr>\n  <tr><td>Midpoints: \\((0.5,0.5),(1.5,0.5),(0.5,1.5),(1.5,1.5)\\)</td><td><reveal>\\(f=0.25,\\;6.25,\\;-0.75,\\;5.25\\), so the sum is \\(11\\)</reveal></td></tr>\n  <tr><td>The exact integral</td><td><reveal>\\(12\\). Both estimates are off, because four boxes is far too coarse.</reveal></td></tr>\n  <tr><td>Which rule does better here?</td><td><reveal>The midpoint rule: it misses by \\(1\\), and the corner rule by \\(12\\). Over-shoots on one side of a box tend to cancel with under-shoots on the other.</reveal></td></tr>\n</table>\n<p class=\"muted small\">Now raise the sliders. Every rule heads for the same value, \\(12\\).</p>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Theorem 5.1",
+      "subtitle": "Properties of double integrals",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  Assume \\(f\\) and \\(g\\) are integrable over the rectangle \\(R\\), \\(S\\) and \\(T\\) are subregions, and \\(m,M\\) are real numbers.\n</p>\n<table>\n  <tr><td><b>i. Sum</b></td><td>\\(\\displaystyle\\iint_R[f+g]\\,dA=\\iint_R f\\,dA+\\iint_R g\\,dA\\)</td></tr>\n  <tr><td><b>ii. Constant multiple</b></td><td>\\(\\displaystyle\\iint_R cf\\,dA=c\\iint_R f\\,dA\\)</td></tr>\n  <tr><td><b>iii. Splitting the region</b></td><td>If \\(R=S\\cup T\\) overlapping only on a boundary, \\(\\displaystyle\\iint_R f\\,dA=\\iint_S f\\,dA+\\iint_T f\\,dA\\)</td></tr>\n  <tr><td><b>iv. Comparison</b></td><td>If \\(f\\ge g\\) on \\(R\\), then \\(\\displaystyle\\iint_R f\\,dA\\ge\\iint_R g\\,dA\\)</td></tr>\n  <tr><td><b>v. Bounds</b></td><td>If \\(m\\le f\\le M\\), then \\(m\\cdot A(R)\\le\\displaystyle\\iint_R f\\,dA\\le M\\cdot A(R)\\)</td></tr>\n  <tr><td><b>vi. Product of separate functions</b></td><td>If \\(f(x,y)=g(x)h(y)\\) on \\(R=[a,b]\\times[c,d]\\), then \\(\\displaystyle\\iint_R f\\,dA=\\left(\\int_a^b g(x)\\,dx\\right)\\left(\\int_c^d h(y)\\,dy\\right)\\)</td></tr>\n</table>\n<p>Property v in words: the solid fits between two flat slabs. What are their volumes?</p>\n<p><reveal>A slab of height \\(m\\) over \\(R\\) has volume \\(m\\cdot A(R)\\), and a slab of height \\(M\\) has volume \\(M\\cdot A(R)\\). The solid under the surface is trapped between them.</reveal></p>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Fubini's Theorem",
+      "subtitle": "Iterated integrals, and slicing the solid",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  For \\(R=[a,b]\\times[c,d]\\), an <b>iterated integral</b> integrates one variable at a time:\n</p>\n$$\\int_a^b\\!\\!\\int_c^d f(x,y)\\,dy\\,dx=\\int_a^b\\left[\\int_c^d f(x,y)\\,dy\\right]dx,\\qquad \\int_c^d\\!\\!\\int_a^b f(x,y)\\,dx\\,dy=\\int_c^d\\left[\\int_a^b f(x,y)\\,dx\\right]dy.$$\n<p>\n  <b>Fubini's Theorem.</b> If \\(f\\) is continuous on \\(R\\), the double integral equals either iterated integral:\n</p>\n$$\\iint_R f(x,y)\\,dA=\\int_a^b\\!\\!\\int_c^d f(x,y)\\,dy\\,dx=\\int_c^d\\!\\!\\int_a^b f(x,y)\\,dx\\,dy.$$\n<p class=\"muted small\">\n  More generally the theorem holds when \\(f\\) is bounded on \\(R\\) and discontinuous only along a finite number of continuous curves.\n</p>\n<p class=\"muted small\">\n  Left: cut the solid with a plane at a fixed \\(x\\). The area of that cross-section is\n  \\(A(x)=\\int_0^3 f(x,y)\\,dy\\). Right: \\(A(x)\\) plotted as the plane sweeps from \\(x=0\\) to \\(x=2\\);\n  the shaded area is what has been collected so far. Press Sweep, then switch the order and sweep again.\n</p>\n<jsx-fubini f=\"3*x*x - y\" xmin=\"0\" xmax=\"2\" ymin=\"0\" ymax=\"3\"></jsx-fubini>\n<p>Both orders end at the same total. What does that say about the volume of the solid?</p>\n<p><reveal>It is one number, \\(15\\), however we slice it: by planes of constant \\(x\\) or by planes of constant \\(y\\). That is Fubini's theorem.</reveal></p>"
+    },
+    {
+      "tag": "example",
+      "label": "Examples 5.3 and 5.5",
+      "subtitle": "Splitting a sum, and a product of separate functions",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p><b>Example 5.3.</b> \\(\\displaystyle\\iint_R (xy-3xy^2)\\,dA\\) over \\(R=\\{0\\le x\\le2,\\;1\\le y\\le2\\}\\)</p>\n<table>\n  <tr><td>Split with property i and ii</td><td><reveal>\\(\\displaystyle\\iint_R xy\\,dA-3\\iint_R xy^2\\,dA\\)</reveal></td></tr>\n  <tr><td>First piece</td><td><reveal>\\(\\displaystyle\\int_1^2\\!\\!\\int_0^2 xy\\,dx\\,dy=\\int_1^2 2y\\,dy=\\left.y^2\\right|_1^2=3\\)</reveal></td></tr>\n  <tr><td>Second piece</td><td><reveal>\\(\\displaystyle3\\int_1^2\\!\\!\\int_0^2 xy^2\\,dx\\,dy=3\\int_1^2 2y^2\\,dy=\\left.2y^3\\right|_1^2=14\\)</reveal></td></tr>\n  <tr><td>Answer</td><td><reveal>\\(3-14=\\mathbf{-11}\\)</reveal></td></tr>\n</table>\n<p class=\"muted small\">Negative is fine: over this region the \\(-3xy^2\\) term outweighs \\(xy\\).</p>\n<p><b>Example 5.5.</b> \\(\\displaystyle\\iint_R e^{y}\\cos x\\,dA\\) over \\(R=\\left[0,\\tfrac{\\pi}{2}\\right]\\times[0,1]\\)</p>\n<p>The integrand is a function of \\(x\\) times a function of \\(y\\), so the double integral is a product of two single integrals.</p>\n<table>\n  <tr><td>The \\(y\\) factor</td><td><reveal>\\(\\displaystyle\\int_0^1 e^y\\,dy=e-1\\)</reveal></td></tr>\n  <tr><td>The \\(x\\) factor</td><td><reveal>\\(\\displaystyle\\int_0^{\\pi/2}\\cos x\\,dx=1\\)</reveal></td></tr>\n  <tr><td>Answer</td><td><reveal>\\((e-1)(1)=\\mathbf{e-1}\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "example",
+      "label": "Example 5.7",
+      "subtitle": "Choosing the order wisely: \\(\\displaystyle\\iint_R x\\sin(xy)\\,dA\\) over \\(R=[0,\\pi]\\times[1,2]\\)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Both orders are legal, but one is much easier. Which variable should go first?</p>\n<table>\n  <tr><td>Integrate in \\(y\\) first</td><td><reveal>\\(\\displaystyle\\int_1^2 x\\sin(xy)\\,dy=\\Big[-\\cos(xy)\\Big]_{y=1}^{y=2}=-\\cos(2x)+\\cos x\\). The factor \\(x\\) cancels the chain-rule factor from the substitution \\(u=xy\\).</reveal></td></tr>\n  <tr><td>Then integrate in \\(x\\)</td><td><reveal>\\(\\displaystyle\\int_0^\\pi\\left(-\\cos2x+\\cos x\\right)dx=\\left[-\\frac{\\sin2x}{2}+\\sin x\\right]_0^\\pi=0\\)</reveal></td></tr>\n  <tr><td>What if we had integrated in \\(x\\) first?</td><td><reveal>We would need integration by parts on \\(x\\sin(xy)\\), then more work in \\(y\\). Same answer, much more effort.</reveal></td></tr>\n  <tr><td>Answer</td><td><reveal>\\(\\mathbf{0}\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "example",
+      "label": "Area, Volume, and Average Value",
+      "subtitle": "Using the double integral",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  Taking \\(f(x,y)=1\\) in the definition makes every box have height \\(1\\), so the \"volume\" equals the base area:\n</p>\n$$A(R)=\\iint_R 1\\,dA.$$\n<p><b>Example 5.8.</b> Find the area of \\(R=[0,3]\\times[0,2]\\).</p>\n<p><reveal>\\(\\displaystyle\\int_0^2\\!\\!\\int_0^3 1\\,dx\\,dy=\\int_0^2 3\\,dy=\\mathbf{6}\\), as expected for a \\(3\\times2\\) rectangle.</reveal></p>\n<p>\n  <b>Example 5.9.</b> Find the volume of the solid bounded above by the elliptic paraboloid \\(2x^2+y^2+z=27\\),\n  below by the \\(xy\\)-plane, and on the sides by \\(x=3\\), \\(y=3\\), and the coordinate planes.\n</p>\n<riemann-boxes f=\"27 - 2*x*x - y*y\" xmin=\"0\" xmax=\"3\" ymin=\"0\" ymax=\"3\" m=\"10\" n=\"10\" rule=\"mid\" sliders square max=\"24\"></riemann-boxes>\n<table>\n  <tr><td>The height</td><td><reveal>\\(z=27-2x^2-y^2\\) over \\(R=[0,3]\\times[0,3]\\)</reveal></td></tr>\n  <tr><td>Inner integral (in \\(x\\))</td><td><reveal>\\(\\displaystyle\\int_0^3(27-2x^2-y^2)\\,dx=\\left[27x-\\tfrac23x^3-xy^2\\right]_0^3=63-3y^2\\)</reveal></td></tr>\n  <tr><td>Outer integral (in \\(y\\))</td><td><reveal>\\(\\displaystyle\\int_0^3(63-3y^2)\\,dy=\\left.63y-y^3\\right|_0^3=189-27=\\mathbf{162}\\)</reveal></td></tr>\n</table>\n<p><b>Average value.</b> \\(f_{\\text{ave}}=\\dfrac{1}{A(R)}\\iint_R f(x,y)\\,dA\\): the height of the flat box with the same volume.</p>"
+    },
+    {
+      "tag": "step",
+      "label": "Problems from the Text",
+      "subtitle": "OpenStax Section 5.1 exercises (numbers as in the book)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">Evaluate each iterated integral, choosing the easier order when it matters. Then reveal.</p>\n<table>\n  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>\n  <tbody>\n  <tr><td>13</td><td>\\(\\displaystyle\\int_{-1}^{1}\\!\\int_{-2}^{2}(2x+3y+5)\\,dx\\,dy\\)</td><td><reveal>Inner: \\(\\left[x^2+3xy+5x\\right]_{-2}^{2}=12y+20\\). Outer: \\(\\int_{-1}^1(12y+20)\\,dy=\\mathbf{40}\\).</reveal></td></tr>\n  <tr><td>29</td><td>\\(\\displaystyle\\int_0^1\\!\\int_1^2 x\\,e^{x+4y}\\,dy\\,dx\\)</td><td><reveal>\\(e^{x+4y}=e^xe^{4y}\\), so it separates: \\(\\left(\\int_0^1xe^x\\,dx\\right)\\left(\\int_1^2e^{4y}dy\\right)=(1)\\cdot\\dfrac{e^8-e^4}{4}\\approx\\mathbf{731.59}\\).</reveal></td></tr>\n  <tr><td>35</td><td>Average value of \\(f(x,y)=-x+2y\\) over \\(R=[0,1]\\times[0,1]\\).</td><td><reveal>\\(A(R)=1\\), \\(\\iint_R f\\,dA=-\\tfrac12+1=\\tfrac12\\). Average \\(=\\mathbf{\\tfrac12}\\).</reveal></td></tr>\n  </tbody>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Summary and What Comes Next",
+      "subtitle": "The one-page version",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n  <tr><td><b>Idea</b></td><td>the double integral is the signed volume under \\(z=f(x,y)\\) over a region, the limit of box volumes</td></tr>\n  <tr><td><b>Definition</b></td><td>\\(\\displaystyle\\iint_R f\\,dA=\\lim\\sum\\sum f(x_{ij}^*,y_{ij}^*)\\,\\Delta A\\)</td></tr>\n  <tr><td><b>Computing</b></td><td>Fubini: two single integrals, in either order, for a rectangle</td></tr>\n  <tr><td><b>Smart moves</b></td><td>split sums and constants; factor products; pick the easier order</td></tr>\n  <tr><td><b>Uses</b></td><td>area (\\(f=1\\)), volume, average value \\(\\frac{1}{A(R)}\\iint_R f\\,dA\\)</td></tr>\n</table>\n<p class=\"muted small\">\n  Next lesson: regions that are not rectangles. The inner limits then become functions, such as\n  \\(g_1(x)\\le y\\le g_2(x)\\), and the order of integration starts to matter much more.\n</p>"
     }
-  ],
-  "notes": ""
+  ]
 }

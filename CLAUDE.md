@@ -552,6 +552,33 @@ vertices, branches), `play`/`sliders`/`ghost`/`arrows` as in `<jsx-transform>`,
 Checked in Chrome: trace, probe, sketch (tan and csc), and the matching grid render with no
 console errors.
 
+### Calculus III tags: `<jsx-lagrange>`, `<jsx-fubini>`, `<riemann-boxes>` (added 2026-10-01)
+
+Built when the Lagrange Multipliers and Double Integrals lessons (`calculus3/fall2025/2025-10-01-Lagrange-multipliers/`,
+`.../2025-10-06-double-integrals/`) were redone against OpenStax 4.8 and 5.1. Both lessons have a `content.json`
+sidecar and a hand-kept `index.html` (JSXGraph links in `<head>`), so they were generated together from one
+step list (head/markup match the other jsx lessons). Edit both files if you hand-edit either.
+
+- `<jsx-lagrange f g curve-x curve-y tmin tmax t xmin xmax ymin ymax levels crit>` (`js/jsxgraph.js`): contours of
+  `f`, the constraint `g = 0` (parametrized by `curve-x/curve-y` in `t`), a point the instructor slides along it,
+  unit-direction arrows for the gradients (the `∇g` arrow is drawn 0.7x as long so it stays visible when parallel),
+  the live contour of `f` through the point (`implicitcurve`), a readout that turns green when `∇f ∥ ∇g` and
+  reports `λ`, and a strip graph of `f` restricted to the constraint. `keepaspectratio` is on so perpendicular
+  looks perpendicular: height comes from the width via `LAGRANGE_ASPECT`, centered on the midpoint of `ymin/ymax`.
+  Gradients are central finite differences, so authors give plain expressions, not derivatives. `crit` = t values
+  for the "jump to candidate" buttons.
+- `<jsx-fubini f xmin xmax ymin ymax order>` (`js/jsxgraph.js`): two boards. Left: the cross-section area under
+  `f` at a fixed `x` (or `y`); right: `A(x)` with the area collected so far shaded. Order buttons swap which
+  variable is sliced; the totals match.
+- `<riemann-boxes f xmin xmax ymin ymax m n rule sliders square rules play max>` (`js/riemann.js`, imported by
+  `boot.js`): canvas 3D, drag to rotate, painter's-algorithm face sort, no library. Boxes for an `m x n` grid with
+  sample rule `ul|ur|ll|lr|mid`, live Riemann sum vs a fine-midpoint "exact" value. Expressions are plain JS with
+  `sin cos tan exp sqrt abs log pow pi` in scope (same convention as `<jsx-lagrange>`).
+
+All three verified in Chrome (Lagrange steps 2 and golf example, Riemann intro and sample-point steps, Fubini
+slicing): no console errors, readouts match the hand answers (27, 540, 162, 15). Practice answers in both lessons
+were checked numerically rather than copied from OpenStax's checkpoint list.
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:

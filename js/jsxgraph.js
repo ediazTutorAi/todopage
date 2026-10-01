@@ -2639,6 +2639,432 @@ function renderJsxTrigGraph(el) {
   gotoStage(0);
 }
 
+// ---------------------------------------------------------------------------
+// Calculus III tags (Lagrange multipliers, double integrals). Expressions are plain JS
+// with sin, cos, tan, exp, sqrt, abs, log, pow and pi in scope.
+function compileMath(args, expr, tag, attr) {
+  try {
+    // eslint-disable-next-line no-new-func -- instructor-authored lesson content, not user input.
+    return new Function(...args, 'const {sin,cos,tan,exp,sqrt,abs,log,pow,PI:pi}=Math; return (' + expr + ');');
+  } catch (err) {
+    console.error(`<${tag}>: could not parse ${attr}="${expr}"`, err);
+    return null;
+  }
+}
+
+// <jsx-lagrange f="x*y" g="x*x+y*y-8" curve-x="sqrt(8)*cos(t)" curve-y="sqrt(8)*sin(t)"
+//   tmin="0" tmax="2*pi" t="0.3" xmin="-5" xmax="5" ymin="-3" ymax="3"
+//   levels="-4 -2 2 4" crit="0.785 2.356">
+//
+// Constrained optimization picture: contours of f, the constraint curve g = 0, and a point P
+// the instructor slides along the constraint. Shows the gradients of f and g at P as unit
+// direction arrows, the live contour of f through P, and (strip below) f restricted to the
+// constraint as a function of the parameter t. At an extremum the contour through P just
+// touches the constraint, the arrows line up, and the strip graph flattens: that is the
+// Lagrange condition grad f = lambda grad g made visible.
+//
+// `curve-x`/`curve-y` parametrize g = 0 in t (t in [tmin, tmax]). `xmin/xmax` set the width;
+// the height follows from the board's fixed aspect ratio (keepaspectratio, so perpendicular
+// really looks perpendicular) around the midpoint of ymin/ymax. `crit` lists t values for the
+// "jump to a critical point" buttons. `levels` draws faint contours. `no-strip` hides the
+// restricted-f graph.
+const LAGRANGE_ASPECT = 1.7;
+
+function renderJsxLagrange(el) {
+  const TAG = 'jsx-lagrange';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const f = compileMath(['x', 'y'], el.getAttribute('f') || '0', TAG, 'f');
+  const g = compileMath(['x', 'y'], el.getAttribute('g') || '0', TAG, 'g');
+  const cxF = compileMath(['t'], el.getAttribute('curve-x') || 't', TAG, 'curve-x');
+  const cyF = compileMath(['t'], el.getAttribute('curve-y') || '0', TAG, 'curve-y');
+  if (!f || !g || !cxF || !cyF) return;
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const tmin = num('tmin', 0);
+  const tmax = num('tmax', 1);
+  let tcur = num('t', (tmin + tmax) / 2);
+  const xmin = num('xmin', -5);
+  const xmax = num('xmax', 5);
+  const ymid = (num('ymin', -3) + num('ymax', 3)) / 2;
+  const yhalf = (xmax - xmin) / LAGRANGE_ASPECT / 2;
+  const levels = (el.getAttribute('levels') || '').split(/[\s,]+/).filter(Boolean).map(Number).filter(Number.isFinite);
+  const crit = (el.getAttribute('crit') || '').split(/[\s,]+/).filter(Boolean).map((s) => evalNumAttr({ getAttribute: () => s }, 'x', NaN, TAG)).filter(Number.isFinite);
+  const showStrip = !el.hasAttribute('no-strip');
+
+  const px = () => cxF(tcur);
+  const py = () => cyF(tcur);
+  const H = 1e-5;
+  const grad = (fn, x, y) => [(fn(x + H, y) - fn(x - H, y)) / (2 * H), (fn(x, y + H) - fn(x, y - H)) / (2 * H)];
+  const fOnCurve = (t) => f(cxF(t), cyF(t));
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--lagrange';
+  host.id = `jsx-board-${++boardCounter}`;
+  container.append(readout, host);
+  let stripHost = null;
+  if (showStrip) {
+    const cap = document.createElement('div');
+    cap.className = 'muted small jsx-strip-cap';
+    cap.textContent = 'f along the constraint, as the point moves (horizontal axis: t)';
+    stripHost = document.createElement('div');
+    stripHost.className = 'jsx-board jsx-board--strip';
+    stripHost.id = `jsx-board-${++boardCounter}`;
+    container.append(cap, stripHost);
+  }
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.appendChild(controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const muted = cssVar('--muted') || '#6b7280';
+  const negative = cssVar('--negative') || '#c0392b';
+
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymid + yhalf, xmax, ymid - yhalf],
+    axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  levels.forEach((c) => {
+    board.create('implicitcurve', [(x, y) => f(x, y) - c], {
+      strokeColor: muted, strokeOpacity: 0.55, strokeWidth: 2, highlight: false, fixed: true,
+    });
+  });
+  board.create('curve', [(t) => cxF(t), (t) => cyF(t), tmin, tmax], {
+    strokeColor: ink, strokeWidth: CURVE_STROKE, highlight: false, fixed: true,
+  });
+  board.create('implicitcurve', [(x, y) => f(x, y) - f(px(), py())], {
+    strokeColor: accent, strokeWidth: CURVE_STROKE - 1, highlight: false, fixed: true,
+  });
+
+  const unit = (v) => { const L = Math.hypot(v[0], v[1]); return L < 1e-9 ? [0, 0] : [v[0] / L, v[1] / L]; };
+  const ARROW = (xmax - xmin) * 0.1;
+  const tail = board.create('point', [px, py], { visible: false, fixed: true, name: '' });
+  const tipOf = (fn, i, k) => () => px() + k * ARROW * unit(grad(fn, px(), py()))[i];
+  const tipOfY = (fn, k) => () => py() + k * ARROW * unit(grad(fn, px(), py()))[1];
+  const tipF = board.create('point', [tipOf(f, 0, 1), tipOfY(f, 1)], { visible: false, fixed: true, name: '' });
+  const tipG = board.create('point', [tipOf(g, 0, 0.7), tipOfY(g, 0.7)], { visible: false, fixed: true, name: '' });
+  board.create('arrow', [tail, tipF], { strokeColor: accent, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  board.create('arrow', [tail, tipG], { strokeColor: negative, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  board.create('text', [() => tipF.X() + ARROW * 0.12, () => tipF.Y() + ARROW * 0.12, '∇f'], {
+    fontSize: READOUT_VALUE_FONT - 2, color: accent, fixed: true, cssStyle: 'font-weight:800',
+  });
+  board.create('text', [() => tipG.X() + ARROW * 0.12, () => tipG.Y() - ARROW * 0.25, '∇g'], {
+    fontSize: READOUT_VALUE_FONT - 2, color: negative, fixed: true, cssStyle: 'font-weight:800',
+  });
+  board.create('point', [px, py], {
+    name: '', size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: ink, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  });
+
+  // strip: f restricted to the constraint
+  let strip = null;
+  if (showStrip) {
+    let lo = Infinity; let hi = -Infinity;
+    for (let i = 0; i <= 400; i++) {
+      const v = fOnCurve(tmin + ((tmax - tmin) * i) / 400);
+      if (Number.isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    }
+    const pad = (hi - lo) * 0.18 || 1;
+    strip = JXG.JSXGraph.initBoard(stripHost.id, {
+      boundingbox: [tmin - (tmax - tmin) * 0.04, hi + pad, tmax + (tmax - tmin) * 0.04, lo - pad],
+      axis: false, showNavigation: false, showCopyright: false, keepaspectratio: false,
+      pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+    });
+    strip.create('functiongraph', [fOnCurve, tmin, tmax], { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+    strip.create('line', [[() => tcur, 0], [() => tcur, 1]], { strokeColor: muted, strokeWidth: 2, dash: 2, highlight: false, fixed: true });
+    strip.create('line', [[0, () => fOnCurve(tcur)], [1, () => fOnCurve(tcur)]], { strokeColor: negative, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true });
+    strip.create('point', [() => tcur, () => fOnCurve(tcur)], {
+      name: '', size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: accent, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+    });
+    strip.create('text', [tmin, hi + pad * 0.6, () => `f = ${fmtNum(fOnCurve(tcur))}`], {
+      fontSize: READOUT_VALUE_FONT - 2, color: accent, fixed: true, cssStyle: 'font-weight:800',
+    });
+  }
+
+  const f2 = (v) => fmtNum(v).replace('-', '−');
+  function updateReadout() {
+    const x = px(); const y = py();
+    const a = grad(f, x, y); const b = grad(g, x, y);
+    const la = Math.hypot(a[0], a[1]); const lb = Math.hypot(b[0], b[1]);
+    const cross = a[0] * b[1] - a[1] * b[0];
+    const sinA = la * lb < 1e-9 ? 0 : Math.abs(cross) / (la * lb);
+    const parallel = sinA < 0.02;
+    let lam = '';
+    if (parallel && lb > 1e-9) lam = ` &nbsp; λ = ${f2((a[0] * b[0] + a[1] * b[1]) / (lb * lb))}`;
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">P = (<b>${f2(x)}</b>, <b>${f2(y)}</b>)</span>` +
+      `<span class="jsx-trace-chip">f(P) = <b>${f2(f(x, y))}</b></span>` +
+      `<span class="jsx-trace-chip" style="color:${accent}">∇f = ⟨${f2(a[0])}, ${f2(a[1])}⟩</span>` +
+      `<span class="jsx-trace-chip" style="color:${negative}">∇g = ⟨${f2(b[0])}, ${f2(b[1])}⟩</span>` +
+      (parallel
+        ? `<span class="jsx-trace-chip jsx-trace-main is-parallel">∇f ∥ ∇g${lam}</span>`
+        : `<span class="jsx-trace-chip">not parallel (∇f × ∇g = ${f2(cross)})</span>`);
+  }
+  function refresh() {
+    updateReadout();
+    const input = controls.querySelector('input');
+    if (input && Math.abs(parseFloat(input.value) - tcur) > 1e-9) input.value = tcur;
+    board.update();
+    if (strip) strip.update();
+  }
+
+  // controls
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = '<span class="jsx-slider-name">t <small>slide along the constraint</small></span>' +
+    `<input type="range" min="${tmin}" max="${tmax}" step="${(tmax - tmin) / 800}" value="${tcur}">`;
+  const input = row.querySelector('input');
+  let raf = null;
+  const stop = () => { if (raf) cancelAnimationFrame(raf); raf = null; playBtn.textContent = '▶ Sweep'; };
+  input.addEventListener('input', () => { stop(); tcur = parseFloat(input.value); refresh(); });
+  input.addEventListener('pointerup', () => input.blur());
+  const playBtn = document.createElement('button');
+  playBtn.type = 'button'; playBtn.className = 'btn'; playBtn.textContent = '▶ Sweep';
+  playBtn.addEventListener('pointerup', () => playBtn.blur());
+  playBtn.addEventListener('click', () => {
+    if (raf) { stop(); return; }
+    if (tcur >= tmax - 1e-6) tcur = tmin;
+    playBtn.textContent = '⏸ Pause';
+    let last = performance.now();
+    const tick = (now) => {
+      tcur = Math.min(tmax, tcur + ((now - last) / 1000) * ((tmax - tmin) / 16));
+      last = now;
+      refresh();
+      if (tcur < tmax) raf = requestAnimationFrame(tick); else stop();
+    };
+    raf = requestAnimationFrame(tick);
+  });
+  controls.appendChild(playBtn);
+  if (crit.length) {
+    const group = document.createElement('div');
+    group.className = 'jsx-switch';
+    crit.forEach((tc, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn';
+      b.textContent = `Jump to candidate ${i + 1}`;
+      b.addEventListener('pointerup', () => b.blur());
+      b.addEventListener('click', () => { stop(); tcur = tc; refresh(); });
+      group.appendChild(b);
+    });
+    controls.appendChild(group);
+  }
+  controls.appendChild(row);
+  refresh();
+}
+
+// <jsx-fubini f="3*x*x - y" xmin="0" xmax="2" ymin="0" ymax="3">
+//
+// Fubini's theorem, animated. Slice the solid at a fixed x (left): the cross-section is the
+// area under z = f(x, y), A(x) = integral of f dy. Then A(x) itself is plotted as x moves
+// (right) and the area accumulated so far is shaded: its final value is the double integral.
+// The order button swaps the roles of x and y (integrate dx first, slice at fixed y), and the
+// total comes out the same. Instructor-driven: slider, Sweep, order toggle.
+function renderJsxFubini(el) {
+  const TAG = 'jsx-fubini';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const f = compileMath(['x', 'y'], el.getAttribute('f') || '0', TAG, 'f');
+  if (!f) return;
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const lim = { x: [num('xmin', 0), num('xmax', 1)], y: [num('ymin', 0), num('ymax', 1)] };
+  const state = { outer: el.getAttribute('order') === 'yx' ? 'y' : 'x', s: null };
+  const inner = () => (state.outer === 'x' ? 'y' : 'x');
+  const fv = (o, i, u, w) => (o === 'x' ? f(u, w) : f(w, u)); // outer value u, inner value w
+
+  // cached A(u) tables for each order
+  const cache = {};
+  function table(o) {
+    if (cache[o]) return cache[o];
+    const i = o === 'x' ? 'y' : 'x';
+    const [ol, oh] = lim[o]; const [il, ih] = lim[i];
+    const N = 240; const M = 240;
+    const us = []; const As = [];
+    for (let a = 0; a <= N; a++) {
+      const u = ol + ((oh - ol) * a) / N;
+      let s = 0;
+      for (let b = 0; b < M; b++) s += fv(o, i, u, il + ((ih - il) * (b + 0.5)) / M);
+      us.push(u); As.push(s * ((ih - il) / M));
+    }
+    let tot = 0;
+    for (let a = 0; a < N; a++) tot += ((As[a] + As[a + 1]) / 2) * ((oh - ol) / N);
+    cache[o] = { us, As, tot, lo: Math.min(0, ...As), hi: Math.max(0, ...As) };
+    return cache[o];
+  }
+  const Aat = (o, u) => {
+    const T = table(o); const [ol, oh] = lim[o];
+    const k = Math.max(0, Math.min(T.us.length - 1, ((u - ol) / (oh - ol)) * (T.us.length - 1)));
+    const k0 = Math.floor(k); const k1 = Math.min(T.us.length - 1, k0 + 1);
+    return T.As[k0] + (T.As[k1] - T.As[k0]) * (k - k0);
+  };
+  const accum = (o, s) => {
+    const T = table(o); let tot = 0; const [ol, oh] = lim[o];
+    const h = (oh - ol) / (T.us.length - 1);
+    for (let a = 0; a < T.us.length - 1; a++) {
+      const u0 = T.us[a]; const u1 = T.us[a + 1];
+      if (u0 >= s) break;
+      const w = Math.min(u1, s) - u0;
+      const A1 = T.As[a]; const A2 = Aat(o, Math.min(u1, s));
+      tot += ((A1 + A2) / 2) * w; void h;
+    }
+    return tot;
+  };
+  let zlo = 0; let zhi = 0;
+  for (let a = 0; a <= 30; a++) for (let b = 0; b <= 30; b++) {
+    const v = f(lim.x[0] + ((lim.x[1] - lim.x[0]) * a) / 30, lim.y[0] + ((lim.y[1] - lim.y[0]) * b) / 30);
+    if (Number.isFinite(v)) { zlo = Math.min(zlo, v); zhi = Math.max(zhi, v); }
+  }
+  state.s = lim[state.outer][0] + (lim[state.outer][1] - lim[state.outer][0]) * 0.35;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const grid = document.createElement('div');
+  grid.className = 'jsx-fubini-grid';
+  const mk = (cap) => {
+    const box = document.createElement('div');
+    const c = document.createElement('div');
+    c.className = 'muted small jsx-strip-cap';
+    const h = document.createElement('div');
+    h.className = 'jsx-board jsx-board--fubini';
+    h.id = `jsx-board-${++boardCounter}`;
+    box.append(c, h);
+    grid.appendChild(box);
+    return { cap: c, host: h, set: cap };
+  };
+  const L = mk(); const R = mk();
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, grid, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const muted = cssVar('--muted') || '#6b7280';
+  const negative = cssVar('--negative') || '#c0392b';
+  const opts = (bb) => ({
+    boundingbox: bb, axis: true, showNavigation: false, showCopyright: false, keepaspectratio: false,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  const bbLeft = () => { const [a, b] = lim[inner()]; const p = (b - a) * 0.06; return [a - p, zhi + (zhi - zlo) * 0.15 + 0.001, b + p, zlo - (zhi - zlo) * 0.12 - 0.001]; };
+  const bbRight = () => { const T = table(state.outer); const [a, b] = lim[state.outer]; const p = (b - a) * 0.06; const r = (T.hi - T.lo) || 1; return [a - p, T.hi + r * 0.18, b + p, T.lo - r * 0.12]; };
+  const bl = JXG.JSXGraph.initBoard(L.host.id, opts(bbLeft()));
+  const br = JXG.JSXGraph.initBoard(R.host.id, opts(bbRight()));
+  [bl, br].forEach((b) => styleAxes(b, ink));
+
+  const sliceData = () => {
+    const o = state.outer; const i = inner(); const [il, ih] = lim[i];
+    const xs = []; const ys = [];
+    for (let a = 0; a <= 160; a++) { const w = il + ((ih - il) * a) / 160; xs.push(w); ys.push(fv(o, i, state.s, w)); }
+    return { xs, ys };
+  };
+  const sliceFill = () => {
+    const d = sliceData(); const [il, ih] = lim[inner()];
+    return { xs: [...d.xs, ih, il], ys: [...d.ys, 0, 0] };
+  };
+  const makeCurve = (b, get, style) => { const c = b.create('curve', [[0], [0]], style); c.updateDataArray = function u() { const d = get(); this.dataX = d.xs; this.dataY = d.ys; }; b.update(); return c; };
+  makeCurve(bl, sliceFill, { strokeWidth: 0, fillColor: accent, fillOpacity: 0.28, highlight: false });
+  makeCurve(bl, sliceData, { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+  bl.create('text', [() => bbLeft()[0] + (bbLeft()[2] - bbLeft()[0]) * 0.1, () => bbLeft()[1] - (bbLeft()[1] - bbLeft()[3]) * 0.1,
+    () => `z = f at ${state.outer} = ${fmtNum(state.s)}`], { fontSize: READOUT_VALUE_FONT - 4, color: accent, fixed: true, cssStyle: 'font-weight:800' });
+  bl.create('text', [() => bbLeft()[2] - (bbLeft()[2] - bbLeft()[0]) * 0.03, () => (zlo < 0 ? zlo * 0.15 : -(zhi - zlo) * 0.1), () => inner()],
+    { anchorX: 'right', fontSize: READOUT_VALUE_FONT - 2, color: ink, fixed: true, cssStyle: 'font-weight:800' });
+
+  const curveR = () => { const T = table(state.outer); return { xs: T.us, ys: T.As }; };
+  const fillR = () => {
+    const T = table(state.outer); const [ol] = lim[state.outer];
+    const xs = []; const ys = [];
+    T.us.forEach((u, a) => { if (u <= state.s) { xs.push(u); ys.push(T.As[a]); } });
+    xs.push(state.s, state.s, ol); ys.push(Aat(state.outer, state.s), 0, 0);
+    return { xs, ys };
+  };
+  makeCurve(br, curveR, { strokeColor: muted, strokeWidth: CURVE_STROKE - 1, highlight: false });
+  makeCurve(br, fillR, { strokeWidth: 0, fillColor: negative, fillOpacity: 0.3, highlight: false });
+  br.create('point', [() => state.s, () => Aat(state.outer, state.s)], {
+    name: '', size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: negative, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  });
+  br.create('text', [() => bbRight()[0] + (bbRight()[2] - bbRight()[0]) * 0.1, () => bbRight()[1] - (bbRight()[1] - bbRight()[3]) * 0.1,
+    () => `A(${state.outer}) = ∫ f d${inner()}`], { fontSize: READOUT_VALUE_FONT - 4, color: negative, fixed: true, cssStyle: 'font-weight:800' });
+  br.create('text', [() => bbRight()[2] - (bbRight()[2] - bbRight()[0]) * 0.03, () => -(bbRight()[1] - bbRight()[3]) * 0.1, () => state.outer],
+    { anchorX: 'right', fontSize: READOUT_VALUE_FONT - 2, color: ink, fixed: true, cssStyle: 'font-weight:800' });
+
+  const f2 = (v) => fmtNum(v).replace('-', '−');
+  function refresh() {
+    const o = state.outer; const i = inner();
+    const T = table(o);
+    L.cap.textContent = `Slice at a fixed ${o}: the area under the curve is A(${o})`;
+    R.cap.textContent = `A(${o}) as ${o} moves; shaded = area collected so far`;
+    const done = state.s >= lim[o][1] - 1e-6;
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">∬ f d${i} d${o}: &nbsp;${o} = <b>${f2(state.s)}</b></span>` +
+      `<span class="jsx-trace-chip">A(${o}) = <b>${f2(Aat(o, state.s))}</b></span>` +
+      `<span class="jsx-trace-chip">collected = <b>${f2(accum(o, state.s))}</b></span>` +
+      `<span class="jsx-trace-chip ${done ? 'jsx-trace-main' : ''}">total = <b>${f2(T.tot)}</b></span>`;
+    bl.setBoundingBox(bbLeft(), false);
+    br.setBoundingBox(bbRight(), false);
+    bl.update(); br.update();
+    const input = controls.querySelector('input');
+    if (input) { input.min = lim[o][0]; input.max = lim[o][1]; input.step = (lim[o][1] - lim[o][0]) / 400; if (Math.abs(parseFloat(input.value) - state.s) > 1e-9) input.value = state.s; }
+    controls.querySelectorAll('.jsx-switch .btn').forEach((b) => b.classList.toggle('is-on', b.dataset.o === o));
+  }
+
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = '<span class="jsx-slider-name">slice <small>drag it</small></span><input type="range" min="0" max="1" step="0.01">';
+  const input = row.querySelector('input');
+  let raf = null;
+  const stop = () => { if (raf) cancelAnimationFrame(raf); raf = null; sweep.textContent = '▶ Sweep'; };
+  input.addEventListener('input', () => { stop(); state.s = parseFloat(input.value); refresh(); });
+  input.addEventListener('pointerup', () => input.blur());
+  const sweep = document.createElement('button');
+  sweep.type = 'button'; sweep.className = 'btn'; sweep.textContent = '▶ Sweep';
+  sweep.addEventListener('pointerup', () => sweep.blur());
+  sweep.addEventListener('click', () => {
+    if (raf) { stop(); return; }
+    const [ol, oh] = lim[state.outer];
+    if (state.s >= oh - 1e-6) state.s = ol;
+    sweep.textContent = '⏸ Pause';
+    let last = performance.now();
+    const tick = (now) => {
+      state.s = Math.min(oh, state.s + ((now - last) / 1000) * ((oh - ol) / 9));
+      last = now;
+      refresh();
+      if (state.s < oh) raf = requestAnimationFrame(tick); else stop();
+    };
+    raf = requestAnimationFrame(tick);
+  });
+  const sw = document.createElement('div');
+  sw.className = 'jsx-switch';
+  [['x', '∫∫ f dy dx'], ['y', '∫∫ f dx dy']].forEach(([o, label]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.dataset.o = o; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => {
+      stop();
+      const frac = (state.s - lim[state.outer][0]) / (lim[state.outer][1] - lim[state.outer][0]);
+      state.outer = o;
+      state.s = lim[o][0] + frac * (lim[o][1] - lim[o][0]);
+      refresh();
+    });
+    sw.appendChild(b);
+  });
+  controls.append(sweep, sw, row);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -2647,4 +3073,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-sine-trace').forEach(renderJsxSineTrace);
   document.querySelectorAll('jsx-transform').forEach(renderJsxTransform);
   document.querySelectorAll('jsx-trig-graph').forEach(renderJsxTrigGraph);
+  document.querySelectorAll('jsx-lagrange').forEach(renderJsxLagrange);
+  document.querySelectorAll('jsx-fubini').forEach(renderJsxFubini);
 });

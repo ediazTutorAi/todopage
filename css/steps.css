@@ -520,3 +520,24 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-trig-grid figcaption { font-size: 1rem; min-height: 1.6em; }
 @media (max-width: 900px) { .jsx-trig-grid { grid-template-columns: repeat(2, 1fr); } }
 .jsx-trig-grid > figure, .jsx-trig-grid .jsx-diagram { min-width: 0; }
+
+/* <riemann-boxes> (js/riemann.js): canvas 3D Riemann boxes for double integrals. */
+.step-body .riemann-diagram { width: min(920px, 100%); margin: 0.9rem auto; }
+.riemann-canvas { width: 100%; aspect-ratio: 1.9 / 1; border: 1px solid var(--line); border-radius: 10px; cursor: grab; display: block; }
+.riemann-canvas:active { cursor: grabbing; }
+.riemann-readout { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; margin-bottom: 0.5rem; }
+.riemann-chip { border: 2px solid var(--line); border-radius: 999px; padding: 0.15rem 0.8rem; font-size: 1.05rem; color: var(--ink); }
+.riemann-chip b { color: var(--accent); }
+.riemann-main { border-color: var(--accent); background: #eaf3fb; font-weight: 600; }
+.riemann-chip.is-close { border-color: #2e8b57; background: #e8f6ee; }
+.riemann-hint { margin-top: 0.25rem; }
+
+/* <jsx-lagrange> and <jsx-fubini> (js/jsxgraph.js, Calculus III). */
+.jsx-board--lagrange { aspect-ratio: 1.7 / 1; }
+.jsx-board--strip { aspect-ratio: 5 / 1; }
+.jsx-strip-cap { margin: 0.5rem 0 0.2rem; }
+.jsx-trace-main.is-parallel { border-color: #2e8b57; background: #e8f6ee; }
+.jsx-fubini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.jsx-fubini-grid > div { min-width: 0; }
+.jsx-board--fubini { aspect-ratio: 1.3 / 1; }
+@media (max-width: 800px) { .jsx-fubini-grid { grid-template-columns: 1fr; } }

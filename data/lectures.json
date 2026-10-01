@@ -193,9 +193,11 @@
     "date": "2026-03-02",
     "title": "Double Integrals",
     "subtitle": "",
-    "description": "",
+    "description": "Double integrals over rectangles built from boxes you can rotate and refine, sample-point rules, Fubini by slicing in either order, properties, and area, volume and average value.",
     "tags": [
-      "double Integrals"
+      "double Integrals",
+      "Riemann sums",
+      "Fubini"
     ],
     "url": "calculus3/fall2025/2025-10-06-double-integrals/index.html"
   },
@@ -205,9 +207,11 @@
     "date": "2026-02-26",
     "title": "Lagrange Multipliers",
     "subtitle": "",
-    "description": "",
+    "description": "Constrained optimization through a live picture: slide a point along the constraint and watch the contour of f touch it exactly where the gradients line up. One constraint, three variables, two constraints, and what the multiplier means.",
     "tags": [
-      "Lagrange multipliers"
+      "Lagrange multipliers",
+      "Optimization",
+      "Gradient"
     ],
     "url": "calculus3/fall2025/2025-10-01-Lagrange-multipliers/index.html"
   },
