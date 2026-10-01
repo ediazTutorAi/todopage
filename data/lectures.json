@@ -484,9 +484,11 @@
     "date": "2025-02-24",
     "title": "Coordinates",
     "subtitle": "",
-    "description": "",
+    "description": "Coordinates with respect to a basis, the B-matrix of a linear transformation, change of basis (A = SBS^-1), similar matrices, and when a basis makes the matrix diagonal, with a draggable tilted-grid diagram.",
     "tags": [
-      "coordinates"
+      "coordinates",
+      "Change of basis",
+      "Similar matrices"
     ],
     "url": "linear-algebra/fall2025/2025-10-02-coordinates/index.html"
   },

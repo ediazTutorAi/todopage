@@ -579,6 +579,21 @@ All three verified in Chrome (Lagrange steps 2 and golf example, Riemann intro a
 slicing): no console errors, readouts match the hand answers (27, 540, 162, 15). Practice answers in both lessons
 were checked numerically rather than copied from OpenStax's checkpoint list.
 
+### `<jsx-basis>`: coordinates with respect to a basis (added 2026-10-01)
+
+`<jsx-basis v1="3,1" v2="-1,3" x="10,10" a="0.9,0.3;0.3,0.1" drag-basis snap-c>` (`renderJsxBasis` in
+`js/jsxgraph.js`), built for the redone Linear Algebra "Coordinates" lesson (Bretscher 3.4, a 55-minute class,
+`linear-algebra/fall2025/2025-10-02-coordinates/index.html`, 10 steps; hand-authored, no `content.json`). Draws the
+standard grid, the tilted B-grid (lines parallel to `v1`/`v2`, so a point's `c1`-`c2` address can be read off),
+`v1`/`v2`, a draggable `x`, and the path `c1 v1` then `c2 v2` to it. Readout: `x`, `[x]_B`, `x = c1 v1 + c2 v2`.
+`a="a,b;c,d"` adds `T(x)=Ax` (purple), `[T(x)]_B`, and the live B-matrix `B = S^-1 A S` (flags "diagonal!" when
+off-diagonals vanish, Theorem 3.4.7). `drag-basis` makes the `v1`/`v2` tips draggable (snapped to integers) so
+students watch `B` change; the Example 10 rotation never goes diagonal. `keepaspectratio` is on (oblique axes keep
+their true angles); height follows from width like `<jsx-lagrange>`. Checked in Chrome: Example 2 gives `[x]=(4,2)`,
+Example 6's basis `((1,2),(1,-1))` gives `B` diag(5,-1), Example 9's reflection basis `((2,1),(-1,2))` gives
+diag(1,-1). Problem answers were checked by hand against the book's definitions. The textbook PDF in
+`linear-algebra/` is a scan (no text layer): read pages as images (section 3.4 is PDF pages 159-173).
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:

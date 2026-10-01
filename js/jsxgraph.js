@@ -3065,6 +3065,188 @@ function renderJsxFubini(el) {
   refresh();
 }
 
+// <jsx-basis v1="3,1" v2="-1,3" x="10,10" a="0.9,0.3;0.3,0.1" drag-basis snap-c>
+//
+// Coordinates with respect to a basis B = (v1, v2) of R^2 (Linear Algebra 3.4). Draws the standard
+// grid, the B-grid (lines parallel to v1 and v2, so the c1-c2 "address" of every point is visible),
+// the vectors v1 and v2, and a draggable vector x with the path c1*v1 then c2*v2 that reaches it.
+// The readout gives x, [x]_B, and the equation x = c1 v1 + c2 v2.
+//
+//   a="a,b;c,d"   standard matrix A of a linear transformation T(x) = Ax. Adds T(x) (purple arrow),
+//                 its coordinates [T(x)]_B, and the B-matrix B = S^-1 A S (live). When B is diagonal
+//                 the readout says so (Theorem 3.4.7).
+//   drag-basis    v1 and v2 become draggable (snapped to integer points), so B can be watched
+//                 changing as the basis changes.
+//   snap-c        x snaps to half-integer B-coordinates while dragging.
+//   no-grid       hide the B-grid.
+// `xmin/xmax` set the width; height follows from a fixed aspect ratio around the midpoint of
+// ymin/ymax (keepaspectratio, so the oblique axes keep their true angles).
+const BASIS_ASPECT = 1.6;
+
+function parseNumList(s) {
+  // eslint-disable-next-line no-new-func -- instructor-authored lesson content.
+  return s.split(',').map((t) => new Function(`return (${t});`)());
+}
+function parseMatrix(s) {
+  const rows = s.split(';').map(parseNumList);
+  return rows;
+}
+
+function renderJsxBasis(el) {
+  const TAG = 'jsx-basis';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  let V1; let V2; let X0; let A = null;
+  try {
+    V1 = parseNumList(el.getAttribute('v1') || '1,0');
+    V2 = parseNumList(el.getAttribute('v2') || '0,1');
+    X0 = parseNumList(el.getAttribute('x') || '2,1');
+    if (el.getAttribute('a')) A = parseMatrix(el.getAttribute('a'));
+  } catch (err) {
+    console.error(`<${TAG}>: could not parse an attribute`, err);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const dragBasis = el.hasAttribute('drag-basis');
+  const snapC = el.hasAttribute('snap-c');
+  const showGrid = !el.hasAttribute('no-grid');
+  const xmin = num('xmin', -8);
+  const xmax = num('xmax', 8);
+  const ymid = (num('ymin', -5) + num('ymax', 5)) / 2;
+  const yhalf = (xmax - xmin) / BASIS_ASPECT / 2;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--basis';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+  const green = '#2e8b57';
+  const purple = '#7d3c98';
+
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymid + yhalf, xmax, ymid - yhalf],
+    axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  const pt = (opts) => ({ name: '', size: POINT_SIZE + 1, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false, ...opts });
+  const p1 = board.create('point', [...V1], pt({ fillColor: accent, fixed: !dragBasis, snapToGrid: dragBasis, snapSizeX: 1, snapSizeY: 1, size: POINT_SIZE + 2 }));
+  const p2 = board.create('point', [...V2], pt({ fillColor: green, fixed: !dragBasis, snapToGrid: dragBasis, snapSizeX: 1, snapSizeY: 1, size: POINT_SIZE + 2 }));
+  const O = board.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+  const P = board.create('point', [...X0], pt({ fillColor: ink, size: POINT_SIZE + 2 }));
+
+  const S = () => [[p1.X(), p2.X()], [p1.Y(), p2.Y()]];
+  const det = () => p1.X() * p2.Y() - p2.X() * p1.Y();
+  const inv = () => { const d = det(); return [[p2.Y() / d, -p2.X() / d], [-p1.Y() / d, p1.X() / d]]; };
+  const mv = (M, v) => [M[0][0] * v[0] + M[0][1] * v[1], M[1][0] * v[0] + M[1][1] * v[1]];
+  const ok = () => Math.abs(det()) > 1e-6;
+  const coords = (v) => (ok() ? mv(inv(), v) : [NaN, NaN]);
+  const cP = () => coords([P.X(), P.Y()]);
+
+  // B-grid: lines parallel to v1 (c2 = k) and to v2 (c1 = k).
+  if (showGrid) {
+    const N = 14;
+    for (let k = -N; k <= N; k++) {
+      const major = k === 0;
+      board.create('line', [[() => k * p2.X(), () => k * p2.Y()], [() => k * p2.X() + p1.X(), () => k * p2.Y() + p1.Y()]], {
+        strokeColor: accent, strokeOpacity: major ? 0.8 : 0.32, strokeWidth: major ? 3 : 1.5, highlight: false, fixed: true, straightFirst: true, straightLast: true,
+      });
+      board.create('line', [[() => k * p1.X(), () => k * p1.Y()], [() => k * p1.X() + p2.X(), () => k * p1.Y() + p2.Y()]], {
+        strokeColor: green, strokeOpacity: major ? 0.8 : 0.32, strokeWidth: major ? 3 : 1.5, highlight: false, fixed: true, straightFirst: true, straightLast: true,
+      });
+    }
+  }
+  board.create('arrow', [O, p1], { strokeColor: accent, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  board.create('arrow', [O, p2], { strokeColor: green, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  const lab = (p, txt, color) => board.create('text', [() => p.X() + 0.25, () => p.Y() + 0.35, txt], {
+    fontSize: READOUT_VALUE_FONT, color, fixed: true, cssStyle: 'font-weight:800',
+  });
+  lab(p1, 'v₁', accent);
+  lab(p2, 'v₂', green);
+
+  // path c1*v1 then c2*v2 reaching x
+  const mid = board.create('point', [() => cP()[0] * p1.X(), () => cP()[0] * p1.Y()], { visible: false, fixed: true, name: '' });
+  board.create('segment', [O, mid], { strokeColor: accent, strokeWidth: 4, dash: 2, highlight: false, fixed: true });
+  board.create('segment', [mid, P], { strokeColor: green, strokeWidth: 4, dash: 2, highlight: false, fixed: true });
+  board.create('text', [() => P.X() + 0.25, () => P.Y() + 0.35, 'x'], { fontSize: READOUT_VALUE_FONT, color: ink, fixed: true, cssStyle: 'font-weight:800' });
+
+  let TP = null;
+  if (A) {
+    const tx = () => mv(A, [P.X(), P.Y()]);
+    TP = board.create('point', [() => tx()[0], () => tx()[1]], pt({ fillColor: purple, fixed: true, size: POINT_SIZE + 2 }));
+    board.create('arrow', [O, TP], { strokeColor: purple, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+    board.create('segment', [P, TP], { strokeColor: purple, strokeWidth: 2.5, dash: 3, highlight: false, fixed: true });
+    board.create('text', [() => TP.X() + 0.25, () => TP.Y() + 0.35, 'T(x)'], { fontSize: READOUT_VALUE_FONT, color: purple, fixed: true, cssStyle: 'font-weight:800' });
+  }
+
+  const f2 = (v) => (Number.isFinite(v) ? fmtNum(v).replace('-', '−') : '?');
+  const matHtml = (M) => `<span class="la-mat"><span>${f2(M[0][0])}</span><span>${f2(M[0][1])}</span><span>${f2(M[1][0])}</span><span>${f2(M[1][1])}</span></span>`;
+  const vecHtml = (v) => `<span class="la-mat la-vec"><span>${f2(v[0])}</span><span>${f2(v[1])}</span></span>`;
+
+  function updateReadout() {
+    if (!ok()) {
+      readout.innerHTML = '<span class="jsx-trace-chip jsx-trace-main is-undef">v₁ and v₂ are parallel: they do not form a basis</span>';
+      return;
+    }
+    const c = cP();
+    let html =
+      `<span class="jsx-trace-chip">x = ${vecHtml([P.X(), P.Y()])}</span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">[x]<sub>𝔅</sub> = ${vecHtml(c)}</span>` +
+      `<span class="jsx-trace-chip">x = <b>${f2(c[0])}</b>·v₁ + <b>${f2(c[1])}</b>·v₂</span>`;
+    if (A) {
+      const T = mv(A, [P.X(), P.Y()]);
+      const cT = coords(T);
+      const B = (() => { const AS = [mv(A, [p1.X(), p1.Y()]), mv(A, [p2.X(), p2.Y()])]; const col = (v) => coords(v); const c1 = col(AS[0]); const c2 = col(AS[1]); return [[c1[0], c2[0]], [c1[1], c2[1]]]; })();
+      const diag = Math.abs(B[0][1]) < 0.02 && Math.abs(B[1][0]) < 0.02;
+      html += `<span class="jsx-trace-chip" style="color:${purple}">T(x) = ${vecHtml(T)}</span>` +
+        `<span class="jsx-trace-chip" style="color:${purple}">[T(x)]<sub>𝔅</sub> = ${vecHtml(cT)}</span>` +
+        `<span class="jsx-trace-chip ${diag ? 'jsx-trace-main is-parallel' : ''}">B = ${matHtml(B)}${diag ? ' &nbsp;diagonal!' : ''}</span>`;
+    }
+    readout.innerHTML = html;
+  }
+  function refresh() { updateReadout(); board.update(); }
+
+  P.on('drag', () => {
+    if (snapC && ok()) {
+      const c = cP();
+      const r = [Math.round(c[0] * 2) / 2, Math.round(c[1] * 2) / 2];
+      const m = mv(S(), r);
+      P.moveTo(m);
+    }
+    refresh();
+  });
+  p1.on('drag', refresh);
+  p2.on('drag', refresh);
+
+  const reset = document.createElement('button');
+  reset.type = 'button'; reset.className = 'btn'; reset.textContent = 'Reset';
+  reset.addEventListener('pointerup', () => reset.blur());
+  reset.addEventListener('click', () => { p1.moveTo(V1); p2.moveTo(V2); P.moveTo(X0); refresh(); });
+  controls.appendChild(reset);
+  const hint = document.createElement('span');
+  hint.className = 'muted small';
+  hint.textContent = dragBasis ? 'Drag x, or drag the tips of v₁ and v₂.' : 'Drag x.';
+  controls.appendChild(hint);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -3075,4 +3257,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-trig-graph').forEach(renderJsxTrigGraph);
   document.querySelectorAll('jsx-lagrange').forEach(renderJsxLagrange);
   document.querySelectorAll('jsx-fubini').forEach(renderJsxFubini);
+  document.querySelectorAll('jsx-basis').forEach(renderJsxBasis);
 });

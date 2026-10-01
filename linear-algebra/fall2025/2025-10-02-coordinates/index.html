@@ -3,18 +3,30 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Coordinates</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (interactive basis / coordinate diagrams) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -27,7 +39,7 @@
 
   <header class="site-header">
     <h1>Coordinates</h1>
-    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+    <div class="meta"></div>
   </header>
 
   <main class="container">
@@ -35,98 +47,172 @@
       <div class="card" id="left-card">
 
         <!-- STEPS -->
-
         <div class="step is-visible" data-step="1">
           <div class="step-title">Definition 3.4.1</div>
-          <div class="step-subtitle">Coordinate in a subspace of $\mathbb{R}^n$</div>
+          <div class="step-subtitle">Coordinates in a subspace of \(\mathbb{R}^n\)</div>
           <div class="step-body">
-            Consider a basis $\mathfrak{B}=(\vec{v}_1,\cdots,\vec{v}_m)$ of a subspace V of $\mathbb{R}^n$. By Theorem
-            3.2.10, any vector $\vec{x}$ in V can be written uniquely
-            $$\vec{x}=c_1\vec{v}_1+\cdots+c_m\vec{v}_m$$
-            The scalars $c_1,c_2,\cdots,c_m$ are called the $\mathfrak{B}$-coordinates of $\vec{x}$, and the vector
-            $$\begin{bmatrix}c_1\\c_2\\ \vdots\\c_m\end{bmatrix}$$
-            is the $\mathfrak{B}$-coordinate vector of $\vec{x}$, denoted by $[\vec{x}]_{\mathfrak{B}}$. Thus,
-            $$[\vec{x}]_{\mathfrak{B}}=\begin{bmatrix}c_1\\c_2\\ \vdots \\c_m\end{bmatrix}$$
-            means that $\vec{x}=c_1\vec{v}_1+c_2\vec{v}_2+\cdots+c_m\vec{v}_m$<br>
-            Note that<br>
-            $$\vec{x}=S[\vec{x}]_{\mathfrak{B}}$$
-            where
-            $$S=\begin{bmatrix}|&|&|&|\\ \vec{v}_1&\vec{v}_2&\ldots&\vec{v}_m\\ |&|&|&|\end{bmatrix}$$
-            an $n\times m$ matrix
+<p>Let \(\mathfrak{B}=(\vec v_1,\dots,\vec v_m)\) be a basis of a subspace \(V\) of \(\mathbb{R}^n\). Every \(\vec x\) in \(V\) can be written <b>uniquely</b> as</p>
+$$\vec x=c_1\vec v_1+c_2\vec v_2+\cdots+c_m\vec v_m .$$
+<p>The \(c_i\) are the <b>\(\mathfrak{B}\)-coordinates</b> of \(\vec x\), and
+$$[\vec x]_{\mathfrak{B}}=\begin{bmatrix}c_1\\ \vdots\\ c_m\end{bmatrix}$$
+is the <b>\(\mathfrak{B}\)-coordinate vector</b>: the "address" of \(\vec x\) in the grid made by the basis.</p>
+$$\vec x=S\,[\vec x]_{\mathfrak{B}},\qquad S=\begin{bmatrix}|&&|\\ \vec v_1&\cdots&\vec v_m\\ |&&|\end{bmatrix}\ (n\times m).$$
+<p class="muted small">Example 1. \(\vec v_1=(1,1,1)\), \(\vec v_2=(1,2,3)\), \(V=\operatorname{span}(\vec v_1,\vec v_2)\). Is \(\vec x=(5,7,9)\) in \(V\)?</p>
+<table>
+  <tr><td>Solve \(c_1\vec v_1+c_2\vec v_2=\vec x\)</td><td><reveal>\(\operatorname{rref}\begin{bmatrix}1&1&5\\1&2&7\\1&3&9\end{bmatrix}=\begin{bmatrix}1&0&3\\0&1&2\\0&0&0\end{bmatrix}\): consistent, \(c_1=3,\ c_2=2\)</reveal></td></tr>
+  <tr><td>Is \(\vec x\) in \(V\)? Its coordinates?</td><td><reveal>Yes: \(\vec x=3\vec v_1+2\vec v_2\), so \([\vec x]_{\mathfrak{B}}=\begin{bmatrix}3\\2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Check \(\vec x=S[\vec x]_{\mathfrak{B}}\)</td><td><reveal>\(\begin{bmatrix}1&1\\1&2\\1&3\end{bmatrix}\begin{bmatrix}3\\2\end{bmatrix}=\begin{bmatrix}5\\7\\9\end{bmatrix}\)</reveal></td></tr>
+</table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="2">
-          <div class="step-title">Theorem 3.4.2</div>
-          <div class="step-subtitle">Linearity of Coordinates</div>
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Finding coordinates, and building a vector from its coordinates</div>
           <div class="step-body">
-            If $\mathfrak{B}$ is a basis of a subspace $V$ of $\mathbb{R}^n$, then<br>
-            a. $[\vec{x}+\vec{y}]_{\mathfrak{B}}=[\vec{x}]_{\mathfrak{B}}+[\vec{y}]_{\mathfrak{B}}$ for all vectors
-            $\vec{x}$ and $\vec{y}$ in $V$, and<br>
-            b. $[k\vec{x}]_{\mathfrak{B}}=k[\vec{x}]_{\mathfrak{B}}$ for all $\vec{x}$ in V and for all scalars k.
+<p class="muted small">
+  Basis \(\vec v_1=(3,1)\) (blue), \(\vec v_2=(-1,3)\) (green). The tilted grid is the \(c_1\)-\(c_2\) coordinate system.
+  Drag \(\vec x\) and read its address \([\vec x]_{\mathfrak{B}}\) from the grid.
+</p>
+<jsx-basis v1="3,1" v2="-1,3" x="10,10" snap-c xmin="-14" xmax="14" ymin="-1" ymax="7"></jsx-basis>
+<table>
+  <tr><td>(a) \(\vec x=(10,10)\). Find \([\vec x]_{\mathfrak{B}}\).</td><td><reveal>Solve \(c_1(3,1)+c_2(-1,3)=(10,10)\): \(c_1=4,\ c_2=2\), so \([\vec x]_{\mathfrak{B}}=\begin{bmatrix}4\\2\end{bmatrix}\). Or \(S^{-1}\vec x=\tfrac1{10}\begin{bmatrix}3&1\\-1&3\end{bmatrix}\begin{bmatrix}10\\10\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>(b) \([\vec y]_{\mathfrak{B}}=\begin{bmatrix}2\\-1\end{bmatrix}\). Find \(\vec y\).</td><td><reveal>\(\vec y=2\vec v_1-\vec v_2=2\begin{bmatrix}3\\1\end{bmatrix}-\begin{bmatrix}-1\\3\end{bmatrix}=\begin{bmatrix}7\\-1\end{bmatrix}\). Or \(\vec y=S[\vec y]_{\mathfrak{B}}\).</reveal></td></tr>
+</table>
+<p class="muted small">The axes need not be perpendicular: Cartesian coordinates work just as well with oblique axes.</p>
           </div>
         </div>
 
         <div class="step is-visible" data-step="3">
-          <div class="step-title">Theorem 3.4.3</div>
-          <div class="step-subtitle">The matrix of a linear transformation</div>
+          <div class="step-title">Theorem 3.4.2</div>
+          <div class="step-subtitle">Linearity of coordinates</div>
           <div class="step-body">
-            Consider a linear transformation T from $\mathbb{R}^n$ to $\mathbb{R}^n$ and a basis
-            $\mathfrak{B}=(v_1,\cdots,v_n)$ of $\mathbb{R}^n$. Then there exists a unique $n\times n$ matrix B that
-            transforms $[\vec{x}]_{\mathfrak{B}}$ into $[T(\vec{x})]_{\mathfrak{B}}$:
-            $$[T(x)]_{\mathfrak{B}}=B[x]_{\mathfrak{B}}$$
-            for all $\vec{x}$ in $\mathbb{R}^n$. This matrix B is called the $\mathfrak{B}$-matrix of T. We can
-            construct B column by column, as follows<br>
-            $$B=\begin{bmatrix}|&|&|&|\\
-            [T(\vec{v}_1)]_{\mathfrak{B}}&[T(\vec{v}_2)]_{\mathfrak{B}}&\ldots&[T(\vec{v}_m)_{\mathfrak{B}}]\\
-            |&|&|&|\end{bmatrix}$$
+<p>If \(\mathfrak{B}\) is a basis of a subspace \(V\) of \(\mathbb{R}^n\), then for all \(\vec x,\vec y\) in \(V\) and all scalars \(k\):</p>
+$$[\vec x+\vec y]_{\mathfrak{B}}=[\vec x]_{\mathfrak{B}}+[\vec y]_{\mathfrak{B}},\qquad [k\vec x]_{\mathfrak{B}}=k\,[\vec x]_{\mathfrak{B}}.$$
+<p class="muted small">Test it with Example 2: \([\vec x]_{\mathfrak{B}}=(4,2)\) for \(\vec x=(10,10)\) and \([\vec y]_{\mathfrak{B}}=(2,-1)\) for \(\vec y=(7,-1)\).</p>
+<table>
+  <tr><td>\(\vec x+\vec y\)</td><td><reveal>\((17,9)\), and \(6\vec v_1+1\vec v_2=(18-1,\,6+3)=(17,9)\). So \([\vec x+\vec y]_{\mathfrak{B}}=(6,1)=(4,2)+(2,-1)\).</reveal></td></tr>
+  <tr><td>\(3\vec x\)</td><td><reveal>\([3\vec x]_{\mathfrak{B}}=3(4,2)=(12,6)\)</reveal></td></tr>
+  <tr><td>Why does this work?</td><td><reveal>Coordinates are just the coefficients of the unique linear combination. Adding vectors adds coefficients, scaling a vector scales them.</reveal></td></tr>
+</table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">Theorem 3.4.4</div>
-          <div class="step-subtitle">Standard matrix versus $\mathfrak{B}-matrix$</div>
+          <div class="step-title">Theorem 3.4.3</div>
+          <div class="step-subtitle">The \(\mathfrak{B}\)-matrix of a linear transformation</div>
           <div class="step-body">
-            Consider a linear transformation T from $\mathbb{R}^n$ to $\mathbb{R}^n$ and a basis
-            $\mathfrak{B}=(\vec{v_1},\cdots\vec{v_n})$ of $\mathbb{R}^n$. Let B be the $\mathfrak{B}$-matrix of T, and
-            let A be the standard matrix of T (such that $T(x)=Ax$ for all x in $\mathbb{R}^n$). Then <br>
-            $$AS=SB,B=S^{-1}AS,A=SBS^{-1}$$
+<p>Let \(T:\mathbb{R}^n\to\mathbb{R}^n\) be linear and \(\mathfrak{B}=(\vec v_1,\dots,\vec v_n)\) a basis. There is a unique \(n\times n\) matrix \(B\) with</p>
+$$[T(\vec x)]_{\mathfrak{B}}=B\,[\vec x]_{\mathfrak{B}},\qquad B=\begin{bmatrix}|&&|\\ [T(\vec v_1)]_{\mathfrak{B}}&\cdots&[T(\vec v_n)]_{\mathfrak{B}}\\ |&&|\end{bmatrix}.$$
+<p class="muted small">
+  Example 3. \(T\) = orthogonal projection onto the line \(L\) spanned by \(\vec v_1=(3,1)\), with \(\vec v_2=(-1,3)\perp L\).
+  Drag \(\vec x\): the purple \(T(\vec x)\) always lands on the \(c_1\)-axis.
+</p>
+<jsx-basis v1="3,1" v2="-1,3" x="2,6" a="0.9,0.3;0.3,0.1" xmin="-8" xmax="8" ymin="-1" ymax="5"></jsx-basis>
+<table>
+  <tr><td>\(T(\vec v_1)\) and \([T(\vec v_1)]_{\mathfrak{B}}\)</td><td><reveal>\(\vec v_1\) is on \(L\), so \(T(\vec v_1)=\vec v_1\) and \([T(\vec v_1)]_{\mathfrak{B}}=\begin{bmatrix}1\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(T(\vec v_2)\) and \([T(\vec v_2)]_{\mathfrak{B}}\)</td><td><reveal>\(\vec v_2\perp L\), so \(T(\vec v_2)=\vec 0\) and \([T(\vec v_2)]_{\mathfrak{B}}=\begin{bmatrix}0\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>The matrix \(B\)</td><td><reveal>\(B=\begin{bmatrix}1&0\\0&0\end{bmatrix}\): "keep \(c_1\), kill \(c_2\)". Much simpler than the standard matrix.</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step" data-step="5">
-          <div class="step-title">Definition 3.4.5</div>
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Theorem 3.4.4</div>
+          <div class="step-subtitle">Standard matrix versus \(\mathfrak{B}\)-matrix</div>
+          <div class="step-body">
+<p>Let \(A\) be the standard matrix of \(T\) and \(B\) its \(\mathfrak{B}\)-matrix. With \(S=[\vec v_1\ \cdots\ \vec v_n]\),</p>
+$$AS=SB,\qquad B=S^{-1}AS,\qquad A=SBS^{-1}.$$
+<p>The diagram says it all: going around either way from \([\vec x]_{\mathfrak{B}}\) to \(T(\vec x)\) must give the same result.</p>
+$$\begin{array}{ccc}\vec x&\xrightarrow{\ \ A\ \ }&T(\vec x)\\ {\scriptstyle S}\ \uparrow&&\uparrow\ {\scriptstyle S}\\ [\vec x]_{\mathfrak{B}}&\xrightarrow{\ \ B\ \ }&[T(\vec x)]_{\mathfrak{B}}\end{array}$$
+<p class="muted small">Example 5 (continued). Projection onto \(L\), \(\mathfrak{B}=((3,1),(-1,3))\), \(B=\operatorname{diag}(1,0)\). Recover \(A\).</p>
+<table>
+  <tr><td>\(S\) and \(S^{-1}\)</td><td><reveal>\(S=\begin{bmatrix}3&-1\\1&3\end{bmatrix}\), \(S^{-1}=\dfrac1{10}\begin{bmatrix}3&1\\-1&3\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(A=SBS^{-1}\)</td><td><reveal>\(\begin{bmatrix}3&-1\\1&3\end{bmatrix}\begin{bmatrix}1&0\\0&0\end{bmatrix}\dfrac1{10}\begin{bmatrix}3&1\\-1&3\end{bmatrix}=\begin{bmatrix}0.9&0.3\\0.3&0.1\end{bmatrix}\), the matrix in the picture</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Definition 3.4.5 and Theorem 3.4.6</div>
           <div class="step-subtitle">Similar matrices</div>
           <div class="step-body">
-            Consider two $n \times n$ matrices A and B. We say that A is similar to B if there exists an invertible
-            matrix S such that
-            $$AS=SB, or B=S^{-1}AS$$
+<p>\(A\) is <b>similar</b> to \(B\) if there is an invertible \(S\) with \(AS=SB\), i.e. \(B=S^{-1}AS\).
+In words: <b>two matrices are similar when they represent the same transformation in different bases.</b></p>
+<p class="muted small">
+  Example 6. Is \(A=\begin{bmatrix}1&2\\4&3\end{bmatrix}\) similar to \(B=\begin{bmatrix}5&0\\0&-1\end{bmatrix}\)? Start with the standard basis and
+  drag the tips of \(\vec v_1\) to \((1,2)\) and \(\vec v_2\) to \((1,-1)\).
+</p>
+<jsx-basis v1="1,0" v2="0,1" x="1,0.5" a="1,2;4,3" drag-basis xmin="-8" xmax="8" ymin="-2" ymax="5"></jsx-basis>
+<table>
+  <tr><td>Which \(S\) works?</td><td><reveal>\(S=\begin{bmatrix}1&1\\2&-1\end{bmatrix}\), \(\det S=-3\neq0\). Check \(AS=\begin{bmatrix}5&-1\\10&1\end{bmatrix}=SB\).</reveal></td></tr>
+  <tr><td>Theorem 3.4.6: similarity is an equivalence relation. Why reflexive, symmetric, transitive?</td><td><reveal>\(A=I^{-1}AI\). If \(B=S^{-1}AS\) then \(A=SBS^{-1}\). If \(B=P^{-1}AP\) and \(C=Q^{-1}BQ\) then \(C=(PQ)^{-1}A(PQ)\).</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step" data-step="6">
-          <div class="step-title">Theorem 3.4.6</div>
-          <div class="step-subtitle">Similarity is an equivalence relation</div>
-          <div class="step-body">
-            a. An $n\times n$ matrix A is similar to A itself<br>
-            b. If A is similar to B, then B is similar to A<br>
-            c. If A is similar to B and B is similar to C then A is similar to C
-          </div>
-        </div>
-        <div class="step" data-step="7">
+        <div class="step is-visible" data-step="7">
           <div class="step-title">Theorem 3.4.7</div>
-          <div class="step-subtitle">When is the \(\mathfrak{B}\)-matrix of T diagonal</div>
+          <div class="step-subtitle">When is the \(\mathfrak{B}\)-matrix of \(T\) diagonal?</div>
           <div class="step-body">
-            Consider a linear transformation \(T(\vec{x})=A \vec{x}\) from \(\mathbb{R}^{n}\) to \(\mathbb{R}^{n}\). Let
-            \(\mathfrak{B}=(\vec{v_1},\cdots,\vec{v_n})\) be a basis of \(\mathbb{R}^{n}\).<br>
-            Then the \(\mathfrak{B}\)-matrix B of T is diagonal if and only if \(T(\vec{v_1})=c_1
-            \vec{v_1},\cdots,T(\vec{v_n})=c_n \vec{v_n}\) for some scalars \(c_1,\cdots, c_n\).<br>
-
-            From a geometrical point of view, this means that \(T(\vec{v_j})\) is parallel to \(\vec{v_j}\) for all
-            \(j=1,\cdots,n\).
+<p>For \(T(\vec x)=A\vec x\) and a basis \(\mathfrak{B}=(\vec v_1,\dots,\vec v_n)\) of \(\mathbb{R}^n\), the \(\mathfrak{B}\)-matrix \(B\) is <b>diagonal</b> if and only if</p>
+$$T(\vec v_1)=c_1\vec v_1,\ \ \dots,\ \ T(\vec v_n)=c_n\vec v_n .$$
+<p>Geometrically: each \(T(\vec v_j)\) is <b>parallel</b> to \(\vec v_j\).</p>
+<p class="muted small">
+  Example 9. \(T\) = reflection about the line \(L\) spanned by \((2,1)\). Drag \(\vec v_1\) to \((2,1)\) and \(\vec v_2\) to \((-1,2)\), and watch \(B\).
+</p>
+<jsx-basis v1="1,0" v2="0,1" x="2,1.5" a="0.6,0.8;0.8,-0.6" drag-basis xmin="-6" xmax="6" ymin="-3" ymax="3"></jsx-basis>
+<table>
+  <tr><td>Which vectors does a reflection keep on their own line?</td><td><reveal>Vectors along \(L\) (\(T(\vec v_1)=\vec v_1\)) and vectors perpendicular to \(L\) (\(T(\vec v_2)=-\vec v_2\)).</reveal></td></tr>
+  <tr><td>So the \(\mathfrak{B}\)-matrix is</td><td><reveal>\(B=\begin{bmatrix}1&0\\0&-1\end{bmatrix}\)</reveal></td></tr>
+</table>
           </div>
         </div>
 
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 10</div>
+          <div class="step-subtitle">A transformation that has no such basis</div>
+          <div class="step-body">
+<p>\(A=\begin{bmatrix}0&-1\\1&0\end{bmatrix}\) is the rotation through \(\theta=\dfrac{\pi}{2}\). Is there a basis \(\mathfrak{B}\) with a diagonal \(B\)?</p>
+<p class="muted small">Try to make \(B\) diagonal by dragging \(\vec v_1\) and \(\vec v_2\).</p>
+<jsx-basis v1="1,0" v2="0,1" x="2,1" a="0,-1;1,0" drag-basis xmin="-6" xmax="6" ymin="-3" ymax="3"></jsx-basis>
+<table>
+  <tr><td>What would we need?</td><td><reveal>Nonzero \(\vec v_j\) with \(T(\vec v_j)\) parallel to \(\vec v_j\) (Theorem 3.4.7).</reveal></td></tr>
+  <tr><td>Why is it impossible?</td><td><reveal>A quarter turn sends every nonzero \(\vec x\) to a vector <b>perpendicular</b> to it, never parallel. No such basis exists.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Problems from the Text</div>
+          <div class="step-subtitle">Bretscher, Exercises 3.4 (numbers as in the book)</div>
+          <div class="step-body">
+<table>
+  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>43</td><td>The plane \(x_1+2x_2+x_3=0\) has basis \(\mathfrak{B}=\left(\begin{bmatrix}-1\\0\\1\end{bmatrix},\begin{bmatrix}-2\\1\\0\end{bmatrix}\right)\). If \([\vec x]_{\mathfrak{B}}=\begin{bmatrix}2\\-3\end{bmatrix}\), find \(\vec x\).</td><td><reveal>\(\vec x=2\begin{bmatrix}-1\\0\\1\end{bmatrix}-3\begin{bmatrix}-2\\1\\0\end{bmatrix}=\begin{bmatrix}4\\-3\\2\end{bmatrix}\); check \(4-6+2=0\).</reveal></td></tr>
+  <tr><td>47</td><td>\(T:\mathbb{R}^2\to\mathbb{R}^2\) has \(\mathfrak{B}\)-matrix \(\begin{bmatrix}a&b\\c&d\end{bmatrix}\) for \(\mathfrak{B}=\left(\begin{bmatrix}0\\1\end{bmatrix},\begin{bmatrix}1\\0\end{bmatrix}\right)\). Find the standard matrix.</td><td><reveal>\(S=\begin{bmatrix}0&1\\1&0\end{bmatrix}=S^{-1}\), \(A=SBS^{-1}=\begin{bmatrix}d&c\\b&a\end{bmatrix}\): swapping the basis order swaps rows and columns.</reveal></td></tr>
+  <tr><td>59</td><td>Is \(\begin{bmatrix}2&0\\0&3\end{bmatrix}\) similar to \(\begin{bmatrix}2&1\\0&3\end{bmatrix}\)?</td><td><reveal>Yes. The second matrix sends \((1,0)\mapsto2(1,0)\) and \((1,1)\mapsto3(1,1)\). In the basis \(((1,0),(1,1))\) its \(\mathfrak{B}\)-matrix is \(\operatorname{diag}(2,3)\).</reveal></td></tr>
+  <tr><td>60</td><td>Is \(\begin{bmatrix}1&0\\0&-1\end{bmatrix}\) similar to \(\begin{bmatrix}0&1\\1&0\end{bmatrix}\)?</td><td><reveal>Yes. The second is the reflection about \(y=x\). With \(\mathfrak{B}=((1,1),(1,-1))\) it becomes \(\operatorname{diag}(1,-1)\).</reveal></td></tr>
+  <tr><td>62</td><td>Find a basis \(\mathfrak{B}\) so that \(T(\vec x)=\begin{bmatrix}1&2\\4&3\end{bmatrix}\vec x\) has \(B=\begin{bmatrix}5&0\\0&-1\end{bmatrix}\).</td><td><reveal>Need \(T(\vec v_1)=5\vec v_1\), \(T(\vec v_2)=-\vec v_2\): \(\vec v_1=(1,2)\), \(\vec v_2=(1,-1)\), exactly the basis from Example 6.</reveal></td></tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Coordinates</b></td><td>\(\vec x=c_1\vec v_1+\cdots+c_m\vec v_m\); \([\vec x]_{\mathfrak{B}}=(c_1,\dots,c_m)\); \(\vec x=S[\vec x]_{\mathfrak{B}}\)</td></tr>
+  <tr><td><b>Linearity</b></td><td>\([\vec x+\vec y]_{\mathfrak{B}}=[\vec x]_{\mathfrak{B}}+[\vec y]_{\mathfrak{B}}\), \([k\vec x]_{\mathfrak{B}}=k[\vec x]_{\mathfrak{B}}\)</td></tr>
+  <tr><td><b>\(\mathfrak{B}\)-matrix</b></td><td>\([T(\vec x)]_{\mathfrak{B}}=B[\vec x]_{\mathfrak{B}}\); columns are \([T(\vec v_j)]_{\mathfrak{B}}\)</td></tr>
+  <tr><td><b>Change of basis</b></td><td>\(B=S^{-1}AS\), \(A=SBS^{-1}\); such \(A\) and \(B\) are <b>similar</b></td></tr>
+  <tr><td><b>Diagonal \(B\)</b></td><td>iff each \(T(\vec v_j)\) is parallel to \(\vec v_j\); a rotation by \(\pi/2\) has no such basis</td></tr>
+</table>
+          </div>
+        </div>
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
@@ -153,9 +239,9 @@
   </div>
   <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
-
   <!-- JS entry (ES modules) -->
   <script type="module" src="/todopage/js/boot.js"></script>
+
 </body>
 
 </html>
