@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-07",
+    "title": "Verifying Trigonometric Identities",
+    "subtitle": "Lesson 15",
+    "description": "Verify identities by working one side at a time: rewrite in sine and cosine, combine over a common denominator, or multiply by the conjugate. Each example is revealed line by line with its reason, and checked with a graph of both sides.",
+    "tags": [
+      "Identities",
+      "Verifying",
+      "Pythagorean"
+    ],
+    "url": "trigonometry/2026/2026-10-07-lesson-15-verifying-trigonometric-identities/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-05",
     "title": "Review of Fundamental Identities",
     "subtitle": "Lesson 14",
