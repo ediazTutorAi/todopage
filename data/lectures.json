@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-05",
+    "title": "Review of Fundamental Identities",
+    "subtitle": "Lesson 14",
+    "description": "Ratio, reciprocal, Pythagorean, and even/odd identities, with an identity-versus-equation graph check, a draggable unit circle, symmetry graphs, and worked examples that use identities to simplify and solve.",
+    "tags": [
+      "Identities",
+      "Pythagorean",
+      "Even and Odd"
+    ],
+    "url": "trigonometry/2026/2026-10-05-lesson-14-review-of-fundamental-identities/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-09-30",
     "title": "Graphing Other Trigonometric Functions",
     "subtitle": "Lesson 13",

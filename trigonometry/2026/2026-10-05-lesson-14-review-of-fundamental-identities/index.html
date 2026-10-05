@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Review of Fundamental Identities</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (identity-vs-equation graphs and even/odd symmetry use <jsx-graph>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Review of Fundamental Identities</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Review of Fundamental Identities</div>
+          <div class="step-subtitle">What is an identity?</div>
+          <div class="step-body">
+<p>An <b>identity</b> is an equation that is true for <b>all</b> values of the variable, as long as those values are in the <reveal>domain</reveal>.</p>
+<p>Compare the two sides of each equation as graphs. Which one is an identity?</p>
+<table>
+  <tr><td>\(\sin^2 x + \cos^2 x = 1\)</td><td><reveal>Identity: the two graphs are the same line for every \(x\).</reveal></td></tr>
+  <tr><td>\(\sin x = \cos x\)</td><td><reveal>Not an identity: the graphs only meet at some \(x\) (those are the solutions).</reveal></td></tr>
+</table>
+<jsx-graph fn="Math.sin(x)**2 + Math.cos(x)**2" fn2="1" label="left side" label2="right side" xmin="-7" xmax="7" ymin="-2" ymax="2" pi-ticks></jsx-graph>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">Ratio and Reciprocal Identities</div>
+          <div class="step-subtitle">Recall them from memory, then check</div>
+          <div class="step-body">
+<p>Let \(\theta\) be any value for which the functions are defined. Fill in each blank.</p>
+<table>
+  <tr><th>Reciprocal</th><th></th><th></th><th></th></tr>
+  <tr><td>\(\sin\theta =\)</td><td><reveal>\(\dfrac{1}{\csc\theta}\)</reveal></td><td>\(\csc\theta =\)</td><td><reveal>\(\dfrac{1}{\sin\theta}\)</reveal></td></tr>
+  <tr><td>\(\cos\theta =\)</td><td><reveal>\(\dfrac{1}{\sec\theta}\)</reveal></td><td>\(\sec\theta =\)</td><td><reveal>\(\dfrac{1}{\cos\theta}\)</reveal></td></tr>
+  <tr><td>\(\tan\theta =\)</td><td><reveal>\(\dfrac{1}{\cot\theta}\)</reveal></td><td>\(\cot\theta =\)</td><td><reveal>\(\dfrac{1}{\tan\theta}\)</reveal></td></tr>
+  <tr><th>Ratio</th><th></th><th></th><th></th></tr>
+  <tr><td>\(\tan\theta =\)</td><td><reveal>\(\dfrac{\sin\theta}{\cos\theta}\)</reveal></td><td>\(\cot\theta =\)</td><td><reveal>\(\dfrac{\cos\theta}{\sin\theta}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Pythagorean Identities</div>
+          <div class="step-subtitle">Where \(\sin^2\theta + \cos^2\theta = 1\) comes from</div>
+          <div class="step-body">
+<p>Drag the point around the unit circle. Here \(x = \cos\theta\) and \(y = \sin\theta\).</p>
+<sign-circle radius="1" start-angle="35"></sign-circle>
+<p>Square each coordinate and add. What do you get, wherever the point sits?</p>
+<p><reveal>\(\sin^2\theta + \cos^2\theta = 1\)</reveal> (the circle \(x^2 + y^2 = 1\))</p>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Two More Pythagorean Identities</div>
+          <div class="step-subtitle">Divide the first one</div>
+          <div class="step-body">
+<p>Start from \(\sin^2\theta + \cos^2\theta = 1\).</p>
+<table>
+  <tr><td>Divide every term by \(\sin^2\theta\)</td><td><reveal>\(1 + \cot^2\theta = \csc^2\theta\)</reveal></td></tr>
+  <tr><td>Divide every term by \(\cos^2\theta\)</td><td><reveal>\(\tan^2\theta + 1 = \sec^2\theta\)</reveal></td></tr>
+</table>
+<p class="muted small">Each one also rearranges, for example \(\cos^2\theta = 1 - \sin^2\theta\).</p>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Using a Pythagorean identity</div>
+          <div class="step-body">
+<p>Let \(\theta\) be an angle such that \(\cos\theta &gt; 0\) and \(\sin\theta = -\dfrac{2}{3}\). Find \(\cos\theta\) and \(\tan\theta\).</p>
+<reveal class="solution">
+<p>\(\cos^2\theta = 1 - \sin^2\theta = 1 - \dfrac{4}{9} = \dfrac{5}{9}\), so \(\cos\theta = \pm\dfrac{\sqrt5}{3}\). Since \(\cos\theta &gt; 0\), \(\cos\theta = \dfrac{\sqrt5}{3}\).</p>
+<p>\(\tan\theta = \dfrac{\sin\theta}{\cos\theta} = \dfrac{-2/3}{\sqrt5/3} = -\dfrac{2}{\sqrt5} = -\dfrac{2\sqrt5}{5}\)</p>
+</reveal>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Even and Odd Functions</div>
+          <div class="step-subtitle">Symmetry of the graph</div>
+          <div class="step-body">
+<p>A function \(f\) is <b>even</b> if <reveal>\(f(-x) = f(x)\)</reveal> for every \(x\) in its domain. Its graph is symmetric about the <reveal>\(y\)-axis</reveal>.</p>
+<p>A function \(f\) is <b>odd</b> if <reveal>\(f(-x) = -f(x)\)</reveal> for every \(x\) in its domain. Its graph is symmetric about the <reveal>origin</reveal>.</p>
+<table>
+  <tr><td>\(y = x^2\) and \(y = \cos x\)</td><td>\(y = x^3\) and \(y = \sin x\)</td></tr>
+  <tr><td><jsx-graph fn="x*x" xmin="-3" xmax="3" ymin="-1" ymax="5"></jsx-graph></td><td><jsx-graph fn="x*x*x" xmin="-3" xmax="3" ymin="-5" ymax="5"></jsx-graph></td></tr>
+  <tr><td><jsx-graph fn="Math.cos(x)" xmin="-7" xmax="7" ymin="-2" ymax="2" pi-ticks></jsx-graph></td><td><jsx-graph fn="Math.sin(x)" xmin="-7" xmax="7" ymin="-2" ymax="2" pi-ticks></jsx-graph></td></tr>
+</table>
+<p class="muted small">Check: \((-1)^2 = (1)^2\) and \((-1)^3 = -(1)^3\).</p>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">Even and Odd Identities</div>
+          <div class="step-subtitle">Which trig functions are even, which are odd?</div>
+          <div class="step-body">
+<p>Let \(\theta\) be any value for which the functions are defined. Fill in each result and say whether it is even or odd.</p>
+<table>
+  <tr><td>\(\sin(-\theta)\)</td><td><reveal>\(-\sin\theta\) (odd)</reveal></td><td>\(\csc(-\theta)\)</td><td><reveal>\(-\csc\theta\) (odd)</reveal></td></tr>
+  <tr><td>\(\cos(-\theta)\)</td><td><reveal>\(\cos\theta\) (even)</reveal></td><td>\(\sec(-\theta)\)</td><td><reveal>\(\sec\theta\) (even)</reveal></td></tr>
+  <tr><td>\(\tan(-\theta)\)</td><td><reveal>\(-\tan\theta\) (odd)</reveal></td><td>\(\cot(-\theta)\)</td><td><reveal>\(-\cot\theta\) (odd)</reveal></td></tr>
+</table>
+<p class="muted small">Only cosine and its reciprocal secant are even.</p>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Verify the remaining even/odd identities</div>
+          <div class="step-body">
+<p>Using the even/odd identities for sine and cosine, along with other fundamental identities, verify the other four.</p>
+<reveal class="solution">
+<p>\(\sec(-\theta) = \dfrac{1}{\cos(-\theta)} = \dfrac{1}{\cos\theta} = \sec\theta\)</p>
+<p>\(\csc(-\theta) = \dfrac{1}{\sin(-\theta)} = \dfrac{1}{-\sin\theta} = -\csc\theta\)</p>
+<p>\(\tan(-\theta) = \dfrac{\sin(-\theta)}{\cos(-\theta)} = \dfrac{-\sin\theta}{\cos\theta} = -\tan\theta\)</p>
+<p>\(\cot(-\theta) = \dfrac{\cos(-\theta)}{\sin(-\theta)} = \dfrac{\cos\theta}{-\sin\theta} = -\cot\theta\)</p>
+</reveal>
+          </div>
+        </div>
+        <div class="step" data-step="9">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Continuing from Example 1</div>
+          <div class="step-body">
+<p>Let \(\cos\theta &gt; 0\) and \(\sin\theta = -\dfrac{2}{3}\). Find \(\csc(-\theta)\), \(\cos(-\theta)\), and \(\cot(-\theta)\).</p>
+<table>
+  <tr><td>\(\csc(-\theta)\)</td><td><reveal>\(-\csc\theta = \dfrac{-1}{-2/3} = \dfrac{3}{2}\)</reveal></td></tr>
+  <tr><td>\(\cos(-\theta)\)</td><td><reveal>\(\cos\theta = \dfrac{\sqrt5}{3}\) (Example 1)</reveal></td></tr>
+  <tr><td>\(\cot(-\theta)\)</td><td><reveal>\(-\cot\theta = \dfrac{-1}{\tan\theta} = \dfrac{-1}{-2/\sqrt5} = \dfrac{\sqrt5}{2}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="10">
+          <div class="step-title">Useful Applications</div>
+          <div class="step-subtitle">Rewrite in terms of a single function</div>
+          <div class="step-body">
+<p>An equation with a single trig function is easier to work with than one with several. Identities let us convert.</p>
+<p><b>Example 4.</b> Write \(-2\sin^2 x + \cos x + 1\) in terms of a single trig function and factor.</p>
+<reveal class="solution">
+<p>Replace \(\sin^2 x\) with \(1 - \cos^2 x\):</p>
+<p>\(-2(1 - \cos^2 x) + \cos x + 1 = 2\cos^2 x + \cos x - 1\)</p>
+<p>Let \(u = \cos x\): \(2u^2 + u - 1 = (2u - 1)(u + 1)\), so the expression is \((2\cos x - 1)(\cos x + 1)\).</p>
+</reveal>
+          </div>
+        </div>
+        <div class="step" data-step="11">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">Simplify, then solve</div>
+          <div class="step-body">
+<p>It is known that \(\theta \in QI\) and \(\dfrac{\sin\theta\,\cot\theta}{\csc^2\theta\,(1 - \cos^2\theta)} = \dfrac{\sqrt2}{2}\). Find \(\theta\).</p>
+<reveal class="solution">
+<p>Numerator: \(\sin\theta\cdot\dfrac{\cos\theta}{\sin\theta} = \cos\theta\). Denominator: \(1 - \cos^2\theta = \sin^2\theta\), so \(\csc^2\theta\sin^2\theta = 1\).</p>
+<p>The equation becomes \(\cos\theta = \dfrac{\sqrt2}{2}\). In QI, \(\theta = \dfrac{\pi}{4}\).</p>
+</reveal>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
