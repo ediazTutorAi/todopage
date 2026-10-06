@@ -2880,8 +2880,33 @@ function renderJsxFubini(el) {
   if (!f) return;
   const num = (n, d) => evalNumAttr(el, n, d, TAG);
   const lim = { x: [num('xmin', 0), num('xmax', 1)], y: [num('ymin', 0), num('ymax', 1)] };
+  // Optional general region: g1/g2 (functions of x) make a Type I region, h1/h2 (functions of y)
+  // a Type II one; give both for a region described either way. Without them the region is the
+  // whole [xmin,xmax] x [ymin,ymax] rectangle.
+  const cm = (n, v) => (v === null ? null : compileMath([n], v, TAG, n === 'x' ? 'g1/g2' : 'h1/h2'));
+  const gAttr = [el.getAttribute('g1'), el.getAttribute('g2')];
+  const hAttr = [el.getAttribute('h1'), el.getAttribute('h2')];
+  const hasG = gAttr[0] !== null && gAttr[1] !== null;
+  const hasH = hAttr[0] !== null && hAttr[1] !== null;
+  const gf = hasG ? [cm('x', gAttr[0]), cm('x', gAttr[1])] : null;
+  const hf = hasH ? [cm('y', hAttr[0]), cm('y', hAttr[1])] : null;
+  if ((hasG && !(gf[0] && gf[1])) || (hasH && !(hf[0] && hf[1]))) return;
+  const isRegion = hasG || hasH;
+  const orders = isRegion ? [...(hasG ? ['x'] : []), ...(hasH ? ['y'] : [])] : ['x', 'y'];
   const state = { outer: el.getAttribute('order') === 'yx' ? 'y' : 'x', s: null };
+  if (!orders.includes(state.outer)) state.outer = orders[0];
   const inner = () => (state.outer === 'x' ? 'y' : 'x');
+  // inner limits when the outer variable is at u
+  const ilim = (o, u) => {
+    if (o === 'x' && gf) return [gf[0](u), gf[1](u)];
+    if (o === 'y' && hf) return [hf[0](u), hf[1](u)];
+    return lim[o === 'x' ? 'y' : 'x'];
+  };
+  const inRegion = (x, y) => {
+    if (gf) return y >= gf[0](x) - 1e-9 && y <= gf[1](x) + 1e-9;
+    if (hf) return x >= hf[0](y) - 1e-9 && x <= hf[1](y) + 1e-9;
+    return true;
+  };
   const fv = (o, i, u, w) => (o === 'x' ? f(u, w) : f(w, u)); // outer value u, inner value w
 
   // cached A(u) tables for each order
@@ -2889,11 +2914,12 @@ function renderJsxFubini(el) {
   function table(o) {
     if (cache[o]) return cache[o];
     const i = o === 'x' ? 'y' : 'x';
-    const [ol, oh] = lim[o]; const [il, ih] = lim[i];
+    const [ol, oh] = lim[o];
     const N = 240; const M = 240;
     const us = []; const As = [];
     for (let a = 0; a <= N; a++) {
       const u = ol + ((oh - ol) * a) / N;
+      const [il, ih] = ilim(o, u);
       let s = 0;
       for (let b = 0; b < M; b++) s += fv(o, i, u, il + ((ih - il) * (b + 0.5)) / M);
       us.push(u); As.push(s * ((ih - il) / M));
@@ -2923,7 +2949,8 @@ function renderJsxFubini(el) {
   };
   let zlo = 0; let zhi = 0;
   for (let a = 0; a <= 30; a++) for (let b = 0; b <= 30; b++) {
-    const v = f(lim.x[0] + ((lim.x[1] - lim.x[0]) * a) / 30, lim.y[0] + ((lim.y[1] - lim.y[0]) * b) / 30);
+    const px = lim.x[0] + ((lim.x[1] - lim.x[0]) * a) / 30; const py = lim.y[0] + ((lim.y[1] - lim.y[0]) * b) / 30;
+    const v = inRegion(px, py) ? f(px, py) : NaN;
     if (Number.isFinite(v)) { zlo = Math.min(zlo, v); zhi = Math.max(zhi, v); }
   }
   state.s = lim[state.outer][0] + (lim[state.outer][1] - lim[state.outer][0]) * 0.35;
@@ -2972,13 +2999,13 @@ function renderJsxFubini(el) {
   [bl, br].forEach((b) => styleAxes(b, ink));
 
   const sliceData = () => {
-    const o = state.outer; const i = inner(); const [il, ih] = lim[i];
+    const o = state.outer; const i = inner(); const [il, ih] = ilim(o, state.s);
     const xs = []; const ys = [];
     for (let a = 0; a <= 160; a++) { const w = il + ((ih - il) * a) / 160; xs.push(w); ys.push(fv(o, i, state.s, w)); }
     return { xs, ys };
   };
   const sliceFill = () => {
-    const d = sliceData(); const [il, ih] = lim[inner()];
+    const d = sliceData(); const [il, ih] = ilim(state.outer, state.s);
     return { xs: [...d.xs, ih, il], ys: [...d.ys, 0, 0] };
   };
   const makeCurve = (b, get, style) => { const c = b.create('curve', [[0], [0]], style); c.updateDataArray = function u() { const d = get(); this.dataX = d.xs; this.dataY = d.ys; }; b.update(); return c; };
@@ -3039,29 +3066,45 @@ function renderJsxFubini(el) {
     const o = state.outer; const i = inner();
     const at = (u, w) => (o === 'x' ? [u, w] : [w, u]); // (outer, inner) -> (x, y)
     const P = (u, w, z) => { const [x, y] = at(u, w); return scr(x, y, z); };
-    const [ol, oh] = lim[o]; const [il, ih] = lim[i];
+    const [bil, bih] = lim[i]; // plane spans the whole bounding box
+    const [il, ih] = ilim(o, state.s); // the solid is only over D
 
     const faces = [];
     const quad = (pts, fill, stroke, alpha) => { faces.push({ sp: pts, d: pts.reduce((a, q) => a + q[2], 0) / pts.length, fill, stroke, alpha }); };
-    const S = 26;
+    const S = isRegion ? 40 : 26;
     for (let a = 0; a < S; a++) {
       for (let b = 0; b < S; b++) {
         const xa = x0 + ((x1 - x0) * a) / S; const xb = x0 + ((x1 - x0) * (a + 1)) / S;
         const ya = y0 + ((y1 - y0) * b) / S; const yb = y0 + ((y1 - y0) * (b + 1)) / S;
         const mid = o === 'x' ? (xa + xb) / 2 : (ya + yb) / 2;
+        if (isRegion && !inRegion((xa + xb) / 2, (ya + yb) / 2)) continue;
         const swept = mid <= state.s;
         quad([scr(xa, ya, f(xa, ya)), scr(xb, ya, f(xb, ya)), scr(xb, yb, f(xb, yb)), scr(xa, yb, f(xa, yb))],
           swept ? negative : '#9aa0a6', swept ? 'rgba(192,57,43,0.35)' : 'rgba(90,98,110,0.3)', swept ? 0.34 : 0.2);
       }
     }
-    quad([P(state.s, il, zlo), P(state.s, ih, zlo), P(state.s, ih, zhi), P(state.s, il, zhi)], accent, accent, 0.1);
+    quad([P(state.s, bil, zlo), P(state.s, bih, zlo), P(state.s, bih, zhi), P(state.s, bil, zhi)], accent, accent, 0.1);
     faces.sort((p, q) => q.d - p.d);
 
     // base rectangle
     ctx.lineWidth = 2.5; ctx.strokeStyle = ink;
     ctx.beginPath();
-    [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].forEach(([x, y], k) => { const p = scr(x, y, 0); if (k) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
-    ctx.closePath(); ctx.stroke();
+    let outline = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+    if (isRegion) {
+      // boundary of D on the floor, using whichever description was given
+      const T = 80; outline = [];
+      if (gf) {
+        for (let a = 0; a <= T; a++) { const u = x0 + ((x1 - x0) * a) / T; outline.push([u, gf[1](u)]); }
+        for (let a = T; a >= 0; a--) { const u = x0 + ((x1 - x0) * a) / T; outline.push([u, gf[0](u)]); }
+      } else {
+        for (let a = 0; a <= T; a++) { const u = y0 + ((y1 - y0) * a) / T; outline.push([hf[1](u), u]); }
+        for (let a = T; a >= 0; a--) { const u = y0 + ((y1 - y0) * a) / T; outline.push([hf[0](u), u]); }
+      }
+    }
+    outline.forEach(([x, y], k) => { const p = scr(x, y, 0); if (k) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+    ctx.closePath();
+    if (isRegion) { ctx.globalAlpha = 0.12; ctx.fillStyle = ink; ctx.fill(); ctx.globalAlpha = 1; }
+    ctx.stroke();
     faces.forEach((fc) => {
       ctx.beginPath();
       fc.sp.forEach((q, k) => (k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])));
@@ -3072,7 +3115,7 @@ function renderJsxFubini(el) {
     // plane outline
     ctx.lineWidth = 2.5; ctx.strokeStyle = accent;
     ctx.beginPath();
-    [[il, zlo], [ih, zlo], [ih, zhi], [il, zhi]].forEach(([w, z], k) => { const p = P(state.s, w, z); if (k) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+    [[bil, zlo], [bih, zlo], [bih, zhi], [bil, zhi]].forEach(([w, z], k) => { const p = P(state.s, w, z); if (k) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
     ctx.closePath(); ctx.stroke();
     // cross-section: the region between the plane's cut of the surface and z = 0
     const N = 120; const cut = [];
@@ -3154,7 +3197,7 @@ function renderJsxFubini(el) {
   });
   const sw = document.createElement('div');
   sw.className = 'jsx-switch';
-  [['x', '∫∫ f dy dx'], ['y', '∫∫ f dx dy']].forEach(([o, label]) => {
+  [['x', '∫∫ f dy dx'], ['y', '∫∫ f dx dy']].filter(([o]) => orders.includes(o)).forEach(([o, label]) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'btn'; b.dataset.o = o; b.textContent = label;
     b.addEventListener('pointerup', () => b.blur());
@@ -3167,7 +3210,169 @@ function renderJsxFubini(el) {
     });
     sw.appendChild(b);
   });
-  controls.append(sweep, sw, row);
+  if (orders.length > 1) controls.append(sweep, sw, row); else controls.append(sweep, row);
+  refresh();
+}
+
+// <jsx-region g1="x*x*x" g2="sqrt(x)" h1="y*y" h2="Math.cbrt(y)" xmin="0" xmax="1" ymin="0" ymax="1"
+//   desc-i="0 ≤ x ≤ 1, x³ ≤ y ≤ √x" desc-ii="0 ≤ y ≤ 1, y² ≤ x ≤ ∛y" split="1" show="swept">
+//
+// A region D of the plane (Double Integrals over General Regions). The instructor sweeps a slice
+// across it: for a Type I description (g1, g2 are functions of x) the slice is a vertical segment
+// from y = g1(x) to y = g2(x); for Type II (h1, h2 functions of y) it is a horizontal segment from
+// x = h1(y) to x = h2(y). The slice's endpoints and the inner limits are read out live, and the
+// area swept so far is shaded, so "the inner limits depend on the outer variable" is something
+// watched, not asserted. Give both descriptions to get the I / II toggle; give one to fix the type.
+// `xmin/xmax` is the x range of D (outer range for Type I), `ymin/ymax` the y range (outer range
+// for Type II). `desc-i`/`desc-ii` are plain-text captions of the region. `split="1"` draws a
+// dashed vertical cut at that x and labels the two pieces D1, D2 (decomposing a region, Theorem 5.5).
+// Same blue (region) and red (swept) pairing as <jsx-fubini>.
+function renderJsxRegion(el) {
+  const TAG = 'jsx-region';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const mk = (arg, name) => (el.getAttribute(name) === null ? null : compileMath([arg], el.getAttribute(name), TAG, name));
+  const g = [mk('x', 'g1'), mk('x', 'g2')];
+  const h = [mk('y', 'h1'), mk('y', 'h2')];
+  const hasG = !!(g[0] && g[1]); const hasH = !!(h[0] && h[1]);
+  if (!hasG && !hasH) { console.error(`<${TAG}>: give g1 and g2 (functions of x) and/or h1 and h2 (functions of y).`); return; }
+  const lim = { x: [num('xmin', 0), num('xmax', 1)], y: [num('ymin', 0), num('ymax', 1)] };
+  const split = el.hasAttribute('split') ? num('split', null) : null;
+  const state = { type: hasG && !(el.getAttribute('order') === 'II' && hasH) ? 'I' : 'II', s: null };
+  const outerVar = () => (state.type === 'I' ? 'x' : 'y');
+  const lo = (u) => (state.type === 'I' ? g[0](u) : h[0](u));
+  const hi = (u) => (state.type === 'I' ? g[1](u) : h[1](u));
+  const range = () => lim[outerVar()];
+  const f2 = (v) => fmtNum(v).replace('-', '−');
+  state.s = range()[0] + (range()[1] - range()[0]) * 0.4;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board jsx-board--region';
+  board.id = `jsx-board-${++boardCounter}`;
+  const cap = document.createElement('div');
+  cap.className = 'muted small jsx-strip-cap';
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, board, cap, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const [bx0, bx1] = lim.x; const [by0, by1] = lim.y;
+  const padX = (bx1 - bx0) * 0.14; const padY = (by1 - by0) * 0.14;
+  // equal scales (a disk must look round): the board takes the region's own aspect ratio, and the
+  // container is narrowed so a tall region does not push the controls off the slide
+  const ratio = (bx1 - bx0 + 2 * padX) / (by1 - by0 + 2 * padY);
+  board.style.aspectRatio = String(ratio);
+  board.style.maxWidth = `${Math.round(Math.min(720, 390 * ratio))}px`;
+  board.style.marginInline = 'auto';
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [bx0 - padX, by1 + padY, bx1 + padX, by0 - padY], axis: true, showNavigation: false, showCopyright: false,
+    keepaspectratio: true, pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+
+  // sample the outer variable, including both sides of a split/jump so edges stay vertical
+  const samples = (a, b, n) => {
+    const out = [];
+    for (let k = 0; k <= n; k++) out.push(a + ((b - a) * k) / n);
+    if (state.type === 'I' && split !== null && split > a && split < b) out.push(split - 1e-9, split + 1e-9);
+    return out.sort((p, q) => p - q);
+  };
+  const pt = (u, w) => (state.type === 'I' ? [u, w] : [w, u]);
+  const polygon = (upto) => {
+    const [a, b] = range(); const top = Math.min(b, upto);
+    const us = samples(a, top, 200);
+    const xs = []; const ys = [];
+    us.forEach((u) => { const [x, y] = pt(u, hi(u)); xs.push(x); ys.push(y); });
+    for (let k = us.length - 1; k >= 0; k--) { const [x, y] = pt(us[k], lo(us[k])); xs.push(x); ys.push(y); }
+    return { xs, ys };
+  };
+  const curve = (get, style) => { const c = bd.create('curve', [[0], [0]], style); c.updateDataArray = function u() { const d = get(); this.dataX = d.xs; this.dataY = d.ys; }; bd.update(); return c; };
+  curve(() => polygon(Infinity), { strokeWidth: 0, fillColor: accent, fillOpacity: 0.14, highlight: false });
+  curve(() => polygon(state.s), { strokeWidth: 0, fillColor: negative, fillOpacity: 0.3, highlight: false });
+  curve(() => { const d = polygon(Infinity); d.xs.push(d.xs[0]); d.ys.push(d.ys[0]); return d; }, { strokeColor: ink, strokeWidth: CURVE_STROKE, highlight: false });
+  if (split !== null) {
+    bd.create('line', [[split, by0 - padY], [split, by1 + padY]], { straightFirst: false, straightLast: false, dash: 2, strokeColor: ink, strokeWidth: 2, highlight: false });
+    const mid = (x) => (hasG ? (g[0](x) + g[1](x)) / 2 : (by0 + by1) / 2);
+    bd.create('text', [(bx0 + split) / 2, () => mid((bx0 + split) / 2), 'D₁'], { fontSize: READOUT_VALUE_FONT, anchorX: 'middle', anchorY: 'middle', color: ink, fixed: true, cssStyle: 'font-weight:800' });
+    bd.create('text', [(split + bx1) / 2, () => mid((split + bx1) / 2), 'D₂'], { fontSize: READOUT_VALUE_FONT, anchorX: 'middle', anchorY: 'middle', color: ink, fixed: true, cssStyle: 'font-weight:800' });
+  }
+  // the slice itself
+  const ends = () => { const a = pt(state.s, lo(state.s)); const b = pt(state.s, hi(state.s)); return [a, b]; };
+  bd.create('segment', [() => ends()[0], () => ends()[1]], { strokeColor: negative, strokeWidth: CURVE_STROKE + 2, highlight: false, fixed: true });
+  [0, 1].forEach((k) => bd.create('point', [() => ends()[k][0], () => ends()[k][1]], {
+    name: '', size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: negative, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  }));
+
+  function refresh() {
+    const v = outerVar(); const w = state.type === 'I' ? 'y' : 'x';
+    const L = lo(state.s); const H = hi(state.s);
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">Type ${state.type} (slice at fixed ${v})</span>` +
+      `<span class="jsx-trace-chip">${v} = <b>${f2(state.s)}</b></span>` +
+      `<span class="jsx-trace-chip">${w} from <b>${f2(L)}</b> to <b>${f2(H)}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">${f2(range()[0])} ≤ ${v} ≤ ${f2(range()[1])}, &nbsp;inner limits move with ${v}</span>`;
+    const d = el.getAttribute(state.type === 'I' ? 'desc-i' : 'desc-ii');
+    cap.textContent = d ? `D = { ${d} }` : '';
+    bd.update();
+    const input = controls.querySelector('input');
+    if (input) { input.min = range()[0]; input.max = range()[1]; input.step = (range()[1] - range()[0]) / 400; if (Math.abs(parseFloat(input.value) - state.s) > 1e-9) input.value = state.s; }
+    controls.querySelectorAll('.jsx-switch .btn').forEach((b) => b.classList.toggle('is-on', b.dataset.t === state.type));
+  }
+
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = '<span class="jsx-slider-name">slice <small>drag it</small></span><input type="range" min="0" max="1" step="0.01">';
+  const input = row.querySelector('input');
+  let raf = null;
+  const stop = () => { if (raf) cancelAnimationFrame(raf); raf = null; sweep.textContent = '▶ Sweep'; };
+  input.addEventListener('input', () => { stop(); state.s = parseFloat(input.value); refresh(); });
+  input.addEventListener('pointerup', () => input.blur());
+  const sweep = document.createElement('button');
+  sweep.type = 'button'; sweep.className = 'btn'; sweep.textContent = '▶ Sweep';
+  sweep.addEventListener('pointerup', () => sweep.blur());
+  sweep.addEventListener('click', () => {
+    if (raf) { stop(); return; }
+    const [a, b] = range();
+    if (state.s >= b - 1e-6) state.s = a;
+    sweep.textContent = '⏸ Pause';
+    let last = performance.now();
+    const tick = (now) => {
+      state.s = Math.min(b, state.s + ((now - last) / 1000) * ((b - a) / 7));
+      last = now; refresh();
+      if (state.s < b) raf = requestAnimationFrame(tick); else stop();
+    };
+    raf = requestAnimationFrame(tick);
+  });
+  controls.appendChild(sweep);
+  if (hasG && hasH) {
+    const sw = document.createElement('div');
+    sw.className = 'jsx-switch';
+    [['I', 'Type I: vertical slices'], ['II', 'Type II: horizontal slices']].forEach(([t, label]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn'; b.dataset.t = t; b.textContent = label;
+      b.addEventListener('pointerup', () => b.blur());
+      b.addEventListener('click', () => {
+        stop();
+        const [a0, b0] = range(); const frac = (state.s - a0) / (b0 - a0);
+        state.type = t;
+        const [a1, b1] = range(); state.s = a1 + frac * (b1 - a1);
+        refresh();
+      });
+      sw.appendChild(b);
+    });
+    controls.appendChild(sw);
+  }
+  controls.appendChild(row);
   refresh();
 }
 
@@ -3364,4 +3569,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-lagrange').forEach(renderJsxLagrange);
   document.querySelectorAll('jsx-fubini').forEach(renderJsxFubini);
   document.querySelectorAll('jsx-basis').forEach(renderJsxBasis);
+  document.querySelectorAll('jsx-region').forEach(renderJsxRegion);
 });

@@ -594,6 +594,27 @@ Example 6's basis `((1,2),(1,-1))` gives `B` diag(5,-1), Example 9's reflection 
 diag(1,-1). Problem answers were checked by hand against the book's definitions. The textbook PDF in
 `linear-algebra/` is a scan (no text layer): read pages as images (section 3.4 is PDF pages 159-173).
 
+### `<jsx-region>` and general regions in `<jsx-fubini>` (added 2026-10-05)
+
+Built for the "Double Integrals over General Regions" lesson (`calculus3/fall2025/2025-10-07-double-integrals-general-regions/`,
+OpenStax 5.2, 9 steps for a 35 minute class; has a `content.json` sidecar and a hand-kept `index.html`, both generated from one step
+list, so edit both if you hand-edit either).
+
+- `<jsx-region g1 g2 h1 h2 xmin xmax ymin ymax desc-i desc-ii split order>` (`renderJsxRegion` in `js/jsxgraph.js`): a 2D region D
+  with a slice the instructor sweeps across it. `g1`/`g2` (expressions in `x`) give a Type I description, `h1`/`h2` (in `y`) a Type II
+  one; give both to get the "Type I / Type II" toggle, one to fix the type. The slice is a vertical segment (Type I) or horizontal
+  (Type II), with live readout of the inner limits, and the swept part of D shaded red. `xmin/xmax` is D's x extent (outer range for
+  Type I), `ymin/ymax` its y extent (outer range for Type II). `desc-i`/`desc-ii` are plain-Unicode captions shown as `D = { ... }`.
+  `split="1"` draws a dashed vertical cut at that x and labels D1, D2 (decomposing a region); a piecewise `g2` such as
+  `(x<1?2:1)` is allowed, and the sampler adds points on both sides of the split so the edge stays vertical. `order="II"` starts on
+  Type II. Equal axis scales (`keepaspectratio`), with the board's aspect ratio taken from the region's own bounds so a disk is round.
+  Expressions are plain JS with `sin cos tan exp sqrt abs log pow pi` in scope; use `Math.cbrt` for cube roots.
+- `<jsx-fubini ... g1 g2 h1 h2>`: the same attributes now make the Fubini tag use a general region instead of the full rectangle. The
+  inner limits come from the region at each slice, the 3D surface is drawn only over D, D is outlined and tinted on the floor, and
+  `zmin/zmax` come from f sampled only inside D. Order buttons only appear for the descriptions given (Type I only hides the
+  `dx dy` button). Without these attributes it behaves exactly as before. Used for the tetrahedron (Example 5.17) in step 3 of that
+  lesson: totals 6 in both orders.
+
 ### Other tags added without notes at the time (documented 2026-10-05)
 
 These exist in the code and are used by trigonometry lessons, but were never written up here.

@@ -218,6 +218,21 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-03",
+    "title": "Double Integrals over General Regions",
+    "subtitle": "",
+    "description": "Double integrals over non-rectangular regions: sweep a slice across a region to see the inner limits move, Type I and Type II descriptions, Fubini on a slanted solid, switching the order, decomposing regions, and area and average value.",
+    "tags": [
+      "double integrals",
+      "general regions",
+      "Fubini",
+      "Type I and II"
+    ],
+    "url": "calculus3/fall2025/2025-10-07-double-integrals-general-regions/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-02",
     "title": "Double Integrals",
     "subtitle": "",

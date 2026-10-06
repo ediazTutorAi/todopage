@@ -541,6 +541,7 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-fubini-grid > div { min-width: 0; }
 .jsx-fubini-canvas { width: 100%; aspect-ratio: 2.4 / 1; border: 1px solid var(--line); border-radius: 10px; cursor: grab; display: block; margin-bottom: 0.8rem; }
 .jsx-fubini-canvas:active { cursor: grabbing; }
+.jsx-board--region { aspect-ratio: 1.8 / 1; } /* overridden inline from the region's own bounds */
 .jsx-board--fubini { aspect-ratio: 1.7 / 1; }
 @media (max-width: 800px) { .jsx-fubini-grid { grid-template-columns: 1fr; } }
 

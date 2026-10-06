@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Double Integrals over General Regions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (interactive diagrams on this page) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Double Integrals over General Regions</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Beyond Rectangles</div>
+          <div class="step-subtitle">The inner limits can depend on the outer variable</div>
+          <div class="step-body">
+<p>
+  Last lesson every region was a rectangle \(R=[a,b]\times[c,d]\), so every limit of integration was a constant.
+  Most regions are not rectangles: a disk, a triangle, the sliver between two curves. We call such a region \(D\), and we
+  still want \(\displaystyle\iint_D f(x,y)\,dA\), the volume over \(D\) under \(z=f(x,y)\).
+</p>
+<p class="muted small">
+  The disk \(x^2+y^2\le4\). Press Sweep, or drag the slice. The red segment is one slice of \(D\); the red
+  shading is the part of \(D\) swept so far.
+</p>
+<jsx-region g1="-sqrt(4-x*x)" g2="sqrt(4-x*x)" h1="-sqrt(4-y*y)" h2="sqrt(4-y*y)" xmin="-2" xmax="2" ymin="-2" ymax="2" desc-i="−2 ≤ x ≤ 2, −√(4−x²) ≤ y ≤ √(4−x²)" desc-ii="−2 ≤ y ≤ 2, −√(4−y²) ≤ x ≤ √(4−y²)"></jsx-region>
+<p>Watch where the slice starts and stops as it moves. How is that different from a rectangle?</p>
+<p><reveal>On a rectangle the slice always runs between the same two numbers. On \(D\) its endpoints move, so the inner limits are <b>functions of the outer variable</b>. The outer limits stay constants.</reveal></p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition</div>
+          <div class="step-subtitle">Type I and Type II regions</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Type I</b></td><td>between two vertical lines and two curves \(y=g_1(x)\), \(y=g_2(x)\):<br>\(D=\{(x,y)\mid a\le x\le b,\;g_1(x)\le y\le g_2(x)\}\)</td></tr>
+  <tr><td><b>Type II</b></td><td>between two horizontal lines and two curves \(x=h_1(y)\), \(x=h_2(y)\):<br>\(D=\{(x,y)\mid c\le y\le d,\;h_1(y)\le x\le h_2(y)\}\)</td></tr>
+</table>
+<p class="muted small">
+  <b>Example 5.11.</b> The region in the first quadrant between \(y=\sqrt{x}\) and \(y=x^3\). Switch between the two sweeps:
+  Type I slices are vertical, Type II slices are horizontal.
+</p>
+<jsx-region g1="x*x*x" g2="sqrt(x)" h1="y*y" h2="Math.cbrt(y)" xmin="0" xmax="1" ymin="0" ymax="1" desc-i="0 ≤ x ≤ 1, x³ ≤ y ≤ √x" desc-ii="0 ≤ y ≤ 1, y² ≤ x ≤ ∛y"></jsx-region>
+<table>
+  <tr><td>Where do the curves meet?</td><td><reveal>\(\sqrt x=x^3\Rightarrow x=0\) or \(x=1\), so the outer limits are \(0\) and \(1\) in either order</reveal></td></tr>
+  <tr><td>Type I description</td><td><reveal>\(0\le x\le1,\;x^3\le y\le\sqrt x\). The bottom curve is \(y=x^3\), the top is \(y=\sqrt x\).</reveal></td></tr>
+  <tr><td>Type II description</td><td><reveal>Solve each curve for \(x\): \(y=\sqrt x\Rightarrow x=y^2\), \(y=x^3\Rightarrow x=\sqrt[3]{y}\). So \(0\le y\le1,\;y^2\le x\le\sqrt[3]{y}\).</reveal></td></tr>
+</table>
+<p class="muted small">Tip: sketch the region and draw one slice. The curve the slice enters through is the lower limit, the one it leaves through is the upper limit.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Fubini's Theorem for General Regions</div>
+          <div class="step-subtitle">Theorem 5.4 and a solid with a slanted face</div>
+          <div class="step-body">
+<p>If \(f\) is continuous on \(D\), the double integral is an iterated integral whose inner limits come from the region:</p>
+$$\text{Type I:}\quad\iint_D f\,dA=\int_a^b\!\!\int_{g_1(x)}^{g_2(x)} f(x,y)\,dy\,dx,\qquad
+\text{Type II:}\quad\iint_D f\,dA=\int_c^d\!\!\int_{h_1(y)}^{h_2(y)} f(x,y)\,dx\,dy.$$
+<p class="muted small">
+  <b>Example 5.17.</b> The tetrahedron bounded by \(x=0\), \(y=0\), \(z=0\) and the plane \(2x+3y+z=6\). Its floor is the
+  triangle \(D\) below the line \(2x+3y=6\), and its roof is \(z=6-2x-3y\). Top: the solid, cut by a plane. Blue: the
+  cross-section. Below: its area \(A(x)\) and the volume collected so far. Sweep it, then switch to the other order.
+</p>
+<jsx-fubini f="6-2*x-3*y" xmin="0" xmax="3" ymin="0" ymax="2" g1="0" g2="2-2*x/3" h1="0" h2="3-3*y/2"></jsx-fubini>
+<table>
+  <tr><td>Describe \(D\) as Type I</td><td><reveal>\(0\le x\le3,\;0\le y\le 2-\tfrac23x\)</reveal></td></tr>
+  <tr><td>Cross-section area at fixed \(x\)</td><td><reveal>\(\displaystyle A(x)=\int_0^{2-2x/3}(6-2x-3y)\,dy=\tfrac23(3-x)^2\)</reveal></td></tr>
+  <tr><td>Add up the cross-sections</td><td><reveal>\(\displaystyle V=\int_0^3\tfrac23(3-x)^2\,dx=\tfrac23\cdot9=\mathbf{6}\)</reveal></td></tr>
+  <tr><td>Does the other order agree?</td><td><reveal>Yes. Type II: \(\displaystyle\int_0^2\!\!\int_0^{3-3y/2}(6-2x-3y)\,dx\,dy=6\). The same solid, sliced the other way.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 5.12</div>
+          <div class="step-subtitle">Evaluating a Type I integral: \(\displaystyle\iint_D x^2e^{xy}\,dA\)</div>
+          <div class="step-body">
+<p class="muted small">
+  \(D=\{0\le x\le2,\;x/2\le y\le1\}\), a triangle. Sweep once to see why the lower limit moves but the upper limit does not.
+</p>
+<jsx-region g1="x/2" g2="1" xmin="0" xmax="2" ymin="0" ymax="1" desc-i="0 ≤ x ≤ 2, x/2 ≤ y ≤ 1"></jsx-region>
+<table>
+  <tr><td>Set up</td><td><reveal>\(\displaystyle\int_0^2\!\!\int_{x/2}^{1}x^2e^{xy}\,dy\,dx\)</reveal></td></tr>
+  <tr><td>Inner integral (treat \(x\) as constant)</td><td><reveal>\(\displaystyle\int_{x/2}^1x^2e^{xy}\,dy=\Big[x\,e^{xy}\Big]_{y=x/2}^{y=1}=xe^{x}-xe^{x^2/2}\)</reveal></td></tr>
+  <tr><td>Outer integral</td><td><reveal>\(\displaystyle\int_0^2\left(xe^x-xe^{x^2/2}\right)dx=\Big[xe^x-e^x-e^{x^2/2}\Big]_0^2=(2e^2-e^2-e^2)-(-1-1)=\mathbf{2}\)</reveal></td></tr>
+  <tr><td>Why not Type II?</td><td><reveal>It is legal (\(0\le y\le1,\;0\le x\le2y\)), but then the inner integral is \(\int x^2e^{xy}\,dx\), which needs integration by parts twice. The order was chosen for the integrand.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Switching the Order</div>
+          <div class="step-subtitle">When one order cannot be done at all: \(\displaystyle\int_0^1\!\!\int_x^1 e^{y^2}\,dy\,dx\)</div>
+          <div class="step-body">
+<p>
+  The integral \(\int e^{y^2}\,dy\) has no elementary antiderivative, so the inner step in the order given is a dead end.
+  The fix is to read the region off the limits, then describe the <i>same</i> region the other way.
+</p>
+<p class="muted small">
+  Start on Type I (the order given: \(0\le x\le1,\;x\le y\le1\)). Then switch to Type II and sweep again.
+</p>
+<jsx-region g1="x" g2="1" h1="0" h2="y" xmin="0" xmax="1" ymin="0" ymax="1" desc-i="0 ≤ x ≤ 1, x ≤ y ≤ 1" desc-ii="0 ≤ y ≤ 1, 0 ≤ x ≤ y"></jsx-region>
+<table>
+  <tr><td>The region</td><td><reveal>The triangle with vertices \((0,0)\), \((0,1)\), \((1,1)\), under the line \(y=1\) and above \(y=x\)</reveal></td></tr>
+  <tr><td>Rewrite as Type II</td><td><reveal>\(0\le y\le1,\;0\le x\le y\), so \(\displaystyle\int_0^1\!\!\int_0^{y}e^{y^2}\,dx\,dy\)</reveal></td></tr>
+  <tr><td>Inner integral</td><td><reveal>\(\displaystyle\int_0^ye^{y^2}\,dx=ye^{y^2}\), since \(e^{y^2}\) is constant in \(x\)</reveal></td></tr>
+  <tr><td>Outer integral</td><td><reveal>\(\displaystyle\int_0^1ye^{y^2}\,dy=\Big[\tfrac12e^{y^2}\Big]_0^1=\mathbf{\dfrac{e-1}{2}}\)</reveal></td></tr>
+</table>
+<p class="muted small">Order of steps: sketch the region from the limits, redraw the slice the other way, read the new limits, then integrate.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Theorem 5.5</div>
+          <div class="step-subtitle">Decomposing a region</div>
+          <div class="step-body">
+<p>
+  If \(D=D_1\cup D_2\) with the pieces overlapping only along a boundary, then
+  \(\displaystyle\iint_D f\,dA=\iint_{D_1}f\,dA+\iint_{D_2}f\,dA\).
+  Use it when \(D\) is not Type I or Type II as a whole, but is a union of pieces that are.
+</p>
+<p class="muted small">
+  The L-shaped region below has a top edge that jumps at \(x=1\), and a Type I description needs \(g_2\) to be continuous.
+  Cut it at the dashed line.
+</p>
+<jsx-region g1="0" g2="(x<1?2:1)" xmin="0" xmax="2" ymin="0" ymax="2" split="1" desc-i="0 ≤ x ≤ 2, 0 ≤ y ≤ 2 for x < 1 and 0 ≤ y ≤ 1 for x ≥ 1"></jsx-region>
+<p>Evaluate \(\displaystyle\iint_D(x+y)\,dA\) over this L.</p>
+<table>
+  <tr><td>\(D_1\)</td><td><reveal>\(0\le x\le1,\;0\le y\le2\)</reveal></td></tr>
+  <tr><td>\(D_2\)</td><td><reveal>\(1\le x\le2,\;0\le y\le1\)</reveal></td></tr>
+  <tr><td>\(\displaystyle\iint_{D_1}(x+y)\,dA\)</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_0^2(x+y)\,dy\,dx=\int_0^1(2x+2)\,dx=3\)</reveal></td></tr>
+  <tr><td>\(\displaystyle\iint_{D_2}(x+y)\,dA\)</td><td><reveal>\(\displaystyle\int_1^2\!\!\int_0^1(x+y)\,dy\,dx=\int_1^2\left(x+\tfrac12\right)dx=2\)</reveal></td></tr>
+  <tr><td>Add them</td><td><reveal>\(3+2=\mathbf{5}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Area and Average Value</div>
+          <div class="step-subtitle">Using \(f=1\), and dividing by the area</div>
+          <div class="step-body">
+<p>Taking \(f(x,y)=1\) makes the volume over \(D\) equal to its base area:</p>
+$$A(D)=\iint_D 1\,dA,\qquad f_{\text{ave}}=\frac{1}{A(D)}\iint_D f(x,y)\,dA.$$
+<p><b>Example 5.18.</b> The area bounded below by \(y=x^2\) and above by \(y=2x\) in the first quadrant.</p>
+<p><reveal>The curves meet at \(x=0\) and \(x=2\). \(\displaystyle A=\int_0^2\!\!\int_{x^2}^{2x}dy\,dx=\int_0^2(2x-x^2)\,dx=\mathbf{\tfrac43}\).</reveal></p>
+<p><b>Example 5.19.</b> The average value of \(f(x,y)=7xy^2\) over the region between \(x=y\) and \(x=\sqrt y\).</p>
+<jsx-region g1="x*x" g2="x" h1="y" h2="sqrt(y)" xmin="0" xmax="1" ymin="0" ymax="1" desc-i="0 ≤ x ≤ 1, x² ≤ y ≤ x" desc-ii="0 ≤ y ≤ 1, y ≤ x ≤ √y"></jsx-region>
+<table>
+  <tr><td>Area of \(D\)</td><td><reveal>\(\displaystyle\int_0^1(x-x^2)\,dx=\tfrac12-\tfrac13=\tfrac16\)</reveal></td></tr>
+  <tr><td>The double integral</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_{x^2}^{x}7xy^2\,dy\,dx=\tfrac73\int_0^1(x^4-x^7)\,dx=\tfrac73\cdot\tfrac{3}{40}=\tfrac{7}{40}\)</reveal></td></tr>
+  <tr><td>Average value</td><td><reveal>\(\dfrac{7/40}{1/6}=\mathbf{\dfrac{21}{20}}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Problems from the Text</div>
+          <div class="step-subtitle">OpenStax Section 5.2 (Checkpoints and Example 5.15)</div>
+          <div class="step-body">
+<p class="muted small">Sketch the region, set up the iterated integral, evaluate, then reveal.</p>
+<table>
+  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>Checkpoint 5.11</td><td>\(\displaystyle\iint_D(x^2+y^2)\,dA\) where \(D\) is the first-quadrant region between \(y=2x\) and \(y=x^2\).</td><td><reveal>\(\displaystyle\int_0^2\!\!\int_{x^2}^{2x}(x^2+y^2)\,dy\,dx=\int_0^2\left(\tfrac{14}{3}x^3-x^4-\tfrac13x^6\right)dx=\mathbf{\tfrac{216}{35}}\). Type II gives the same number.</reveal></td></tr>
+  <tr><td>Checkpoint 5.14</td><td>The average value of \(f(x,y)=xy\) over the triangle with vertices \((0,0)\), \((1,0)\), \((1,3)\).</td><td><reveal>\(D=\{0\le x\le1,\;0\le y\le3x\}\), \(A=\tfrac32\). \(\displaystyle\iint_D xy\,dA=\int_0^1\tfrac92x^3\,dx=\tfrac98\). Average \(=\mathbf{\tfrac34}\).</reveal></td></tr>
+  <tr><td>Example 5.15</td><td>Reverse the order and evaluate \(\displaystyle\int_0^{\sqrt2}\!\!\int_0^{2-x^2}xe^{x^2}\,dy\,dx\).</td><td><reveal>Region: \(0\le y\le2,\;0\le x\le\sqrt{2-y}\). \(\displaystyle\int_0^2\!\!\int_0^{\sqrt{2-y}}xe^{x^2}dx\,dy=\tfrac12\int_0^2\left(e^{2-y}-1\right)dy=\mathbf{\tfrac12(e^2-3)}\).</reveal></td></tr>
+  <tr><td>Checkpoint 5.12</td><td>The volume under \(f(x,y)=10-2x+y\) over the region \(0\le x\le1,\;0\le y\le e^x\).</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_0^{e^x}(10-2x+y)\,dy\,dx=\int_0^1\left[(10-2x)e^x+\tfrac12e^{2x}\right]dx=\mathbf{\tfrac{e^2+40e-49}{4}}\approx16.78\).</reveal></td></tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Summary and What Comes Next</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Region types</b></td><td>Type I: \(a\le x\le b,\;g_1(x)\le y\le g_2(x)\). Type II: \(c\le y\le d,\;h_1(y)\le x\le h_2(y)\).</td></tr>
+  <tr><td><b>Computing</b></td><td>Inner limits are functions of the outer variable; outer limits are constants. The result is a number.</td></tr>
+  <tr><td><b>Choosing an order</b></td><td>Sketch \(D\) and one slice. Pick the order that keeps the limits simple <i>and</i> the integrand integrable. Switch by redescribing \(D\).</td></tr>
+  <tr><td><b>Pieces</b></td><td>If \(D\) is not Type I or II, cut it into pieces that are, and add the integrals.</td></tr>
+  <tr><td><b>Uses</b></td><td>area \(\iint_D1\,dA\), volume under \(f\), average value \(\frac{1}{A(D)}\iint_Df\,dA\)</td></tr>
+</table>
+<p class="muted small">
+  Not covered today, in the same section of the text: improper double integrals (unbounded regions, Theorems 5.6 and 5.7) and joint
+  probability densities (Examples 5.22 and 5.23). Next lesson: regions like the disk we started with are far easier in polar coordinates.
+</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
