@@ -513,11 +513,13 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-02-26",
-    "title": "Linear Spaces",
+    "title": "Introduction to Linear Spaces",
     "subtitle": "",
-    "description": "",
+    "description": "Section 4.1: the eight rules of a linear space, examples in function, matrix and sequence spaces, subspaces, basis, coordinates, dimension, and the solution space of a linear differential equation.",
     "tags": [
-      "Linear Spaces"
+      "Linear Spaces",
+      "Subspaces",
+      "Basis and dimension"
     ],
     "url": "linear-algebra/fall2025/2025-10-03-linear-space/index.html"
   },

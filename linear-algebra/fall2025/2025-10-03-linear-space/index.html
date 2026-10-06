@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Introduction to Linear Spaces</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
@@ -25,7 +25,7 @@
 <body>
 
 <header class="site-header">
-  <h1>Linear Spaces</h1>
+  <h1>Introduction to Linear Spaces</h1>
   <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
 </header>
 
@@ -35,171 +35,195 @@
 
       <!-- STEPS -->
       <div class="step is-visible" data-step="1">
-        <div class="step-title">Definition 4.1.1</div>
-        <div class="step-subtitle">Linear spaces (or vector spaces)</div>
+        <div class="step-title">Motivation</div>
+        <div class="step-subtitle">Example 1: a differential equation</div>
         <div class="step-body">
-          A linear space V is a set endowed with a rule for addition and a rule for scalar multiplication such that these operations satisfy the following eight rules (for all f, g, h in V and c, k in \(\mathbb{R}\))<br>
-          1. \((f+g)+h=f+(g+h)\)<br>
-          2. \(f+g=g+f\)<br>
-          3. There exists a neutral element n in v such that \(f+n=f\) for all f in V. This n is unique and denoted by 0.<br>
-          4. For each f in V, there exists a g in V such that \(f+g=0\). This g is unique and denoted by \((-f)\)<br>
-          5. \(k(f+g)=kf+kg\)<br>
-          6. \((c+k)f=cf+kf\)<br>
-          7. \(c(kf)=(ck)f\)<br>
-          8. \(1f=f\)
+<p>Consider the differential equation
+$$f''(x)+f(x)=0 .$$
+A solution is a function \(f\) whose second derivative is \(-f\).</p>
+<table>
+  <tr><td>Two solutions you already know</td><td><reveal>\(\sin x\) and \(\cos x\), since \((\sin x)''=-\sin x\) and \((\cos x)''=-\cos x\)</reveal></td></tr>
+  <tr><td>If \(f\) and \(g\) are solutions, is \(f+g\)?</td><td><reveal>Yes: \((f+g)''+(f+g)=(f''+f)+(g''+g)=0\)</reveal></td></tr>
+  <tr><td>If \(f\) is a solution and \(k\) a constant, is \(kf\)?</td><td><reveal>Yes: \((kf)''+kf=k(f''+f)=0\)</reveal></td></tr>
+  <tr><td>So every "linear combination" is a solution</td><td><reveal>\(f(x)=c_1\sin x+c_2\cos x\). In fact all solutions have this form.</reveal></td></tr>
+</table>
+<p>The solutions behave like vectors: we can add them and scale them. Their set looks like a 2-dimensional space with "basis" \(\sin x,\cos x\), but its elements are functions, not arrows or columns of numbers. This section makes that idea precise.</p>
         </div>
       </div>
 
       <div class="step" data-step="2">
-        <div class="step-title">Examples of Linear Spaces</div>
-        <div class="step-subtitle"></div>
+        <div class="step-title">Definition 4.1.1</div>
+        <div class="step-subtitle">Linear spaces (or vector spaces)</div>
         <div class="step-body">
-         <ul>
-            <li>\(\mathbb{R}^{n}\) is the prototype of linear spaces</li>
-            <li>Let \(F(\mathbb{R},\mathbb{R})\) be the set of all functions from \(\mathbb{R}\) to \(\mathbb{R}\) with the operations $$(f+g)(x)=f(x)+g(x)$$ and $$(kf)(x)=kf(x)$$</li>
-            <li>\(\mathbb{R}^{n\times m}\) the set of all \(n \times m\) matrices, is a linear space. What is the neutral element?</li>
-            <li>The set of all infinite sequences of real numbers \((x_0,x_1,x_2,\cdots)\) with component wise addition and multiplication by scalar. What is the neutral element?</li>
-         </ul>
+<p>A <b>linear space</b> \(V\) is a set with a rule for addition (if \(f,g\) are in \(V\), so is \(f+g\)) and a rule for scalar multiplication (if \(f\) is in \(V\) and \(k\in\mathbb{R}\), then \(kf\) is in \(V\)) satisfying these eight rules, for all \(f,g,h\) in \(V\) and all \(c,k\) in \(\mathbb{R}\):</p>
+<ol>
+  <li>\((f+g)+h=f+(g+h)\)</li>
+  <li>\(f+g=g+f\)</li>
+  <li>There is a <b>neutral element</b> \(n\) in \(V\) with \(f+n=f\) for all \(f\). It is unique and denoted \(0\).</li>
+  <li>For each \(f\) there is a \(g\) with \(f+g=0\). It is unique and denoted \(-f\).</li>
+  <li>\(k(f+g)=kf+kg\)</li>
+  <li>\((c+k)f=cf+kf\)</li>
+  <li>\(c(kf)=(ck)f\)</li>
+  <li>\(1f=f\)</li>
+</ol>
+<p class="muted small">In brief: a set with two reasonable operations, addition and scalar multiplication, that allow us to form linear combinations. Everything we did in \(\mathbb{R}^n\) (span, independence, basis, dimension, linear transformations) only used these rules.</p>
         </div>
       </div>
 
       <div class="step" data-step="3">
-        <div class="step-title">More examples of linear spaces</div>
-        <div class="step-subtitle"></div>
+        <div class="step-title">Examples of Linear Spaces</div>
+        <div class="step-subtitle">Examples 2 to 8: what is the neutral element?</div>
         <div class="step-body">
-          <ul>
-            <li>The linear equations in three unknowns $$ax+by+cz=d$$</li>
-            <li>A plane with no coordinates</li>
-            <li>Let \(\mathbb{C}=\{a+bi\text{ such that }a,b\in \mathbb{R},i^2=-1\}\) be the set of complex numbers</li>
-          </ul>
-          We say that an element \(f\) of a linear space is a linear combination of the elements \(f_1,f_2,\cdots,f_n\) if $$f=c_1f_1+c_2f_2+\cdots + c_nf_n$$ for some scalars \(c_1,c_2,\cdots,c_n\).
-        </div>
-      </div>
-      <div class="step" data-step="4">
-        <div class="step-title">Definition 4.1.2</div>
-        <div class="step-subtitle">Subspaces</div>
-        <div class="step-body">
-          A subset W of a linear space W is called a subspace of V if:
-          <ul>
-            <li>W contains the neutral element 0 of V</li>
-            <li>W is closed under addition (if f and g are in W, then so is \(f+g\))</li>
-            <li>W is closed under scalar multiplication (if f is in W and k is a scalar, then kf is in W) </li>
-          </ul>
-          We can summarize parts b and c by saying that W is closed under linear combinations. Also notice that a linear subspace is also a linear space on its own, why we didn't prove that the eight properties hold?
-        </div>
-      </div>
-      <div class="step" data-step="5">
-        <div class="step-title">Examples of subspaces</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          <ul>
-            <li>Show that the polynomials of degree \(\leq 2\), of the form \(f(x)=a+bx+cx^2\), are a subspace W of the space \(F(\mathbb{R},\mathbb{R})\) of all functions from \(\mathbb{R}\) to \(\mathbb{R}\)</li>
-            <li>Show that the differential functions form a subspace W of \(F(\mathbb{R},\mathbb{R}) \)</li>
-            <li>\(C^{\infty}(\mathbb{R})\) The smooth functions</li>
-            <li>P, the set of all polynomials</li>
-            <li>\(P_n\) the set of all polynomials of degree \(\leq n\)</li>
-            </ul>
-        </div>
-      </div>
-      <div class="step" data-step="6">
-        <div class="step-title">Definition 4.1.3</div>
-        <div class="step-subtitle">Span, linear independence, basis, coordinates</div>
-        <div class="step-body">
-          Consider the elements \(f_1,\cdots,f_n\) in a linear space V.
-          <ul>
-            <li>a. We say that \(f_1,\cdots,f_n\) span V if every \(f\) in V can be expressed as a linear combination of \(f_1,\cdots,f_n\)</li>
-            <li>b. We say \(f_i\) is redundant if it is a linear combination of \(f_1,\cdots,f_{i-1}\). The elements \(f_1,\cdots,f_n\) are called linearly independent if none of them is redundant. This is the case if the equation<br>
-            $$c_1f_1+\cdots+c_nf_n=0$$
-            has only the trivial solution
-            $$c_1=\cdots=c_n=0$$
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="step" data-step="7">
-        <div class="step-title">Span, linear independence, basis, coordinates (continued)</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          We say that elements \(f_1,\cdots,f_n\) are a basis of V is they span V and are linearly independent. This means that every f in V can be written uniquely as a linear combination $f=c_1f_1+\cdots+c_nf_n$. The coefficients \(c_1,\cdots,c_n\) are called the coordinates of f with respect to the basis \(\mathfrak{B}=(f_1,\cdots,f_n)\). The vector
-          $$\begin{bmatrix}
-            c_1 \\
-            \vdots \\
-            c_n
-          \end{bmatrix}$$
-          in \(\mathbb{R}^{n}\) is called the \(\mathfrak{B}\)-coordinate vector of f, denoted by \([f]_{\mathfrak{B}}\)<br>
-          The transformation
-          $$L(f)=[f]_\mathfrak{B}=\begin{bmatrix}
-            c_1 \\
-            \vdots \\
-            c_n
-          \end{bmatrix} $$ from V to \(\mathbb{R}^{n}\) is called the \(\mathfrak{B}\)-coordinate transformation, sometimes denoted by \(L_{\mathfrak{B}}\)
-        </div>
-      </div>
-      <div class="step" data-step="8">
-        <div class="step-title">Theorem 4.1.4</div>
-        <div class="step-subtitle">Linearity of the coordinate transformation \(L_{\mathfrak{B}}\)</div>
-        <div class="step-body">
-          If \(\mathfrak{B}\) is a basis of a linear space V, then:
-          <ul>
-            <li>\([f+g]_{\mathfrak{B}}=[f]_{\mathfrak{B}}+[g]_{\mathfrak{B}}\) for all elements f and g of V, and</li>
-            <li>\([kf]_{\mathfrak{B}}=k[f]_{\mathfrak{B}}\) for all f and V and for all scalars k</li>
-          </ul>
-        </div>
-      </div>
-      <div class="step" data-step="9">
-        <div class="step-title">Theorem 4.1.5</div>
-        <div class="step-subtitle">Dimension</div>
-        <div class="step-body">
-          If a linear space V has a basis with n elements, then all other bases of V consist of n elements as well. We say that n is dimension of V:
-          $$dim(V)=n$$
-        </div>
-      </div>
-      <div class="step" data-step="10">
-        <div class="step-title">Examples from Dimension</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          1. Find a basis of \(\mathbb{R}^{2\times 2}\).<br>
-          2. Find a basis of \(P_2\) the space of all polynomials of degree \(\leq 2\), and thus determine the dimension of \(P_2\).
-        </div>
-      </div>
-      <div class="step" data-step="11">
-        <div class="step-title">Summary 4.1.6</div>
-        <div class="step-subtitle">Finding a basis of a linear space V</div>
-        <div class="step-body">
-          a. Write down a typical element of V, in terms of some arbitrary constants.<br>
-          b. Using the arbitrary constants as coefficients, express your typical elements as a linear combination of some elements of V.<br>
-          c. Verify that the elements of V in this linear combination are linearly independent, then they will form a basis of V.
-        </div>
-      </div>
-      <div class="step" data-step="12">
-        <div class="step-title">Examples</div>
-        <div class="step-subtitle">Basis</div>
-        <div class="step-body">
-          Find a basis of the space V of all matrices B that commute with \(A=\begin{bmatrix}
-           0 & 1 \\
-           2 & 3 
-          \end{bmatrix}\)
-        </div>
-      </div>
-      <div class="step" data-step="13">
-        <div class="step-title">Theorem 4.1.7</div>
-        <div class="step-subtitle">Linear differential equations</div>
-        <div class="step-body">
-          The solutions of the differential equation.
-          $$f''(x)+af'(x)+bf(x)=0$$ where a, b are constants, form a two-dimensional subspace of the space \(C^{\infty}\) of smooth functions. More generally, the solutions of the differential equation
-          $$f^{(n)}(x)+a_{n-1}f^{(n-1)}+\cdots+a_1f'(x)+a_0f(x)=0$$
-          where \(a_0,\cdots,a_{n-1}\) are constants form an n-dimensional subspace of \(C^{\infty}\). A differential equation of this form is called an nth-order differential equation with constant coefficients.
-        </div>
-      </div>
-      <div class="step" data-step="14">
-        <div class="step-title">Definition 4.1.8</div>
-        <div class="step-subtitle">Finite dimensional linear spaces</div>
-        <div class="step-body">
-          A linear space V is called finite dimensional if it has a (finite) basis \(f_1,\cdots,f_n\). Otherwise, the space is called infinite dimensional. These ideas are from 1888.
+<table>
+  <tr><td>Ex. 2: \(\mathbb{R}^n\), the prototype</td><td><reveal>Neutral element: the zero vector \(\vec 0\)</reveal></td></tr>
+  <tr><td>Ex. 3: \(F(\mathbb{R},\mathbb{R})\), all functions \(\mathbb{R}\to\mathbb{R}\), with \((f+g)(x)=f(x)+g(x)\) and \((kf)(x)=kf(x)\)</td><td><reveal>The zero function, \(f(x)=0\) for all \(x\)</reveal></td></tr>
+  <tr><td>Ex. 4: \(\mathbb{R}^{n\times m}\), all \(n\times m\) matrices</td><td><reveal>The zero matrix</reveal></td></tr>
+  <tr><td>Ex. 5: all infinite sequences \((x_0,x_1,x_2,\dots)\), added and scaled term by term</td><td><reveal>The sequence \((0,0,0,\dots)\)</reveal></td></tr>
+</table>
+<p class="muted small">Also linear spaces (read Examples 6 to 8): the equations \(ax+by+cz=d\), geometric vectors in a plane with no coordinate system, and the complex numbers \(\mathbb{C}\). Besides \(\mathbb{R}^n\), the most important examples are <b>spaces of functions</b>.</p>
         </div>
       </div>
 
-      
+      <div class="step" data-step="4">
+        <div class="step-title">Definition 4.1.2</div>
+        <div class="step-subtitle">Subspaces, Examples 10, 12, 14</div>
+        <div class="step-body">
+<p>A subset \(W\) of a linear space \(V\) is a <b>subspace</b> of \(V\) if</p>
+<ul>
+  <li>a. \(W\) contains the neutral element \(0\) of \(V\);</li>
+  <li>b. \(W\) is closed under addition (if \(f,g\) are in \(W\), so is \(f+g\));</li>
+  <li>c. \(W\) is closed under scalar multiplication (if \(f\) is in \(W\) and \(k\) is a scalar, \(kf\) is in \(W\)).</li>
+</ul>
+<p>We summarize b and c by saying that \(W\) is closed under linear combinations.</p>
+<p><b>Ex. 10.</b> The polynomials \(f(x)=a+bx+cx^2\) of degree \(\le2\) form a subspace of \(F(\mathbb{R},\mathbb{R})\). Check a, b, c:</p>
+<table>
+  <tr><td>a. Contains the zero function?</td><td><reveal>\(f(x)=0=0+0x+0x^2\), yes</reveal></td></tr>
+  <tr><td>b. Closed under addition?</td><td><reveal>\((a+bx+cx^2)+(p+qx+rx^2)=(a+p)+(b+q)x+(c+r)x^2\), still degree \(\le2\)</reveal></td></tr>
+  <tr><td>c. Closed under scalar multiplication?</td><td><reveal>\(k(a+bx+cx^2)=ka+(kb)x+(kc)x^2\), yes</reveal></td></tr>
+</table><p><b>Ex. 12.</b> Other subspaces of \(F(\mathbb{R},\mathbb{R})\): the differentiable functions, the smooth functions \(C^\infty\), all polynomials \(P\), and \(P_n\) (degree \(\le n\)). <b>Ex. 14.</b> The noninvertible \(2\times2\) matrices are not a subspace of \(\mathbb{R}^{2\times2}\). Why? <reveal>Not closed under addition: \(\begin{bmatrix}1&0\\0&0\end{bmatrix}+\begin{bmatrix}0&0\\0&1\end{bmatrix}=I_2\), and \(I_2\) is invertible.</reveal></p>
+        </div>
+      </div>
+
+      <div class="step" data-step="5">
+        <div class="step-title">Definition 4.1.3</div>
+        <div class="step-subtitle">Span, independence, basis, coordinates</div>
+        <div class="step-body">
+<p>Let \(f_1,\dots,f_n\) be elements of a linear space \(V\).</p>
+<ul>
+  <li><b>Span:</b> every \(f\) in \(V\) is a linear combination \(c_1f_1+\cdots+c_nf_n\).</li>
+  <li><b>Linearly independent:</b> \(c_1f_1+\cdots+c_nf_n=0\) has only the trivial solution \(c_1=\cdots=c_n=0\) (no \(f_i\) is redundant).</li>
+  <li><b>Basis:</b> spans and independent. Then every \(f\) is a <i>unique</i> combination \(f=c_1f_1+\cdots+c_nf_n\).</li>
+</ul>
+<p>The \(c_i\) are the <b>coordinates</b> of \(f\) with respect to \(\mathfrak{B}=(f_1,\dots,f_n)\), and \([f]_{\mathfrak{B}}=\begin{bmatrix}c_1\\ \vdots\\ c_n\end{bmatrix}\) in \(\mathbb{R}^n\). The map \(L_{\mathfrak{B}}(f)=[f]_{\mathfrak{B}}\) is invertible with \(L_{\mathfrak{B}}^{-1}(\vec e_i)=f_i\).</p>
+<p><b>Theorem 4.1.4.</b> \(L_{\mathfrak{B}}\) is linear: \([f+g]_{\mathfrak{B}}=[f]_{\mathfrak{B}}+[g]_{\mathfrak{B}}\) and \([kf]_{\mathfrak{B}}=k[f]_{\mathfrak{B}}\). Why? <reveal>Coordinates are the coefficients of the unique linear combination; adding or scaling combinations adds or scales coefficients.</reveal></p>
+        </div>
+      </div>
+
+      <div class="step" data-step="6">
+        <div class="step-title">Theorem 4.1.5</div>
+        <div class="step-subtitle">Dimension</div>
+        <div class="step-body">
+<p>If a linear space \(V\) has a basis with \(n\) elements, then all other bases of \(V\) consist of \(n\) elements as well. We say that \(n\) is the <b>dimension</b> of \(V\):
+$$\dim(V)=n .$$</p>
+<p><b>Why?</b> If \(\mathfrak{B}\) has \(n\) elements and \(\mathfrak{C}=(g_1,\dots,g_m)\) is another basis, then \([g_1]_{\mathfrak{B}},\dots,[g_m]_{\mathfrak{B}}\) are independent vectors in \(\mathbb{R}^n\) (by Theorem 4.1.4), so \(m\le n\). Swap the roles to get \(n\le m\).</p>
+<p>So dimension is well defined, and \(V\) "looks like" \(\mathbb{R}^n\) through \(L_{\mathfrak{B}}\).</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="7">
+        <div class="step-title">Examples of Bases</div>
+        <div class="step-subtitle">Examples 15 and 16</div>
+        <div class="step-body">
+<p><b>Ex. 15.</b> Find a basis of \(\mathbb{R}^{2\times2}\), the space of all \(2\times2\) matrices, and thus its dimension.</p>
+<table>
+  <tr><td>Write a typical element as a combination</td><td><reveal>\(\begin{bmatrix}a&b\\c&d\end{bmatrix}=a\begin{bmatrix}1&0\\0&0\end{bmatrix}+b\begin{bmatrix}0&1\\0&0\end{bmatrix}+c\begin{bmatrix}0&0\\1&0\end{bmatrix}+d\begin{bmatrix}0&0\\0&1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Independent?</td><td><reveal>Yes: each matrix has a \(1\) in a position where the other three have a \(0\)</reveal></td></tr>
+  <tr><td>Dimension</td><td><reveal>\(\dim(\mathbb{R}^{2\times2})=4\); the coordinate vector is \((a,b,c,d)\)</reveal></td></tr>
+</table>
+<p><b>Ex. 16.</b> Find a basis of \(P_2\), the polynomials of degree \(\le2\), and thus its dimension.</p>
+<table>
+  <tr><td>Typical element</td><td><reveal>\(f(x)=a+bx+cx^2=a\cdot1+b\cdot x+c\cdot x^2\)</reveal></td></tr>
+  <tr><td>Basis and dimension</td><td><reveal>\(\mathfrak{B}=(1,x,x^2)\) (standard basis of \(P_2\); independence left as an exercise), so \(\dim(P_2)=3\), and \([f]_{\mathfrak{B}}=(a,b,c)\)</reveal></td></tr>
+</table>
+        </div>
+      </div>
+
+      <div class="step" data-step="8">
+        <div class="step-title">Summary 4.1.6</div>
+        <div class="step-subtitle">Finding a basis of a linear space \(V\), Example 17</div>
+        <div class="step-body">
+<ul>
+  <li>a. Write down a typical element of \(V\), in terms of some arbitrary constants.</li>
+  <li>b. Using the arbitrary constants as coefficients, express your typical element as a linear combination of some elements of \(V\).</li>
+  <li>c. Verify that the elements of \(V\) in this linear combination are linearly independent. Then they form a basis of \(V\).</li>
+</ul>
+<p><b>Example 17.</b> Find a basis of the space \(V\) of all matrices \(B\) that commute with \(A=\begin{bmatrix}0&1\\2&3\end{bmatrix}\) (see Example 13).</p>
+<table>
+  <tr><td>Set \(B=\begin{bmatrix}a&b\\c&d\end{bmatrix}\) and impose \(BA=AB\)</td><td><reveal>\(\begin{bmatrix}2b&a+3b\\2d&c+3d\end{bmatrix}=\begin{bmatrix}c&d\\2a+3c&2b+3d\end{bmatrix}\), so \(2b=c,\ a+3b=d,\ 2d=2a+3c,\ c+3d=2b+3d\)</reveal></td></tr>
+  <tr><td>Solve</td><td><reveal>The last two equations are redundant: \(c=2b\), \(d=a+3b\), with \(a,b\) free</reveal></td></tr>
+  <tr><td>Typical element as a combination</td><td><reveal>\(B=\begin{bmatrix}a&b\\2b&a+3b\end{bmatrix}=a\begin{bmatrix}1&0\\0&1\end{bmatrix}+b\begin{bmatrix}0&1\\2&3\end{bmatrix}=aI_2+bA\)</reveal></td></tr>
+  <tr><td>Basis, dimension</td><td><reveal>\(I_2\) and \(A\) are independent, so \((I_2,A)\) is a basis and \(\dim V=2\)</reveal></td></tr>
+</table>
+        </div>
+      </div>
+
+      <div class="step" data-step="9">
+        <div class="step-title">Theorem 4.1.7</div>
+        <div class="step-subtitle">Linear differential equations, Example 18</div>
+        <div class="step-body">
+<p>The solutions of the differential equation
+$$f''(x)+af'(x)+bf(x)=0\quad(a,b\text{ constants})$$
+form a <b>two-dimensional subspace</b> of the space \(C^\infty\) of smooth functions. More generally, the solutions of
+$$f^{(n)}(x)+a_{n-1}f^{(n-1)}(x)+\cdots+a_1f'(x)+a_0f(x)=0$$
+(\(a_0,\dots,a_{n-1}\) constants) form an \(n\)-dimensional subspace of \(C^\infty\). This is an <b>\(n\)th-order linear differential equation with constant coefficients</b>. (Proved in Section 9.3.)</p>
+<p>Back to the motivation: \(f''+f=0\) is second order, so its solution space is 2-dimensional. Why is \((\cos x,\sin x)\) a basis? <reveal>Both are solutions and they are independent. Two independent elements of a 2-dimensional space form a basis.</reveal></p>
+<p><b>Example 18.</b> Find all solutions of \(f''(x)+f'(x)-6f(x)=0\). <i>Hint:</i> try \(f(x)=e^{kx}\).</p>
+<reveal class="solution">\(f(x)=e^{kx}\) is a solution if \(k^2e^{kx}+ke^{kx}-6e^{kx}=(k^2+k-6)e^{kx}=(k+3)(k-2)e^{kx}=0\), so \(k=2\) or \(k=-3\). Then \(e^{2x}\) and \(e^{-3x}\) are independent solutions, and by Theorem 4.1.7 the solution space is 2-dimensional, so they form a basis. All solutions: \(f(x)=c_1e^{2x}+c_2e^{-3x}\).</reveal>
+        </div>
+      </div>
+
+      <div class="step" data-step="10">
+        <div class="step-title">Definition 4.1.8</div>
+        <div class="step-subtitle">Finite dimensional spaces, Example 19</div>
+        <div class="step-body">
+<p>A linear space \(V\) is <b>finite dimensional</b> if it has a (finite) basis \(f_1,\dots,f_n\), so \(\dim(V)=n\). Otherwise it is <b>infinite dimensional</b>.</p>
+<p><b>Example 19.</b> Why can no finite list of polynomials span the space \(P\) of all polynomials?</p>
+<reveal class="solution">Let \(N\) be the largest degree among \(f_1,\dots,f_n\). Every linear combination lies in \(P_N\), so a polynomial such as \(x^{N+1}\) is never in the span. Hence \(P\) is infinite dimensional (so are \(F(\mathbb{R},\mathbb{R})\) and the sequence space).</reveal>
+        </div>
+      </div>
+
+      <div class="step" data-step="11">
+        <div class="step-title">Problems from the Text</div>
+        <div class="step-subtitle">Bretscher, Exercises 4.1 (numbers as in the book); the rest are homework</div>
+        <div class="step-body">
+<table>
+  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>2</td><td>Is \(\{p(t): p(2)=0\}\) a subspace of \(P_2\)? If so find a basis.</td><td><reveal>Yes. \(p=a+bt+ct^2\) with \(a+2b+4c=0\), so \(a=-2b-4c\) and \(p=b(t-2)+c(t^2-4)\). Basis \((t-2,\ t^2-4)\), dimension 2.</reveal></td></tr>
+  <tr><td>20</td><td>Basis and dimension of \(\left\{\begin{bmatrix}a&b\\c&d\end{bmatrix}: a+d=0\right\}\).</td><td><reveal>\(\begin{bmatrix}a&b\\c&-a\end{bmatrix}=a\begin{bmatrix}1&0\\0&-1\end{bmatrix}+b\begin{bmatrix}0&1\\0&0\end{bmatrix}+c\begin{bmatrix}0&0\\1&0\end{bmatrix}\). Dimension 3.</reveal></td></tr>
+  <tr><td>27</td><td>Basis and dimension of the \(2\times2\) matrices commuting with \(B=\begin{bmatrix}1&0\\0&2\end{bmatrix}\).</td><td><reveal>\(\begin{bmatrix}a&b\\c&d\end{bmatrix}B=\begin{bmatrix}a&2b\\c&2d\end{bmatrix}\) and \(B\begin{bmatrix}a&b\\c&d\end{bmatrix}=\begin{bmatrix}a&b\\2c&2d\end{bmatrix}\), so \(b=c=0\). The diagonal matrices: basis \(\left(\begin{bmatrix}1&0\\0&0\end{bmatrix},\begin{bmatrix}0&0\\0&1\end{bmatrix}\right)\), dimension 2.</reveal></td></tr>
+  <tr><td>50</td><td>Find all solutions of \(f''+8f'-20f=0\).</td><td><reveal>\(k^2+8k-20=(k+10)(k-2)\): \(f=c_1e^{2x}+c_2e^{-10x}\).</reveal></td></tr>
+  </tbody>
+</table>
+        </div>
+      </div>
+
+      <div class="step" data-step="12">
+        <div class="step-title">Summary</div>
+        <div class="step-subtitle">The one-page version</div>
+        <div class="step-body">
+<table>
+  <tr><td><b>Linear space</b></td><td>a set with addition and scalar multiplication satisfying the 8 rules; examples: \(\mathbb{R}^n\), \(\mathbb{R}^{n\times m}\), \(F(\mathbb{R},\mathbb{R})\), \(P_n\), sequences, \(\mathbb{C}\)</td></tr>
+  <tr><td><b>Subspace</b></td><td>contains \(0\), closed under addition and scalar multiplication</td></tr>
+  <tr><td><b>Basis</b></td><td>spans and is linearly independent; every \(f\) is a unique combination \(c_1f_1+\cdots+c_nf_n\)</td></tr>
+  <tr><td><b>Coordinates</b></td><td>\([f]_{\mathfrak{B}}=(c_1,\dots,c_n)\); \(L_{\mathfrak{B}}\) is linear and invertible</td></tr>
+  <tr><td><b>Dimension</b></td><td>the number of elements in any basis; \(\dim\mathbb{R}^{n\times m}=nm\), \(\dim P_n=n+1\)</td></tr>
+  <tr><td><b>Finding a basis</b></td><td>typical element, write as combination, check independence</td></tr>
+  <tr><td><b>Linear DEs</b></td><td>an \(n\)th-order equation with constant coefficients has an \(n\)-dimensional solution space</td></tr>
+</table>
+        </div>
+      </div>
+
       <!-- Controls -->
       <div class="reveal-controls" role="group" aria-label="Slide controls">
         <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
