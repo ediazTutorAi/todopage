@@ -143,9 +143,10 @@ $$\iint_R f(x,y)\,dA=\int_a^b\!\!\int_c^d f(x,y)\,dy\,dx=\int_c^d\!\!\int_a^b f(
   More generally the theorem holds when \(f\) is bounded on \(R\) and discontinuous only along a finite number of continuous curves.
 </p>
 <p class="muted small">
-  Left: cut the solid with a plane at a fixed \(x\). The area of that cross-section is
-  \(A(x)=\int_0^3 f(x,y)\,dy\). Right: \(A(x)\) plotted as the plane sweeps from \(x=0\) to \(x=2\);
-  the shaded area is what has been collected so far. Press Sweep, then switch the order and sweep again.
+  Top: the surface \(z=f(x,y)\) over \(R\), cut by a plane at a fixed \(x\) (parallel to the \(yz\)-plane) or at a fixed \(y\)
+  (parallel to the \(xz\)-plane). The blue region where the plane meets the solid is a cross-section; its area is
+  \(A(x)=\int_0^3 f(x,y)\,dy\). Bottom left: that cross-section on its own. Bottom right: \(A(x)\) as the plane sweeps from \(x=0\) to \(x=2\);
+  the shaded area is the volume collected so far. Press Sweep, then switch the order and sweep again.
 </p>
 <jsx-fubini f="3*x*x - y" xmin="0" xmax="2" ymin="0" ymax="3"></jsx-fubini>
 <p>Both orders end at the same total. What does that say about the volume of the solid?</p>

@@ -569,7 +569,7 @@ step list (head/markup match the other jsx lessons). Edit both files if you hand
   for the "jump to candidate" buttons.
 - `<jsx-fubini f xmin xmax ymin ymax order>` (`js/jsxgraph.js`): two boards. Left: the cross-section area under
   `f` at a fixed `x` (or `y`); right: `A(x)` with the area collected so far shaded. Order buttons swap which
-  variable is sliced; the totals match.
+  variable is sliced; the totals match. **3D slicing view (added 2026-10-05)**: above the two 2D boards, a draggable canvas 3D picture of the surface with the slicing plane (fixed x = parallel to the yz-plane, fixed y = parallel to the xz-plane, switched by the order buttons), the cross-section where the plane meets the solid shaded blue, and the already-swept part of the surface tinted red, so the collected volume is visible. Plain canvas with its own projection and painter's sort (same approach as `<riemann-boxes>`, not shared code). The 2D boards stay: bottom left is the cross-section alone, bottom right is A(x) with the collected area shaded. Sweep, the slice slider and the order buttons drive all three views. Used in step 5 of the double-integrals lesson.
 - `<riemann-boxes f xmin xmax ymin ymax m n rule sliders square rules play max>` (`js/riemann.js`, imported by
   `boot.js`): canvas 3D, drag to rotate, painter's-algorithm face sort, no library. Boxes for an `m x n` grid with
   sample rule `ul|ur|ll|lr|mid`, live Riemann sum vs a fine-midpoint "exact" value. Expressions are plain JS with
@@ -593,6 +593,41 @@ their true angles); height follows from width like `<jsx-lagrange>`. Checked in 
 Example 6's basis `((1,2),(1,-1))` gives `B` diag(5,-1), Example 9's reflection basis `((2,1),(-1,2))` gives
 diag(1,-1). Problem answers were checked by hand against the book's definitions. The textbook PDF in
 `linear-algebra/` is a scan (no text layer): read pages as images (section 3.4 is PDF pages 159-173).
+
+### Other tags added without notes at the time (documented 2026-10-05)
+
+These exist in the code and are used by trigonometry lessons, but were never written up here.
+
+**JSXGraph engine (`js/jsxgraph.js`, needs the CDN `<link>`/`<script>` in the lesson `<head>`):**
+
+- `<jsx-unit-circle start-angle="60" show-grid="all|six|four" show-labels="q1|all" coterminal target-x="-0.5" target-y="-0.866,0.5" build>`
+  (`renderJsxUnitCircle`; Lesson 09 and later). One flexible unit-circle manipulative reused for construction, evaluating
+  expressions, coterminal reduction and "given one ratio find the rest". The draggable point **snaps to the 16 special angles**
+  (multiples of 30 and 45 degrees); `<sign-circle>` is the continuous-drag one. Readouts are plain Unicode text (not KaTeX), since
+  JSXGraph rewrites text nodes every update. `show-grid` (bare = `all`) draws the construction chords, with the blue/orange/black
+  family colors from the workbook (the orange is a local constant, not tied to `--accent`/`--negative`); `show-labels` reveals the
+  exact coordinates; `coterminal` lets the angle accumulate across laps (`start-angle="-690"` works) so dragging shows
+  "add/subtract 360"; `target-x`/`target-y` (comma-separated decimals) draw dashed reference lines colored by the sign convention;
+  `build` stages the construction up. Exact-fraction strings come only from a fixed hand-checked table, never computed.
+- `<jsx-sine-trace fn="sin|cos" a b a-slider a-min a-max b-slider b-min b-max fn2 label label2 xmax ymax>`
+  (`renderJsxSineTrace`; Lesson 11). Draggable point on a circle (radius = amplitude) wired to a live point tracing the sine or
+  cosine curve, joined by a dashed line at the shared height. `a-slider`/`b-slider` turn it into the amplitude/period demo
+  (dragging `a` past 0 shows the reflection). Both modes start the glider at angle 0 (circle's right); cosine mode projects the
+  glider's x down to a `foot` on the horizontal diameter. Negative `a` draws the circle at radius `|a|` and flips only the traced
+  point's sign. `fn2` is a static dashed comparison curve (same convention as `<jsx-graph>`), not wired to the trace.
+
+**Hand-rolled SVG engine (`js/triangle.js`, no library, no CDN tags):**
+
+- `<mirror-angles angle="35">` (Lesson 06, Reference Angle Theorem): one draggable point in QI (clamped 3 to 87 degrees) drives its
+  three mirror angles in QII/QIII/QIV, which share the reference angle and differ only in the signs of x/y. Reuses
+  `renderAxes`/`placeOverlay`/`toSvgPoint`/`buildArcSpan`.
+- `<gears input-radius="2" output-radius="3" input-label output-label unit="in" editable>` (Lesson 10): two meshed gears, drag one and
+  the other turns, for arc length / angular displacement ratios. `editable` adds two radius inputs so the instructor can try other
+  radii live (changing one rebuilds the diagram and resets rotations to 0).
+- `<speed-circle radius="10" angular-speed="36" unit="cm" point-label="P" editable>` (Lesson 10): the one **time-based** tag.
+  A Play/Pause/Reset `requestAnimationFrame` loop sweeps point P at constant `angular-speed` (degrees/sec; default 36 = pi/5 rad/s,
+  chosen to preview a later example), and the readout shows t, theta, s, with theta/t and s/t settling to constant omega and v. The
+  drawn arc is mod 360 each lap, but the numeric readout keeps the true accumulated total.
 
 ## editor-app: Electron install gotcha
 

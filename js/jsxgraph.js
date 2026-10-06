@@ -2946,9 +2946,15 @@ function renderJsxFubini(el) {
     return { cap: c, host: h, set: cap };
   };
   const L = mk(); const R = mk();
+  const view3d = document.createElement('div');
+  const cap3d = document.createElement('div');
+  cap3d.className = 'muted small jsx-strip-cap';
+  const canvas = document.createElement('canvas');
+  canvas.className = 'jsx-fubini-canvas';
+  view3d.append(cap3d, canvas);
   const controls = document.createElement('div');
   controls.className = 'jsx-transform-controls';
-  container.append(readout, grid, controls);
+  container.append(readout, view3d, grid, controls);
   el.replaceWith(container);
 
   const ink = cssVar('--ink') || '#151515';
@@ -3001,6 +3007,102 @@ function renderJsxFubini(el) {
   br.create('text', [() => bbRight()[2] - (bbRight()[2] - bbRight()[0]) * 0.03, () => -(bbRight()[1] - bbRight()[3]) * 0.1, () => state.outer],
     { anchorX: 'right', fontSize: READOUT_VALUE_FONT - 2, color: ink, fixed: true, cssStyle: 'font-weight:800' });
 
+  // ---- 3D view: the surface, the slicing plane, and the cross-section cut out of the solid ----
+  const view = { az: 0.62, el: 0.5 };
+  function draw3d() {
+    const dpr = window.devicePixelRatio || 1;
+    const cw = canvas.clientWidth; const ch = canvas.clientHeight;
+    if (!cw || !ch) return;
+    if (canvas.width !== Math.round(cw * dpr)) { canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr); }
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cw, ch);
+    const [x0, x1] = lim.x; const [y0, y1] = lim.y;
+    const big = Math.max(x1 - x0, y1 - y0); const zr = Math.max(1e-9, zhi - zlo);
+    const ca = Math.cos(view.az); const sa = Math.sin(view.az);
+    const ce = Math.cos(view.el); const se = Math.sin(view.el);
+    const proj = (x, y, z) => {
+      const X = (x - (x0 + x1) / 2) / big; const Y = (y - (y0 + y1) / 2) / big;
+      const Z = ((z - (zlo + zhi) / 2) / zr) * 0.95;
+      const u = X * ca - Y * sa; const w = X * sa + Y * ca;
+      return { u, v: Z * ce + w * se, d: w * ce - Z * se };
+    };
+    let umin = Infinity; let umax = -Infinity; let vmin = Infinity; let vmax = -Infinity;
+    [x0, x1].forEach((x) => [y0, y1].forEach((y) => [zlo, zhi].forEach((z) => {
+      const p = proj(x, y, z);
+      umin = Math.min(umin, p.u); umax = Math.max(umax, p.u); vmin = Math.min(vmin, p.v); vmax = Math.max(vmax, p.v);
+    })));
+    const pad = 16;
+    const sc = Math.min((cw - 2 * pad) / (umax - umin), (ch - 2 * pad) / (vmax - vmin));
+    const cu = (umin + umax) / 2; const cv = (vmin + vmax) / 2;
+    const scr = (x, y, z) => { const p = proj(x, y, z); return [cw / 2 + (p.u - cu) * sc, ch / 2 - (p.v - cv) * sc, p.d]; };
+    const o = state.outer; const i = inner();
+    const at = (u, w) => (o === 'x' ? [u, w] : [w, u]); // (outer, inner) -> (x, y)
+    const P = (u, w, z) => { const [x, y] = at(u, w); return scr(x, y, z); };
+    const [ol, oh] = lim[o]; const [il, ih] = lim[i];
+
+    const faces = [];
+    const quad = (pts, fill, stroke, alpha) => { faces.push({ sp: pts, d: pts.reduce((a, q) => a + q[2], 0) / pts.length, fill, stroke, alpha }); };
+    const S = 26;
+    for (let a = 0; a < S; a++) {
+      for (let b = 0; b < S; b++) {
+        const xa = x0 + ((x1 - x0) * a) / S; const xb = x0 + ((x1 - x0) * (a + 1)) / S;
+        const ya = y0 + ((y1 - y0) * b) / S; const yb = y0 + ((y1 - y0) * (b + 1)) / S;
+        const mid = o === 'x' ? (xa + xb) / 2 : (ya + yb) / 2;
+        const swept = mid <= state.s;
+        quad([scr(xa, ya, f(xa, ya)), scr(xb, ya, f(xb, ya)), scr(xb, yb, f(xb, yb)), scr(xa, yb, f(xa, yb))],
+          swept ? negative : '#9aa0a6', swept ? 'rgba(192,57,43,0.35)' : 'rgba(90,98,110,0.3)', swept ? 0.34 : 0.2);
+      }
+    }
+    quad([P(state.s, il, zlo), P(state.s, ih, zlo), P(state.s, ih, zhi), P(state.s, il, zhi)], accent, accent, 0.1);
+    faces.sort((p, q) => q.d - p.d);
+
+    // base rectangle
+    ctx.lineWidth = 2.5; ctx.strokeStyle = ink;
+    ctx.beginPath();
+    [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].forEach(([x, y], k) => { const p = scr(x, y, 0); if (k) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+    ctx.closePath(); ctx.stroke();
+    faces.forEach((fc) => {
+      ctx.beginPath();
+      fc.sp.forEach((q, k) => (k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])));
+      ctx.closePath();
+      ctx.globalAlpha = fc.alpha; ctx.fillStyle = fc.fill; ctx.fill();
+      ctx.globalAlpha = 1; ctx.lineWidth = 1; ctx.strokeStyle = fc.stroke; ctx.stroke();
+    });
+    // plane outline
+    ctx.lineWidth = 2.5; ctx.strokeStyle = accent;
+    ctx.beginPath();
+    [[il, zlo], [ih, zlo], [ih, zhi], [il, zhi]].forEach(([w, z], k) => { const p = P(state.s, w, z); if (k) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+    ctx.closePath(); ctx.stroke();
+    // cross-section: the region between the plane's cut of the surface and z = 0
+    const N = 120; const cut = [];
+    for (let a = 0; a <= N; a++) { const w = il + ((ih - il) * a) / N; cut.push(P(state.s, w, fv(o, i, state.s, w))); }
+    ctx.beginPath();
+    cut.forEach((q, k) => (k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])));
+    const e1 = P(state.s, ih, 0); const e0 = P(state.s, il, 0);
+    ctx.lineTo(e1[0], e1[1]); ctx.lineTo(e0[0], e0[1]); ctx.closePath();
+    ctx.globalAlpha = 0.6; ctx.fillStyle = accent; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.beginPath();
+    cut.forEach((q, k) => (k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])));
+    ctx.lineWidth = 4; ctx.strokeStyle = accent; ctx.stroke();
+    // axis labels
+    ctx.fillStyle = muted; ctx.font = '700 18px system-ui, sans-serif';
+    const lab = (t, x, y, z) => { const p = scr(x, y, z); ctx.fillText(t, p[0] + 6, p[1] + 4); };
+    lab('x', x1, y0, 0); lab('y', x0, y1, 0); lab('z', x0, y0, zhi);
+  }
+  let rot = null;
+  canvas.style.touchAction = 'none';
+  canvas.addEventListener('pointerdown', (e) => { canvas.setPointerCapture(e.pointerId); rot = { x: e.clientX, y: e.clientY, az: view.az, el: view.el }; });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!rot) return;
+    view.az = rot.az - (e.clientX - rot.x) * 0.008;
+    view.el = Math.max(0.08, Math.min(1.45, rot.el + (e.clientY - rot.y) * 0.006));
+    draw3d();
+  });
+  canvas.addEventListener('pointerup', () => { rot = null; });
+  canvas.addEventListener('pointercancel', () => { rot = null; });
+  window.addEventListener('resize', draw3d);
+
   const f2 = (v) => fmtNum(v).replace('-', '−');
   function refresh() {
     const o = state.outer; const i = inner();
@@ -3016,6 +3118,10 @@ function renderJsxFubini(el) {
     bl.setBoundingBox(bbLeft(), false);
     br.setBoundingBox(bbRight(), false);
     bl.update(); br.update();
+    cap3d.textContent = state.outer === 'x'
+      ? 'The plane x = constant (parallel to the yz-plane) cuts the solid. Drag the picture to rotate it.'
+      : 'The plane y = constant (parallel to the xz-plane) cuts the solid. Drag the picture to rotate it.';
+    draw3d();
     const input = controls.querySelector('input');
     if (input) { input.min = lim[o][0]; input.max = lim[o][1]; input.step = (lim[o][1] - lim[o][0]) / 400; if (Math.abs(parseFloat(input.value) - state.s) > 1e-9) input.value = state.s; }
     controls.querySelectorAll('.jsx-switch .btn').forEach((b) => b.classList.toggle('is-on', b.dataset.o === o));
