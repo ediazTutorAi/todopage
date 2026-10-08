@@ -4,51 +4,93 @@
   "date": "2026-03-04",
   "title": "Double Integrals in Polar Coordinates",
   "subtitle": "",
-  "description": "",
+  "description": "Double integrals in polar coordinates: cut a polar rectangle into pieces to see where the factor r in dA = r dr dθ comes from, sweep a ray through general polar regions, then volumes, areas and the Gaussian integral.",
   "tags": [
-    "double Integrals",
-    "polar coordinats"
+    "double integrals",
+    "polar coordinates",
+    "polar rectangles",
+    "area and volume"
   ],
   "steps": [
     {
-      "tag": "theorem",
-      "label": "Theorem 16.3",
-      "subtitle": "Change of Variables for Double Integrals over Polar Rectangle Regions",
+      "tag": "step",
+      "label": "When Rectangles Fight Back",
+      "subtitle": "A disk is easy to say and hard to slice",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "Let \\(f\\) be continuous on the region R in the xy-plane expressed in polar coordinates as\n            $R=\\{(r,\\theta):0\\leq a \\leq r \\leq b,\\alpha \\leq\\theta\\leq\\beta\\}$, where $\\beta-\\alpha\\leq 2\\pi$. Then $f$\n            is integrable over R, and the double integral of $f$ over R is\n            $$\\iint_{R}f(x,y)dA=\\int_{\\alpha}^{\\beta}\\int_{a}^{b}f(rcos(\\theta),rsin(\\theta)) r dr d\\theta$$"
-    },
-    {
-      "tag": "theorem",
-      "label": "Theorem 16.4",
-      "subtitle": "Change of Variables for Double Integrals over More General Polar Regions",
-      "ggbId": "",
-      "reveal": false,
-      "bodyHtml": "Let $f$ be continuous on the region R in the xy-plane expressed in polar coordinates as:\n            $$R=\\{(r,\\theta):0\\leq g(\\theta)\\leq r\\leq h(\\theta),\\alpha\\leq\\beta\\}$$\n            where $0<\\beta-\\alpha\\leq 2\\pi$. Then\n              $$\\iint_{R}f(x,y)dA=\\int_{\\alpha}^{\\beta}\\int_{g(\\theta)}^{h(\\theta)}f(rcos(\\theta),rsin(\\theta)) r dr\n              d\\theta$$"
+      "bodyHtml": "<p>\n  Last lesson we integrated over regions \\(D\\) by slicing with vertical or horizontal lines. For the disk\n  \\(x^2+y^2\\le4\\) that meant inner limits \\(\\pm\\sqrt{4-x^2}\\) and a square root in every integrand.\n  But the disk is described by <i>two simple conditions</i> in polar coordinates: \\(0\\le r\\le2\\) and \\(0\\le\\theta\\le2\\pi\\).\n</p>\n<p class=\"muted small\">\n  The same disk, now swept by a <b>ray</b> instead of a vertical slice. Press Sweep. Compare where the ray starts and stops\n  with the slice from last lesson.\n</p>\n<jsx-polar-region h1=\"0\" h2=\"2\" tmin=\"0\" tmax=\"2*pi\" xmin=\"-2\" xmax=\"2\" ymin=\"-2\" ymax=\"2\" desc=\"0 ≤ θ ≤ 2π, 0 ≤ r ≤ 2\"></jsx-polar-region>\n<p>What are the limits of \\(r\\) on every ray? What does that tell you about the iterated integral?</p>\n<p><reveal>Every ray runs from \\(r=0\\) to \\(r=2\\): <b>constant limits</b>, just like a rectangle, but in the \\((r,\\theta)\\) variables. Circles, rings, sectors and petals become \"rectangles\" in polar coordinates.</reveal></p>\n<p class=\"muted small\">Goal for today: rewrite \\(\\iint_D f(x,y)\\,dA\\) in \\(r\\) and \\(\\theta\\). The only tricky part is what replaces \\(dA\\).</p>"
     },
     {
       "tag": "step",
-      "label": "Area of Polar Regions",
-      "subtitle": "",
+      "label": "Polar Rectangles and the Factor r",
+      "subtitle": "Where does \\(dA = r\\,dr\\,d\\theta\\) come from?",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "The area of the polar region $R=\\{(r,\\theta):0\\leq g(\\theta)\\leq r\\leq\n              h(\\theta),\\alpha\\leq\\theta\\leq\\beta\\}$ where $0<\\beta-\\alpha\\leq 2\\pi$, is\n                $$A=\\iint_{R}dA=\\int_{\\alpha}^{\\beta}\\int_{g(\\theta)}^{h(\\theta)} r dr d\\theta$$"
+      "bodyHtml": "<p>\n  A <b>polar rectangle</b> is \\(R=\\{(r,\\theta)\\mid a\\le r\\le b,\\ \\alpha\\le\\theta\\le\\beta\\}\\): its sides are circle arcs (constant \\(r\\))\n  and rays (constant \\(\\theta\\)).\n</p>\n<p class=\"muted small\">\n  <b>Example 5.24.</b> \\(R=\\{1\\le r\\le3,\\ 0\\le\\theta\\le\\pi\\}\\). Cut it into \\(m\\) rings and \\(n\\) wedges. The red piece is one\n  subrectangle \\(R_{ij}\\). Drag <i>ring</i> to move it outward and watch its two arcs and its area.\n</p>\n<jsx-polar-rect rmin=\"1\" rmax=\"3\" tmin=\"0\" tmax=\"pi\" m=\"3\" n=\"4\"></jsx-polar-rect>\n<table>\n  <tr><td>Describe the picture in words</td><td><reveal>The upper half of a ring (annulus) with inner radius 1 and outer radius 3.</reveal></td></tr>\n  <tr><td>Is the red piece's area \\(\\Delta r\\,\\Delta\\theta\\)?</td><td><reveal>No. Move the ring slider: the area grows as the piece moves outward, because the same \\(\\Delta\\theta\\) subtends a longer arc at larger \\(r\\).</reveal></td></tr>\n  <tr><td>Exact area of a piece</td><td><reveal>\\(\\Delta A=\\tfrac12(r_i^2-r_{i-1}^2)\\Delta\\theta=\\tfrac12(r_i+r_{i-1})(r_i-r_{i-1})\\Delta\\theta=r^*\\,\\Delta r\\,\\Delta\\theta\\), where \\(r^*\\) is the midpoint radius.</reveal></td></tr>\n  <tr><td>What do the two sums in the readout say?</td><td><reveal>\\(\\sum r^*\\Delta r\\Delta\\theta\\) matches the true area \\(\\tfrac12(b^2-a^2)(\\beta-\\alpha)\\). Forgetting the factor \\(r\\) gives the wrong number, however fine the grid.</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "theorem",
+      "label": "Double Integral over a Polar Rectangle",
+      "subtitle": "Definition and the iterated form",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>Sampling \\(f\\) at \\((r_{ij}^*,\\theta_{ij}^*)\\) in each piece, the Riemann sum and its limit define</p>\n$$\\iint_R f(r,\\theta)\\,dA=\\lim_{m,n\\to\\infty}\\sum_{i=1}^m\\sum_{j=1}^n f(r_{ij}^*,\\theta_{ij}^*)\\,r_{ij}^*\\,\\Delta r\\,\\Delta\\theta .$$\n<p>In an iterated integral, <b>\\(dA\\) becomes \\(r\\,dr\\,d\\theta\\)</b>, and \\(x=r\\cos\\theta,\\ y=r\\sin\\theta\\):</p>\n$$\\iint_R f(x,y)\\,dA=\\int_{\\theta=\\alpha}^{\\beta}\\int_{r=a}^{b}f(r\\cos\\theta,\\,r\\sin\\theta)\\;r\\,dr\\,d\\theta .$$\n<p class=\"muted small\"><b>Example 5.25.</b> Evaluate \\(\\displaystyle\\iint_R 3x\\,dA\\) over \\(R=\\{1\\le r\\le2,\\ 0\\le\\theta\\le\\pi\\}\\).</p>\n<table>\n  <tr><td>Convert the integrand</td><td><reveal>\\(3x=3r\\cos\\theta\\), and \\(dA=r\\,dr\\,d\\theta\\), so the integrand is \\(3r^2\\cos\\theta\\).</reveal></td></tr>\n  <tr><td>Set up</td><td><reveal>\\(\\displaystyle\\int_0^{\\pi}\\!\\!\\int_1^2 3r^2\\cos\\theta\\,dr\\,d\\theta\\)</reveal></td></tr>\n  <tr><td>Evaluate</td><td><reveal>The limits are constant and the integrand separates: \\(\\displaystyle\\Big(\\int_1^2 3r^2\\,dr\\Big)\\Big(\\int_0^\\pi\\cos\\theta\\,d\\theta\\Big)=7\\cdot0=\\mathbf{0}\\).</reveal></td></tr>\n  <tr><td>Does 0 make sense?</td><td><reveal>Yes. \\(R\\) is symmetric about the \\(y\\)-axis and \\(x\\) is odd in that symmetry, so the left half cancels the right half.</reveal></td></tr>\n</table>"
     },
     {
       "tag": "example",
-      "label": "Evaluating a Double Integral by Converting from Rectangular Coordinates",
-      "subtitle": "",
+      "label": "Example 5.26 and 5.27",
+      "subtitle": "Disks and half rings",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "Evaluate the integral \\(\\displaystyle\\iint_R(1-x^2-y^2)dA\\) where R is the unit disk on the xy-plane."
+      "bodyHtml": "<p><b>Example 5.26.</b> Evaluate \\(\\displaystyle\\iint_R(1-x^2-y^2)\\,dA\\) over the unit disk. Also the volume under the paraboloid \\(z=1-x^2-y^2\\) (Example 5.29).</p>\n<table>\n  <tr><td>Region</td><td><reveal>\\(0\\le r\\le1,\\ 0\\le\\theta\\le2\\pi\\)</reveal></td></tr>\n  <tr><td>Use \\(x^2+y^2=r^2\\)</td><td><reveal>\\(\\displaystyle\\int_0^{2\\pi}\\!\\!\\int_0^1(1-r^2)\\,r\\,dr\\,d\\theta\\)</reveal></td></tr>\n  <tr><td>Evaluate</td><td><reveal>\\(\\displaystyle2\\pi\\int_0^1(r-r^3)\\,dr=2\\pi\\Big(\\tfrac12-\\tfrac14\\Big)=\\mathbf{\\tfrac{\\pi}{2}}\\)</reveal></td></tr>\n  <tr><td>Rectangular version?</td><td><reveal>\\(\\displaystyle\\int_{-1}^1\\!\\!\\int_{-\\sqrt{1-x^2}}^{\\sqrt{1-x^2}}(1-x^2-y^2)\\,dy\\,dx\\) is possible, and much longer.</reveal></td></tr>\n</table>\n<p class=\"muted small\">\n  <b>Example 5.27.</b> Evaluate \\(\\displaystyle\\iint_R(x+y)\\,dA\\) where \\(R=\\{1\\le x^2+y^2\\le4,\\ x\\le0\\}\\). The region, swept by a ray:\n</p>\n<jsx-polar-region h1=\"1\" h2=\"2\" tmin=\"pi/2\" tmax=\"3*pi/2\" xmin=\"-2\" xmax=\"0\" ymin=\"-2\" ymax=\"2\" desc=\"π/2 ≤ θ ≤ 3π/2, 1 ≤ r ≤ 2\"></jsx-polar-region>\n<table>\n  <tr><td>Polar description</td><td><reveal>\\(1\\le r\\le2,\\ \\tfrac{\\pi}{2}\\le\\theta\\le\\tfrac{3\\pi}{2}\\) (the left half, since \\(x\\le0\\))</reveal></td></tr>\n  <tr><td>Set up</td><td><reveal>\\(\\displaystyle\\int_{\\pi/2}^{3\\pi/2}\\!\\!\\int_1^2(r\\cos\\theta+r\\sin\\theta)\\,r\\,dr\\,d\\theta\\)</reveal></td></tr>\n  <tr><td>Evaluate</td><td><reveal>\\(\\displaystyle\\Big(\\int_1^2r^2dr\\Big)\\Big(\\int_{\\pi/2}^{3\\pi/2}(\\cos\\theta+\\sin\\theta)\\,d\\theta\\Big)=\\tfrac73\\cdot(-2)=\\mathbf{-\\tfrac{14}{3}}\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "theorem",
+      "label": "General Polar Regions",
+      "subtitle": "Theorem 5.8: the inner limits can depend on \\(\\theta\\)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>If \\(D=\\{(r,\\theta)\\mid\\alpha\\le\\theta\\le\\beta,\\ h_1(\\theta)\\le r\\le h_2(\\theta)\\}\\) and \\(f\\) is continuous, then</p>\n$$\\iint_D f(r,\\theta)\\,dA=\\int_{\\alpha}^{\\beta}\\int_{h_1(\\theta)}^{h_2(\\theta)}f(r,\\theta)\\,r\\,dr\\,d\\theta .$$\n<p class=\"muted small\">\n  Same idea as Type I and Type II, but the slice is a <b>ray</b>: the outer variable is \\(\\theta\\), and the ray enters at \\(h_1(\\theta)\\)\n  and leaves at \\(h_2(\\theta)\\). Here is the upper half of the cardioid \\(r=1+\\cos\\theta\\).\n</p>\n<jsx-polar-region h1=\"0\" h2=\"1+cos(t)\" tmin=\"0\" tmax=\"pi\" xmin=\"-0.5\" xmax=\"2\" ymin=\"0\" ymax=\"1.4\" desc=\"0 ≤ θ ≤ π, 0 ≤ r ≤ 1 + cos θ\"></jsx-polar-region>\n<p class=\"muted small\">\n  <b>Example 5.28.</b> Evaluate \\(\\displaystyle\\iint_D r^2\\sin\\theta\\;r\\,dr\\,d\\theta\\) over this region.\n</p>\n<table>\n  <tr><td>Set up</td><td><reveal>\\(\\displaystyle\\int_0^{\\pi}\\!\\!\\int_0^{1+\\cos\\theta}r^3\\sin\\theta\\,dr\\,d\\theta\\)</reveal></td></tr>\n  <tr><td>Inner integral</td><td><reveal>\\(\\displaystyle\\int_0^{1+\\cos\\theta}r^3\\sin\\theta\\,dr=\\tfrac14(1+\\cos\\theta)^4\\sin\\theta\\)</reveal></td></tr>\n  <tr><td>Substitute \\(u=1+\\cos\\theta\\)</td><td><reveal>\\(du=-\\sin\\theta\\,d\\theta\\), and \\(\\theta:0\\to\\pi\\) gives \\(u:2\\to0\\). So \\(\\displaystyle\\tfrac14\\int_0^2u^4\\,du=\\tfrac14\\cdot\\tfrac{32}{5}=\\mathbf{\\tfrac85}\\).</reveal></td></tr>\n</table>"
     },
     {
       "tag": "example",
-      "label": "Finding a Volume Using Double Integration",
-      "subtitle": "",
+      "label": "Volumes in Polar Coordinates",
+      "subtitle": "Examples 5.30 and 5.32",
       "ggbId": "",
       "reveal": false,
-      "bodyHtml": "Find the volume of the solid that lies under the paraboloid \\(z=4-x^2-y^2\\) and above the disk \\((x-1)^2+y^2=1\\) on the xy-plane."
+      "bodyHtml": "<p>\n  <b>Example 5.30.</b> Find the volume under \\(z=4-x^2-y^2\\) and above the disk \\((x-1)^2+y^2=1\\).\n  The disk is <i>not</i> centered at the origin, but it still has a simple polar boundary.\n</p>\n<jsx-polar-region h1=\"0\" h2=\"2*cos(t)\" tmin=\"-pi/2\" tmax=\"pi/2\" xmin=\"0\" xmax=\"2\" ymin=\"-1\" ymax=\"1\" desc=\"−π/2 ≤ θ ≤ π/2, 0 ≤ r ≤ 2 cos θ\"></jsx-polar-region>\n<table>\n  <tr><td>Boundary in polar form</td><td><reveal>\\(x^2+y^2=2x\\Rightarrow r^2=2r\\cos\\theta\\Rightarrow r=2\\cos\\theta\\)</reveal></td></tr>\n  <tr><td>Range of \\(\\theta\\)</td><td><reveal>\\(r\\ge0\\) needs \\(\\cos\\theta\\ge0\\): \\(-\\tfrac\\pi2\\le\\theta\\le\\tfrac\\pi2\\). Check it with the ray above. (Not \\(0\\le\\theta\\le\\pi\\).)</reveal></td></tr>\n  <tr><td>Set up</td><td><reveal>\\(\\displaystyle V=\\int_{-\\pi/2}^{\\pi/2}\\!\\!\\int_0^{2\\cos\\theta}(4-r^2)\\,r\\,dr\\,d\\theta\\)</reveal></td></tr>\n  <tr><td>Inner integral</td><td><reveal>\\(\\displaystyle\\Big[2r^2-\\tfrac{r^4}{4}\\Big]_0^{2\\cos\\theta}=8\\cos^2\\theta-4\\cos^4\\theta\\)</reveal></td></tr>\n  <tr><td>Outer integral</td><td><reveal>With \\(\\int_{-\\pi/2}^{\\pi/2}\\cos^2\\theta=\\tfrac\\pi2\\) and \\(\\int_{-\\pi/2}^{\\pi/2}\\cos^4\\theta=\\tfrac{3\\pi}{8}\\): \\(V=4\\pi-\\tfrac{3\\pi}{2}=\\mathbf{\\tfrac{5\\pi}{2}}\\).</reveal></td></tr>\n</table>\n<p class=\"muted small\"><b>Example 5.32.</b> The cone \\(z=2-\\sqrt{x^2+y^2}\\) above the \\(xy\\)-plane.</p>\n<table>\n  <tr><td>Base and height</td><td><reveal>The cone meets the plane where \\(r=2\\): base is the disk \\(0\\le r\\le2\\), and \\(z=2-r\\).</reveal></td></tr>\n  <tr><td>Volume</td><td><reveal>\\(\\displaystyle\\int_0^{2\\pi}\\!\\!\\int_0^2(2-r)\\,r\\,dr\\,d\\theta=2\\pi\\Big[r^2-\\tfrac{r^3}{3}\\Big]_0^2=\\mathbf{\\tfrac{8\\pi}{3}}\\), which is \\(\\tfrac13\\pi a^2h\\) for \\(a=h=2\\).</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "example",
+      "label": "Areas in Polar Coordinates",
+      "subtitle": "Take \\(f=1\\): then \\(A(D)=\\iint_D r\\,dr\\,d\\theta\\)",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">\n  <b>Example 5.34.</b> Find the area of the region inside <i>both</i> the circle \\(r=3\\cos\\theta\\) and the cardioid \\(r=1+\\cos\\theta\\).\n  The dashed curve is the circle. The boundary switches from the cardioid to the circle where the curves cross.\n</p>\n<jsx-polar-region h1=\"0\" h2=\"(abs(t)<pi/3 ? 1+cos(t) : 3*cos(t))\" curve2=\"3*cos(t)\" tmin=\"-pi/2\" tmax=\"pi/2\" xmin=\"0\" xmax=\"3\" ymin=\"-1.6\" ymax=\"1.6\" desc=\"−π/2 ≤ θ ≤ π/2, 0 ≤ r ≤ the smaller of 1 + cos θ and 3 cos θ\"></jsx-polar-region>\n<table>\n  <tr><td>Where do the curves cross?</td><td><reveal>\\(3\\cos\\theta=1+\\cos\\theta\\Rightarrow\\cos\\theta=\\tfrac12\\Rightarrow\\theta=\\pm\\tfrac\\pi3\\)</reveal></td></tr>\n  <tr><td>Which curve is the outer limit?</td><td><reveal>On \\(0\\le\\theta\\le\\tfrac\\pi3\\) the cardioid is smaller, so \\(h_2=1+\\cos\\theta\\). On \\(\\tfrac\\pi3\\le\\theta\\le\\tfrac\\pi2\\) the circle is, so \\(h_2=3\\cos\\theta\\). Use symmetry about the \\(x\\)-axis.</reveal></td></tr>\n  <tr><td>Set up</td><td><reveal>\\(\\displaystyle A=2\\Big[\\int_0^{\\pi/3}\\!\\!\\int_0^{1+\\cos\\theta}r\\,dr\\,d\\theta+\\int_{\\pi/3}^{\\pi/2}\\!\\!\\int_0^{3\\cos\\theta}r\\,dr\\,d\\theta\\Big]\\)</reveal></td></tr>\n  <tr><td>Evaluate</td><td><reveal>\\(\\displaystyle\\tfrac12\\int_0^{\\pi/3}(1+\\cos\\theta)^2d\\theta=\\tfrac\\pi4+\\tfrac{9\\sqrt3}{16}\\) and \\(\\displaystyle\\tfrac92\\int_{\\pi/3}^{\\pi/2}\\cos^2\\theta\\,d\\theta=\\tfrac{3\\pi}{8}-\\tfrac{9\\sqrt3}{16}\\). The \\(\\sqrt3\\) terms cancel, and doubling gives \\(A=\\mathbf{\\tfrac{5\\pi}{4}}\\).</reveal></td></tr>\n</table>\n<p class=\"muted small\"><b>Example 5.33 (symmetry).</b> The eight-petal rose \\(r=\\cos4\\theta\\) has area \\(8\\int_{-\\pi/8}^{\\pi/8}\\!\\int_0^{\\cos4\\theta}r\\,dr\\,d\\theta=\\tfrac\\pi2\\): one petal is \\(-\\tfrac\\pi8\\le\\theta\\le\\tfrac\\pi8\\).</p>"
+    },
+    {
+      "tag": "example",
+      "label": "An Improper Integral",
+      "subtitle": "Example 5.35: why polar coordinates matter beyond disks",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  Evaluate \\(\\displaystyle\\iint_{\\mathbb R^2}e^{-10(x^2+y^2)}\\,dx\\,dy\\). In rectangular coordinates \\(\\int e^{-x^2}dx\\) has no elementary antiderivative.\n  In polar coordinates the extra factor \\(r\\) makes it work.\n</p>\n<p class=\"muted small\">\n  Integrate over the disk of radius \\(a\\) (the simpler case \\(e^{-(x^2+y^2)}\\)): the value \\(\\pi(1-e^{-a^2})\\) against \\(a\\). Dashed: \\(\\pi\\).\n</p>\n<jsx-graph fn=\"Math.PI*(1-Math.exp(-x*x))\" fn2=\"Math.PI\" xmin=\"0\" xmax=\"3\" ymin=\"0\" ymax=\"3.6\" label=\"disk of radius a\" label2=\"π\"></jsx-graph>\n<table>\n  <tr><td>Integrate over the disk \\(r\\le a\\)</td><td><reveal>\\(\\displaystyle\\int_0^{2\\pi}\\!\\!\\int_0^ae^{-10r^2}\\,r\\,dr\\,d\\theta=2\\pi\\cdot\\tfrac{1-e^{-10a^2}}{20}=\\tfrac{\\pi}{10}\\big(1-e^{-10a^2}\\big)\\)</reveal></td></tr>\n  <tr><td>Let \\(a\\to\\infty\\)</td><td><reveal>\\(e^{-10a^2}\\to0\\), so the integral over the whole plane is \\(\\mathbf{\\tfrac{\\pi}{10}}\\).</reveal></td></tr>\n  <tr><td>Why the factor \\(r\\) helps</td><td><reveal>\\(r\\,e^{-10r^2}\\) has the antiderivative \\(-\\tfrac1{20}e^{-10r^2}\\). Without the \\(r\\) there is none.</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Problems from the Text",
+      "subtitle": "OpenStax Section 5.3 Checkpoints",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">Sketch the region, convert, evaluate, then reveal.</p>\n<table>\n  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>\n  <tbody>\n  <tr><td>Checkpoint 5.17</td><td>Sketch \\(R=\\{1\\le r\\le2,\\ -\\tfrac\\pi2\\le\\theta\\le\\tfrac\\pi2\\}\\) and evaluate \\(\\displaystyle\\iint_R x\\,dA\\).</td><td><reveal>\\(\\displaystyle\\int_{-\\pi/2}^{\\pi/2}\\!\\!\\int_1^2r^2\\cos\\theta\\,dr\\,d\\theta=\\tfrac73\\cdot2=\\mathbf{\\tfrac{14}{3}}\\)</reveal></td></tr>\n  <tr><td>Checkpoint 5.18</td><td>Evaluate \\(\\displaystyle\\iint_R(4-x^2-y^2)\\,dA\\) over the disk of radius 2.</td><td><reveal>\\(\\displaystyle2\\pi\\int_0^2(4-r^2)\\,r\\,dr=2\\pi\\cdot4=\\mathbf{8\\pi}\\)</reveal></td></tr>\n  <tr><td>Checkpoint 5.19</td><td>Evaluate \\(\\displaystyle\\int_{-\\pi/4}^{\\pi/4}\\!\\!\\int_0^{2\\cos2\\theta}r^2\\sin^2(2\\theta)\\,r\\,dr\\,d\\theta\\).</td><td><reveal>Inner: \\(\\tfrac14(2\\cos2\\theta)^4\\sin^22\\theta=4\\cos^42\\theta\\sin^22\\theta\\). With \\(u=2\\theta\\) the outer integral is \\(2\\int_{-\\pi/2}^{\\pi/2}\\cos^4u\\sin^2u\\,du=4\\cdot\\tfrac{\\pi}{32}=\\mathbf{\\tfrac\\pi8}\\).</reveal></td></tr>\n  <tr><td>Checkpoint 5.20</td><td>Set up and evaluate the volume between \\(z=x^2+y^2\\) and \\(z=16-x^2-y^2\\).</td><td><reveal>They meet at \\(r^2=8\\), \\(r=2\\sqrt2\\). \\(\\displaystyle\\int_0^{2\\pi}\\!\\!\\int_0^{2\\sqrt2}(16-2r^2)\\,r\\,dr\\,d\\theta=\\mathbf{64\\pi}\\).</reveal></td></tr>\n  <tr><td>Checkpoint 5.21</td><td>The area inside \\(r=3-3\\sin\\theta\\) and outside \\(r=1+\\sin\\theta\\).</td><td><reveal>They cross at \\(\\sin\\theta=\\tfrac12\\). The region is \\(-\\tfrac{7\\pi}6\\le\\theta\\le\\tfrac\\pi6\\), so by symmetry \\(\\displaystyle A=2\\int_{-\\pi/2}^{\\pi/6}\\tfrac12\\big[(3-3\\sin\\theta)^2-(1+\\sin\\theta)^2\\big]d\\theta=\\mathbf{8\\pi+9\\sqrt3}\\).</reveal></td></tr>\n  <tr><td>Checkpoint 5.22</td><td>Evaluate \\(\\displaystyle\\iint_{\\mathbb R^2}e^{-4(x^2+y^2)}\\,dx\\,dy\\).</td><td><reveal>\\(2\\pi\\int_0^\\infty re^{-4r^2}dr=2\\pi\\cdot\\tfrac18=\\mathbf{\\tfrac\\pi4}\\)</reveal></td></tr>\n  </tbody>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Summary",
+      "subtitle": "The one-page version",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n  <tr><td><b>Conversion</b></td><td>\\(x=r\\cos\\theta,\\ y=r\\sin\\theta,\\ x^2+y^2=r^2,\\ \\boxed{dA=r\\,dr\\,d\\theta}\\). Never forget the \\(r\\).</td></tr>\n  <tr><td><b>Polar rectangle</b></td><td>\\(\\displaystyle\\iint_R f\\,dA=\\int_\\alpha^\\beta\\!\\!\\int_a^b f(r\\cos\\theta,r\\sin\\theta)\\,r\\,dr\\,d\\theta\\)</td></tr>\n  <tr><td><b>General region</b></td><td>\\(\\displaystyle\\int_\\alpha^\\beta\\!\\!\\int_{h_1(\\theta)}^{h_2(\\theta)}f\\,r\\,dr\\,d\\theta\\). Sweep a ray: it enters at \\(h_1\\), leaves at \\(h_2\\).</td></tr>\n  <tr><td><b>When to use it</b></td><td>The region is a disk, ring, sector or petal, or the integrand contains \\(x^2+y^2\\).</td></tr>\n  <tr><td><b>Uses</b></td><td>Volume under \\(z=f\\), area \\(\\iint_D r\\,dr\\,d\\theta\\), improper integrals over \\(\\mathbb R^2\\).</td></tr>\n</table>\n<p class=\"muted small\">Not covered: the exercises on separable and radial functions, and the Gaussian \\(\\int e^{-x^2/2}dx=\\sqrt{2\\pi}\\) derivation. Next lesson: triple integrals.</p>"
     }
   ],
   "notes": ""

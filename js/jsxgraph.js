@@ -3558,6 +3558,240 @@ function renderJsxBasis(el) {
   refresh();
 }
 
+// <jsx-polar-rect rmin="1" rmax="3" tmin="0" tmax="pi" m="3" n="4">
+//
+// Why dA = r dr dtheta. A polar rectangle {rmin<=r<=rmax, tmin<=theta<=tmax} cut into m rings and n
+// wedges. One highlighted piece (ring slider) shows its two arc lengths and its area, which is
+// r* dr dtheta with r* the midpoint radius (an exact identity for a ring sector). The readout compares
+// the Riemann sum WITH the factor r against the sum that forgets it, next to the true area.
+// Sliders for m and n refine the grid so the sums can be watched converging (or not).
+function renderJsxPolarRect(el) {
+  const TAG = 'jsx-polar-rect';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const a = num('rmin', 1); const b = num('rmax', 3);
+  const t0 = num('tmin', 0); const t1 = num('tmax', Math.PI);
+  const st = { m: Math.round(num('m', 3)), n: Math.round(num('n', 4)), i: 1 };
+  const f2 = (v) => fmtNum(v).replace('-', '−');
+  const f3 = (v) => (Math.round(v * 1000) / 1000).toString();
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board jsx-board--region';
+  board.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, board, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  // bounding box of the sector in x,y, padded; equal scales so circles are round
+  const pts = [];
+  for (let k = 0; k <= 60; k++) { const t = t0 + ((t1 - t0) * k) / 60; pts.push([a * Math.cos(t), a * Math.sin(t)], [b * Math.cos(t), b * Math.sin(t)]); }
+  pts.push([0, 0]);
+  const xs0 = Math.min(...pts.map((p) => p[0])); const xs1 = Math.max(...pts.map((p) => p[0]));
+  const ys0 = Math.min(...pts.map((p) => p[1])); const ys1 = Math.max(...pts.map((p) => p[1]));
+  const padX = (xs1 - xs0) * 0.14; const padY = (ys1 - ys0) * 0.14;
+  const ratio = (xs1 - xs0 + 2 * padX) / (ys1 - ys0 + 2 * padY);
+  board.style.aspectRatio = String(ratio);
+  board.style.maxWidth = `${Math.round(Math.min(720, 390 * ratio))}px`;
+  board.style.marginInline = 'auto';
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [xs0 - padX, ys1 + padY, xs1 + padX, ys0 - padY], axis: true, showNavigation: false, showCopyright: false,
+    keepaspectratio: true, pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+
+  // closed outline of the polar piece [r0,r1] x [u0,u1]
+  const piece = (r0, r1, u0, u1) => {
+    const xs = []; const ys = [];
+    const N = 40;
+    for (let k = 0; k <= N; k++) { const u = u0 + ((u1 - u0) * k) / N; xs.push(r1 * Math.cos(u)); ys.push(r1 * Math.sin(u)); }
+    for (let k = N; k >= 0; k--) { const u = u0 + ((u1 - u0) * k) / N; xs.push(r0 * Math.cos(u)); ys.push(r0 * Math.sin(u)); }
+    xs.push(xs[0]); ys.push(ys[0]);
+    return { xs, ys };
+  };
+  const curve = (get, style) => { const c = bd.create('curve', [[0], [0]], style); c.updateDataArray = function u() { const d = get(); this.dataX = d.xs; this.dataY = d.ys; }; bd.update(); return c; };
+  const dr = () => (b - a) / st.m; const dt = () => (t1 - t0) / st.n;
+  curve(() => piece(a, b, t0, t1), { strokeWidth: 0, fillColor: accent, fillOpacity: 0.14, highlight: false });
+  // grid: m+1 arcs and n+1 rays, drawn as one polyline each
+  curve(() => {
+    const xs = []; const ys = [];
+    for (let i = 0; i <= st.m; i++) {
+      const r = a + i * dr();
+      for (let k = 0; k <= 60; k++) { const u = t0 + ((t1 - t0) * k) / 60; xs.push(r * Math.cos(u)); ys.push(r * Math.sin(u)); }
+      xs.push(NaN); ys.push(NaN);
+    }
+    for (let j = 0; j <= st.n; j++) {
+      const u = t0 + j * dt();
+      xs.push(a * Math.cos(u), b * Math.cos(u), NaN); ys.push(a * Math.sin(u), b * Math.sin(u), NaN);
+    }
+    return { xs, ys };
+  }, { strokeColor: '#7d838c', strokeWidth: GRID_STROKE + 0.5, highlight: false });
+  // highlighted piece: ring i, middle wedge
+  const hiJ = () => Math.ceil(st.n / 2);
+  const pc = () => piece(a + (st.i - 1) * dr(), a + st.i * dr(), t0 + (hiJ() - 1) * dt(), t0 + hiJ() * dt());
+  curve(pc, { strokeWidth: 0, fillColor: negative, fillOpacity: 0.4, highlight: false });
+  curve(pc, { strokeColor: negative, strokeWidth: CURVE_STROKE, highlight: false });
+  curve(() => piece(a, b, t0, t1), { strokeColor: ink, strokeWidth: CURVE_STROKE, highlight: false });
+
+  function refresh() {
+    if (st.i > st.m) st.i = st.m;
+    const r0 = a + (st.i - 1) * dr(); const r1 = a + st.i * dr(); const rs = (r0 + r1) / 2;
+    const d_t = dt(); const d_r = dr();
+    const area = 0.5 * (r1 * r1 - r0 * r0) * d_t;
+    const withR = (() => { let sum = 0; for (let i = 1; i <= st.m; i++) { const q = a + (i - 0.5) * d_r; sum += q * d_r * d_t * st.n; } return sum; })();
+    const without = d_r * d_t * st.m * st.n;
+    const exact = 0.5 * (b * b - a * a) * (t1 - t0);
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">piece: inner arc <b>${f3(r0 * d_t)}</b>, outer arc <b>${f3(r1 * d_t)}</b></span>` +
+      `<span class="jsx-trace-chip">Δr = <b>${f3(d_r)}</b>, Δθ = <b>${f3(d_t)}</b>, r* = <b>${f3(rs)}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">area = <b>${f3(area)}</b> &nbsp;= &nbsp;r*·Δr·Δθ = <b>${f3(rs * d_r * d_t)}</b> &nbsp;(not Δr·Δθ = ${f3(d_r * d_t)})</span>` +
+      `<span class="jsx-trace-chip">Σ r*ΔrΔθ = <b>${f3(withR)}</b></span>` +
+      `<span class="jsx-trace-chip">Σ ΔrΔθ = <b>${f3(without)}</b></span>` +
+      `<span class="jsx-trace-chip">true area = <b>${f3(exact)}</b></span>`;
+    bd.update();
+  }
+  const slider = (label, hint, min, max, get, set) => {
+    const row = document.createElement('label');
+    row.className = 'jsx-slider-row';
+    row.innerHTML = `<span class="jsx-slider-name">${label} <small>${hint}</small></span><input type="range" min="${min}" max="${max}" step="1">`;
+    const input = row.querySelector('input');
+    input.value = get();
+    input.addEventListener('input', () => { set(parseInt(input.value, 10)); refresh(); });
+    input.addEventListener('pointerup', () => input.blur());
+    controls.appendChild(row);
+    return input;
+  };
+  const iIn = slider('ring', 'which piece is highlighted', 1, 24, () => st.i, (v) => { st.i = Math.min(v, st.m); });
+  slider('rings m', 'cuts in r', 1, 24, () => st.m, (v) => { st.m = v; iIn.max = v; if (st.i > v) { st.i = v; iIn.value = v; } });
+  slider('wedges n', 'cuts in θ', 1, 24, () => st.n, (v) => { st.n = v; });
+  iIn.max = st.m;
+  refresh();
+}
+
+// <jsx-polar-region h1="0" h2="1+cos(t)" tmin="0" tmax="pi" xmin="-0.5" xmax="2" ymin="0" ymax="1.3">
+//
+// A general polar region D = {tmin<=theta<=tmax, h1(theta)<=r<=h2(theta)} with a ray the instructor sweeps
+// through it. The red segment is one ray's slice of D (r from h1 to h2); the red shading is the part of D
+// swept so far. Same blue (region) / red (swept) pairing as <jsx-region>, but the slice is a ray, so the
+// OUTER variable is theta and the inner limits are functions of theta (Theorem 5.8). Expressions are in `t`.
+// `desc` is a plain-text caption. `curve2`/`curve2-label` draw a second dashed polar curve for reference.
+function renderJsxPolarRegion(el) {
+  const TAG = 'jsx-polar-region';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const mk = (name, dflt) => compileMath(['t'], el.getAttribute(name) ?? dflt, TAG, name);
+  const h1 = mk('h1', '0'); const h2 = mk('h2', '1');
+  if (!h1 || !h2) return;
+  const t0 = num('tmin', 0); const t1 = num('tmax', 2 * Math.PI);
+  const lim = { x: [num('xmin', -1), num('xmax', 1)], y: [num('ymin', -1), num('ymax', 1)] };
+  const st = { s: t0 + (t1 - t0) * 0.35 };
+  const f2 = (v) => fmtNum(v).replace('-', '−');
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board jsx-board--region';
+  board.id = `jsx-board-${++boardCounter}`;
+  const cap = document.createElement('div');
+  cap.className = 'muted small jsx-strip-cap';
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, board, cap, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const [bx0, bx1] = lim.x; const [by0, by1] = lim.y;
+  const padX = (bx1 - bx0) * 0.14; const padY = (by1 - by0) * 0.14;
+  const ratio = (bx1 - bx0 + 2 * padX) / (by1 - by0 + 2 * padY);
+  board.style.aspectRatio = String(ratio);
+  board.style.maxWidth = `${Math.round(Math.min(720, 390 * ratio))}px`;
+  board.style.marginInline = 'auto';
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [bx0 - padX, by1 + padY, bx1 + padX, by0 - padY], axis: true, showNavigation: false, showCopyright: false,
+    keepaspectratio: true, pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+
+  const xy = (r, t) => [r * Math.cos(t), r * Math.sin(t)];
+  const polygon = (upto) => {
+    const top = Math.min(t1, upto); const N = 240;
+    const xs = []; const ys = [];
+    for (let k = 0; k <= N; k++) { const t = t0 + ((top - t0) * k) / N; const [x, y] = xy(h2(t), t); xs.push(x); ys.push(y); }
+    for (let k = N; k >= 0; k--) { const t = t0 + ((top - t0) * k) / N; const [x, y] = xy(h1(t), t); xs.push(x); ys.push(y); }
+    return { xs, ys };
+  };
+  const curve = (get, style) => { const c = bd.create('curve', [[0], [0]], style); c.updateDataArray = function u() { const d = get(); this.dataX = d.xs; this.dataY = d.ys; }; bd.update(); return c; };
+  curve(() => polygon(Infinity), { strokeWidth: 0, fillColor: accent, fillOpacity: 0.14, highlight: false });
+  curve(() => polygon(st.s), { strokeWidth: 0, fillColor: negative, fillOpacity: 0.3, highlight: false });
+  curve(() => { const d = polygon(Infinity); d.xs.push(d.xs[0]); d.ys.push(d.ys[0]); return d; }, { strokeColor: ink, strokeWidth: CURVE_STROKE, highlight: false });
+  if (el.getAttribute('curve2') !== null) {
+    const c2 = mk('curve2', '1');
+    if (c2) {
+      curve(() => { const xs = []; const ys = []; for (let k = 0; k <= 360; k++) { const t = (2 * Math.PI * k) / 360; const [x, y] = xy(c2(t), t); xs.push(x); ys.push(y); } return { xs, ys }; },
+        { strokeColor: cssVar('--muted') || '#666', strokeWidth: 2.5, dash: 2, highlight: false });
+    }
+  }
+  const ends = () => [xy(h1(st.s), st.s), xy(h2(st.s), st.s)];
+  bd.create('segment', [() => ends()[0], () => ends()[1]], { strokeColor: negative, strokeWidth: CURVE_STROKE + 2, highlight: false, fixed: true });
+  [0, 1].forEach((k) => bd.create('point', [() => ends()[k][0], () => ends()[k][1]], {
+    name: '', size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: negative, strokeWidth: POINT_STROKE, fixed: true, highlight: false,
+  }));
+
+  function refresh() {
+    const L = h1(st.s); const H = h2(st.s);
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">θ = <b>${fmtAngle(st.s)}</b></span>` +
+      `<span class="jsx-trace-chip">r from <b>${f2(L)}</b> to <b>${f2(H)}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">${fmtAngle(t0)} ≤ θ ≤ ${fmtAngle(t1)}, &nbsp;r runs from h₁(θ) to h₂(θ)</span>`;
+    const d = el.getAttribute('desc');
+    cap.textContent = d ? `D = { ${d} }` : '';
+    bd.update();
+    if (input.value === '' || Math.abs(parseFloat(input.value) - st.s) > 1e-9) input.value = st.s;
+  }
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = `<span class="jsx-slider-name">ray <small>drag it</small></span><input type="range" min="${t0}" max="${t1}" step="${(t1 - t0) / 400}">`;
+  const input = row.querySelector('input');
+  let raf = null;
+  const stop = () => { if (raf) cancelAnimationFrame(raf); raf = null; sweep.textContent = '▶ Sweep'; };
+  input.addEventListener('input', () => { stop(); st.s = parseFloat(input.value); refresh(); });
+  input.addEventListener('pointerup', () => input.blur());
+  const sweep = document.createElement('button');
+  sweep.type = 'button'; sweep.className = 'btn'; sweep.textContent = '▶ Sweep';
+  sweep.addEventListener('pointerup', () => sweep.blur());
+  sweep.addEventListener('click', () => {
+    if (raf) { stop(); return; }
+    if (st.s >= t1 - 1e-6) st.s = t0;
+    sweep.textContent = '⏸ Pause';
+    let last = performance.now();
+    const tick = (now) => {
+      st.s = Math.min(t1, st.s + ((now - last) / 1000) * ((t1 - t0) / 7));
+      last = now; refresh();
+      if (st.s < t1) raf = requestAnimationFrame(tick); else stop();
+    };
+    raf = requestAnimationFrame(tick);
+  });
+  controls.append(sweep, row);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -3570,4 +3804,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-fubini').forEach(renderJsxFubini);
   document.querySelectorAll('jsx-basis').forEach(renderJsxBasis);
   document.querySelectorAll('jsx-region').forEach(renderJsxRegion);
+  document.querySelectorAll('jsx-polar-rect').forEach(renderJsxPolarRect);
+  document.querySelectorAll('jsx-polar-region').forEach(renderJsxPolarRegion);
 });

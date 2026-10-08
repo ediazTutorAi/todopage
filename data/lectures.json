@@ -208,10 +208,12 @@
     "date": "2026-03-04",
     "title": "Double Integrals in Polar Coordinates",
     "subtitle": "",
-    "description": "",
+    "description": "Double integrals in polar coordinates: cut a polar rectangle into pieces to see where the factor r in dA = r dr dθ comes from, sweep a ray through general polar regions, then volumes, areas and the Gaussian integral.",
     "tags": [
-      "double Integrals",
-      "polar coordinats"
+      "double integrals",
+      "polar coordinates",
+      "polar rectangles",
+      "area and volume"
     ],
     "url": "calculus3/fall2025/2025-10-08-polar-integrals/index.html"
   },

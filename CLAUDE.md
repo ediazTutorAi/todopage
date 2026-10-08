@@ -650,6 +650,23 @@ These exist in the code and are used by trigonometry lessons, but were never wri
   chosen to preview a later example), and the readout shows t, theta, s, with theta/t and s/t settling to constant omega and v. The
   drawn arc is mod 360 each lap, but the numeric readout keeps the true accumulated total.
 
+### `<jsx-polar-rect>` and `<jsx-polar-region>` (added 2026-10-08)
+
+Built for the redone "Double Integrals in Polar Coordinates" lesson (`calculus3/fall2025/2025-10-08-polar-integrals/`, OpenStax 5.3,
+10 steps for a 45 minute class; has a `content.json` sidecar and a hand-kept `index.html`, both generated from one step list, so edit
+both if you hand-edit either). The old Stewart-style stub of that lesson was replaced.
+
+- `<jsx-polar-rect rmin rmax tmin tmax m n>` (`renderJsxPolarRect`): a polar rectangle cut into `m` rings and `n` wedges, one piece
+  highlighted (ring slider). Shows why `dA = r dr dtheta`: the piece's two arc lengths, its area `r* dr dtheta`, and the Riemann sum
+  with the factor `r` against the sum that forgets it, next to the true area. Sliders refine the grid.
+- `<jsx-polar-region h1 h2 tmin tmax xmin xmax ymin ymax desc curve2>` (`renderJsxPolarRegion`): general polar region
+  `h1(t) <= r <= h2(t)`, expressions in `t`, swept by a ray (same blue/red pairing as `<jsx-region>`). `curve2` draws a second dashed
+  polar curve. Piecewise boundaries work, e.g. `h2="(abs(t)<pi/3 ? 1+cos(t) : 3*cos(t))"`. Used for the disk, half ring, cardioid,
+  `r = 2cos(t)` disk and the circle/cardioid overlap.
+
+Verified in Chrome: all boards render, no console errors. Answers were checked numerically (5.28 = 8/5, 5.30 = 5pi/2, 5.34 = 5pi/4, and
+Checkpoint 5.21 = 8pi + 9 sqrt 3, which OpenStax leaves unanswered). No 3D solid view for the volume steps, the base disk is shown.
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:
