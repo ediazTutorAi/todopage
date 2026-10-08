@@ -489,13 +489,14 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-03-05",
-    "title": "Matrix of Linear Transformations",
+    "title": "The Matrix of a Linear Transformation",
     "subtitle": "",
-    "description": "",
+    "description": "Section 4.3: the B-matrix of a linear transformation on a linear space, its columns, kernel and image through coordinates, change of basis, and B = S^-1 A S with a draggable basis.",
     "tags": [
-      "Linear Transformations",
-      "matrix",
-      "change of basis"
+      "matrix of a transformation",
+      "change of basis",
+      "similar matrices",
+      "linear spaces"
     ],
     "url": "linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation/index.html"
   },
@@ -503,11 +504,14 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-03-03",
-    "title": "Linear Transformations",
+    "title": "Linear Transformations and Isomorphisms",
     "subtitle": "",
-    "description": "",
+    "description": "Section 4.2: linear transformations between linear spaces, image, kernel, rank-nullity, isomorphisms, coordinates as isomorphisms, and a polynomial explorer to test whether a map is an isomorphism.",
     "tags": [
-      "Linear Transformations"
+      "linear transformations",
+      "isomorphisms",
+      "linear spaces",
+      "kernel and image"
     ],
     "url": "linear-algebra/fall2025/2025-10-07-linear-transformations-and-isomorphisms/index.html"
   },

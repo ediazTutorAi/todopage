@@ -5,6 +5,7 @@ import './triangle.js';
 import './curveDiagram.js';
 import './jsxgraph.js';
 import './riemann.js';
+import './staged-svg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // add ▶ buttons next to steps with data-ggb-id

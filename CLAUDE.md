@@ -667,6 +667,25 @@ both if you hand-edit either). The old Stewart-style stub of that lesson was rep
 Verified in Chrome: all boards render, no console errors. Answers were checked numerically (5.28 = 8/5, 5.30 = 5pi/2, 5.34 = 5pi/4, and
 Checkpoint 5.21 = 8pi + 9 sqrt 3, which OpenStax leaves unanswered). No 3D solid view for the volume steps, the base disk is shown.
 
+### `<jsx-poly-map>` and the Linear Algebra 4.2 / 4.3 lessons (added 2026-10-08)
+
+Both lessons were redone from Bretscher (PDF pages 190 to 209; the PDF is a scan, read pages as images; book page = PDF page - 12):
+`linear-algebra/fall2025/2025-10-07-linear-transformations-and-isomorphisms/` (4.2, 10 steps, 25 min) and
+`.../2025-10-08-matrix-of-linear-transformation/` (4.3, 8 steps, 25 min). Hand-authored `index.html`, no `content.json` (like 4.1).
+
+- `<jsx-poly-map degree matrix eval presets xmin xmax ymin ymax range>` (`renderJsxPolyMap`): sliders set the standard-basis coordinates
+  of a polynomial and its graph moves with them (coordinate transformation as an isomorphism). `matrix="r1;r2;.."` adds the red dashed
+  graph of T(f) with `[T(f)]_B = B[f]_B`, and the readout names the column of B when f is a basis element (Theorem 4.3.2). `eval="1,2,3"`
+  shows L(f) = (f(1), f(2), f(3)) as dots plus a dimension comparison, and flags a nonzero f in the kernel. (Neither lesson uses it now: 4.2 Example 6 and 4.3 Theorems 4.3.2/4.3.5 are algebra only, no graph, at the instructor's request. The tag is kept for future use.)
+  `presets="name:a,b,c;..."` adds buttons (basis elements, a kernel element).
+- Example 8 of 4.3 originally reused `<jsx-basis>` (`a="1,0;0,-1"`, `v1="1,1"`, `v2="1,-1"`); that graph was removed and the example is now step-by-step matrix algebra.
+
+- `<staged-svg>` (`js/staged-svg.js`, styles in `css/steps.css`): wraps an inline `<svg>` whose pieces carry `data-stage="n"`; Next (or a click on the
+  diagram) reveals one stage at a time, Back/Reset undo, and `data-caption` text on a piece is shown under the figure. Used for Figure 1 of
+  Section 4.2 (the "is T an isomorphism?" decision diagram, 9 arrows). Generic, reusable for any flow chart or staged figure.
+
+Verified in Chrome: no console errors, kernel preset gives L(f)=0 with the kernel flag, column 3 of B is (2,2,0), Example 8 gives B = [[0,1],[1,0]].
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:

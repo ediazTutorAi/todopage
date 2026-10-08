@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Linear Transformations and Isomorphisms</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,138 +30,277 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Linear transformations and Isomorphisms</h1>
-  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Linear Transformations and Isomorphisms</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">Definition 4.2.1</div>
-        <div class="step-subtitle">Linear transformations, image, kernel, rank, nullity</div>
-        <div class="step-body">
-          Consider two linear spaces V and W. A function T from V to W is called a <strong>linear transformation</strong> if<br>
-          $$T(f+g)=T(f)+T(g)\text{ and } T(kf)=kT(f)$$
-          for all elements $f \text{ and } g$ of V and for all scalars k. These two rules are referred to as the sum rule and the constant-multiple rule, respectively.<br>
-          For a linear transformation T from V to W, we let <br>
-          $$im(T)=\{T(f):f \in V\}$$ and 
-          $$ker(T)=\{f \in V:T(f)=0\}$$
-          Note that $im(T)$ is a subspace of targe space W and the \(ker(T)\) is a subspace of domain V.
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Definition 4.2.1</div>
+          <div class="step-subtitle">Linear transformations, image, kernel, rank, nullity</div>
+          <div class="step-body">
+<p>Let \(V\) and \(W\) be linear spaces. A function \(T\) from \(V\) to \(W\) is a <b>linear transformation</b> if for all \(f,g\) in \(V\) and all scalars \(k\)</p>
+$$T(f+g)=T(f)+T(g)\qquad\text{and}\qquad T(kf)=kT(f).$$
+<p>Its <b>image</b> and <b>kernel</b> are \(\operatorname{im}(T)=\{T(f):f\in V\}\) (a subspace of \(W\)) and \(\ker(T)=\{f\in V:T(f)=0\}\) (a subspace of \(V\)).
+If they are finite dimensional, \(\operatorname{rank}(T)=\dim(\operatorname{im}T)\) and \(\operatorname{nullity}(T)=\dim(\ker T)\), and for finite dimensional \(V\) the <b>rank-nullity theorem</b> holds:</p>
+$$\dim(V)=\operatorname{rank}(T)+\operatorname{nullity}(T).$$
+<p class="muted small"><b>Example 1.</b> \(D(f)=f'\) from \(C^\infty\) to \(C^\infty\) (the smooth functions).</p>
+<table>
+  <tr><td>Is \(D\) linear?</td><td><reveal>Yes: \((f+g)'=f'+g'\) and \((kf)'=kf'\), the rules of calculus.</reveal></td></tr>
+  <tr><td>\(\ker(D)\)</td><td><reveal>\(f'=0\) means \(f\) is constant. A basis is \(f(x)=1\), so the nullity is 1.</reveal></td></tr>
+  <tr><td>\(\operatorname{im}(D)\)</td><td><reveal>Every smooth \(g\) has an antiderivative (fundamental theorem of calculus), so \(\operatorname{im}(D)=C^\infty\).</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
 
-      <div class="step" data-step="2">
-        <div class="step-title">Linear transformations, image, kernel, rank, nullity</div>
-        <div class="step-subtitle">continued</div>
-        <div class="step-body">
-         If the image of T is finite dimensional, then $dim(imT)$ is called the rank of T, and if the kernel of T is finite dimensional, then dim(kerT) is the nullity of T.<br>
-         If V is finite dimensional, then the rank-nullity theorem holds.<br>
-         $$dim(V)=rank(T)+nullity(T)=dim(im(T))+dim(ker(T))$$
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Examples 2 and 3</div>
+          <div class="step-subtitle">An integral and a shift: kernel and image</div>
+          <div class="step-body">
+<p><b>Example 2.</b> Let \(C[0,1]\) be the continuous functions on \([0,1]\), and \(I(f)=\displaystyle\int_0^1 f(x)\,dx\) from \(C[0,1]\) to \(\mathbb{R}\).</p>
+<table>
+  <tr><td>Why is \(I\) linear?</td><td><reveal>\(\int_0^1(f+g)=\int_0^1 f+\int_0^1 g\) and \(\int_0^1 kf=k\int_0^1 f\)</reveal></td></tr>
+  <tr><td>\(\operatorname{im}(I)\)</td><td><reveal>Any real \(b\) equals \(I(f)\) for the constant function \(f(x)=b\). So \(\operatorname{im}(I)=\mathbb{R}\) and \(\operatorname{rank}(I)=1\).</reveal></td></tr>
+  <tr><td>Name a nonzero element of \(\ker(I)\)</td><td><reveal>\(f(x)=x-\tfrac12\), since \(\int_0^1(x-\tfrac12)\,dx=0\). The kernel is infinite dimensional.</reveal></td></tr>
+</table>
+<p><b>Example 3.</b> Let \(V\) be all infinite sequences, and \(T(x_0,x_1,x_2,\dots)=(x_1,x_2,x_3,\dots)\) from \(V\) to \(V\) (drop the first term). It is linear.</p>
+<table>
+  <tr><td>\(\ker(T)\)</td><td><reveal>All sequences \((x_0,0,0,\dots)\) with \(x_0\) arbitrary. A basis is \((1,0,0,\dots)\), so the nullity is 1.</reveal></td></tr>
+  <tr><td>Is \((1,2,3,\dots)\) in the image?</td><td><reveal>Yes: \(T(0,1,2,3,\dots)=(1,2,3,\dots)\). The first term \(x_0\) is free, so choose \(0\).</reveal></td></tr>
+  <tr><td>\(\operatorname{im}(T)\)</td><td><reveal>Every sequence: \((b_0,b_1,\dots)=T(0,b_0,b_1,\dots)\). So \(\operatorname{im}(T)=V\).</reveal></td></tr>
+</table>
+<p class="muted small">Here \(T\) has a nonzero kernel and its image is everything. That cannot happen for a map from \(\mathbb{R}^n\) to \(\mathbb{R}^n\), but it happens on infinite dimensional spaces.</p>
+          </div>
         </div>
-      </div>
 
-      <div class="step" data-step="3">
-        <div class="step-title">Examples</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          <ul>
-            <li>$D(f)=f'$ from $C^{\infty}$ to $C^{\infty}$</li>
-            <li>$I(f)=\int_0^1 f(x)dx$ from $C[0,1]$ to $\mathbb{R}$</li>
-            <li>$T(x_0,x_1,x_2,\cdots)=(x_1,x_2,x_3,\cdots)$</li>
-            <li>$$L\left(\begin{bmatrix}
-             a & b \\
-             c & d 
-            \end{bmatrix}\right)=\begin{bmatrix}
-             a\\
-             b\\
-             c\\
-             d 
-            \end{bmatrix}$$ from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$</li>        
-          </ul>
-          Observe that L is an isomorphism from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{4}$
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Isomorphisms</div>
+          <div class="step-subtitle">Definition 4.2.2 and Theorem 4.2.3: coordinates are isomorphisms</div>
+          <div class="step-body">
+<p>An invertible linear transformation \(T\) is called an <b>isomorphism</b>. The linear space \(V\) is <b>isomorphic</b> to \(W\) if there exists an isomorphism \(T\) from \(V\) to \(W\).</p>
+<p><b>Example 4.</b> \(L\!\left(\begin{bmatrix}a&b\\c&d\end{bmatrix}\right)=\begin{bmatrix}a\\b\\c\\d\end{bmatrix}\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^4\) just rearranges four scalars. It is linear, and \(L^{-1}\) puts them back, so \(\mathbb{R}^{2\times2}\cong\mathbb{R}^4\).</p>
+<p><b>Theorem 4.2.3.</b> If \(\mathfrak{B}=(f_1,\dots,f_n)\) is a basis of \(V\), then the coordinate transformation \(L_{\mathfrak{B}}(f)=[f]_{\mathfrak{B}}\) from \(V\) to \(\mathbb{R}^n\) is an isomorphism. <b>Every \(n\)-dimensional space is isomorphic to \(\mathbb{R}^n\).</b></p>
+$$f=c_1f_1+\cdots+c_nf_n\ \text{ in }V\ \ \underset{L_{\mathfrak{B}}^{-1}}{\overset{L_{\mathfrak{B}}}{\rightleftarrows}}\ \ [f]_{\mathfrak{B}}=\begin{bmatrix}c_1\\\vdots\\c_n\end{bmatrix}\ \text{ in }\mathbb{R}^n$$
+<table>
+  <tr><td>What is \([f]_{\mathfrak{B}}\) for \(f=2-x+3x^2\) in \(P_2\), \(\mathfrak{B}=(1,x,x^2)\)?</td><td><reveal>\(\begin{bmatrix}2\\-1\\3\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Why can we use Chapters 1 to 3 on \(P_2\)?</td><td><reveal>Because \(L_{\mathfrak{B}}\) is linear and invertible: sums go to sums, scalar multiples to scalar multiples, so any question about \(P_2\) can be moved to \(\mathbb{R}^3\) and back.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 5, Part 1</div>
+          <div class="step-subtitle">\(T(A)=S^{-1}AS\) is linear</div>
+          <div class="step-body">
+<p>Show that the transformation \(T(A)=S^{-1}AS\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^{2\times2}\) is an isomorphism, where \(S=\begin{bmatrix}1&2\\3&4\end{bmatrix}\).</p>
+<table>
+  <tr><td>Definition 4.2.2 asks for two things</td><td><reveal>(1) \(T\) is a linear transformation, and (2) \(T\) is invertible. We check them separately.</reveal></td></tr>
+  <tr><td>Rule 1: \(T(A_1+A_2)=T(A_1)+T(A_2)\)</td><td><reveal>Matrix multiplication distributes over addition, so
+  \(T(A_1+A_2)=S^{-1}(A_1+A_2)S=S^{-1}A_1S+S^{-1}A_2S=T(A_1)+T(A_2)\).</reveal></td></tr>
+  <tr><td>Rule 2: \(T(kA)=kT(A)\)</td><td><reveal>A scalar moves freely through a matrix product, so
+  \(T(kA)=S^{-1}(kA)S=k\,S^{-1}AS=kT(A)\).</reveal></td></tr>
+  <tr><td>Does the particular \(S\) matter for linearity?</td><td><reveal>No. The two computations work for any fixed \(S\) (we only need \(S^{-1}\) to exist, which is used in part 2). Linearity comes from the shape \(A\mapsto(\text{matrix})\,A\,(\text{matrix})\).</reveal></td></tr>
+</table>
+<p class="muted small">Next slide: invertibility. The most direct way to show a function is invertible is to write down its inverse.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 5, Part 2</div>
+          <div class="step-subtitle">\(T(A)=S^{-1}AS\) is invertible</div>
+          <div class="step-body">
+<table>
+  <tr><td>Find \(S^{-1}\) first</td><td><reveal>\(\det S=1\cdot4-2\cdot3=-2\neq0\), so \(S^{-1}=\dfrac{1}{-2}\begin{bmatrix}4&-2\\-3&1\end{bmatrix}=\begin{bmatrix}-2&1\\ \tfrac32&-\tfrac12\end{bmatrix}\). (This is why \(T\) is defined at all.)</reveal></td></tr>
+  <tr><td>Solve \(B=S^{-1}AS\) for \(A\)</td><td><reveal>Multiply on the left by \(S\): \(SB=AS\). Multiply on the right by \(S^{-1}\): \(A=SBS^{-1}\).</reveal></td></tr>
+  <tr><td>Candidate inverse</td><td><reveal>\(T^{-1}(B)=SBS^{-1}\). For every \(B\) there is exactly one \(A\), so \(T\) is invertible.</reveal></td></tr>
+  <tr><td>Verify both compositions</td><td><reveal>\(T^{-1}(T(A))=S(S^{-1}AS)S^{-1}=A\) and \(T(T^{-1}(B))=S^{-1}(SBS^{-1})S=B\).</reveal></td></tr>
+  <tr><td>Example with numbers: \(A=\begin{bmatrix}1&0\\0&0\end{bmatrix}\)</td><td><reveal>\(AS=\begin{bmatrix}1&2\\0&0\end{bmatrix}\), so \(T(A)=S^{-1}(AS)=\begin{bmatrix}-2&-4\\ \tfrac32&3\end{bmatrix}\). Undo it: \(S\,T(A)\,S^{-1}=\begin{bmatrix}1&0\\0&0\end{bmatrix}=A\).</reveal></td></tr>
+  <tr><td>A second proof, with the kernel</td><td><reveal>If \(T(A)=0\) then \(S^{-1}AS=0\), and multiplying by \(S\) and \(S^{-1}\) gives \(A=0\). So \(\ker(T)=\{0\}\), and since the domain and target both have dimension 4, Theorem 4.2.4(c) (next slide) says \(T\) is an isomorphism.</reveal></td></tr>
+  <tr><td>Conclusion</td><td><reveal>\(T\) is linear and invertible, hence an <b>isomorphism</b>. Matrices \(A\) and \(S^{-1}AS\) are similar, so this map is "change the basis" acting on all \(2\times2\) matrices at once.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Theorem 4.2.4</div>
+          <div class="step-subtitle">Properties of isomorphisms</div>
+          <div class="step-body">
+<p>Let \(T\) be a linear transformation from \(V\) to \(W\).</p>
+<ol type="a">
+  <li>\(T\) is an isomorphism if (and only if) \(\ker(T)=\{0\}\) and \(\operatorname{im}(T)=W\).</li>
+</ol>
+<p class="muted small">In parts b to d, \(V\) and \(W\) are finite dimensional.</p>
+<ol type="a" start="2">
+  <li>\(V\) is isomorphic to \(W\) if (and only if) \(\dim(V)=\dim(W)\).</li>
+  <li>If \(\ker(T)=\{0\}\) and \(\dim(V)=\dim(W)\), then \(T\) is an isomorphism.</li>
+  <li>If \(\operatorname{im}(T)=W\) and \(\dim(V)=\dim(W)\), then \(T\) is an isomorphism.</li>
+</ol>
+<table>
+  <tr><td>Why does (a) hold?</td><td><reveal>\(\operatorname{im}(T)=W\) says \(T(f)=g\) always has a solution. If \(T(f_1)=T(f_2)=g\), then \(T(f_1-f_2)=0\), so \(f_1=f_2\) when the kernel is \(\{0\}\): the solution is unique, hence \(T\) is invertible.</reveal></td></tr>
+  <tr><td>Why does (c) hold?</td><td><reveal>Rank-nullity: \(\dim(V)=0+\dim(\operatorname{im}T)\), so \(\dim(\operatorname{im}T)=\dim(W)\), and a subspace of \(W\) of full dimension is \(W\) itself. Then use (a).</reveal></td></tr>
+  <tr><td>Is \(P_2\) isomorphic to \(\mathbb{R}^{2\times2}\)? To \(\mathbb{R}^3\)?</td><td><reveal>\(\dim P_2=3\), \(\dim\mathbb{R}^{2\times2}=4\): no. \(\dim\mathbb{R}^3=3\): yes, by (b).</reveal></td></tr>
+</table>
+<p class="muted small">Warning: equal dimensions alone do not make a given \(T\) an isomorphism. Part (c) needs the kernel too.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Evaluating a polynomial at three points: two nearly identical maps</div>
+          <div class="step-body">
+<p>Consider \(f\mapsto\begin{bmatrix}f(1)\\f(2)\\f(3)\end{bmatrix}\) in two settings: (a) from \(P_3\) to \(\mathbb{R}^3\), and (b) from \(P_2\) to \(\mathbb{R}^3\). Which is an isomorphism? Call the maps \(L\) and \(T\).</p>
+<p><b>(a)</b> \(L:P_3\to\mathbb{R}^3\).</p>
+<table>
+  <tr><td>Dimensions</td><td><reveal>\(\dim P_3=4\) (basis \(1,x,x^2,x^3\)) and \(\dim\mathbb{R}^3=3\).</reveal></td></tr>
+  <tr><td>Apply Theorem 4.2.4(b)</td><td><reveal>Isomorphic spaces must have equal dimensions. \(4\neq3\), so \(P_3\) and \(\mathbb{R}^3\) are not isomorphic, and \(L\) <b>is not</b> an isomorphism.</reveal></td></tr>
+  <tr><td>Where does it fail, concretely?</td><td><reveal>With \(f=a+bx+cx^2+dx^3\), \(L(f)=\begin{bmatrix}a+b+c+d\\a+2b+4c+8d\\a+3b+9c+27d\end{bmatrix}\): 3 equations in 4 unknowns, so a nonzero solution of \(L(f)=0\) must exist (the kernel is not \(\{0\}\)).</reveal></td></tr>
+  <tr><td>Name one</td><td><reveal>\(f(x)=(x-1)(x-2)(x-3)=x^3-6x^2+11x-6\). Check: \(f(1)=f(2)=f(3)=0\) but \(f\neq0\).</reveal></td></tr>
+  <tr><td>Rank-nullity agrees</td><td><reveal>\(\operatorname{rank}(L)\le3\), so \(\operatorname{nullity}(L)=4-\operatorname{rank}(L)\ge1\).</reveal></td></tr>
+</table>
+<p><b>(b)</b> \(T:P_2\to\mathbb{R}^3\), the same formula on quadratics.</p>
+<table>
+  <tr><td>Dimensions</td><td><reveal>\(\dim P_2=3=\dim\mathbb{R}^3\). The dimension test passes, but this <b>alone does not</b> show \(T\) is an isomorphism.</reveal></td></tr>
+  <tr><td>Find \(\ker(T)\)</td><td><reveal>\(T(f)=0\) means \(f(1)=f(2)=f(3)=0\): the quadratic \(f\) has three zeros.</reveal></td></tr>
+  <tr><td>Why is \(f=0\)?</td><td><reveal>A nonzero polynomial of degree at most 2 has at most 2 roots. Three roots force \(f=0\). So \(\ker(T)=\{0\}\).</reveal></td></tr>
+  <tr><td>Conclude with Theorem 4.2.4(c)</td><td><reveal>\(\ker(T)=\{0\}\) and \(\dim P_2=\dim\mathbb{R}^3\), so \(T\) <b>is</b> an isomorphism.</reveal></td></tr>
+  <tr><td>Second proof with a matrix</td><td><reveal>In coordinates \(f=a+bx+cx^2\), \(T(f)=\begin{bmatrix}1&1&1\\1&2&4\\1&3&9\end{bmatrix}\begin{bmatrix}a\\b\\c\end{bmatrix}\), and the determinant is \(1(18-12)-1(9-4)+1(3-2)=2\neq0\). The matrix is invertible, so \(T\) is too.</reveal></td></tr>
+  <tr><td>What does it mean?</td><td><reveal>Any three values \(f(1),f(2),f(3)\) come from exactly one quadratic: through three points with distinct \(x\) there is a unique parabola.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Is \(T\) an Isomorphism?</div>
+          <div class="step-subtitle">Figure 1: a decision diagram for finite dimensional \(V\) and \(W\)</div>
+          <div class="step-body">
+<p class="muted small">Click the diagram (or Next) to follow one arrow at a time.</p>
+<staged-svg>
+<svg viewBox="0 0 760 600" role="img" aria-label="Decision diagram: is the linear transformation T from V to W an isomorphism?">
+  <g>
+    <rect class="flow-box" x="230" y="20" width="300" height="64" rx="8"/>
+    <text class="flow-text" x="380" y="59">Is dim(V) = dim(W)?</text>
+  </g>
+  <g data-stage="1" data-caption="If the dimensions differ, there is no isomorphism at all (Theorem 4.2.4b).">
+    <path class="flow-line" d="M230 52 H110 V506"/><polygon class="flow-head" points="102,506 118,506 110,522"/>
+    <text class="flow-label" x="150" y="42">no</text>
+    <rect class="flow-box flow-box--no" x="0" y="522" width="230" height="64" rx="8"/>
+    <text class="flow-text" x="115" y="548">T is not an</text><text class="flow-text" x="115" y="572">isomorphism</text>
+  </g>
+  <g data-stage="2" data-caption="Equal dimensions are necessary but not enough: now look at T itself.">
+    <path class="flow-line" d="M380 84 V124"/><polygon class="flow-head" points="372,124 388,124 380,140"/>
+    <text class="flow-label" x="394" y="116">yes</text>
+    <rect class="flow-box" x="230" y="140" width="300" height="64" rx="8"/>
+    <text class="flow-text" x="380" y="168">Can you write a formula</text><text class="flow-text" x="380" y="192">for the inverse of T?</text>
+  </g>
+  <g data-stage="3" data-caption="A formula for T⁻¹ settles it: T is invertible, hence an isomorphism (as in Example 5).">
+    <path class="flow-line" d="M530 172 H650 V506"/><polygon class="flow-head" points="642,506 658,506 650,522"/>
+    <text class="flow-label" x="560" y="162">yes</text>
+    <rect class="flow-box flow-box--yes" x="530" y="522" width="230" height="64" rx="8"/>
+    <text class="flow-text" x="645" y="548">T is an</text><text class="flow-text" x="645" y="572">isomorphism</text>
+  </g>
+  <g data-stage="4" data-caption="No formula for the inverse? Study the kernel.">
+    <path class="flow-line" d="M380 204 V254"/><polygon class="flow-head" points="372,254 388,254 380,270"/>
+    <text class="flow-label" x="394" y="240">no</text>
+    <rect class="flow-box" x="230" y="270" width="300" height="64" rx="8"/>
+    <text class="flow-text" x="380" y="309">Is ker(T) = {0} ?</text>
+  </g>
+  <g data-stage="5" data-caption="A nonzero element in the kernel means T is not invertible (Theorem 4.2.4a).">
+    <path class="flow-line" d="M230 302 H110"/><circle class="flow-head" cx="110" cy="302" r="5"/>
+    <text class="flow-label" x="150" y="292">no</text>
+  </g>
+  <g data-stage="6" data-caption="ker(T) = {0} together with equal dimensions makes T an isomorphism (Theorem 4.2.4c).">
+    <path class="flow-line" d="M530 302 H650"/><circle class="flow-head" cx="650" cy="302" r="5"/>
+    <text class="flow-label" x="560" y="292">yes</text>
+  </g>
+  <g data-stage="7" data-caption="Cannot decide about the kernel? Check whether the image is all of W instead.">
+    <path class="flow-line" d="M380 334 V384"/><polygon class="flow-head" points="372,384 388,384 380,400"/>
+    <text class="flow-label" x="394" y="370">can't tell</text>
+    <rect class="flow-box" x="230" y="400" width="300" height="64" rx="8"/>
+    <text class="flow-text" x="380" y="439">Is im(T) = W ?</text>
+  </g>
+  <g data-stage="8" data-caption="If the image is smaller than W, T is not onto, so it is not an isomorphism.">
+    <path class="flow-line" d="M230 432 H110"/><circle class="flow-head" cx="110" cy="432" r="5"/>
+    <text class="flow-label" x="150" y="422">no</text>
+  </g>
+  <g data-stage="9" data-caption="im(T) = W together with equal dimensions makes T an isomorphism (Theorem 4.2.4d).">
+    <path class="flow-line" d="M530 432 H650"/><circle class="flow-head" cx="650" cy="432" r="5"/>
+    <text class="flow-label" x="560" y="422">yes</text>
+  </g>
+</svg>
+</staged-svg>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Problems from the Text</div>
+          <div class="step-subtitle">Bretscher, Exercises 4.2 (numbers as in the book); the rest are homework</div>
+          <div class="step-body">
+<p class="muted small">For each: is it linear? If so find kernel and image, and decide whether it is an isomorphism.</p>
+<table>
+  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>1</td><td>\(T(M)=M+I_2\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^{2\times2}\).</td><td><reveal>Not linear: \(T(0)=I_2\neq0\).</reveal></td></tr>
+  <tr><td>6</td><td>\(T(M)=M\begin{bmatrix}1&2\\3&6\end{bmatrix}\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^{2\times2}\).</td><td><reveal>Linear. \(\begin{bmatrix}p&q\\r&s\end{bmatrix}\) is in the kernel iff \(p=-3q\) and \(r=-3s\): basis \(\begin{bmatrix}-3&1\\0&0\end{bmatrix},\begin{bmatrix}0&0\\-3&1\end{bmatrix}\), nullity 2, rank 2. Not an isomorphism (the matrix is not invertible).</reveal></td></tr>
+  <tr><td>7</td><td>\(T(M)=\begin{bmatrix}1&2\\3&4\end{bmatrix}M\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^{2\times2}\).</td><td><reveal>Linear. \(AM=0\) forces \(M=0\) since \(A\) is invertible (\(\det=-2\)), so the kernel is \(\{0\}\); equal dimensions give an isomorphism, with \(T^{-1}(M)=A^{-1}M\).</reveal></td></tr>
+  <tr><td>23</td><td>\(T(f(t))=f(7)\) from \(P_2\) to \(\mathbb{R}\).</td><td><reveal>Linear. Image \(\mathbb{R}\), rank 1. Kernel: \(f(7)=0\), basis \((t-7,\ t(t-7))\), nullity 2. Not an isomorphism (\(3\neq1\)).</reveal></td></tr>
+  <tr><td>24</td><td>\(T(f(t))=f''(t)f(t)\) from \(P_2\) to \(P_2\).</td><td><reveal>Not linear: \(T(2f)=(2f)''(2f)=4f''f=4T(f)\neq2T(f)\) in general.</reveal></td></tr>
+  <tr><td>26</td><td>\(T(f(t))=f(-t)\) from \(P_2\) to \(P_2\), that is \(T(a+bt+ct^2)=a-bt+ct^2\).</td><td><reveal>Linear, and \(T(T(f))=f\), so \(T^{-1}=T\): an isomorphism. Kernel \(\{0\}\), image \(P_2\).</reveal></td></tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Linear transformation</b></td><td>\(T(f+g)=T(f)+T(g)\), \(T(kf)=kT(f)\); \(\operatorname{im}(T)\subseteq W\) and \(\ker(T)\subseteq V\) are subspaces; \(\dim V=\operatorname{rank}+\operatorname{nullity}\)</td></tr>
+  <tr><td><b>Isomorphism</b></td><td>an invertible linear transformation; \(V\cong W\) means same structure</td></tr>
+  <tr><td><b>Coordinates</b></td><td>\(L_{\mathfrak{B}}:V\to\mathbb{R}^n\) is an isomorphism, so every \(n\)-dimensional space is isomorphic to \(\mathbb{R}^n\)</td></tr>
+  <tr><td><b>Is \(T\) an isomorphism?</b></td><td>(1) \(\dim V=\dim W\)? If not, no. (2) Write the inverse? If so, yes. (3) Otherwise: is \(\ker(T)=\{0\}\) (or \(\operatorname{im}T=W\))? With equal dimensions either one is enough.</td></tr>
+  <tr><td><b>Infinite dimensions</b></td><td>the shortcuts in (2) and (3) fail; use Theorem 4.2.4(a) only</td></tr>
+</table>
+<p class="muted small">Next lesson: Section 4.3, the matrix of a linear transformation. Coordinates turn \(T\) into a matrix, and you already know how to study matrices.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
         </div>
       </div>
-      <div class="step" data-step="4">
-        <div class="step-title">Definition 4.2.2</div>
-        <div class="step-subtitle">Isomorphisms and isomorphic spaces</div>
-        <div class="step-body">
-          An invertible linear transformation T is called an isomorphism. We say that the linear space V is isomorphic to the linear space W if there exists an isomorphism T from V to W.
-        </div>
-      </div>
-      <div class="step" data-step="5">
-        <div class="step-title">Theorem 4.2.3</div>
-        <div class="step-subtitle">Coordinate transformations are isomorphism</div>
-        <div class="step-body">
-          If $\mathfrak{B}=(f_1,f_2,\cdots,f_n)$ is a basis of a linear space V, then the coordinate transformation $L_{\mathfrak{B}}(f)=[f]_{\mathfrak{B}}$ from V to $\mathbb{R}^{n}$ is an isomorphism. Thus, V is isomorphic to $\mathbb{R}^{n}$; the linear spaces V and $\mathbb{R}^{n}$ have the same structure.
-        </div>
-      </div>
-      <div class="step" data-step="6">
-        <div class="step-title">Example 5</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          Show that the transformation<br>
-          $$T(A)=S^{-1}AS$$
-          from $\mathbb{R}^{2\times 2}$ to $\mathbb{R}^{2\times 2}$ is an isomorphism, where
-          $$S=\begin{bmatrix}
-           1 & 2 \\
-           3 & 4 
-          \end{bmatrix}$$
-        </div>
-      </div>
-      <div class="step" data-step="7">
-        <div class="step-title">Theorem 4.2.4</div>
-        <div class="step-subtitle">Properties of isomorphisms</div>
-        <div class="step-body">
-          a. A linear transformation T from V to W is an isomorphism if and only if ker(T)={0} and im(T)=W.<br>
-          In parts (b) through (d), the linear spaces V and W are assumed to be finite dimensional.<br>
-          b. The linear space V is isomorphic to W if and only if dim(V)=dim(W)<br>
-          c. Suppose T is a linear transformation from V to W with Ker(T)={0}. If dim(V)=dim(W), then T is an isomorphism.<br>
-          d. Suppose T is a linear transformation from V to W with im(T)=W. If dim(V)=dim(W), then T is an isomorphism.
-        </div>
-      </div>
-      <div class="step" data-step="8">
-        <div class="step-title">Example</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          Is the linear transformation:
-          $$L(f(x))=\begin{bmatrix}f(1)\\f(2)\\f(3)\end{bmatrix}$$ from $P_3$ to $\mathbb{R}^{3}$ an isomorphism?<br>
-          Is the same transformation as before but from $P_2$ to $\mathbb{R}^{3}$ an isomorphism?
-        </div>
-      </div>
-      
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
 </body>
+
 </html>

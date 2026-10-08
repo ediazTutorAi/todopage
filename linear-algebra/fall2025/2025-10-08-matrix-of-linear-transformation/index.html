@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>The Matrix of a Linear Transformation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,94 +30,206 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Matrix of a Linear Transformation</h1>
-  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>The Matrix of a Linear Transformation</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">Definition 4.3.1</div>
-        <div class="step-subtitle">The $\mathfrak{B}$-matrix of a linear transformation</div>
-        <div class="step-body">
-          Consider a linear transformation T from V to V, where V is an n-dimensional linear space. Let $\mathfrak{B}$ be a basis of V. Consider the linear transformation $L_{\mathfrak{B}}\circ T \circ L_{\mathfrak{B}}^{-1}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$, with standard matrix B, meaning $B\vec{x}=L_{\mathfrak{B}}(T(L_{\mathfrak{B}}^{-1})(\vec{x}))$ for all $\vec{x}$ in $\mathbb{R}^{n}$. This matrix B is called the $\mathfrak{B}$-matrix transformation T. See the accompanying diagrams. Letting $f=L_{\mathfrak{B}}(\vec{x})$ and $\vec{x}=[f]_{\mathfrak{B}}$ we find that
-          $$[T(f)]_{\mathfrak{B}}=B[f]_{\mathfrak{B}}$$ for all f in v.
-          
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Example 1 and Definition 4.3.1</div>
+          <div class="step-subtitle">The \(\mathfrak{B}\)-matrix of a linear transformation</div>
+          <div class="step-body">
+<p>Consider \(T(f)=f'+f''\) from \(P_2\) to \(P_2\). Since \(P_2\cong\mathbb{R}^3\), this is essentially a linear map \(\mathbb{R}^3\to\mathbb{R}^3\), given by a \(3\times3\) matrix \(B\). Let us find it.</p>
+<table>
+  <tr><td>Compute \(T(a+bx+cx^2)\)</td><td><reveal>\((b+2cx)+2c=(b+2c)+2c\,x\)</reveal></td></tr>
+  <tr><td>Coordinates of input and output in \(\mathfrak{B}=(1,x,x^2)\)</td><td><reveal>\([f]_{\mathfrak{B}}=\begin{bmatrix}a\\b\\c\end{bmatrix}\) and \([T(f)]_{\mathfrak{B}}=\begin{bmatrix}b+2c\\2c\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Write the output as a matrix times the input</td><td><reveal>\(\begin{bmatrix}b+2c\\2c\\0\end{bmatrix}=\begin{bmatrix}0&1&2\\0&0&2\\0&0&0\end{bmatrix}\begin{bmatrix}a\\b\\c\end{bmatrix}\), so \(B=\begin{bmatrix}0&1&2\\0&0&2\\0&0&0\end{bmatrix}\).</reveal></td></tr>
+</table>
+<p><b>Definition 4.3.1.</b> Let \(T:V\to V\) be linear, \(\dim V=n\), \(\mathfrak{B}\) a basis. The \(\mathfrak{B}\)-matrix of \(T\) is the standard matrix \(B\) of \(L_{\mathfrak{B}}\circ T\circ L_{\mathfrak{B}}^{-1}\):</p>
+$$[T(f)]_{\mathfrak{B}}=B\,[f]_{\mathfrak{B}}\qquad\text{for all }f\text{ in }V.$$
+<p class="muted small">Diagram: \(f\mapsto T(f)\) on top, \([f]_{\mathfrak{B}}\mapsto[T(f)]_{\mathfrak{B}}\) below (multiply by \(B\)), with \(L_{\mathfrak{B}}\) down the sides.</p>
+          </div>
         </div>
-      </div>
 
-      <div class="step" data-step="2">
-        <div class="step-title">Theorem 4.3.2</div>
-        <div class="step-subtitle">The columns of the B-matrix of a linear transformation</div>
-        <div class="step-body">
-         Consider a linear transformation T from V to V, and let B be the matrix of T with respect to a basis $\mathfrak{B}=(f_1,f_2,..,f_n)$ of V. Then
-         $$\begin{bmatrix}|&&|\\T(f_1)]_{\mathfrak{B}}&\cdots&[T(f_n)]_{\mathfrak{B}}\\|&&|\end{bmatrix}$$
-         The columns of B are the $\mathfrak{B}$-coordinates vectors of the transforms of the basis elements $f_1,\cdots,f_n$ of V.
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Theorem 4.3.2</div>
+          <div class="step-subtitle">The columns of \(B\), and Example 2</div>
+          <div class="step-body">
+<p>Let \(T:V\to V\) be linear, and \(B\) its matrix with respect to a basis \(\mathfrak{B}=(f_1,\dots,f_n)\). Then</p>
+$$B=\begin{bmatrix}|&&|\\ [T(f_1)]_{\mathfrak{B}}&\cdots&[T(f_n)]_{\mathfrak{B}}\\ |&&|\end{bmatrix}.$$
+<p>The columns of \(B\) are the \(\mathfrak{B}\)-coordinates of the images of the basis elements.</p>
+<table>
+  <tr><td>Why? What are the coordinates of \(f_i\) itself?</td><td><reveal>\(f_i=0\cdot f_1+\cdots+1\cdot f_i+\cdots+0\cdot f_n\), so \([f_i]_{\mathfrak{B}}=\vec e_i\).</reveal></td></tr>
+  <tr><td>Apply \([T(f)]_{\mathfrak{B}}=B[f]_{\mathfrak{B}}\) to \(f=f_i\)</td><td><reveal>\([T(f_i)]_{\mathfrak{B}}=B\vec e_i\), and \(B\vec e_i\) is exactly the \(i\)th column of \(B\). Do this for \(i=1,\dots,n\).</reveal></td></tr>
+  <tr><td>Recipe</td><td><reveal>(1) apply \(T\) to each basis element. (2) Write each result in \(\mathfrak{B}\)-coordinates. (3) Use those coordinate vectors as the columns, in order.</reveal></td></tr>
+</table>
+<p class="muted small"><b>Example 2.</b> Use Theorem 4.3.2 to find the matrix \(B\) of \(T(f)=f'+f''\) from \(P_2\) to \(P_2\) with respect to \(\mathfrak{B}=(1,x,x^2)\) (the map of Example 1).</p>
+<table>
+  <tr><td>\(T(1)\) and \([T(1)]_{\mathfrak{B}}\)</td><td><reveal>\(1'+1''=0\), so the first column is \(\begin{bmatrix}0\\0\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(T(x)\) and \([T(x)]_{\mathfrak{B}}\)</td><td><reveal>\(x'+x''=1\), so the second column is \(\begin{bmatrix}1\\0\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(T(x^2)\) and \([T(x^2)]_{\mathfrak{B}}\)</td><td><reveal>\((x^2)'+(x^2)''=2x+2\), so the third column is \(\begin{bmatrix}2\\2\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Assemble</td><td><reveal>\(B=\begin{bmatrix}0&1&2\\0&0&2\\0&0&0\end{bmatrix}\), the same matrix as Example 1 with much less algebra.</reveal></td></tr>
+  <tr><td>Reading the last column</td><td><reveal>\(T(x^2)=2\cdot1+2\cdot x+0\cdot x^2=2+2x\). Writing the basis elements \(1,x,x^2\) beside the rows, and the images \(T(1),T(x),T(x^2)\) above the columns, makes this easy to see.</reveal></td></tr>
+</table>
+<p class="muted small"><b>Use it.</b> For \(f=3-2x+x^2\), \([f]_{\mathfrak{B}}=\begin{bmatrix}3\\-2\\1\end{bmatrix}\).</p>
+<table>
+  <tr><td>Compute \(B[f]_{\mathfrak{B}}\)</td><td><reveal>\(\begin{bmatrix}0&1&2\\0&0&2\\0&0&0\end{bmatrix}\begin{bmatrix}3\\-2\\1\end{bmatrix}=\begin{bmatrix}-2+2\\2\\0\end{bmatrix}=\begin{bmatrix}0\\2\\0\end{bmatrix}\), so \(T(f)=2x\)</reveal></td></tr>
+  <tr><td>Check directly</td><td><reveal>\(f'=-2+2x\) and \(f''=2\), so \(f'+f''=2x\). It agrees.</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
 
-      <div class="step" data-step="3">
-        <div class="step-title">Definition 4.3.3</div>
-        <div class="step-subtitle">Change of basis matrix</div>
-        <div class="step-body">
-          Consider two bases $\mathfrak{U}$ and $\mathfrak{B}$ of an n-dimentional linear space V. Consider the linear transformation $L_{\mathfrak{U}}\circ L_{\mathfrak{B}}^{-1}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$, with standard matrix S, meaning that $S\\vec{x}=L_{\mathfrak{U}}(L_{\mathfrak{B}}^{-1}(\vec{x}))$ for all $\vec{x}$ in $\mathbb{R}^{n}$. This invertible matrix S is called the change of basis matrix from $\mathfrak{B}$ to $\mathfrak{U}$, sometimes denonted by $S_{\mathfrak{B}\to \mathfrak{U}}$. Letting $f=L_{\mathfrak{B}}^{-1}(\vec{x})$ and $\vec{x}=[f]_{\mathfrak{B}}$, we find that 
-          $$[f]_{\mathfrak{U}}=S[f]_{\mathfrak{B}}$$ for all f in V.
-          If $\mathfrak{B}=(b_1,\cdots,b_i,\cdots,b_n)$, then:
-          $$[b_i]_{\mathfrak{U}}=S[b_i]_{\mathfrak{B}}=S \vec{e_i}$$ which is the i-th column of S, so that
-          $$S_{\mathfrak{B}\to \mathfrak{U}}=\begin{bmatrix}|&&|\\ [b_1]_{\mathfrak{U}}&\cdots&[b_n]_{\mathfrak{U}}\\|&&|\end{bmatrix}$$
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Rotation and scaling hiding in a trigonometric space</div>
+          <div class="step-body">
+<p>Let \(V=\operatorname{span}(\cos x,\sin x)\) in \(C^\infty\), and \(T(f)=3f+2f'-f''\) (a linear transformation \(V\to V\)).</p>
+<table>
+  <tr><td>\(T(\cos x)\)</td><td><reveal>\(3\cos x-2\sin x+\cos x=4\cos x-2\sin x\)</reveal></td></tr>
+  <tr><td>\(T(\sin x)\)</td><td><reveal>\(3\sin x+2\cos x+\sin x=2\cos x+4\sin x\)</reveal></td></tr>
+  <tr><td>(a) the matrix \(B\) for \(\mathfrak{B}=(\cos x,\sin x)\)</td><td><reveal>Columns \(\begin{bmatrix}4\\-2\end{bmatrix}\) and \(\begin{bmatrix}2\\4\end{bmatrix}\): \(B=\begin{bmatrix}4&2\\-2&4\end{bmatrix}\). This is a rotation combined with a scaling.</reveal></td></tr>
+  <tr><td>(b) is \(T\) an isomorphism?</td><td><reveal>\(\det B=16+4=20\neq0\), so \(B\) is invertible, hence so is \(T\).</reveal></td></tr>
+</table>
+<p class="muted small">Technique: a question about \(T\) (image, kernel, invertibility, solving \(T(f)=g\)) becomes a question about the matrix \(B\), by solving \(B[f]_{\mathfrak{B}}=[g]_{\mathfrak{B}}\).</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">A transformation on matrices: kernel and image through \(B\)</div>
+          <div class="step-body">
+<p>Let \(T(M)=\begin{bmatrix}0&1\\0&0\end{bmatrix}M-M\begin{bmatrix}0&1\\0&0\end{bmatrix}\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^{2\times2}\). Use the standard basis \(\mathfrak{B}=(E_{11},E_{12},E_{21},E_{22})\), so \(\begin{bmatrix}a&b\\c&d\end{bmatrix}\) has coordinates \(\begin{bmatrix}a\\b\\c\\d\end{bmatrix}\).</p>
+<table>
+  <tr><td>Compute \(T\) on \(\begin{bmatrix}a&b\\c&d\end{bmatrix}\)</td><td><reveal>\(\begin{bmatrix}c&d\\0&0\end{bmatrix}-\begin{bmatrix}0&a\\0&c\end{bmatrix}=\begin{bmatrix}c&d-a\\0&-c\end{bmatrix}\), coordinates \(\begin{bmatrix}c\\d-a\\0\\-c\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>(a) the \(4\times4\) matrix \(B\)</td><td><reveal>\(B=\begin{bmatrix}0&0&1&0\\-1&0&0&1\\0&0&0&0\\0&0&-1&0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>(b) bases of \(\operatorname{im}(B)\) and \(\ker(B)\)</td><td><reveal>Column 2 is \(\vec0\) and column 4 is \(-\)column 1, so \(\vec v_1=\begin{bmatrix}0\\-1\\0\\0\end{bmatrix}\), \(\vec v_3=\begin{bmatrix}1\\0\\0\\-1\end{bmatrix}\) form a basis of the image, and \(\begin{bmatrix}0\\1\\0\\0\end{bmatrix}\), \(\begin{bmatrix}1\\0\\0\\1\end{bmatrix}\) a basis of the kernel.</reveal></td></tr>
+  <tr><td>(c) translate back to matrices</td><td><reveal>\(\operatorname{im}(T)\): \(\begin{bmatrix}0&-1\\0&0\end{bmatrix},\begin{bmatrix}1&0\\0&-1\end{bmatrix}\). \(\ker(T)\): \(\begin{bmatrix}0&1\\0&0\end{bmatrix},\ I_2\). So rank 2 and nullity 2.</reveal></td></tr>
+</table>
+<p class="muted small">Check: \(\operatorname{rank}+\operatorname{nullity}=2+2=4=\dim\mathbb{R}^{2\times2}\). Sanity check: the kernel is the set of matrices that commute with \(E_{12}=\begin{bmatrix}0&1\\0&0\end{bmatrix}\), and \(I_2\) and \(E_{12}\) both do.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Change of Basis</div>
+          <div class="step-subtitle">Definition 4.3.3 and Example 5</div>
+          <div class="step-body">
+<p>Let \(\mathfrak{A}\) and \(\mathfrak{B}\) be two bases of \(V\). The <b>change of basis matrix</b> from \(\mathfrak{B}\) to \(\mathfrak{A}\) is the standard matrix \(S\) of \(L_{\mathfrak{A}}\circ L_{\mathfrak{B}}^{-1}\):</p>
+$$[f]_{\mathfrak{A}}=S\,[f]_{\mathfrak{B}},\qquad S_{\mathfrak{B}\to\mathfrak{A}}=\begin{bmatrix}|&&|\\ [b_1]_{\mathfrak{A}}&\cdots&[b_n]_{\mathfrak{A}}\\ |&&|\end{bmatrix},\qquad S_{\mathfrak{A}\to\mathfrak{B}}=(S_{\mathfrak{B}\to\mathfrak{A}})^{-1}.$$
+<p class="muted small">
+  <b>Example 5.</b> \(V=\operatorname{span}(e^x,e^{-x})\), \(\mathfrak{A}=(e^x,e^{-x})\), \(\mathfrak{B}=(e^x+e^{-x},\ e^x-e^{-x})\). Find \(S=S_{\mathfrak{B}\to\mathfrak{A}}\).
+</p>
+<table>
+  <tr><td>\([e^x+e^{-x}]_{\mathfrak{A}}\)</td><td><reveal>\(1\cdot e^x+1\cdot e^{-x}\), so \(\begin{bmatrix}1\\1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\([e^x-e^{-x}]_{\mathfrak{A}}\)</td><td><reveal>\(1\cdot e^x+(-1)\cdot e^{-x}\), so \(\begin{bmatrix}1\\-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(S\)</td><td><reveal>\(S=\begin{bmatrix}1&1\\1&-1\end{bmatrix}\)</reveal></td></tr>
+</table>
+<p class="muted small">
+  Special case (Example 6): if \(\mathfrak{A}\) is the standard basis of \(\mathbb{R}^n\), then \([\vec x]_{\mathfrak{A}}=\vec x\) and \(S=\begin{bmatrix}\vec b_1&\cdots&\vec b_n\end{bmatrix}\),
+  the matrix we used in Section 3.4. For a subspace of \(\mathbb{R}^n\) this reads \(\begin{bmatrix}\vec b_1&\cdots&\vec b_n\end{bmatrix}=\begin{bmatrix}\vec a_1&\cdots&\vec a_n\end{bmatrix}S\) (Theorem 4.3.4).
+</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Theorem 4.3.5</div>
+          <div class="step-subtitle">Change of basis for the matrix of a transformation</div>
+          <div class="step-body">
+<p>Let \(T:V\to V\) be linear, \(A\) its \(\mathfrak{A}\)-matrix, \(B\) its \(\mathfrak{B}\)-matrix, and \(S\) the change of basis matrix from \(\mathfrak{B}\) to \(\mathfrak{A}\). Then</p>
+$$AS=SB\qquad\text{or}\qquad A=SBS^{-1}\qquad\text{or}\qquad B=S^{-1}AS,$$
+<p>so \(A\) and \(B\) are <b>similar</b>.</p>
+<table>
+  <tr><td>Start from \(f\) in \(\mathfrak{A}\)-coordinates</td><td><reveal>\([T(f)]_{\mathfrak{A}}=A\,[f]_{\mathfrak{A}}\), and \([f]_{\mathfrak{A}}=S\,[f]_{\mathfrak{B}}\), so \([T(f)]_{\mathfrak{A}}=AS\,[f]_{\mathfrak{B}}\).</reveal></td></tr>
+  <tr><td>Go the other way around the diagram</td><td><reveal>\([T(f)]_{\mathfrak{B}}=B\,[f]_{\mathfrak{B}}\), and converting the output to \(\mathfrak{A}\) gives \([T(f)]_{\mathfrak{A}}=S\,[T(f)]_{\mathfrak{B}}=SB\,[f]_{\mathfrak{B}}\).</reveal></td></tr>
+  <tr><td>Compare</td><td><reveal>Both equal \([T(f)]_{\mathfrak{A}}\) for every \([f]_{\mathfrak{B}}\), so \(AS=SB\). Since \(S\) is invertible, \(B=S^{-1}AS\) and \(A=SBS^{-1}\).</reveal></td></tr>
+  <tr><td>Why do we care?</td><td><reveal>Same transformation, different descriptions. If a basis \(\mathfrak{B}\) makes \(B\) simple (for example diagonal), we can study \(T\) through \(B\) and convert back with \(S\).</reveal></td></tr>
+</table>
+<p class="muted small">
+  <b>Example 8.</b> \(V=\operatorname{span}(e^x,e^{-x})\), \(D(f)=f'\), \(\mathfrak{A}=(e^x,e^{-x})\), \(\mathfrak{B}=(e^x+e^{-x},\ e^x-e^{-x})\) as in Example 5.
+  (a) Find the \(\mathfrak{A}\)-matrix \(A\). (b) Use (a), Theorem 4.3.5 and Example 5 to find the \(\mathfrak{B}\)-matrix \(B\). (c) Find \(B\) again from Theorem 4.3.2.
+</p>
+<table>
+  <tr><td>(a) \(D(e^x)\) and \(D(e^{-x})\)</td><td><reveal>\(D(e^x)=e^x\) and \(D(e^{-x})=-e^{-x}\) (chain rule)</reveal></td></tr>
+  <tr><td>(a) \(A\)</td><td><reveal>Columns \(\begin{bmatrix}1\\0\end{bmatrix}\) and \(\begin{bmatrix}0\\-1\end{bmatrix}\): \(A=\begin{bmatrix}1&0\\0&-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>(b) \(S\) and \(S^{-1}\)</td><td><reveal>From Example 5, \(S=\begin{bmatrix}1&1\\1&-1\end{bmatrix}\) with \(\det S=-2\), so \(S^{-1}=\tfrac12\begin{bmatrix}1&1\\1&-1\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>(b) \(AS\)</td><td><reveal>\(\begin{bmatrix}1&0\\0&-1\end{bmatrix}\begin{bmatrix}1&1\\1&-1\end{bmatrix}=\begin{bmatrix}1&1\\-1&1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>(b) \(B=S^{-1}(AS)\)</td><td><reveal>\(\tfrac12\begin{bmatrix}1&1\\1&-1\end{bmatrix}\begin{bmatrix}1&1\\-1&1\end{bmatrix}=\tfrac12\begin{bmatrix}0&2\\2&0\end{bmatrix}=\begin{bmatrix}0&1\\1&0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Check \(AS=SB\)</td><td><reveal>\(SB=\begin{bmatrix}1&1\\1&-1\end{bmatrix}\begin{bmatrix}0&1\\1&0\end{bmatrix}=\begin{bmatrix}1&1\\-1&1\end{bmatrix}=AS\)</reveal></td></tr>
+  <tr><td>(c) \(D\) on the basis \(\mathfrak{B}\)</td><td><reveal>\(D(e^x+e^{-x})=e^x-e^{-x}\) and \(D(e^x-e^{-x})=e^x+e^{-x}\)</reveal></td></tr>
+  <tr><td>(c) \(B\) from the columns</td><td><reveal>\(e^x-e^{-x}\) is the 2nd basis element and \(e^x+e^{-x}\) the 1st, so the columns are \(\begin{bmatrix}0\\1\end{bmatrix}\) and \(\begin{bmatrix}1\\0\end{bmatrix}\). The same \(B\).</reveal></td></tr>
+  <tr><td>Which matrix is simpler?</td><td><reveal>Both are simple. \(A\) is diagonal (\(D\) scales \(e^x\) by 1 and \(e^{-x}\) by \(-1\)); \(B\) swaps the two coordinates. They are similar, \(B=S^{-1}AS\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Problems from the Text</div>
+          <div class="step-subtitle">Bretscher, Exercises 4.3 (numbers as in the book); the rest are homework</div>
+          <div class="step-body">
+<p class="muted small">Find the matrix \(B\) with respect to the given basis, and decide whether \(T\) is an isomorphism.</p>
+<table>
+  <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>12</td><td>\(T(M)=M\begin{bmatrix}2&0\\0&3\end{bmatrix}\) from \(\mathbb{R}^{2\times2}\), standard basis.</td><td><reveal>\(T\) scales column 1 by 2 and column 2 by 3: \(B=\operatorname{diag}(2,3,2,3)\). \(\det B=36\neq0\), an isomorphism.</reveal></td></tr>
+  <tr><td>20</td><td>\(T(f)=f'\) from \(P_2\) to \(P_2\), standard basis.</td><td><reveal>\(T(1)=0\), \(T(t)=1\), \(T(t^2)=2t\): \(B=\begin{bmatrix}0&1&0\\0&0&2\\0&0&0\end{bmatrix}\). Rank 2, kernel the constants: not an isomorphism.</reveal></td></tr>
+  <tr><td>21</td><td>\(T(f)=f''-3f\) from \(P_2\) to \(P_2\), standard basis.</td><td><reveal>\(T(1)=-3\), \(T(t)=-3t\), \(T(t^2)=2-3t^2\): \(B=\begin{bmatrix}-3&0&2\\0&-3&0\\0&0&-3\end{bmatrix}\), \(\det B=-27\neq0\). An isomorphism.</reveal></td></tr>
+  <tr><td>24</td><td>\(T(f(t))=f(3)\) from \(P_2\) to \(P_2\), basis \(\mathfrak{B}=(1,\ t-3,\ (t-3)^2)\).</td><td><reveal>\(T(1)=1\), \(T(t-3)=0\), \(T((t-3)^2)=0\): \(B=\begin{bmatrix}1&0&0\\0&0&0\\0&0&0\end{bmatrix}\). The basis makes the matrix simple. Rank 1, not an isomorphism.</reveal></td></tr>
+  <tr><td>48</td><td>\(T(f)=f'\) on \(\operatorname{span}(\cos t,\sin t)\), basis \((\cos t,\sin t)\).</td><td><reveal>\(T(\cos t)=-\sin t\), \(T(\sin t)=\cos t\): \(B=\begin{bmatrix}0&1\\-1&0\end{bmatrix}\), \(\det B=1\). An isomorphism (a rotation by \(-90^\circ\) in coordinates).</reveal></td></tr>
+  </tbody>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>\(\mathfrak{B}\)-matrix</b></td><td>\([T(f)]_{\mathfrak{B}}=B[f]_{\mathfrak{B}}\); \(B\) is the matrix of \(L_{\mathfrak{B}}\circ T\circ L_{\mathfrak{B}}^{-1}\)</td></tr>
+  <tr><td><b>Computing \(B\)</b></td><td>the \(i\)th column is \([T(f_i)]_{\mathfrak{B}}\): apply \(T\) to each basis element and write the result in coordinates</td></tr>
+  <tr><td><b>Using \(B\)</b></td><td>\(\operatorname{im}\) and \(\ker\) of \(T\) come from those of \(B\) by applying \(L_{\mathfrak{B}}^{-1}\); \(T\) is an isomorphism iff \(\det B\neq0\)</td></tr>
+  <tr><td><b>Change of basis</b></td><td>\(S_{\mathfrak{B}\to\mathfrak{A}}\) has columns \([b_i]_{\mathfrak{A}}\); \([f]_{\mathfrak{A}}=S[f]_{\mathfrak{B}}\); \(S_{\mathfrak{A}\to\mathfrak{B}}=S^{-1}\)</td></tr>
+  <tr><td><b>Two matrices, one \(T\)</b></td><td>\(AS=SB\), i.e. \(B=S^{-1}AS\): \(A\) and \(B\) are similar</td></tr>
+</table>
+<p class="muted small">Next: orthogonality. Choosing the right basis can make a matrix very simple (Examples 8 and 24), which returns when we diagonalize.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
         </div>
       </div>
-      <div class="step" data-step="4">
-        <div class="step-title">Theorem 4.3.4</div>
-        <div class="step-subtitle">Change of basis in a subspace of $\mathbb{R}^{n}$</div>
-        <div class="step-body">
-          Consider a subspace V or $\mathbb{R}^{n}$ with two bases $\mathfrak{U}=(\vec{a_1},\cdots,\vec{a_m})$ and $\mathfrak{B}=(\vec{b_1},\cdots,\vec{b_n})$. Let S be the change of basis matrix from $\mathfrak{B}$ to $\mathfrak{U}$. Then the following equation holds:
-          $$\begin{bmatrix}|&&|\\ b_1&\cdots&b_n\\|&&|\end{bmatrix}=\begin{bmatrix}|&&|\\ a_1&\cdots&a_n\\|&&|\end{bmatrix}S$$
-        </div>
-      </div>
-      <div class="step" data-step="5">
-        <div class="step-title">Theorem 4.3.5</div>
-        <div class="step-subtitle">Change of basis for the matrix of a linear transformation</div>
-        <div class="step-body">
-         Let V be a linear space with two given bases $\mathfrak{U}$ and $\mathfrak{B}$. Consider a linear transformation T from V to V, and let A and B be the $\mathfrak{U}$-matrix and $\mathfrak{B}$-matrix of T, respectively. Let S be the change of basis matrix from $\mathfrak{B}$ to $\mathfrak{U}$. Then A is similar to B, and:
-         $$AS=SB or A=SBS^{-1} or B=S^{-1}AS$$
-        </div>
-      </div>
-      
-      
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
 </body>
+
 </html>

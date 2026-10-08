@@ -549,3 +549,28 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-board--basis { aspect-ratio: 1.6 / 1; }
 .la-mat { display: inline-grid; grid-template-columns: repeat(2, auto); gap: 0 0.7em; padding: 0 0.45em; margin: 0 0.15em; border-left: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 4px; vertical-align: middle; text-align: right; line-height: 1.25; font-weight: 700; }
 .la-vec { grid-template-columns: auto; }
+
+/* column vector in a jsx readout (coordinate vectors are columns) */
+.jsx-col { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; line-height: 1.15; padding: 0 0.35em; margin: 0 0.1em; border-left: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 6px; }
+
+/* <staged-svg>: inline SVG revealed stage by stage (js/staged-svg.js) */
+.staged-diagram { margin: 0.8rem auto; max-width: 700px; }
+.staged-frame { cursor: pointer; border: 1px solid var(--line); border-radius: 10px; padding: 0.4rem; background: var(--bg); }
+.staged-frame svg { width: 100%; height: auto; display: block; }
+.staged-frame svg [data-stage] { transition: opacity 0.35s ease; }
+.staged-frame svg .staged-hidden { opacity: 0; pointer-events: none; }
+.staged-frame svg .staged-new .flow-line { stroke: var(--accent); }
+.staged-frame svg .staged-new .flow-head { fill: var(--accent); }
+.staged-frame svg .staged-new .flow-label { fill: var(--accent); }
+.staged-frame svg .staged-new .flow-box { stroke: var(--accent); }
+.staged-caption { min-height: 2.6em; margin: 0.5rem 0.2rem; font-size: 1.15rem; }
+.staged-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; }
+.staged-controls .btn { font-size: 1.05rem; padding: 0.4rem 1rem; }
+.staged-controls .btn:disabled { opacity: 0.4; cursor: default; }
+.flow-box { fill: var(--bg); stroke: var(--ink); stroke-width: 2.5; }
+.flow-box--yes { stroke: #1e8449; }
+.flow-box--no { stroke: var(--negative, #c0392b); }
+.flow-text { fill: var(--ink); font: 600 19px system-ui, sans-serif; text-anchor: middle; }
+.flow-line { fill: none; stroke: var(--ink); stroke-width: 3; }
+.flow-head { fill: var(--ink); }
+.flow-label { fill: var(--muted); font: 700 18px system-ui, sans-serif; }

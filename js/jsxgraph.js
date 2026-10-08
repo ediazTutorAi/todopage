@@ -3792,6 +3792,137 @@ function renderJsxPolarRegion(el) {
   refresh();
 }
 
+// <jsx-poly-map degree="2" matrix="0,1,2;0,0,2;0,0,0" eval="1,2,3" presets="T(1):1,0,0;T(x):0,1,0"
+//   xmin="-3" xmax="4" ymin="-8" ymax="12" range="4">
+//
+// Polynomials as vectors (Bretscher 4.2 and 4.3). Sliders set the coordinates [f]_B = (a, b, c, ...) of
+// f(x) = a + b x + c x^2 + ... in the standard basis (1, x, x^2, ...), and the graph of f moves with them:
+// the coordinate transformation L_B from P_n to R^(n+1) made visible.
+//   matrix="r1;r2;..."  an (n+1)x(n+1) B-matrix (rows, comma separated). Adds the red dashed graph of T(f)
+//                       with [T(f)]_B = B [f]_B, so the matrix can be watched acting on coordinates. When f
+//                       is exactly a basis element, the readout says which column of B appears.
+//   eval="x1,x2,x3"     the evaluation map L(f) = (f(x1), f(x2), ...) into R^m: red dots on the graph and the
+//                       vector L(f). The readout compares dimensions and flags a nonzero f in the kernel.
+//   presets="name:a,b,c;..."  buttons that set the coordinates (e.g. the basis elements, a kernel element).
+// `range` is the slider range for each coordinate (step 0.5). Expressions are plain numbers.
+function renderJsxPolyMap(el) {
+  const TAG = 'jsx-poly-map';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const deg = Math.round(num('degree', 2)); const n = deg + 1;
+  const range = num('range', 4);
+  const parseRows = (raw) => raw.split(';').map((r) => r.split(',').map((t) => {
+    // eslint-disable-next-line no-new-func -- instructor-authored lesson content, not user input.
+    return new Function(`return (${t});`)();
+  }));
+  let B = null;
+  if (el.getAttribute('matrix')) {
+    B = parseRows(el.getAttribute('matrix'));
+    if (B.length !== n || B.some((r) => r.length !== n)) { console.error(`<${TAG}>: matrix must be ${n}x${n} for degree ${deg}`); B = null; }
+  }
+  const xsEval = el.getAttribute('eval') ? el.getAttribute('eval').split(',').map((t) => parseFloat(t)) : null;
+  const presets = (el.getAttribute('presets') || '').split(';').filter(Boolean).map((p) => {
+    const i = p.lastIndexOf(':');
+    return { name: p.slice(0, i), c: p.slice(i + 1).split(',').map((t) => parseFloat(t)) };
+  });
+  const names = ['a', 'b', 'c', 'd', 'e', 'g'];
+  const c = new Array(n).fill(0); c[0] = 1; if (n > 1) c[1] = 0;
+  const st = { c };
+  const f2 = (v) => fmtNum(v).replace('-', '−');
+  const sup = (k) => (k === 0 ? '' : k === 1 ? 'x' : `x${'⁰¹²³⁴⁵⁶⁷⁸⁹'[k]}`);
+  const polyText = (cs) => {
+    let out = '';
+    for (let k = cs.length - 1; k >= 0; k--) {
+      const v = cs[k]; if (Math.abs(v) < 1e-9) continue;
+      const mag = Math.abs(v); const body = (mag === 1 && k > 0) ? sup(k) : `${fmtNum(mag)}${sup(k)}`;
+      out += out === '' ? `${v < 0 ? '−' : ''}${body}` : ` ${v < 0 ? '−' : '+'} ${body}`;
+    }
+    return out === '' ? '0' : out;
+  };
+  // coordinate vectors are columns, as in the textbook
+  const colText = (items) => `<span class="jsx-col">${items.map((t) => `<span>${t}</span>`).join('')}</span>`;
+  const vecText = (v) => colText(v.map(f2));
+  const polyFn = (cs) => (x) => cs.reduce((acc, ck, k) => acc + ck * x ** k, 0);
+  const tCoords = () => (B ? B.map((row) => row.reduce((acc, bij, j) => acc + bij * st.c[j], 0)) : null);
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board';
+  board.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, board, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [num('xmin', -3), num('ymax', 10), num('xmax', 4), num('ymin', -10)], axis: true, showNavigation: false, showCopyright: false,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+  bd.create('functiongraph', [(x) => polyFn(st.c)(x)], { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+  if (B) bd.create('functiongraph', [(x) => polyFn(tCoords())(x)], { strokeColor: negative, strokeWidth: CURVE_STROKE, dash: 2, highlight: false });
+  if (xsEval) {
+    xsEval.forEach((x0) => {
+      bd.create('point', [x0, () => polyFn(st.c)(x0)], { name: '', size: POINT_SIZE + 1, strokeColor: '#fff', fillColor: negative, strokeWidth: POINT_STROKE, fixed: true, highlight: false });
+      bd.create('line', [[x0, 0], [x0, 1]], { strokeColor: negative, strokeWidth: 1.5, dash: 3, highlight: false, fixed: true });
+    });
+  }
+
+  const inputs = [];
+  function refresh() {
+    const chips = [`<span class="jsx-trace-chip">f(x) = <b>${polyText(st.c)}</b></span>`,
+      `<span class="jsx-trace-chip">[f]<sub>B</sub> = <b>${vecText(st.c)}</b></span>`];
+    if (B) {
+      const t = tCoords();
+      chips.push(`<span class="jsx-trace-chip">[T(f)]<sub>B</sub> = B[f]<sub>B</sub> = <b>${vecText(t)}</b></span>`);
+      chips.push(`<span class="jsx-trace-chip jsx-trace-main">T(f) = ${polyText(t)}</span>`);
+      const hot = st.c.findIndex((v) => Math.abs(v - 1) < 1e-9);
+      if (hot >= 0 && st.c.every((v, k) => k === hot || Math.abs(v) < 1e-9)) {
+        chips.push(`<span class="jsx-trace-chip jsx-trace-main">f is basis element ${hot + 1}: [T(f)]<sub>B</sub> is column ${hot + 1} of B</span>`);
+      }
+    }
+    if (xsEval) {
+      const vals = xsEval.map((x0) => polyFn(st.c)(x0));
+      const zero = vals.every((v) => Math.abs(v) < 1e-9); const nonzeroF = st.c.some((v) => Math.abs(v) > 1e-9);
+      chips.push(`<span class="jsx-trace-chip">L(f) = ${colText(xsEval.map((x0) => `f(${fmtNum(x0)})`))} = <b>${vecText(vals)}</b></span>`);
+      chips.push(`<span class="jsx-trace-chip">dim P<sub>${deg}</sub> = <b>${n}</b>, dim ℝ<sup>${xsEval.length}</sup> = <b>${xsEval.length}</b></span>`);
+      if (zero && nonzeroF) chips.push('<span class="jsx-trace-chip jsx-trace-main">L(f) = 0 with f ≠ 0: f is in the kernel</span>');
+    }
+    readout.innerHTML = chips.join('');
+    bd.update();
+    inputs.forEach((inp, k) => { if (parseFloat(inp.value) !== st.c[k]) inp.value = st.c[k]; });
+  }
+  for (let k = 0; k < n; k++) {
+    const row = document.createElement('label');
+    row.className = 'jsx-slider-row';
+    row.innerHTML = `<span class="jsx-slider-name">${names[k]} <small>coefficient of ${k === 0 ? '1' : sup(k)}</small></span><input type="range" min="${-range}" max="${range}" step="0.5">`;
+    const input = row.querySelector('input');
+    input.value = st.c[k];
+    input.addEventListener('input', () => { st.c[k] = parseFloat(input.value); refresh(); });
+    input.addEventListener('pointerup', () => input.blur());
+    inputs.push(input); controls.appendChild(row);
+  }
+  const mkBtn = (label, vals) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => { vals.forEach((v, k) => { st.c[k] = v; }); refresh(); });
+    controls.appendChild(b);
+  };
+  presets.forEach((p) => mkBtn(p.name, p.c));
+  mkBtn('Reset', new Array(n).fill(0));
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -3806,4 +3937,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-region').forEach(renderJsxRegion);
   document.querySelectorAll('jsx-polar-rect').forEach(renderJsxPolarRect);
   document.querySelectorAll('jsx-polar-region').forEach(renderJsxPolarRegion);
+  document.querySelectorAll('jsx-poly-map').forEach(renderJsxPolyMap);
 });
