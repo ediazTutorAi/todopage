@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Sum and Difference Identities</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (graph checks and angle explorer use <jsx-*> tags) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Sum and Difference Identities</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Motivating Example</div>
+          <div class="step-subtitle">Evaluating with the unit circle</div>
+          <div class="step-body">
+<p><b>Example 1.</b> Evaluate each expression using the unit circle.</p>
+<table>
+  <tr><td>(a) \(\sin\left(\dfrac{17\pi}{6}\right)\)</td><td><reveal>\(\sin\left(\dfrac{5\pi}{6}\right) = \dfrac{1}{2}\)</reveal></td><td><reveal>\(\dfrac{17\pi}{6} - \dfrac{12\pi}{6} = \dfrac{5\pi}{6}\)</reveal></td></tr>
+  <tr><td>(b) \(\cos(1050^\circ)\)</td><td><reveal>\(\cos(330^\circ) = \dfrac{\sqrt{3}}{2}\)</reveal></td><td><reveal>\(1050 - 720 = 330\)</reveal></td></tr>
+  <tr><td>(c) \(\tan\left(-\dfrac{11\pi}{6}\right)\)</td><td><reveal>\(\tan\left(\dfrac{\pi}{6}\right) = \dfrac{1/2}{\sqrt{3}/2} = \dfrac{\sqrt{3}}{3}\)</reveal></td><td><reveal>\(-\dfrac{11\pi}{6} + \dfrac{12\pi}{6} = \dfrac{\pi}{6}\)</reveal></td></tr>
+  <tr><td>(d) \(\sin(15^\circ)\)</td><td colspan="2"><reveal>The unit circle has no point at \(15^\circ\), so we cannot get an exact value yet. We can only say \(0 < \sin(15^\circ) < \dfrac{1}{2}\).</reveal></td></tr>
+</table>
+<p>The first three land on a special angle. For (d), can we <reveal>rewrite \(15^\circ\) using angles that are on the unit circle</reveal>?</p>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">The Big Question</div>
+          <div class="step-subtitle">Is sine of a sum the sum of the sines?</div>
+          <div class="step-body">
+<p>\(15^\circ = 45^\circ - 30^\circ\), and both pieces are on the unit circle. A tempting idea is to "distribute":</p>
+<p>\(\sin(45^\circ - 30^\circ) \stackrel{?}{=} \sin(45^\circ) - \sin(30^\circ) = \dfrac{\sqrt{2}}{2} - \dfrac{1}{2} \approx\) <reveal>\(0.207\)</reveal></p>
+<p>But \(\sin(15^\circ) \approx\) <reveal>\(0.259\)</reveal>. So sine does <b>not</b> distribute over a difference.</p>
+<p>Here is the same failure as a graph: \(y = \sin(x + 30^\circ)\) against the "distributed" \(y = \sin x + \sin 30^\circ\).</p>
+<jsx-graph fn="Math.sin(x+Math.PI/6)" fn2="Math.sin(x)+0.5" label="sin(x + 30°)" label2="sin x + sin 30°" xmin="-7" xmax="7" ymin="-2" ymax="2" pi-ticks></jsx-graph>
+<p class="muted small">The curves are never the same shape: one is a shifted sine, the other a raised sine. We need a correct rule.</p>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">The Sum and Difference Identities</div>
+          <div class="step-subtitle">Property</div>
+          <div class="step-body">
+<p>For any angles \(A\) and \(B\) where the functions are defined:</p>
+<table>
+  <tr><th></th><th>Sum</th><th>Difference</th></tr>
+  <tr><td><b>Sine</b></td><td>\(\sin(A+B) = \) <reveal>\(\sin A\cos B + \cos A\sin B\)</reveal></td><td>\(\sin(A-B) = \) <reveal>\(\sin A\cos B - \cos A\sin B\)</reveal></td></tr>
+  <tr><td><b>Cosine</b></td><td>\(\cos(A+B) = \) <reveal>\(\cos A\cos B - \sin A\sin B\)</reveal></td><td>\(\cos(A-B) = \) <reveal>\(\cos A\cos B + \sin A\sin B\)</reveal></td></tr>
+  <tr><td><b>Tangent</b></td><td>\(\tan(A+B) = \) <reveal>\(\dfrac{\tan A + \tan B}{1 - \tan A\tan B}\)</reveal></td><td>\(\tan(A-B) = \) <reveal>\(\dfrac{\tan A - \tan B}{1 + \tan A\tan B}\)</reveal></td></tr>
+</table>
+<p class="muted small">Watch the signs: sine keeps the sign of the angle operation, cosine <b>flips</b> it, and tangent has the same sign on top and the opposite sign on the bottom.</p>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Explore: Watching the Identity Work</div>
+          <div class="step-subtitle">Drag A and B</div>
+          <div class="step-body">
+<p>The red point is at angle \(A \pm B\). Its coordinates are \(\cos(A\pm B)\) and \(\sin(A\pm B)\). Drag the sliders, switch between sin, cos and tan, and between sum and difference.</p>
+<jsx-angle-sum a="45" b="30" op="diff" fn="sin"></jsx-angle-sum>
+<ul>
+  <li>The identity's value and the circle's value should <reveal>always agree</reveal>.</li>
+  <li>The "distributed" version should <reveal>almost never agree</reveal>. Try to find an exception.</li>
+  <li>Set \(A = 45^\circ\), \(B = 30^\circ\), difference, sine: the red point shows \(\sin(15^\circ)\approx\) <reveal>\(0.259\)</reveal>.</li>
+</ul>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Deriving the difference identities</div>
+          <div class="step-body">
+<p>Use the <b>sum</b> identities together with the even/odd identities (\(\cos(-B) = \cos B\), \(\sin(-B) = -\sin B\), \(\tan(-B) = -\tan B\)) to verify the <b>difference</b> identities. Write \(A - B = A + (-B)\).</p>
+<table>
+  <tr><th>Step</th><th>Reason</th></tr>
+  <tr><td>\(\sin(A - B) = \sin(A + (-B))\)</td><td><reveal>Rewrite as a sum</reveal></td></tr>
+  <tr><td><reveal>\(= \sin A\cos(-B) + \cos A\sin(-B)\)</reveal></td><td><reveal>Sum identity</reveal></td></tr>
+  <tr><td><reveal>\(= \sin A\cos B - \cos A\sin B\)</reveal></td><td><reveal>Even/odd: \(\cos(-B) = \cos B\), \(\sin(-B) = -\sin B\)</reveal></td></tr>
+  <tr><td>\(\cos(A - B) = \cos(A + (-B))\)</td><td><reveal>Rewrite as a sum</reveal></td></tr>
+  <tr><td><reveal>\(= \cos A\cos(-B) - \sin A\sin(-B) = \cos A\cos B + \sin A\sin B\)</reveal></td><td><reveal>Sum identity, then even/odd (the two minus signs make a plus)</reveal></td></tr>
+  <tr><td>\(\tan(A - B) = \tan(A + (-B))\)</td><td><reveal>Rewrite as a sum</reveal></td></tr>
+  <tr><td><reveal>\(= \dfrac{\tan A + \tan(-B)}{1 - \tan A\tan(-B)} = \dfrac{\tan A - \tan B}{1 + \tan A\tan B}\)</reveal></td><td><reveal>Sum identity, then \(\tan(-B) = -\tan B\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Evaluating with the identities</div>
+          <div class="step-body">
+<p>Evaluate each expression using a sum/difference identity and the unit circle. For large angles, first subtract full rotations.</p>
+<table>
+  <tr><th>Expression</th><th>Work</th></tr>
+  <tr><td>(a) \(\sin(110^\circ)\cos(40^\circ) + \cos(110^\circ)\sin(40^\circ)\)</td><td><reveal>\(= \sin(110^\circ + 40^\circ) = \sin(150^\circ) = \dfrac{1}{2}\)</reveal></td></tr>
+  <tr><td>(b) \(\cos\left(\dfrac{\pi}{12}\right)\cos\left(\dfrac{5\pi}{12}\right) - \sin\left(\dfrac{\pi}{12}\right)\sin\left(\dfrac{5\pi}{12}\right)\)</td><td><reveal>\(= \cos\left(\dfrac{\pi}{12} + \dfrac{5\pi}{12}\right) = \cos\left(\dfrac{\pi}{2}\right) = 0\)</reveal></td></tr>
+</table>
+<p>These two run the identity <b>backwards</b>: spot the pattern, collapse it into one angle.</p>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">Example 3 (continued)</div>
+          <div class="step-subtitle">Finding exact values at new angles</div>
+          <div class="step-body">
+<table>
+  <tr><th>Expression</th><th>Work</th></tr>
+  <tr><td>(c) \(\sin(735^\circ)\)</td><td><reveal>\(735 - 720 = 15\), so \(\sin(15^\circ) = \sin(45^\circ - 30^\circ)\)</reveal></td></tr>
+  <tr><td></td><td><reveal>\(= \sin 45^\circ\cos 30^\circ - \cos 45^\circ\sin 30^\circ = \dfrac{\sqrt{2}}{2}\cdot\dfrac{\sqrt{3}}{2} - \dfrac{\sqrt{2}}{2}\cdot\dfrac{1}{2} = \dfrac{\sqrt{6} - \sqrt{2}}{4}\)</reveal></td></tr>
+  <tr><td>(d) \(\cos\left(\dfrac{13\pi}{12}\right)\)</td><td><reveal>Which two unit-circle angles add to \(\dfrac{13\pi}{12}\)? \(\dfrac{13\pi}{12} = \dfrac{10\pi}{12} + \dfrac{3\pi}{12} = \dfrac{5\pi}{6} + \dfrac{\pi}{4}\). (Splitting as \(\tfrac{12\pi}{12} + \tfrac{\pi}{12}\) fails: \(\tfrac{\pi}{12}\) is not on the circle.)</reveal></td></tr>
+  <tr><td></td><td><reveal>\(\cos\left(\dfrac{5\pi}{6}\right)\cos\left(\dfrac{\pi}{4}\right) - \sin\left(\dfrac{5\pi}{6}\right)\sin\left(\dfrac{\pi}{4}\right) = -\dfrac{\sqrt{3}}{2}\cdot\dfrac{\sqrt{2}}{2} - \dfrac{1}{2}\cdot\dfrac{\sqrt{2}}{2} = -\dfrac{\sqrt{6} + \sqrt{2}}{4}\)</reveal></td></tr>
+</table>
+<p class="muted small">Check (c) in the explorer above: \(A = 45\), \(B = 30\), difference, sine gives \(0.259\), and \(\frac{\sqrt{6}-\sqrt{2}}{4}\approx 0.259\).</p>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Finding the missing values first</div>
+          <div class="step-body">
+<p>Suppose \(A\) and \(B\) are in <b>quadrant II</b> with \(\sin A = \dfrac{4}{5}\) and \(\cos B = -\dfrac{5}{13}\). Evaluate \(\sin(A - B)\).</p>
+<p>The identity needs \(\sin A\), \(\cos B\), \(\cos A\), \(\sin B\). Two are missing.</p>
+<table>
+  <tr><th>Step</th><th>Reason</th></tr>
+  <tr><td>\(\sin(A - B) = \sin A\cos B - \cos A\sin B\)</td><td><reveal>Difference identity</reveal></td></tr>
+  <tr><td><reveal>\(\cos A = -\sqrt{1 - \left(\dfrac{4}{5}\right)^2} = -\dfrac{3}{5}\)</reveal></td><td><reveal>Pythagorean identity; cosine is <b>negative</b> in QII</reveal></td></tr>
+  <tr><td><reveal>\(\sin B = +\sqrt{1 - \left(-\dfrac{5}{13}\right)^2} = \dfrac{12}{13}\)</reveal></td><td><reveal>Pythagorean identity; sine is <b>positive</b> in QII</reveal></td></tr>
+  <tr><td><reveal>\(\dfrac{4}{5}\left(-\dfrac{5}{13}\right) - \left(-\dfrac{3}{5}\right)\left(\dfrac{12}{13}\right) = -\dfrac{20}{65} + \dfrac{36}{65} = \dfrac{16}{65}\)</reveal></td><td><reveal>Substitute and simplify</reveal></td></tr>
+</table>
+<p class="muted small">Check in the explorer: \(A = 180 - 53.13 = 126.87^\circ\), \(B = 180 - 67.38 = 112.62^\circ\), difference, sine gives \(0.246\approx 16/65\).</p>
+          </div>
+        </div>
+        <div class="step" data-step="9">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">Confirming the cofunction identities</div>
+          <div class="step-body">
+<p>If possible, use the sum/difference identities to confirm each cofunction identity.</p>
+<table>
+  <tr><th>\(\cos(90^\circ - \theta) = \sin\theta\)</th><th>\(\tan\left(\dfrac{\pi}{2} - \theta\right) = \cot\theta\)</th></tr>
+  <tr><td><reveal>\(\cos 90^\circ\cos\theta + \sin 90^\circ\sin\theta\)</reveal></td><td><reveal>\(\dfrac{\tan(\pi/2) - \tan\theta}{1 + \tan(\pi/2)\tan\theta}\)</reveal></td></tr>
+  <tr><td><reveal>\(= 0\cdot\cos\theta + 1\cdot\sin\theta = \sin\theta\) ✓</reveal></td><td><reveal>\(\tan(\pi/2)\) is <b>undefined</b>, so the tangent identity cannot be applied here.</reveal></td></tr>
+</table>
+<p>For the tangent, rewrite first: <reveal>\(\tan\left(\dfrac{\pi}{2} - \theta\right) = \dfrac{\sin(\pi/2 - \theta)}{\cos(\pi/2 - \theta)} = \dfrac{\cos\theta}{\sin\theta} = \cot\theta\)</reveal></p>
+<jsx-graph fn="Math.tan(Math.PI/2 - x)" fn2="1/Math.tan(x)" label="tan(π/2 − x)" label2="cot x" xmin="-7" xmax="7" ymin="-5" ymax="5" pi-ticks></jsx-graph>
+<p class="muted small">The graphs agree, so the identity is true. The sum/difference tangent rule just is not the tool for it.</p>
+          </div>
+        </div>
+        <div class="step" data-step="10">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Double-angle identities, a preview</div>
+          <div class="step-body">
+<p>Use the sum identities with \(2\theta = \theta + \theta\) to confirm these. They come back in the next lesson.</p>
+<table>
+  <tr><th>\(\sin(2\theta) = 2\sin\theta\cos\theta\)</th><th>\(\cos(2\theta) = \cos^2\theta - \sin^2\theta\)</th></tr>
+  <tr><td><reveal>\(\sin(\theta + \theta) = \sin\theta\cos\theta + \cos\theta\sin\theta\)</reveal></td><td><reveal>\(\cos(\theta + \theta) = \cos\theta\cos\theta - \sin\theta\sin\theta\)</reveal></td></tr>
+  <tr><td><reveal>\(= 2\sin\theta\cos\theta\) ✓</reveal></td><td><reveal>\(= \cos^2\theta - \sin^2\theta\) ✓</reveal></td></tr>
+</table>
+<p class="muted small"><b>Careful:</b> \(\cos^2\theta - \sin^2\theta\) has a <b>minus</b>. It is <b>not</b> the Pythagorean identity \(\cos^2\theta + \sin^2\theta = 1\).</p>
+<jsx-graph fn="Math.sin(2*x)" fn2="2*Math.sin(x)*Math.cos(x)" label="sin(2x)" label2="2 sin x cos x" xmin="-7" xmax="7" ymin="-2" ymax="2" pi-ticks></jsx-graph>
+          </div>
+        </div>
+        <div class="step" data-step="11">
+          <div class="step-title">Example 7</div>
+          <div class="step-subtitle">Simplifying an expression</div>
+          <div class="step-body">
+<p>Simplify \(\dfrac{\sec(x + \pi)}{\csc\left(\dfrac{\pi}{2} - x\right)}\).</p>
+<table>
+  <tr><th>Step</th><th>Reason</th></tr>
+  <tr><td>\(\dfrac{\sec(x + \pi)}{\csc(\pi/2 - x)}\)</td><td><reveal>Starting expression</reveal></td></tr>
+  <tr><td><reveal>\(\dfrac{\sin(\pi/2 - x)}{\cos(x + \pi)}\)</reveal></td><td><reveal>Reciprocal identities (\(\sec = 1/\cos\), \(\csc = 1/\sin\)), then flip the complex fraction</reveal></td></tr>
+  <tr><td><reveal>\(\dfrac{\sin\frac{\pi}{2}\cos x - \cos\frac{\pi}{2}\sin x}{\cos x\cos\pi - \sin x\sin\pi}\)</reveal></td><td><reveal>Difference identity on top, sum identity on bottom</reveal></td></tr>
+  <tr><td><reveal>\(\dfrac{1\cdot\cos x - 0\cdot\sin x}{\cos x\cdot(-1) - \sin x\cdot 0} = \dfrac{\cos x}{-\cos x}\)</reveal></td><td><reveal>Unit circle values</reveal></td></tr>
+  <tr><td><reveal>\(-1\)</reveal></td><td><reveal>Cancel \(\cos x\)</reveal></td></tr>
+</table>
+<jsx-graph fn="(1/Math.cos(x+Math.PI))/(1/Math.sin(Math.PI/2-x))" fn2="-1" label="original expression" label2="y = −1" xmin="-7" xmax="7" ymin="-3" ymax="3" pi-ticks></jsx-graph>
+<p class="muted small">Holes appear where \(\cos x = 0\), where the original expression is undefined.</p>
+          </div>
+        </div>
+        <div class="step" data-step="12">
+          <div class="step-title">Your Turn</div>
+          <div class="step-subtitle">Exact values</div>
+          <div class="step-body">
+<p>Use a sum or difference identity to find each exact value.</p>
+<table>
+  <tr><td>\(\cos(75^\circ)\)</td><td><reveal>\(\cos(45^\circ + 30^\circ) = \dfrac{\sqrt{2}}{2}\cdot\dfrac{\sqrt{3}}{2} - \dfrac{\sqrt{2}}{2}\cdot\dfrac{1}{2} = \dfrac{\sqrt{6} - \sqrt{2}}{4}\)</reveal></td></tr>
+  <tr><td>\(\tan(75^\circ)\)</td><td><reveal>\(\dfrac{\tan 45^\circ + \tan 30^\circ}{1 - \tan 45^\circ\tan 30^\circ} = \dfrac{1 + \sqrt{3}/3}{1 - \sqrt{3}/3} = \dfrac{3 + \sqrt{3}}{3 - \sqrt{3}} = 2 + \sqrt{3}\)</reveal></td></tr>
+  <tr><td>\(\sin\left(\dfrac{7\pi}{12}\right)\)</td><td><reveal>\(\sin\left(\dfrac{\pi}{3} + \dfrac{\pi}{4}\right) = \dfrac{\sqrt{3}}{2}\cdot\dfrac{\sqrt{2}}{2} + \dfrac{1}{2}\cdot\dfrac{\sqrt{2}}{2} = \dfrac{\sqrt{6} + \sqrt{2}}{4}\)</reveal></td></tr>
+  <tr><td>\(\cos(105^\circ)\)</td><td><reveal>\(\cos(60^\circ + 45^\circ) = \dfrac{1}{2}\cdot\dfrac{\sqrt{2}}{2} - \dfrac{\sqrt{3}}{2}\cdot\dfrac{\sqrt{2}}{2} = \dfrac{\sqrt{2} - \sqrt{6}}{4}\)</reveal></td></tr>
+</table>
+<p class="muted small">Test any of them in the explorer step before revealing.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="13">
+          <div class="step-title">Proof of sin(A + B)</div>
+          <div class="step-subtitle">Building it from right triangles</div>
+          <div class="step-body">
+<p>\(A, B\) acute, \(OR = 1\). Drop \(R\) to \(Q\) on the first ray, then \(Q\) to the axis.</p>
+<div class="triangle-diagram" style="width:min(460px,100%);margin:0 auto"><div class="triangle-diagram-figure" style="--triangle-aspect:470/300"><svg class="triangle-diagram-svg" viewBox="0 0 470 300"><line x1="67.8" y1="280.0" x2="337.5" y2="280.0" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"/><line x1="120.0" y1="280.0" x2="284.6" y2="192.5" stroke="#0f6ab4" stroke-width="3" stroke-linecap="round"/><line x1="284.6" y1="192.5" x2="180.3" y2="-3.7" stroke="#c2740c" stroke-width="3" stroke-linecap="round"/><line x1="120.0" y1="280.0" x2="180.3" y2="-3.7" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><line x1="284.6" y1="280.0" x2="284.6" y2="192.5" stroke="#2e7d32" stroke-width="3" stroke-linecap="round"/><line x1="284.6" y1="192.5" x2="284.6" y2="-3.7" stroke="#7b3fa0" stroke-width="3" stroke-linecap="round"/><line x1="180.3" y1="-3.7" x2="284.6" y2="-3.7" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/><line x1="82.3" y1="280.0" x2="82.3" y2="-3.7" stroke="#c0392b" stroke-width="4" stroke-linecap="round"/><line x1="82.3" y1="-3.7" x2="180.3" y2="-3.7" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/><line x1="82.3" y1="280.0" x2="120.0" y2="280.0" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/><polyline points="273.6,280.0 273.6,269.0 284.6,269.0" fill="none" stroke="var(--ink)" stroke-width="1.5"/><polyline points="273.6,-3.7 273.6,7.3 284.6,7.3" fill="none" stroke="var(--ink)" stroke-width="1.5"/><polyline points="294.3,187.3 289.1,177.6 279.4,182.8" fill="none" stroke="var(--ink)" stroke-width="1.5"/><polyline points="190.0,280.0 190.0,278.3 189.9,276.6 189.8,274.9 189.7,273.2 189.5,271.5 189.2,269.8 189.0,268.1 188.7,266.4 188.3,264.7 187.9,263.1 187.5,261.4 187.0,259.8 186.5,258.1 185.9,256.5 185.4,254.9 184.7,253.3 184.0,251.8 183.3,250.2 182.6,248.7 181.8,247.1" fill="none" stroke="var(--ink)" stroke-width="1.5"/><polyline points="162.4,257.5 161.4,255.6 160.3,253.9 159.1,252.1 157.8,250.4 156.5,248.8 155.1,247.3 153.6,245.8 152.1,244.3 150.5,243.0 148.9,241.7 147.2,240.4 145.4,239.3 143.6,238.2 141.8,237.2 139.9,236.3 138.0,235.5 136.0,234.8 134.0,234.1 132.0,233.5 130.0,233.0" fill="none" stroke="var(--ink)" stroke-width="1.5"/><polyline points="284.6,166.5 284.0,166.5 283.3,166.5 282.7,166.6 282.1,166.6 281.4,166.7 280.8,166.8 280.2,166.9 279.5,167.0 278.9,167.1 278.3,167.3 277.7,167.4 277.1,167.6 276.5,167.8 275.9,168.0 275.3,168.2 274.7,168.4 274.1,168.7 273.5,169.0 272.9,169.2 272.4,169.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/></svg><reveal class="triangle-overlay triangle-side-label" style="left:47.4%;top:85.5%;color:#0f6ab4">\(\cos B\)</reveal><reveal class="triangle-overlay triangle-side-label" style="left:55.6%;top:27.6%;color:#c2740c">\(\sin B\)</reveal><span class="triangle-overlay triangle-side-label" style="left:30.1%;top:43.2%">\(1\)</span><reveal class="triangle-overlay triangle-side-label" style="left:72.9%;top:78.7%;color:#2e7d32">\(\sin A\cos B\)</reveal><reveal class="triangle-overlay triangle-side-label" style="left:72.9%;top:31.5%;color:#7b3fa0">\(\cos A\sin B\)</reveal><reveal class="triangle-overlay triangle-side-label" style="left:5.2%;top:46.1%;color:#c0392b">\(\sin(A+B)\)</reveal><span class="triangle-overlay triangle-angle-label" style="left:54.5%;top:89.0%">\(A\)</span><span class="triangle-overlay triangle-angle-label" style="left:37.9%;top:64.3%">\(B\)</span><reveal class="triangle-overlay triangle-angle-label" style="left:56.8%;top:52.6%">\(A\)</reveal><span class="triangle-overlay triangle-point-label" style="left:64.6%;top:67.1%">\(Q\)</span><span class="triangle-overlay triangle-point-label" style="left:38.4%;top:-7.0%">\(R\)</span><span class="triangle-overlay triangle-point-label" style="left:23.1%;top:99.1%">\(O\)</span><span class="triangle-overlay triangle-point-label" style="left:61.8%;top:99.1%">\(S\)</span><span class="triangle-overlay triangle-point-label" style="left:63.6%;top:-5.1%">\(T\)</span></div></div>
+<p class="muted small">Click each blank to reveal a side. Red ruler = height of \(R\) = \(\sin(A+B)\); the green plus purple stack reaches the same height.</p>
+          </div>
+        </div>
+        <div class="step" data-step="14">
+          <div class="step-title">Proof of sin(A + B)</div>
+          <div class="step-subtitle">Reading the sides off the triangles</div>
+          <div class="step-body">
+<table>
+  <tr><th>Triangle</th><th>Side</th><th>Reason</th></tr>
+  <tr><td>\(\triangle OQR\) (right angle at \(Q\), angle \(B\) at \(O\), hypotenuse \(1\))</td><td><reveal>\(OQ = \cos B\), \(QR = \sin B\)</reveal></td><td><reveal>Adjacent and opposite to \(B\) with hypotenuse \(1\)</reveal></td></tr>
+  <tr><td>\(\triangle OSQ\) (angle \(A\) at \(O\), hypotenuse \(OQ = \cos B\))</td><td><reveal>\(QS = \cos B\cdot\sin A\)</reveal></td><td><reveal>Opposite \(A\) = hypotenuse \(\times\sin A\)</reveal></td></tr>
+  <tr><td>Angle at \(Q\) in \(\triangle QTR\)</td><td><reveal>\(A\)</reveal></td><td><reveal>\(QR\perp OQ\) and \(QT\perp OS\), so the angle between \(QR\) and \(QT\) equals the angle between \(OQ\) and \(OS\)</reveal></td></tr>
+  <tr><td>\(\triangle QTR\) (angle \(A\) at \(Q\), hypotenuse \(QR = \sin B\))</td><td><reveal>\(QT = \sin B\cdot\cos A\)</reveal></td><td><reveal>Adjacent \(A\) = hypotenuse \(\times\cos A\)</reveal></td></tr>
+  <tr><td>Height of \(R\) above the axis</td><td><reveal>\(\sin(A+B) = QS + QT\)</reveal></td><td><reveal>\(R\) is at height \(QS\) (to reach \(Q\)) plus \(QT\) (up to \(R\)'s level), and \(OR = 1\)</reveal></td></tr>
+</table>
+<p><b>Conclusion:</b> <reveal>\(\sin(A+B) = \sin A\cos B + \cos A\sin B\)</reveal></p>
+<p class="muted small">The difference identity follows from this by replacing \(B\) with \(-B\) (Example 2), and the cosine identities have a similar picture.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

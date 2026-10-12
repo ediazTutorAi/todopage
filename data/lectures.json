@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-12",
+    "title": "Sum and Difference Identities",
+    "subtitle": "Lesson 16",
+    "description": "Why sine does not distribute over a sum, then the sum and difference identities for sine, cosine and tangent, with a live unit-circle explorer, exact values at 15°, 75° and 105°, cofunction checks, and double-angle previews.",
+    "tags": [
+      "Identities",
+      "Sum and Difference",
+      "Exact Values"
+    ],
+    "url": "trigonometry/2026/2026-10-12-lesson-16-sum-and-difference-identities/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-07",
     "title": "Verifying Trigonometric Identities",
     "subtitle": "Lesson 15",

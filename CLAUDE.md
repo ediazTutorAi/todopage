@@ -686,6 +686,16 @@ Both lessons were redone from Bretscher (PDF pages 190 to 209; the PDF is a scan
 
 Verified in Chrome: no console errors, kernel preset gives L(f)=0 with the kernel flag, column 3 of B is (2,2,0), Example 8 gives B = [[0,1],[1,0]].
 
+### `<jsx-angle-sum>` and Lesson 16 (added 2026-10-12)
+
+`<jsx-angle-sum a="45" b="30" op="sum|diff" fn="sin|cos|tan" no-wrong>` (`renderJsxAngleSum` in `js/jsxgraph.js`): unit circle with
+rays at A (blue), B (orange) and A+/-B (red). Sliders set A and B in degrees; buttons switch sin/cos/tan and sum/difference. The
+readout shows the value read off the circle, the same value from the sum/difference identity, and the tempting "distributed" wrong
+version (e.g. sin A - sin B) flagged as not equal; `no-wrong` hides that chip. Lesson:
+`trigonometry/2026/2026-10-12-lesson-16-sum-and-difference-identities/index.html` (14 steps, the last two a triangle proof of sin(A+B) with reveal-labelled sides, hand-authored, no `content.json`).
+Verified in Chrome (sin/cos/tan values match, no console errors). Note a board inside a hidden step sizes itself only after the
+step is shown (JSXGraph's resize observer), so it can look blank for a moment during the slide fade.
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:

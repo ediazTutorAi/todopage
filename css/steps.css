@@ -574,3 +574,5 @@ reveal.triangle-overlay:not(.is-revealed) {
 .flow-line { fill: none; stroke: var(--ink); stroke-width: 3; }
 .flow-head { fill: var(--ink); }
 .flow-label { fill: var(--muted); font: 700 18px system-ui, sans-serif; }
+
+.jsx-board--angle-sum { aspect-ratio: 2.6 / 1; }

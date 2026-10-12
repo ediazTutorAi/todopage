@@ -3923,6 +3923,133 @@ function renderJsxPolyMap(el) {
   refresh();
 }
 
+// <jsx-angle-sum a="60" b="30" op="sum|diff" fn="sin|cos|tan" no-wrong>
+//
+// Sum/difference identities made visible (Lesson 16). A unit circle with the ray at angle A (blue), the ray at
+// angle B (orange), and the ray at A + B (or A - B, red) that the identity predicts. Sliders set A and B in
+// degrees; buttons switch sin / cos / tan and sum / difference. The readout shows the value read straight off
+// the circle (the red point's coordinates), the same value from the identity, and the tempting wrong
+// "distribute" version (e.g. sin A + sin B) so the class sees it fail. Readouts are plain Unicode text.
+function renderJsxAngleSum(el) {
+  const TAG = 'jsx-angle-sum';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const st = {
+    a: evalNumAttr(el, 'a', 60, TAG), b: evalNumAttr(el, 'b', 30, TAG),
+    op: el.getAttribute('op') === 'diff' ? -1 : 1, fn: el.getAttribute('fn') || 'sin',
+  };
+  const showWrong = !el.hasAttribute('no-wrong');
+  const rad = (d) => (d * Math.PI) / 180;
+  const f3 = (v) => (Math.abs(v) < 5e-4 ? '0' : (Math.round(v * 1000) / 1000).toString()).replace('-', '−');
+  const fmtT = (v) => (Math.abs(v) > 1e6 ? 'undefined' : f3(v));
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board jsx-board--angle-sum';
+  board.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, board, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const orange = UNIT_CIRCLE_FOUR_COLOR;
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [-1.45, 1.4, 1.45, -1.4], axis: true, showNavigation: false, showCopyright: false,
+    keepaspectratio: true, pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+  bd.create('circle', [[0, 0], 1], { strokeColor: '#7d838c', strokeWidth: REF_CIRCLE_STROKE, highlight: false, fixed: true });
+
+  const total = () => st.a + st.op * st.b;
+  const ray = (get, color, width) => bd.create('segment', [[0, 0], () => { const t = rad(get()); return [Math.cos(t), Math.sin(t)]; }],
+    { strokeColor: color, strokeWidth: width, highlight: false, fixed: true });
+  const dot = (get, color, name) => bd.create('point', [() => Math.cos(rad(get())), () => Math.sin(rad(get()))],
+    { size: POINT_SIZE, strokeWidth: POINT_STROKE, fillColor: color, strokeColor: color, name, withLabel: !!name,
+      label: { fontSize: 20, offset: [10, 8], cssStyle: 'font-weight:700' }, fixed: true, highlight: false });
+  // arcs: A from 0 (blue, r=.32); B or -B from A's ray... drawn from the x-axis for clarity (orange, r=.2); total (red, r=.5)
+  const arc = (get, color, r) => {
+    const c = bd.create('curve', [[0], [0]], { strokeColor: color, strokeWidth: ARC_STROKE - 1, highlight: false });
+    c.updateDataArray = function u() {
+      const xs = []; const ys = []; const v = get(); const N = 40;
+      for (let k = 0; k <= N; k++) { const t = rad((v * k) / N); xs.push(r * Math.cos(t)); ys.push(r * Math.sin(t)); }
+      this.dataX = xs; this.dataY = ys;
+    };
+    return c;
+  };
+  arc(() => st.a, accent, 0.28);
+  arc(() => st.op * st.b, orange, 0.18);
+  arc(total, negative, 0.42);
+  ray(() => st.op * st.b, orange, RADIUS_SEGMENT_STROKE);
+  ray(() => st.a, accent, RADIUS_SEGMENT_STROKE + 0.5);
+  ray(total, negative, RADIUS_SEGMENT_STROKE + 1);
+  dot(() => st.op * st.b, orange, '');
+  dot(() => st.a, accent, '');
+  dot(total, negative, '');
+  // dashed drops from the red point to both axes: its coordinates ARE cos and sin of the total angle
+  const rp = () => { const t = rad(total()); return [Math.cos(t), Math.sin(t)]; };
+  bd.create('segment', [[0, 0], () => [rp()[0], 0]], { strokeColor: negative, strokeWidth: 2, dash: 2, highlight: false, fixed: true });
+  bd.create('segment', [() => [rp()[0], 0], rp], { strokeColor: negative, strokeWidth: 2, dash: 2, highlight: false, fixed: true });
+
+  const opSym = () => (st.op > 0 ? '+' : '−');
+  function refresh() {
+    const A = rad(st.a); const B = rad(st.b); const T = rad(total());
+    const o = st.op; const s = opSym();
+    let direct; let ident; let wrong; let line; let wline;
+    if (st.fn === 'sin') {
+      direct = Math.sin(T); ident = Math.sin(A) * Math.cos(B) + o * Math.cos(A) * Math.sin(B);
+      wrong = Math.sin(A) + o * Math.sin(B);
+      line = `sin A cos B ${s} cos A sin B`; wline = `sin A ${s} sin B`;
+    } else if (st.fn === 'cos') {
+      direct = Math.cos(T); ident = Math.cos(A) * Math.cos(B) - o * Math.sin(A) * Math.sin(B);
+      wrong = Math.cos(A) + o * Math.cos(B);
+      line = `cos A cos B ${o > 0 ? '−' : '+'} sin A sin B`; wline = `cos A ${s} cos B`;
+    } else {
+      direct = Math.tan(T);
+      ident = (Math.tan(A) + o * Math.tan(B)) / (1 - o * Math.tan(A) * Math.tan(B));
+      wrong = Math.tan(A) + o * Math.tan(B);
+      line = `(tan A ${s} tan B) / (1 ${o > 0 ? '−' : '+'} tan A tan B)`; wline = `tan A ${s} tan B`;
+    }
+    const fv = st.fn === 'tan' ? fmtT : f3;
+    const match = Math.abs(direct - ident) < 1e-6 || (!isFinite(ident) && Math.abs(direct) > 1e6) || (Math.abs(direct) > 1e6 && Math.abs(ident) > 1e6);
+    readout.innerHTML =
+      `<span class="jsx-trace-chip jsx-trace-main">${st.fn}(A ${s} B) = ${st.fn}(${f3(st.a)}° ${s} ${f3(st.b)}°) = ${st.fn}(${f3(total())}°) = <b>${fv(direct)}</b> <small>(red point)</small></span>` +
+      `<span class="jsx-trace-chip">${line} = <b>${fv(ident)}</b> ${match ? '✓ same' : '✗'}</span>` +
+      (showWrong ? `<span class="jsx-trace-chip">${wline} = <b>${fv(wrong)}</b> ${Math.abs(wrong - direct) < 1e-6 ? '(a coincidence here)' : '✗ not equal'}</span>` : '');
+    bd.update();
+  }
+  const slider = (label, key) => {
+    const row = document.createElement('label');
+    row.className = 'jsx-slider-row';
+    row.innerHTML = `<span class="jsx-slider-name">${label}</span><input type="range" min="-180" max="360" step="5">`;
+    const input = row.querySelector('input');
+    input.value = st[key];
+    input.addEventListener('input', () => { st[key] = parseFloat(input.value); refresh(); });
+    input.addEventListener('pointerup', () => input.blur());
+    controls.appendChild(row);
+  };
+  slider('A (blue)', 'a');
+  slider('B (orange)', 'b');
+  const mkBtn = (label, on) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => { on(); refresh(); });
+    controls.appendChild(b);
+  };
+  ['sin', 'cos', 'tan'].forEach((f) => mkBtn(f, () => { st.fn = f; }));
+  mkBtn('A + B', () => { st.op = 1; });
+  mkBtn('A − B', () => { st.op = -1; });
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -3938,4 +4065,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-polar-rect').forEach(renderJsxPolarRect);
   document.querySelectorAll('jsx-polar-region').forEach(renderJsxPolarRegion);
   document.querySelectorAll('jsx-poly-map').forEach(renderJsxPolyMap);
+  document.querySelectorAll('jsx-angle-sum').forEach(renderJsxAngleSum);
 });
