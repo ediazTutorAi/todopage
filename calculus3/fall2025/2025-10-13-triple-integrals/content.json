@@ -1,0 +1,97 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-03-16",
+  "title": "Triple Integrals",
+  "subtitle": "",
+  "description": "Triple integrals (OpenStax 5.4, a 50 minute class): cut a solid into small boxes to see the definition, sweep a plane through it to watch an iterated integral collect volume slice by slice, set up integrals over general solids with a pillar over the base region, change the order of integration, and find volumes and average values.",
+  "tags": [
+    "triple integrals",
+    "iterated integrals",
+    "order of integration",
+    "volume and average value"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Adding a Third Variable",
+      "subtitle": "From area under a surface to mass of a solid",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  A double integral adds up a value \\(f\\) times a small <i>area</i>. If \\(f(x,y,z)\\) is a quantity <b>spread through a\n  solid</b> (a density, a temperature), each piece we add up needs a small <i>volume</i> instead.\n</p>\n<p class=\"muted small\">\n  The box \\(B=[0,2]\\times[0,2]\\times[0,2]\\) with \\(f(x,y,z)=x^2+y^2+z^2\\). Press Refine: it is cut into \\(l\\times m\\times n\\) small\n  boxes, and each contributes \\(f\\) at its center times its volume \\(\\Delta V\\). Drag the picture to turn it.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"0\" xmax=\"2\" g1=\"0\" g2=\"2\" u1=\"0\" u2=\"2\" f=\"x*x+y*y+z*z\" grid=\"2,2,2\" sliders square play max=\"12\" tall></solid-3d>\n<table>\n  <tr><td>If \\(f\\) is a density (g/cm\\(^3\\)), what does \\(\\sum f\\,\\Delta V\\) estimate?</td><td><reveal>The <b>mass</b> of the solid: density times volume for each little box, added up.</reveal></td></tr>\n  <tr><td>What does the sum give if \\(f=1\\)?</td><td><reveal>\\(\\sum \\Delta V\\), the <b>volume</b> of the solid. So a triple integral of \\(1\\) is a volume.</reveal></td></tr>\n  <tr><td>What number are the sums settling to?</td><td><reveal>\\(32\\). That is the exact value of \\(\\iiint_B (x^2+y^2+z^2)\\,dV\\); the sum with one big box is far off, and the error shrinks as the boxes do.</reveal></td></tr>\n</table>\n<p class=\"muted small\">Goal for today: compute that limit without cutting anything, by integrating one variable at a time.</p>"
+    },
+    {
+      "tag": "step",
+      "label": "Definition and Fubini's Theorem",
+      "subtitle": "Theorem 5.9: a box can be sliced in any order",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  Split \\(B=[a,b]\\times[c,d]\\times[e,f]\\) into \\(l\\,m\\,n\\) subboxes with\n  \\(\\Delta x=\\tfrac{b-a}{l},\\ \\Delta y=\\tfrac{d-c}{m},\\ \\Delta z=\\tfrac{f-e}{n}\\), so each has volume \\(\\Delta V=\\Delta x\\,\\Delta y\\,\\Delta z\\).\n  Choosing a sample point \\((x^*_{ijk},y^*_{ijk},z^*_{ijk})\\) in each,\n</p>\n$$\\iiint_B f(x,y,z)\\,dV=\\lim_{l,m,n\\to\\infty}\\sum_{i=1}^{l}\\sum_{j=1}^{m}\\sum_{k=1}^{n} f(x^*_{ijk},y^*_{ijk},z^*_{ijk})\\,\\Delta x\\,\\Delta y\\,\\Delta z .$$\n<p class=\"muted small\">\n  If \\(f\\) is continuous on \\(B\\) the limit exists. <b>Fubini (Theorem 5.9):</b> then \\(\\iiint_B f\\,dV\\) equals an iterated integral\n  in <b>any</b> of the \\(3!=6\\) orders, worked from the inside out. On a box every order has constant limits.\n  Which iterated integral goes with each order (innermost variable first)?\n</p>\n<table>\n  <tr><td>\\(dx,\\ dy,\\ dz\\)</td><td><reveal>\\(\\displaystyle\\int_e^f\\!\\!\\int_c^d\\!\\!\\int_a^b f\\,dx\\,dy\\,dz\\)</reveal></td></tr>\n  <tr><td>\\(dx,\\ dz,\\ dy\\)</td><td><reveal>\\(\\displaystyle\\int_c^d\\!\\!\\int_e^f\\!\\!\\int_a^b f\\,dx\\,dz\\,dy\\)</reveal></td></tr>\n  <tr><td>\\(dy,\\ dz,\\ dx\\)</td><td><reveal>\\(\\displaystyle\\int_a^b\\!\\!\\int_e^f\\!\\!\\int_c^d f\\,dy\\,dz\\,dx\\)</reveal></td></tr>\n  <tr><td>\\(dy,\\ dx,\\ dz\\)</td><td><reveal>\\(\\displaystyle\\int_e^f\\!\\!\\int_a^b\\!\\!\\int_c^d f\\,dy\\,dx\\,dz\\)</reveal></td></tr>\n  <tr><td>\\(dz,\\ dx,\\ dy\\)</td><td><reveal>\\(\\displaystyle\\int_c^d\\!\\!\\int_a^b\\!\\!\\int_e^f f\\,dz\\,dx\\,dy\\)</reveal></td></tr>\n  <tr><td>\\(dz,\\ dy,\\ dx\\)</td><td><reveal>\\(\\displaystyle\\int_a^b\\!\\!\\int_c^d\\!\\!\\int_e^f f\\,dz\\,dy\\,dx\\)</reveal></td></tr>\n</table>\n<p class=\"muted small\">Same rule as before: the limits of the <i>outermost</i> integral are always constants, and the variable you integrate last is the one you sliced along.</p>"
+    },
+    {
+      "tag": "step",
+      "label": "Example 5.36: A Box, Inside Out",
+      "subtitle": "Slices: why the middle answer is a function of z",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">\n  <b>Example 5.36.</b> Evaluate \\(\\displaystyle\\iiint_B (x+yz^2)\\,dV\\) over \\(B=\\{-1\\le x\\le5,\\ 2\\le y\\le4,\\ 0\\le z\\le1\\}\\),\n  integrating in the order \\(dx,\\ dy,\\ dz\\).\n</p>\n<p class=\"muted small\">\n  Sweep the plane \\(z=t\\) through the box. The slice is a rectangle in the \\(xy\\)-plane, and the readout\n  \\(A(z)=\\iint f\\,dx\\,dy\\) is exactly what the two inner integrals produce.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"-1\" xmax=\"5\" g1=\"2\" g2=\"4\" u1=\"0\" u2=\"1\" f=\"x+y*z*z\" sweep=\"z\" tall></solid-3d>\n<table>\n  <tr><td>Inner integral, in \\(x\\)</td><td><reveal>\\(\\displaystyle\\int_{-1}^{5}(x+yz^2)\\,dx=\\Big[\\tfrac{x^2}{2}+xyz^2\\Big]_{-1}^{5}=12+6yz^2\\)</reveal></td></tr>\n  <tr><td>Next, in \\(y\\)</td><td><reveal>\\(\\displaystyle\\int_2^4(12+6yz^2)\\,dy=\\big[12y+3y^2z^2\\big]_2^4=24+36z^2\\)</reveal></td></tr>\n  <tr><td>Last, in \\(z\\)</td><td><reveal>\\(\\displaystyle\\int_0^1(24+36z^2)\\,dz=24+12=\\mathbf{36}\\)</reveal></td></tr>\n  <tr><td>Compare with the readout</td><td><reveal>\\(A(z)=24+36z^2\\) is the slice integral: at \\(z=0\\) it reads \\(24\\), at \\(z=1\\) it reads \\(60\\). The final integral adds up the slices.</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "General Solids: A Pillar over the Base",
+      "subtitle": "Theorem 5.10",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  For a solid \\(E\\) that is not a box, suppose \\(D\\) is its <b>shadow</b> on the \\(xy\\)-plane and \\(E\\) lies between two surfaces:\n  \\(E=\\{(x,y,z)\\mid (x,y)\\in D,\\ u_1(x,y)\\le z\\le u_2(x,y)\\}\\). Then\n</p>\n$$\\iiint_E f\\,dV=\\iint_D\\Big[\\int_{u_1(x,y)}^{u_2(x,y)}f(x,y,z)\\,dz\\Big]dA .$$\n<p class=\"muted small\">\n  Example: the tetrahedron bounded by \\(x=0,\\ y=0,\\ z=0\\) and \\(x+y+z=1\\), with \\(f=5x-3y\\). The red <b>pillar</b>\n  stands over one point \\((x,y)\\) of \\(D\\) (yellow) and runs from the floor to the slanted face. Move its \\(x\\) and \\(y\\)\n  and read off where \\(z\\) starts and stops.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"0\" xmax=\"1\" g1=\"0\" g2=\"1-x\" u1=\"0\" u2=\"1-x-y\" f=\"5*x-3*y\" column tall></solid-3d>\n<table>\n  <tr><td>What are \\(u_1\\) and \\(u_2\\)?</td><td><reveal>\\(u_1=0\\) (the floor) and \\(u_2=1-x-y\\) (the plane \\(x+y+z=1\\) solved for \\(z\\)).</reveal></td></tr>\n  <tr><td>What is \\(D\\)?</td><td><reveal>Set \\(z=0\\) in the slanted face: the triangle \\(x+y\\le1\\) in the first quadrant, so \\(0\\le x\\le1,\\ 0\\le y\\le1-x\\).</reveal></td></tr>\n  <tr><td>What does the inner integral compute?</td><td><reveal>One pillar's worth: \\(\\int_0^{1-x-y}f\\,dz\\) for a fixed \\((x,y)\\). The outer double integral then adds up every pillar over \\(D\\).</reveal></td></tr>\n</table>\n<p class=\"muted small\">Project onto the \\(xz\\)- or \\(yz\\)-plane instead and the same theorem holds with the roles of the variables swapped.</p>"
+    },
+    {
+      "tag": "step",
+      "label": "Example 5.38: The Tetrahedron",
+      "subtitle": "Three nested limits from one picture",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">\n  <b>Example 5.38.</b> Evaluate \\(\\displaystyle\\iiint_E(5x-3y)\\,dV\\) for the tetrahedron of the last step. Write\n  \\(E=\\{0\\le x\\le1,\\ 0\\le y\\le1-x,\\ 0\\le z\\le1-x-y\\}\\). Sweep the plane \\(x=t\\): the slice is a triangle that shrinks to a point.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"0\" xmax=\"1\" g1=\"0\" g2=\"1-x\" u1=\"0\" u2=\"1-x-y\" f=\"5*x-3*y\" sweep=\"x\" tall></solid-3d>\n<table>\n  <tr><td>Set up</td><td><reveal>\\(\\displaystyle\\int_0^1\\!\\!\\int_0^{1-x}\\!\\!\\int_0^{1-x-y}(5x-3y)\\,dz\\,dy\\,dx\\)</reveal></td></tr>\n  <tr><td>Inner, in \\(z\\)</td><td><reveal>\\((5x-3y)(1-x-y)\\), since the integrand does not contain \\(z\\).</reveal></td></tr>\n  <tr><td>Middle, in \\(y\\)</td><td><reveal>\\(\\displaystyle\\int_0^{1-x}(5x-3y)(1-x-y)\\,dy=\\tfrac12(x-1)^2(6x-1)\\)</reveal></td></tr>\n  <tr><td>Outer, in \\(x\\)</td><td><reveal>\\(\\displaystyle\\int_0^1\\tfrac12(x-1)^2(6x-1)\\,dx=\\tfrac{1}{12}\\)</reveal></td></tr>\n  <tr><td>Where do you see the middle answer?</td><td><reveal>It is \\(A(x)\\) in the readout. At \\(x=0\\) it reads \\(-0.5\\): the slice is the biggest triangle, and \\(f=-3y\\) is negative there, so it contributes negative volume.</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Volume as a Triple Integral",
+      "subtitle": "Example 5.39: a square pyramid",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  With \\(f=1\\) the triple integral is the <b>volume</b>: \\(V(E)=\\iiint_E 1\\,dV\\).\n</p>\n<p class=\"muted small\">\n  <b>Example 5.39.</b> The pyramid with base \\([-1,1]\\times[-1,1]\\) in the \\(xy\\)-plane and apex \\((0,0,1)\\).\n  Sweep the plane \\(z=t\\) upward.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"-1\" xmax=\"1\" g1=\"-1\" g2=\"1\" u1=\"0\" u2=\"1-Math.max(abs(x),abs(y))\" sweep=\"z\" tall></solid-3d>\n<table>\n  <tr><td>What shape is each slice, and how big?</td><td><reveal>A square. At height \\(z\\) its sides run from \\(-1+z\\) to \\(1-z\\), so the side is \\(2(1-z)\\) and \\(A(z)=4(1-z)^2\\).</reveal></td></tr>\n  <tr><td>Write \\(E\\) so that \\(z\\) is outermost</td><td><reveal>\\(E=\\{0\\le z\\le1,\\ -1+z\\le y\\le1-z,\\ -1+z\\le x\\le1-z\\}\\)</reveal></td></tr>\n  <tr><td>Volume</td><td><reveal>\\(\\displaystyle\\int_0^1\\!\\!\\int_{-1+z}^{1-z}\\!\\!\\int_{-1+z}^{1-z}dx\\,dy\\,dz=\\int_0^1 4(1-z)^2dz=\\tfrac{\\mathbf4}{\\mathbf3}\\)</reveal></td></tr>\n  <tr><td>Sanity check</td><td><reveal>\\(\\tfrac13\\cdot(\\text{base area }4)\\cdot(\\text{height }1)=\\tfrac43\\). The familiar pyramid formula.</reveal></td></tr>\n</table>\n<p class=\"muted small\">Slicing by \\(z\\) was the only reasonable choice: the top surface \\(z=1-\\max(|x|,|y|)\\) has a crease, but every horizontal slice is a plain square.</p>"
+    },
+    {
+      "tag": "step",
+      "label": "Example 5.40: Changing the Order",
+      "subtitle": "Same solid, three different shadows",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">\n  <b>Example 5.40.</b> The integral \\(\\displaystyle\\int_0^1\\!\\!\\int_0^{x^2}\\!\\!\\int_0^{y^2}xyz\\,dz\\,dy\\,dx\\) is over\n  \\(E=\\{0\\le x\\le1,\\ 0\\le y\\le x^2,\\ 0\\le z\\le y^2\\}\\). Switch the slicing axis: each choice is a different order of integration\n  for the <i>same</i> solid, and the total never changes.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"0\" xmax=\"1\" g1=\"0\" g2=\"x*x\" u1=\"0\" u2=\"y*y\" f=\"x*y*z\" sweep=\"x\" axis-buttons tall></solid-3d>\n<table>\n  <tr><td>Evaluate as given</td><td><reveal>\\(\\int_0^{y^2}xyz\\,dz=\\tfrac12xy^5\\), then \\(\\int_0^{x^2}\\tfrac12xy^5dy=\\tfrac{x^{13}}{12}\\), then \\(\\int_0^1\\tfrac{x^{13}}{12}dx=\\tfrac1{168}\\).</reveal></td></tr>\n  <tr><td>Now integrate \\(dx\\) first. Find the \\(x\\)-limits at a fixed \\((y,z)\\).</td><td><reveal>From \\(y\\le x^2\\) we get \\(x\\ge\\sqrt y\\), and \\(x\\le1\\). So \\(\\sqrt y\\le x\\le1\\).</reveal></td></tr>\n  <tr><td>The \\(yz\\)-shadow</td><td><reveal>\\(0\\le y\\le1,\\ 0\\le z\\le y^2\\), giving \\(\\displaystyle\\int_0^1\\!\\!\\int_0^{y^2}\\!\\!\\int_{\\sqrt y}^{1}xyz\\,dx\\,dz\\,dy\\)</reveal></td></tr>\n  <tr><td>Evaluate it</td><td><reveal>\\(\\int_{\\sqrt y}^1xyz\\,dx=\\tfrac12yz(1-y)\\), then \\(\\int_0^{y^2}\\to\\tfrac14y^5(1-y)\\), then \\(\\int_0^1\\to\\tfrac14\\big(\\tfrac16-\\tfrac17\\big)=\\tfrac1{168}\\). Same answer.</reveal></td></tr>\n  <tr><td>Common mistake</td><td><reveal>Writing \\(y\\le x\\le1\\) instead of \\(\\sqrt y\\le x\\le1\\). Solve <i>the inequality</i> \\(y\\le x^2\\) for \\(x\\); do not just rename the bounds. That slip gives \\(\\tfrac1{96}\\).</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Example 5.41: A Paraboloid and Polar Coordinates",
+      "subtitle": "When the shadow is a disk",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p class=\"muted small\">\n  <b>Example 5.41.</b> Let \\(E\\) be the solid bounded by \\(y=x^2+z^2\\) and \\(y=4\\). Evaluate\n  \\(\\displaystyle\\iiint_E\\sqrt{x^2+z^2}\\,dV\\).\n  The paraboloid opens along the <b>\\(y\\)-axis</b>, so project onto the \\(xz\\)-plane. Sweep \\(y\\): each slice is a disk.\n</p>\n<solid-3d axes=\"xzy\" xmin=\"-2\" xmax=\"2\" g1=\"-sqrt(4-x*x)\" g2=\"sqrt(4-x*x)\" u1=\"x*x+z*z\" u2=\"4\" f=\"sqrt(x*x+z*z)\" sweep=\"y\" tall></solid-3d>\n<table>\n  <tr><td>The shadow \\(D\\) in the \\(xz\\)-plane</td><td><reveal>Where the surfaces meet: \\(x^2+z^2=4\\). So \\(D\\) is the disk \\(x^2+z^2\\le4\\), and \\(x^2+z^2\\le y\\le4\\).</reveal></td></tr>\n  <tr><td>Set up with \\(dy\\) innermost</td><td><reveal>\\(\\displaystyle\\iint_D\\int_{x^2+z^2}^{4}\\sqrt{x^2+z^2}\\,dy\\,dA=\\iint_D(4-x^2-z^2)\\sqrt{x^2+z^2}\\,dA\\)</reveal></td></tr>\n  <tr><td>Convert \\(D\\) to polar (\\(x=r\\cos\\theta,\\ z=r\\sin\\theta\\))</td><td><reveal>\\(\\displaystyle\\int_0^{2\\pi}\\!\\!\\int_0^2(4-r^2)\\,r\\cdot r\\,dr\\,d\\theta\\). The extra \\(r\\) is the polar \\(dA\\).</reveal></td></tr>\n  <tr><td>Evaluate</td><td><reveal>\\(\\displaystyle\\int_0^2(4r^2-r^4)\\,dr=\\tfrac{64}{15}\\), times \\(2\\pi\\): \\(\\ \\mathbf{\\tfrac{128\\pi}{15}}\\approx26.81\\)</reveal></td></tr>\n  <tr><td>Slice check at \\(y=4\\)</td><td><reveal>\\(A(4)=\\iint_{r\\le2}r\\,dA=2\\pi\\cdot\\tfrac{2^3}{3}=\\tfrac{16\\pi}{3}\\approx16.8\\), the value the readout shows at the end of the sweep.</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Average Value",
+      "subtitle": "Theorem 5.11 and Example 5.42",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<p>\n  The <b>average value</b> of \\(f\\) over a solid \\(E\\) with volume \\(V(E)>0\\) is total divided by size:\n</p>\n$$f_{\\text{ave}}=\\frac{1}{V(E)}\\iiint_E f(x,y,z)\\,dV .$$\n<p class=\"muted small\">\n  <b>Example 5.42.</b> The temperature at \\((x,y,z)\\) is \\(T=xy+8z+20\\) (\\(^\\circ\\)C) in the tetrahedron\n  \\(x+y+z\\le1\\), \\(x,y,z\\ge0\\). Find the average temperature. The readout shows both pieces.\n</p>\n<solid-3d axes=\"xyz\" xmin=\"0\" xmax=\"1\" g1=\"0\" g2=\"1-x\" u1=\"0\" u2=\"1-x-y\" f=\"x*y+8*z+20\" sweep=\"z\" avg tall></solid-3d>\n<table>\n  <tr><td>Volume of \\(E\\)</td><td><reveal>\\(V=\\tfrac13\\cdot\\tfrac12\\cdot1=\\tfrac16\\)</reveal></td></tr>\n  <tr><td>\\(\\displaystyle\\iiint_E T\\,dV\\)</td><td><reveal>Inner \\(dz\\): \\((xy+20)(1-x-y)+4(1-x-y)^2\\). Then \\(dy\\) and \\(dx\\) give \\(\\tfrac{147}{40}\\).</reveal></td></tr>\n  <tr><td>Average temperature</td><td><reveal>\\(T_{\\text{ave}}=6\\cdot\\tfrac{147}{40}=\\tfrac{441}{20}=\\mathbf{22.05^\\circ C}\\)</reveal></td></tr>\n  <tr><td>Is it plausible?</td><td><reveal>Yes. \\(T\\) ranges from \\(20\\) (at the origin face) to \\(28\\) (at the top vertex), and most of the volume is near the base, so the average sits just above \\(20\\).</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Summary",
+      "subtitle": "The one-page version",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n  <tr><td><b>Definition</b></td><td>\\(\\displaystyle\\iiint_B f\\,dV=\\lim\\sum f(x^*,y^*,z^*)\\,\\Delta x\\Delta y\\Delta z\\). Continuous \\(f\\) is integrable.</td></tr>\n  <tr><td><b>Box</b></td><td>Constant limits, any of the 6 orders (Fubini).</td></tr>\n  <tr><td><b>General solid</b></td><td>\\(\\displaystyle\\iint_D\\Big[\\int_{u_1(x,y)}^{u_2(x,y)}f\\,dz\\Big]dA\\). Pillar inside, shadow \\(D\\) outside.</td></tr>\n  <tr><td><b>Choosing an order</b></td><td>Sketch the solid, project it, slice it. Limits of the outer integral are constants; each inner limit may use only the variables outside it.</td></tr>\n  <tr><td><b>Volume</b></td><td>\\(V(E)=\\iiint_E1\\,dV\\)</td></tr>\n  <tr><td><b>Average value</b></td><td>\\(f_{\\text{ave}}=\\dfrac1{V(E)}\\iiint_Ef\\,dV\\)</td></tr>\n  <tr><td><b>Round shadows</b></td><td>If a projection is a disk, do the last two integrals in polar coordinates (remember the \\(r\\)).</td></tr>\n</table>\n<p class=\"muted small\">Not covered (homework): Example 5.37 (order freedom on a box), Checkpoint 5.25 (write all six orders), Checkpoints 5.23, 5.24 (ball, \\(36\\pi\\)) and 5.26, and the CAS and prism exercises. Next lesson: cylindrical and spherical coordinates.</p>"
+    }
+  ],
+  "notes": "50 minute plan (about 2 minutes spare): 1. Adding a Third Variable 4 min; 2. Definition and Fubini's Theorem 4 min; 3. Example 5.36: A Box, Inside Out 5 min; 4. General Solids: A Pillar over the Base 5 min; 5. Example 5.38: The Tetrahedron 5 min; 6. Volume as a Triple Integral 5 min; 7. Example 5.40: Changing the Order 7 min; 8. Example 5.41: A Paraboloid and Polar Coordinates 7 min; 9. Average Value 4 min; 10. Summary 2 min"
+}

@@ -696,6 +696,26 @@ version (e.g. sin A - sin B) flagged as not equal; `no-wrong` hides that chip. L
 Verified in Chrome (sin/cos/tan values match, no console errors). Note a board inside a hidden step sizes itself only after the
 step is shown (JSXGraph's resize observer), so it can look blank for a moment during the slide fade.
 
+### `<solid-3d>` and the Triple Integrals lesson (added 2026-10-13)
+
+`<solid-3d axes="xyz" xmin xmax g1 g2 u1 u2 f ...>` (`js/solid.js`, imported by `boot.js`, no CDN tags needed; reuses the
+`.riemann-*` CSS plus a `.solid-tall` canvas modifier): a canvas 3D solid `E = {a0<=a<=a1, g1(a)<=b<=g2(a), u1(a,b)<=h<=u2(a,b)}`
+written in real variable names. `axes` is a permutation of `xyz`: first two letters are the projection D, the third is the variable
+running between the surfaces (`axes="xzy"` gives the paraboloid `y = x^2+z^2` project onto the xz-plane; the range attributes are then
+`xmin/xmax`). `f` defaults to 1 (volume). Three combinable modes: `grid="l,m,n"` (+ `sliders square play max`) cuts E into boxes and
+compares the triple Riemann sum with the exact value; `sweep="x|y|z"` (+ `axis-buttons`) slides a plane through E and reads out
+`A(t)` = integral of f over the slice and "collected so far"; `column` shows the pillar over a point of D with its inner limits and inner
+integral. `avg` adds `V(E)` and the average value. Exact totals come from an iterated midpoint sum on the true limits; slice integrals
+locate every entry/exit of E on a row by bisection, so straight edges are exact (`A(0.55)=0.81` for the pyramid) and curved ones are
+within ~0.3%. Note a midpoint grid sum is *exactly* right for any function linear in each variable, so a `grid` demo needs a curved
+integrand (the lesson uses `x^2+y^2+z^2`) or the sum never visibly converges.
+
+Lesson: `calculus3/fall2025/2025-10-13-triple-integrals/` (OpenStax 5.4, 10 steps timed for a 50 minute class, plan in `content.json` `notes`; replaced a 4-step stub; Example 5.37, Checkpoint 5.25 and the practice step were cut for time and are listed as homework in the summary). Has a `content.json`
+sidecar and a hand-kept `index.html`, both generated from one step list, so edit both if you hand-edit either. All printed answers were
+checked with sympy (36, 162, 1/12, 4/3, 1/168, 128pi/15, 441/20, 8, 8, 36pi). The OpenStax page has typos, avoided here: Theorem 5.10's
+first projection is onto the xy-plane (not xz), and Example 5.40's x-limits must be `sqrt(y) <= x <= 1` (the printed `y <= x <= 1`
+gives 1/96, the lesson uses it as a "common mistake" reveal).
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:

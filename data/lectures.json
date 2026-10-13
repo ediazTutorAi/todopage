@@ -210,9 +210,12 @@
     "date": "2026-03-16",
     "title": "Triple Integrals",
     "subtitle": "",
-    "description": "",
+    "description": "Triple integrals (OpenStax 5.4, a 50 minute class): cut a solid into small boxes to see the definition, sweep a plane through it to watch an iterated integral collect volume slice by slice, set up integrals over general solids with a pillar over the base region, change the order of integration, and find volumes and average values.",
     "tags": [
-      "Triple Integrals"
+      "triple integrals",
+      "iterated integrals",
+      "order of integration",
+      "volume and average value"
     ],
     "url": "calculus3/fall2025/2025-10-13-triple-integrals/index.html"
   },

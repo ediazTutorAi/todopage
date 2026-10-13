@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 2326 — Calculus 3</title>
+  <title>Triple Integrals</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\[', right:'\]', display:true},
-            {left:'\(', right:'\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (interactive diagrams on this page) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,83 +34,262 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Triple Integrals</h1>
-  <div class="meta">MATH 2326 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Triple Integrals</h1>
+    <div class="meta"></div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">5.4 Triple Integrals</div>
-        <div class="step-subtitle">Definition</div>
-        <div class="step-body">
-          The triple integral of a function $f(x,y,z)$ over a rectangular box B is defined as
-          $$\lim_{l,m,n\to\infty}\sum_{i=1}^l\sum_{j=1}^m\sum_{k=1}^n f(x_{ijk},y_{ijk},z_{ijk})\Delta x\Delta y\Delta z$$ which is equivalent to say
-          $$\iiint_B f(x,y,z)dV$$ if this limit exists.
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Adding a Third Variable</div>
+          <div class="step-subtitle">From area under a surface to mass of a solid</div>
+          <div class="step-body">
+<p>
+  A double integral adds up a value \(f\) times a small <i>area</i>. If \(f(x,y,z)\) is a quantity <b>spread through a
+  solid</b> (a density, a temperature), each piece we add up needs a small <i>volume</i> instead.
+</p>
+<p class="muted small">
+  The box \(B=[0,2]\times[0,2]\times[0,2]\) with \(f(x,y,z)=x^2+y^2+z^2\). Press Refine: it is cut into \(l\times m\times n\) small
+  boxes, and each contributes \(f\) at its center times its volume \(\Delta V\). Drag the picture to turn it.
+</p>
+<solid-3d axes="xyz" xmin="0" xmax="2" g1="0" g2="2" u1="0" u2="2" f="x*x+y*y+z*z" grid="2,2,2" sliders square play max="12" tall></solid-3d>
+<table>
+  <tr><td>If \(f\) is a density (g/cm\(^3\)), what does \(\sum f\,\Delta V\) estimate?</td><td><reveal>The <b>mass</b> of the solid: density times volume for each little box, added up.</reveal></td></tr>
+  <tr><td>What does the sum give if \(f=1\)?</td><td><reveal>\(\sum \Delta V\), the <b>volume</b> of the solid. So a triple integral of \(1\) is a volume.</reveal></td></tr>
+  <tr><td>What number are the sums settling to?</td><td><reveal>\(32\). That is the exact value of \(\iiint_B (x^2+y^2+z^2)\,dV\); the sum with one big box is far off, and the error shrinks as the boxes do.</reveal></td></tr>
+</table>
+<p class="muted small">Goal for today: compute that limit without cutting anything, by integrating one variable at a time.</p>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="2">
-        <div class="step-title">Theorem 5.9</div>
-        <div class="step-subtitle">Fubini's Theorem for Triple Integrals</div>
-        <div class="step-body">
-          If $f(x,y,z)$ is continuous on a rectangular box $B=[a,b]\times[c,d]\times[e,f]$, then:
-          $$\iiint_B f(x,y,z)dV=\int_e^f\int_c^d\int_a^b f(x,y,z)dxdydz$$
-          This integral is also equal to any of the other five possible orderings for the triple integral.
-        </div>
-      </div>
-      <div class="step" data-step="3">
-        <div class="step-title">Theorem 5.10</div>
-        <div class="step-subtitle">Triple Integral over a General Region</div>
-        <div class="step-body">
-           The triple integral of a continuous function $f(x,y,z)$ over a general three-dimensional region
-           $$E=\{(x,y,z)|(x,y)\in D,u_1(x,y)\leq z\leq u_2(x,y)\}$$
-           in $\mathbb{R}^3$, where D is the projection of E onto the xy-plane, typo in the textbook, is:
-           $$\iiint_E f(x,y,z)dV=\iint_D \left[\int_{u_1(x,y)}^{u_2(x,y)} f(x,y,z)dz\right]dA$$
-           Similarly we can consider other possible projections onto the other axis planes.
-        </div>
-      </div>
-      <div class="step" data-step="4">
-        <div class="step-title">Changing the limit of Integration</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          Changing the limit of integration.
-        </div>
-      </div>
 
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition and Fubini's Theorem</div>
+          <div class="step-subtitle">Theorem 5.9: a box can be sliced in any order</div>
+          <div class="step-body">
+<p>
+  Split \(B=[a,b]\times[c,d]\times[e,f]\) into \(l\,m\,n\) subboxes with
+  \(\Delta x=\tfrac{b-a}{l},\ \Delta y=\tfrac{d-c}{m},\ \Delta z=\tfrac{f-e}{n}\), so each has volume \(\Delta V=\Delta x\,\Delta y\,\Delta z\).
+  Choosing a sample point \((x^*_{ijk},y^*_{ijk},z^*_{ijk})\) in each,
+</p>
+$$\iiint_B f(x,y,z)\,dV=\lim_{l,m,n\to\infty}\sum_{i=1}^{l}\sum_{j=1}^{m}\sum_{k=1}^{n} f(x^*_{ijk},y^*_{ijk},z^*_{ijk})\,\Delta x\,\Delta y\,\Delta z .$$
+<p class="muted small">
+  If \(f\) is continuous on \(B\) the limit exists. <b>Fubini (Theorem 5.9):</b> then \(\iiint_B f\,dV\) equals an iterated integral
+  in <b>any</b> of the \(3!=6\) orders, worked from the inside out. On a box every order has constant limits.
+  Which iterated integral goes with each order (innermost variable first)?
+</p>
+<table>
+  <tr><td>\(dx,\ dy,\ dz\)</td><td><reveal>\(\displaystyle\int_e^f\!\!\int_c^d\!\!\int_a^b f\,dx\,dy\,dz\)</reveal></td></tr>
+  <tr><td>\(dx,\ dz,\ dy\)</td><td><reveal>\(\displaystyle\int_c^d\!\!\int_e^f\!\!\int_a^b f\,dx\,dz\,dy\)</reveal></td></tr>
+  <tr><td>\(dy,\ dz,\ dx\)</td><td><reveal>\(\displaystyle\int_a^b\!\!\int_e^f\!\!\int_c^d f\,dy\,dz\,dx\)</reveal></td></tr>
+  <tr><td>\(dy,\ dx,\ dz\)</td><td><reveal>\(\displaystyle\int_e^f\!\!\int_a^b\!\!\int_c^d f\,dy\,dx\,dz\)</reveal></td></tr>
+  <tr><td>\(dz,\ dx,\ dy\)</td><td><reveal>\(\displaystyle\int_c^d\!\!\int_a^b\!\!\int_e^f f\,dz\,dx\,dy\)</reveal></td></tr>
+  <tr><td>\(dz,\ dy,\ dx\)</td><td><reveal>\(\displaystyle\int_a^b\!\!\int_c^d\!\!\int_e^f f\,dz\,dy\,dx\)</reveal></td></tr>
+</table>
+<p class="muted small">Same rule as before: the limits of the <i>outermost</i> integral are always constants, and the variable you integrate last is the one you sliced along.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Example 5.36: A Box, Inside Out</div>
+          <div class="step-subtitle">Slices: why the middle answer is a function of z</div>
+          <div class="step-body">
+<p class="muted small">
+  <b>Example 5.36.</b> Evaluate \(\displaystyle\iiint_B (x+yz^2)\,dV\) over \(B=\{-1\le x\le5,\ 2\le y\le4,\ 0\le z\le1\}\),
+  integrating in the order \(dx,\ dy,\ dz\).
+</p>
+<p class="muted small">
+  Sweep the plane \(z=t\) through the box. The slice is a rectangle in the \(xy\)-plane, and the readout
+  \(A(z)=\iint f\,dx\,dy\) is exactly what the two inner integrals produce.
+</p>
+<solid-3d axes="xyz" xmin="-1" xmax="5" g1="2" g2="4" u1="0" u2="1" f="x+y*z*z" sweep="z" tall></solid-3d>
+<table>
+  <tr><td>Inner integral, in \(x\)</td><td><reveal>\(\displaystyle\int_{-1}^{5}(x+yz^2)\,dx=\Big[\tfrac{x^2}{2}+xyz^2\Big]_{-1}^{5}=12+6yz^2\)</reveal></td></tr>
+  <tr><td>Next, in \(y\)</td><td><reveal>\(\displaystyle\int_2^4(12+6yz^2)\,dy=\big[12y+3y^2z^2\big]_2^4=24+36z^2\)</reveal></td></tr>
+  <tr><td>Last, in \(z\)</td><td><reveal>\(\displaystyle\int_0^1(24+36z^2)\,dz=24+12=\mathbf{36}\)</reveal></td></tr>
+  <tr><td>Compare with the readout</td><td><reveal>\(A(z)=24+36z^2\) is the slice integral: at \(z=0\) it reads \(24\), at \(z=1\) it reads \(60\). The final integral adds up the slices.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">General Solids: A Pillar over the Base</div>
+          <div class="step-subtitle">Theorem 5.10</div>
+          <div class="step-body">
+<p>
+  For a solid \(E\) that is not a box, suppose \(D\) is its <b>shadow</b> on the \(xy\)-plane and \(E\) lies between two surfaces:
+  \(E=\{(x,y,z)\mid (x,y)\in D,\ u_1(x,y)\le z\le u_2(x,y)\}\). Then
+</p>
+$$\iiint_E f\,dV=\iint_D\Big[\int_{u_1(x,y)}^{u_2(x,y)}f(x,y,z)\,dz\Big]dA .$$
+<p class="muted small">
+  Example: the tetrahedron bounded by \(x=0,\ y=0,\ z=0\) and \(x+y+z=1\), with \(f=5x-3y\). The red <b>pillar</b>
+  stands over one point \((x,y)\) of \(D\) (yellow) and runs from the floor to the slanted face. Move its \(x\) and \(y\)
+  and read off where \(z\) starts and stops.
+</p>
+<solid-3d axes="xyz" xmin="0" xmax="1" g1="0" g2="1-x" u1="0" u2="1-x-y" f="5*x-3*y" column tall></solid-3d>
+<table>
+  <tr><td>What are \(u_1\) and \(u_2\)?</td><td><reveal>\(u_1=0\) (the floor) and \(u_2=1-x-y\) (the plane \(x+y+z=1\) solved for \(z\)).</reveal></td></tr>
+  <tr><td>What is \(D\)?</td><td><reveal>Set \(z=0\) in the slanted face: the triangle \(x+y\le1\) in the first quadrant, so \(0\le x\le1,\ 0\le y\le1-x\).</reveal></td></tr>
+  <tr><td>What does the inner integral compute?</td><td><reveal>One pillar's worth: \(\int_0^{1-x-y}f\,dz\) for a fixed \((x,y)\). The outer double integral then adds up every pillar over \(D\).</reveal></td></tr>
+</table>
+<p class="muted small">Project onto the \(xz\)- or \(yz\)-plane instead and the same theorem holds with the roles of the variables swapped.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 5.38: The Tetrahedron</div>
+          <div class="step-subtitle">Three nested limits from one picture</div>
+          <div class="step-body">
+<p class="muted small">
+  <b>Example 5.38.</b> Evaluate \(\displaystyle\iiint_E(5x-3y)\,dV\) for the tetrahedron of the last step. Write
+  \(E=\{0\le x\le1,\ 0\le y\le1-x,\ 0\le z\le1-x-y\}\). Sweep the plane \(x=t\): the slice is a triangle that shrinks to a point.
+</p>
+<solid-3d axes="xyz" xmin="0" xmax="1" g1="0" g2="1-x" u1="0" u2="1-x-y" f="5*x-3*y" sweep="x" tall></solid-3d>
+<table>
+  <tr><td>Set up</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_0^{1-x}\!\!\int_0^{1-x-y}(5x-3y)\,dz\,dy\,dx\)</reveal></td></tr>
+  <tr><td>Inner, in \(z\)</td><td><reveal>\((5x-3y)(1-x-y)\), since the integrand does not contain \(z\).</reveal></td></tr>
+  <tr><td>Middle, in \(y\)</td><td><reveal>\(\displaystyle\int_0^{1-x}(5x-3y)(1-x-y)\,dy=\tfrac12(x-1)^2(6x-1)\)</reveal></td></tr>
+  <tr><td>Outer, in \(x\)</td><td><reveal>\(\displaystyle\int_0^1\tfrac12(x-1)^2(6x-1)\,dx=\tfrac{1}{12}\)</reveal></td></tr>
+  <tr><td>Where do you see the middle answer?</td><td><reveal>It is \(A(x)\) in the readout. At \(x=0\) it reads \(-0.5\): the slice is the biggest triangle, and \(f=-3y\) is negative there, so it contributes negative volume.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Volume as a Triple Integral</div>
+          <div class="step-subtitle">Example 5.39: a square pyramid</div>
+          <div class="step-body">
+<p>
+  With \(f=1\) the triple integral is the <b>volume</b>: \(V(E)=\iiint_E 1\,dV\).
+</p>
+<p class="muted small">
+  <b>Example 5.39.</b> The pyramid with base \([-1,1]\times[-1,1]\) in the \(xy\)-plane and apex \((0,0,1)\).
+  Sweep the plane \(z=t\) upward.
+</p>
+<solid-3d axes="xyz" xmin="-1" xmax="1" g1="-1" g2="1" u1="0" u2="1-Math.max(abs(x),abs(y))" sweep="z" tall></solid-3d>
+<table>
+  <tr><td>What shape is each slice, and how big?</td><td><reveal>A square. At height \(z\) its sides run from \(-1+z\) to \(1-z\), so the side is \(2(1-z)\) and \(A(z)=4(1-z)^2\).</reveal></td></tr>
+  <tr><td>Write \(E\) so that \(z\) is outermost</td><td><reveal>\(E=\{0\le z\le1,\ -1+z\le y\le1-z,\ -1+z\le x\le1-z\}\)</reveal></td></tr>
+  <tr><td>Volume</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_{-1+z}^{1-z}\!\!\int_{-1+z}^{1-z}dx\,dy\,dz=\int_0^1 4(1-z)^2dz=\tfrac{\mathbf4}{\mathbf3}\)</reveal></td></tr>
+  <tr><td>Sanity check</td><td><reveal>\(\tfrac13\cdot(\text{base area }4)\cdot(\text{height }1)=\tfrac43\). The familiar pyramid formula.</reveal></td></tr>
+</table>
+<p class="muted small">Slicing by \(z\) was the only reasonable choice: the top surface \(z=1-\max(|x|,|y|)\) has a crease, but every horizontal slice is a plain square.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Example 5.40: Changing the Order</div>
+          <div class="step-subtitle">Same solid, three different shadows</div>
+          <div class="step-body">
+<p class="muted small">
+  <b>Example 5.40.</b> The integral \(\displaystyle\int_0^1\!\!\int_0^{x^2}\!\!\int_0^{y^2}xyz\,dz\,dy\,dx\) is over
+  \(E=\{0\le x\le1,\ 0\le y\le x^2,\ 0\le z\le y^2\}\). Switch the slicing axis: each choice is a different order of integration
+  for the <i>same</i> solid, and the total never changes.
+</p>
+<solid-3d axes="xyz" xmin="0" xmax="1" g1="0" g2="x*x" u1="0" u2="y*y" f="x*y*z" sweep="x" axis-buttons tall></solid-3d>
+<table>
+  <tr><td>Evaluate as given</td><td><reveal>\(\int_0^{y^2}xyz\,dz=\tfrac12xy^5\), then \(\int_0^{x^2}\tfrac12xy^5dy=\tfrac{x^{13}}{12}\), then \(\int_0^1\tfrac{x^{13}}{12}dx=\tfrac1{168}\).</reveal></td></tr>
+  <tr><td>Now integrate \(dx\) first. Find the \(x\)-limits at a fixed \((y,z)\).</td><td><reveal>From \(y\le x^2\) we get \(x\ge\sqrt y\), and \(x\le1\). So \(\sqrt y\le x\le1\).</reveal></td></tr>
+  <tr><td>The \(yz\)-shadow</td><td><reveal>\(0\le y\le1,\ 0\le z\le y^2\), giving \(\displaystyle\int_0^1\!\!\int_0^{y^2}\!\!\int_{\sqrt y}^{1}xyz\,dx\,dz\,dy\)</reveal></td></tr>
+  <tr><td>Evaluate it</td><td><reveal>\(\int_{\sqrt y}^1xyz\,dx=\tfrac12yz(1-y)\), then \(\int_0^{y^2}\to\tfrac14y^5(1-y)\), then \(\int_0^1\to\tfrac14\big(\tfrac16-\tfrac17\big)=\tfrac1{168}\). Same answer.</reveal></td></tr>
+  <tr><td>Common mistake</td><td><reveal>Writing \(y\le x\le1\) instead of \(\sqrt y\le x\le1\). Solve <i>the inequality</i> \(y\le x^2\) for \(x\); do not just rename the bounds. That slip gives \(\tfrac1{96}\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example 5.41: A Paraboloid and Polar Coordinates</div>
+          <div class="step-subtitle">When the shadow is a disk</div>
+          <div class="step-body">
+<p class="muted small">
+  <b>Example 5.41.</b> Let \(E\) be the solid bounded by \(y=x^2+z^2\) and \(y=4\). Evaluate
+  \(\displaystyle\iiint_E\sqrt{x^2+z^2}\,dV\).
+  The paraboloid opens along the <b>\(y\)-axis</b>, so project onto the \(xz\)-plane. Sweep \(y\): each slice is a disk.
+</p>
+<solid-3d axes="xzy" xmin="-2" xmax="2" g1="-sqrt(4-x*x)" g2="sqrt(4-x*x)" u1="x*x+z*z" u2="4" f="sqrt(x*x+z*z)" sweep="y" tall></solid-3d>
+<table>
+  <tr><td>The shadow \(D\) in the \(xz\)-plane</td><td><reveal>Where the surfaces meet: \(x^2+z^2=4\). So \(D\) is the disk \(x^2+z^2\le4\), and \(x^2+z^2\le y\le4\).</reveal></td></tr>
+  <tr><td>Set up with \(dy\) innermost</td><td><reveal>\(\displaystyle\iint_D\int_{x^2+z^2}^{4}\sqrt{x^2+z^2}\,dy\,dA=\iint_D(4-x^2-z^2)\sqrt{x^2+z^2}\,dA\)</reveal></td></tr>
+  <tr><td>Convert \(D\) to polar (\(x=r\cos\theta,\ z=r\sin\theta\))</td><td><reveal>\(\displaystyle\int_0^{2\pi}\!\!\int_0^2(4-r^2)\,r\cdot r\,dr\,d\theta\). The extra \(r\) is the polar \(dA\).</reveal></td></tr>
+  <tr><td>Evaluate</td><td><reveal>\(\displaystyle\int_0^2(4r^2-r^4)\,dr=\tfrac{64}{15}\), times \(2\pi\): \(\ \mathbf{\tfrac{128\pi}{15}}\approx26.81\)</reveal></td></tr>
+  <tr><td>Slice check at \(y=4\)</td><td><reveal>\(A(4)=\iint_{r\le2}r\,dA=2\pi\cdot\tfrac{2^3}{3}=\tfrac{16\pi}{3}\approx16.8\), the value the readout shows at the end of the sweep.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Average Value</div>
+          <div class="step-subtitle">Theorem 5.11 and Example 5.42</div>
+          <div class="step-body">
+<p>
+  The <b>average value</b> of \(f\) over a solid \(E\) with volume \(V(E)>0\) is total divided by size:
+</p>
+$$f_{\text{ave}}=\frac{1}{V(E)}\iiint_E f(x,y,z)\,dV .$$
+<p class="muted small">
+  <b>Example 5.42.</b> The temperature at \((x,y,z)\) is \(T=xy+8z+20\) (\(^\circ\)C) in the tetrahedron
+  \(x+y+z\le1\), \(x,y,z\ge0\). Find the average temperature. The readout shows both pieces.
+</p>
+<solid-3d axes="xyz" xmin="0" xmax="1" g1="0" g2="1-x" u1="0" u2="1-x-y" f="x*y+8*z+20" sweep="z" avg tall></solid-3d>
+<table>
+  <tr><td>Volume of \(E\)</td><td><reveal>\(V=\tfrac13\cdot\tfrac12\cdot1=\tfrac16\)</reveal></td></tr>
+  <tr><td>\(\displaystyle\iiint_E T\,dV\)</td><td><reveal>Inner \(dz\): \((xy+20)(1-x-y)+4(1-x-y)^2\). Then \(dy\) and \(dx\) give \(\tfrac{147}{40}\).</reveal></td></tr>
+  <tr><td>Average temperature</td><td><reveal>\(T_{\text{ave}}=6\cdot\tfrac{147}{40}=\tfrac{441}{20}=\mathbf{22.05^\circ C}\)</reveal></td></tr>
+  <tr><td>Is it plausible?</td><td><reveal>Yes. \(T\) ranges from \(20\) (at the origin face) to \(28\) (at the top vertex), and most of the volume is near the base, so the average sits just above \(20\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Definition</b></td><td>\(\displaystyle\iiint_B f\,dV=\lim\sum f(x^*,y^*,z^*)\,\Delta x\Delta y\Delta z\). Continuous \(f\) is integrable.</td></tr>
+  <tr><td><b>Box</b></td><td>Constant limits, any of the 6 orders (Fubini).</td></tr>
+  <tr><td><b>General solid</b></td><td>\(\displaystyle\iint_D\Big[\int_{u_1(x,y)}^{u_2(x,y)}f\,dz\Big]dA\). Pillar inside, shadow \(D\) outside.</td></tr>
+  <tr><td><b>Choosing an order</b></td><td>Sketch the solid, project it, slice it. Limits of the outer integral are constants; each inner limit may use only the variables outside it.</td></tr>
+  <tr><td><b>Volume</b></td><td>\(V(E)=\iiint_E1\,dV\)</td></tr>
+  <tr><td><b>Average value</b></td><td>\(f_{\text{ave}}=\dfrac1{V(E)}\iiint_Ef\,dV\)</td></tr>
+  <tr><td><b>Round shadows</b></td><td>If a projection is a disk, do the last two integrals in polar coordinates (remember the \(r\)).</td></tr>
+</table>
+<p class="muted small">Not covered (homework): Example 5.37 (order freedom on a box), Checkpoint 5.25 (write all six orders), Checkpoints 5.23, 5.24 (ball, \(36\pi\)) and 5.26, and the CAS and prism exercises. Next lesson: cylindrical and spherical coordinates.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
-
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
 </body>
+
 </html>
