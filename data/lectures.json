@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-14",
+    "title": "Double- and Half-Angle Identities",
+    "subtitle": "Lesson 17",
+    "description": "Double-angle identities from the sum identities, multiples of an angle, power-reducing and half-angle identities with careful sign choice, and exact values at 15°, 105° and π/8, with a live unit-circle explorer and graph checks.",
+    "tags": [
+      "Identities",
+      "Double Angle",
+      "Half Angle"
+    ],
+    "url": "trigonometry/2026/2026-10-14-lesson-17-double-and-half-angle-identities/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-12",
     "title": "Sum and Difference Identities",
     "subtitle": "Lesson 16",
