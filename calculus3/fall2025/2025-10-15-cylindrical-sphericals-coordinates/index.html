@@ -43,67 +43,226 @@
       <div class="card" id="left-card">
 
         <!-- STEPS -->
-        <div class="step is-visible" data-step="1" data-ggb-id="dbhs3q8t">
+        <div class="step is-visible" data-step="1">
           <div class="step-title">Cylindrical Coordinates</div>
-          <div class="step-subtitle">Definition</div>
+          <div class="step-subtitle">Polar coordinates in the plane, plus the height z</div>
           <div class="step-body">
-            To convert from rectangular to cylindrical coordinates, we use the conversion $x=r\cos(\theta)$, $y=r\sin(\theta)$ and $z=z$. To convert from cylindrical to rectangular coordinates, we use $r^2=x^2+y^2$,$\tan(\theta)=\frac{y}{x}$ and $z=z$.
+<p>
+  When a solid has a <b>circular axis of symmetry</b>, the polar \((r,\theta)\) we already use in the \(xy\)-plane is the natural start.
+  Keep it, and keep \(z\) as it is: a point is \((r,\theta,z)\).
+</p>
+$$x=r\cos\theta,\quad y=r\sin\theta,\quad z=z \qquad\qquad r^2=x^2+y^2,\quad \tan\theta=\frac yx,\quad z=z$$
+<p class="muted small">
+  Move the three sliders. The blue segment is \(r\) (along the floor), the orange arc is \(\theta\) (measured from the positive \(x\)-axis),
+  the green segment is the height \(z\). Drag the picture to turn it.
+</p>
+<coord-3d mode="cyl" r="2" theta="2*pi/3" z="1"></coord-3d>
+<table>
+  <tr><td>Convert \((r,\theta,z)=(2,\tfrac{2\pi}{3},1)\) to rectangular</td><td><reveal>\(x=2\cos\tfrac{2\pi}3=-1,\ \ y=2\sin\tfrac{2\pi}3=\sqrt3,\ \ z=1\). The readout above shows the same numbers.</reveal></td></tr>
+  <tr><td>Convert \((1,1,\sqrt2)\) to cylindrical</td><td><reveal>\(r=\sqrt{1+1}=\sqrt2,\ \ \theta=\tfrac\pi4,\ \ z=\sqrt2\). So \((\sqrt2,\tfrac\pi4,\sqrt2)\).</reveal></td></tr>
+  <tr><td>Convert \((-1,1,0)\). Why is \(\theta=\tan^{-1}(y/x)\) dangerous?</td><td><reveal>\(\tan^{-1}(-1)=-\tfrac\pi4\) points into quadrant IV, but the point is in quadrant II. Use \(\theta=\tfrac{3\pi}4\). Always check the quadrant of \((x,y)\).</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="2" data-ggb-id="p5kthve3">
-          <div class="step-title">Special surfaces in cylindrical coordinates</div>
-          <div class="step-subtitle"></div>
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Surfaces in Cylindrical Coordinates</div>
+          <div class="step-subtitle">Hold one coordinate constant</div>
           <div class="step-body">
-            By fixing one of the variables in cylindrical coordinates, we can obtain some special surfaces. Can you guess what surfaces we obtain by fixing each of the variables?
+<p>
+  In rectangular coordinates, fixing one variable gives a <b>plane</b> (\(x=c\), \(y=c\), \(z=c\)). Fix one cylindrical coordinate instead.
+  Guess before you press: what surface does each give?
+</p>
+<p class="muted small">
+  Press <b>fix r</b>, <b>fix &theta;</b> or <b>fix z</b> to draw the surface through the point (the point always lies on it). Press again to clear.
+</p>
+<coord-3d mode="cyl" r="2" theta="pi/4" z="1" surfaces></coord-3d>
+<table>
+  <tr><td>\(r=c\)</td><td><reveal>A <b>cylinder</b> of radius \(c\) around the \(z\)-axis.</reveal></td></tr>
+  <tr><td>\(\theta=c\)</td><td><reveal>A <b>vertical half-plane</b> hinged on the \(z\)-axis (the full plane if \(r\) may be negative).</reveal></td></tr>
+  <tr><td>\(z=c\)</td><td><reveal>A <b>horizontal plane</b>, exactly as in rectangular coordinates.</reveal></td></tr>
+  <tr><td>What are \(z=r\) and \(z=r^2\)?</td><td><reveal>\(z=r=\sqrt{x^2+y^2}\) is a <b>cone</b>; \(z=r^2=x^2+y^2\) is a <b>paraboloid</b>. Any equation with \(x^2+y^2\) in it is a candidate for \(r\).</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="3" data-ggb-id="bvp8sg2n">
-          <div class="step-title">Review of Spherical Coordinates</div>
-          <div class="step-subtitle"></div>
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Spherical Coordinates</div>
+          <div class="step-subtitle">Distance from the origin and two angles</div>
           <div class="step-body">
-            To convert from spherical coordinates to rectangular coordinates:
-          $$x=\rho\sin(\phi)\cos(\theta),\quad y=\rho\sin(\phi)\sin(\theta),\quad z=\rho\cos(\phi)$$
-          To convert from rectangular coordinates to spherical coordinates:
-          $$\rho=\sqrt{x^2+y^2+z^2},\quad \theta=\tan^{-1}\left(\frac{y}{x}\right),\quad \phi=\cos^{-1}\left(\frac{z}{\sqrt{x^2+y^2 +z^2}}\right)$$
-          Look at the applet to see how the coordinates change as we move the point.
+<p>
+  When the symmetry is about a <b>point</b>, describe a point by its distance \(\rho\ge0\) from the origin, the same angle \(\theta\) as before,
+  and the angle \(\varphi\in[0,\pi]\) <b>down from the positive \(z\)-axis</b>.
+</p>
+$$x=\rho\sin\varphi\cos\theta,\quad y=\rho\sin\varphi\sin\theta,\quad z=\rho\cos\varphi \qquad \rho^2=x^2+y^2+z^2$$
+<p class="muted small">
+  The dashed segment on the floor has length \(r=\rho\sin\varphi\): that is the link back to cylindrical coordinates. (Some books swap the names
+  \(\theta\) and \(\varphi\). Here \(\theta\) is always the angle around the \(z\)-axis.)
+</p>
+<coord-3d mode="sph" rho="2" theta="pi/3" phi="pi/6"></coord-3d>
+<table>
+  <tr><td>Convert \((\rho,\theta,\varphi)=(2,\tfrac\pi3,\tfrac\pi6)\) to rectangular</td><td><reveal>\(x=2\cdot\tfrac12\cdot\tfrac12=\tfrac12,\ \ y=2\cdot\tfrac12\cdot\tfrac{\sqrt3}2=\tfrac{\sqrt3}2,\ \ z=2\cdot\tfrac{\sqrt3}2=\sqrt3\).</reveal></td></tr>
+  <tr><td>Convert \((1,1,\sqrt2)\) to spherical</td><td><reveal>\(\rho=\sqrt{1+1+2}=2\), \(\theta=\tfrac\pi4\), and \(\cos\varphi=\tfrac{\sqrt2}{2}\) so \(\varphi=\tfrac\pi4\). Spherical \((2,\tfrac\pi4,\tfrac\pi4)\).</reveal></td></tr>
+  <tr><td>The point \((0,0,-3)\): what are \(\rho,\varphi\), and what is \(\theta\)?</td><td><reveal>\(\rho=3,\ \varphi=\pi\), and \(\theta\) can be <b>anything</b>: on the \(z\)-axis the angle around the axis means nothing. Same happens to \(\theta\) in cylindrical coordinates there.</reveal></td></tr>
+</table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="4">
-          <div class="step-title">Integration in Cylindrical coordinates</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Surfaces in Spherical Coordinates</div>
+          <div class="step-subtitle">The same experiment</div>
           <div class="step-body">
-            If the cylindrical region over which we have to integrate is a general solid, we look at the projections onto the coordinate planes. Hence the triple integral of a continuous function $f(r,\theta,z)$ over a general solid region $E=\{(r,\theta,z)|(r,\theta)\in D, u_1(r,\theta)\leq z \leq u_2(r,\theta)\}$ in $\mathbb{R}^3$, where D is the projection of E onto the $r\theta$-plane, is given by:
-          $$\iiint_E f(r,\theta,z)rdrd\theta dz=\iint_D\left[\int_{u_1(r,\theta)}^{u_2(r,\theta)} f(r,\theta,z)dz\right]\,rdr\,d\theta$$
-          In particular, if $D=\{(r,\theta)|g_1(\theta)\leq r \leq g_2(\theta),\alpha\leq\theta\leq\beta\}$, then we have:
-          $$\iiint_E f(r,\theta,z)r dr d\theta=\int_{\theta=\alpha}^{\theta=\beta}\int_{r=g_1(\theta)}^{r=g_2(\theta)}\int_{z=u_1(r,\theta)}^{z=u_2(r,\theta)} f(r,\theta,z)r dz dr d\theta$$
+<p class="muted small">
+  Same game. Guess the surface, then press the button. Rotate the picture: the cone is easier to see from the side.
+</p>
+<coord-3d mode="sph" rho="3" theta="pi/3" phi="pi/4" surfaces></coord-3d>
+<table>
+  <tr><td>\(\rho=c\)</td><td><reveal>A <b>sphere</b> of radius \(c\) centered at the origin.</reveal></td></tr>
+  <tr><td>\(\theta=c\)</td><td><reveal>A <b>vertical half-plane</b>, the same as in cylindrical coordinates.</reveal></td></tr>
+  <tr><td>\(\varphi=c\)</td><td><reveal>A <b>cone</b> around the \(z\)-axis (\(\varphi=\tfrac\pi2\) is the flat \(xy\)-plane, \(\varphi=\pi\) the negative \(z\)-axis).</reveal></td></tr>
+  <tr><td>Write \(x^2+y^2+z^2=9\) in spherical</td><td><reveal>\(\rho^2=9\), so \(\rho=3\).</reveal></td></tr>
+  <tr><td>Write \(z=\sqrt{x^2+y^2}\) in spherical</td><td><reveal>\(\rho\cos\varphi=\rho\sin\varphi\), so \(\tan\varphi=1\) and \(\varphi=\tfrac\pi4\). That is the cone through the point on screen.</reveal></td></tr>
+</table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="5">
-          <div class="step-title">Setting up Triple Integrals in Cylindrical coordinates</div>
-          <div class="step-subtitle">Examples and change of limits of integration</div>
+          <div class="step-title">The Volume Element in Cylindrical Coordinates</div>
+          <div class="step-subtitle">Why \(dV=r\,dr\,d\theta\,dz\)</div>
           <div class="step-body">
-            
+<p>
+  Cut space with the surfaces we just drew: \(r\), \(r+\Delta r\); \(\theta\), \(\theta+\Delta\theta\); \(z\), \(z+\Delta z\). We get a small curved
+  box. Its volume \(\Delta V\) is what the triple Riemann sum multiplies \(f\) by.
+</p>
+<p class="muted small">
+  Edges: radial \(\Delta r\) (blue), the arc along a circle of radius \(r\) (orange), vertical \(\Delta z\) (green).
+  Slide the position <b>r</b> outward, then change \(d\theta\) and watch the orange edge.
+</p>
+<coord-3d mode="cyl" r="1.5" theta="pi/6" z="0" d="0.5,30,0.5" wedge></coord-3d>
+<table>
+  <tr><td>How long is the orange edge?</td><td><reveal>An arc of angle \(\Delta\theta\) on a circle of radius \(r\): <b>\(r\,\Delta\theta\)</b>, not \(\Delta\theta\). Move \(r\) outward: same angle, longer edge.</reveal></td></tr>
+  <tr><td>Base area of the piece</td><td><reveal>Annular sector: \(\tfrac12[(r+\Delta r)^2-r^2]\Delta\theta=r^*\,\Delta r\,\Delta\theta\) with \(r^*=r+\tfrac{\Delta r}2\), the middle radius. This is the polar \(dA=r\,dr\,d\theta\) from last week.</reveal></td></tr>
+  <tr><td>Volume of the piece</td><td><reveal>\(\Delta V=r^*\,\Delta r\,\Delta\theta\,\Delta z\). The readout agrees exactly. The red <i>naive</i> chip (no \(r\)) is badly off, and worse the farther out you slide.</reveal></td></tr>
+</table>
+$$\iiint_E f\,dV=\iiint_E f(r\cos\theta,\ r\sin\theta,\ z)\;\boxed{r}\;dz\,dr\,d\theta$$
           </div>
         </div>
 
         <div class="step is-visible" data-step="6">
-          <div class="step-title">Setting up Triple Integrals in Spherical coordinates</div>
-          <div class="step-subtitle">Examples</div>
+          <div class="step-title">The Volume Element in Spherical Coordinates</div>
+          <div class="step-subtitle">Why \(dV=\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta\)</div>
           <div class="step-body">
-            Much of the same as said for cylindrical coordinate apply to spherical coordinates, except that the Jacobian is going to be
-          $$\rho^2sin(\phi)$$
+<p>
+  Same cut with \(\rho,\ \theta,\ \varphi\). Three edges leave the corner, and each has a different length.
+</p>
+<coord-3d mode="sph" rho="1.5" theta="pi/6" phi="pi/3" d="0.5,30,30" wedge></coord-3d>
+<table>
+  <tr><td>The blue edge (change in \(\rho\))</td><td><reveal>Straight along a ray: length \(\Delta\rho\).</reveal></td></tr>
+  <tr><td>The green edge (change in \(\varphi\))</td><td><reveal>An arc of angle \(\Delta\varphi\) on a sphere of radius \(\rho\): length \(\rho\,\Delta\varphi\).</reveal></td></tr>
+  <tr><td>The orange edge (change in \(\theta\))</td><td><reveal>An arc of angle \(\Delta\theta\) around the \(z\)-axis, on a circle of radius \(r=\rho\sin\varphi\) (the dashed segment from the last slides): length \(\rho\sin\varphi\,\Delta\theta\). Slide \(\varphi\) toward \(0\) and it shrinks to nothing at the pole.</reveal></td></tr>
+  <tr><td>Multiply</td><td><reveal>\(\Delta V\approx(\Delta\rho)(\rho\,\Delta\varphi)(\rho\sin\varphi\,\Delta\theta)=\rho^2\sin\varphi\,\Delta\rho\,\Delta\varphi\,\Delta\theta\). The readout compares it to the exact piece; shrink the sizes and the match gets better.</reveal></td></tr>
+</table>
+$$\iiint_E f\,dV=\iiint_E f(\rho\sin\varphi\cos\theta,\ \rho\sin\varphi\sin\theta,\ \rho\cos\varphi)\;\boxed{\rho^2\sin\varphi}\;d\rho\,d\varphi\,d\theta$$
           </div>
         </div>
 
         <div class="step is-visible" data-step="7">
-          <div class="step-title">yyy</div>
-          <div class="step-subtitle"></div>
+          <div class="step-title">Example: A Cone Under a Paraboloid</div>
+          <div class="step-subtitle">Setting up in cylindrical coordinates</div>
           <div class="step-body">
-            \(x+\frac{x}{v}\)
+<p class="muted small">
+  Let \(E\) be the solid bounded below by the cone \(z=\sqrt{x^2+y^2}\) and above by the paraboloid \(z=2-x^2-y^2\).
+  Set up and evaluate \(\displaystyle\iiint_E(x^2+y^2)\,dV\). The yellow disk is the shadow \(D\); the pillar goes from the cone up to the paraboloid.
+</p>
+<solid-3d axes="xyz" xmin="-1" xmax="1" g1="-sqrt(1-x*x)" g2="sqrt(1-x*x)" u1="sqrt(x*x+y*y)" u2="2-x*x-y*y" f="x*x+y*y" column tall></solid-3d>
+<table>
+  <tr><td>Rewrite both surfaces in \(r\)</td><td><reveal>Cone: \(z=r\). Paraboloid: \(z=2-r^2\). So \(r\le z\le2-r^2\).</reveal></td></tr>
+  <tr><td>Where do they meet? This gives \(D\).</td><td><reveal>\(r=2-r^2\Rightarrow r^2+r-2=0\Rightarrow r=1\). So \(D\) is the disk \(0\le r\le1\), \(0\le\theta\le2\pi\).</reveal></td></tr>
+  <tr><td>The integrand \(x^2+y^2\)</td><td><reveal>\(r^2\). Together with the Jacobian \(r\): the integrand becomes \(r^3\).</reveal></td></tr>
+  <tr><td>Set up</td><td><reveal>\(\displaystyle\int_0^{2\pi}\!\!\int_0^1\!\!\int_r^{2-r^2}r^2\cdot r\,dz\,dr\,d\theta\)</reveal></td></tr>
+  <tr><td>Evaluate</td><td><reveal>Inner: \(r^3(2-r^2-r)\). Then \(\int_0^1(2r^3-r^5-r^4)\,dr=\tfrac12-\tfrac16-\tfrac15=\tfrac2{15}\). Times \(2\pi\): \(\ \mathbf{\tfrac{4\pi}{15}}\).</reveal></td></tr>
+  <tr><td>Volume of the same solid?</td><td><reveal>Use \(f=1\): \(\int_0^{2\pi}\!\!\int_0^1(2-r^2-r)\,r\,dr\,d\theta=2\pi\big(1-\tfrac14-\tfrac13\big)=\tfrac{5\pi}{6}\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Example: The Ice Cream Cone</div>
+          <div class="step-subtitle">Setting up in spherical coordinates</div>
+          <div class="step-body">
+<p class="muted small">
+  Let \(E\) be the solid above the cone \(z=\sqrt{x^2+y^2}\) and inside the sphere \(x^2+y^2+z^2=4\).
+  Find its volume and \(\displaystyle\iiint_E z\,dV\). Sweep the plane \(z=t\): the readout gives the volume and the integral of \(z\).
+</p>
+<solid-3d axes="xyz" xmin="-1.4142" xmax="1.4142" g1="-sqrt(2-x*x)" g2="sqrt(2-x*x)" u1="sqrt(x*x+y*y)" u2="sqrt(4-x*x-y*y)" f="z" sweep="z" avg tall></solid-3d>
+<table>
+  <tr><td>Both surfaces in spherical</td><td><reveal>Sphere: \(\rho=2\). Cone: \(\varphi=\tfrac\pi4\) (from the surfaces step). The solid is the part with <b>smaller</b> \(\varphi\), so \(0\le\varphi\le\tfrac\pi4\).</reveal></td></tr>
+  <tr><td>All three ranges</td><td><reveal>\(0\le\rho\le2,\quad 0\le\varphi\le\tfrac\pi4,\quad 0\le\theta\le2\pi\). Constants! That is the whole point of choosing spherical here.</reveal></td></tr>
+  <tr><td>Volume: set up and evaluate</td><td><reveal>\(\displaystyle\int_0^{2\pi}\!\!\int_0^{\pi/4}\!\!\int_0^2\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta=\tfrac83\cdot\Big(1-\tfrac{\sqrt2}2\Big)\cdot2\pi=\tfrac{8\pi}3(2-\sqrt2)\approx4.91\)</reveal></td></tr>
+  <tr><td>\(\iiint_E z\,dV\): the integrand</td><td><reveal>\(z=\rho\cos\varphi\), so the integrand is \(\rho\cos\varphi\cdot\rho^2\sin\varphi=\rho^3\sin\varphi\cos\varphi\).</reveal></td></tr>
+  <tr><td>Evaluate</td><td><reveal>\(\displaystyle\int_0^{2\pi}\!\!\int_0^{\pi/4}\!\!\int_0^2\rho^3\sin\varphi\cos\varphi\,d\rho\,d\varphi\,d\theta=2\pi\cdot4\cdot\tfrac14=\mathbf{2\pi}\approx6.28\)</reveal></td></tr>
+  <tr><td>Compare with the readout</td><td><reveal>V(E) = 4.907 and \(\iiint_E z\,dV=6.283\). The average value of \(z\) is \(\tfrac{2\pi}{V}\approx1.28\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Converting an Iterated Integral</div>
+          <div class="step-subtitle">Reading the region off the limits</div>
+          <div class="step-body">
+<p class="muted small">
+  Evaluate
+  \(\displaystyle\int_{-2}^{2}\int_{-\sqrt{4-x^2}}^{\sqrt{4-x^2}}\int_{\sqrt{x^2+y^2}}^{2}(x^2+y^2)\,dz\,dy\,dx\).
+  Read the limits first and picture \(E\); the picture below is that solid. Sweep \(z\) upward.
+</p>
+<solid-3d axes="xyz" xmin="-2" xmax="2" g1="-sqrt(4-x*x)" g2="sqrt(4-x*x)" u1="sqrt(x*x+y*y)" u2="2" f="x*x+y*y" sweep="z" tall></solid-3d>
+<table>
+  <tr><td>What is the shadow \(D\)?</td><td><reveal>\(-\sqrt{4-x^2}\le y\le\sqrt{4-x^2}\), \(-2\le x\le2\) is the disk \(x^2+y^2\le4\): \(0\le r\le2,\ 0\le\theta\le2\pi\).</reveal></td></tr>
+  <tr><td>What is \(E\)?</td><td><reveal>Between the cone \(z=r\) and the plane \(z=2\): an upside-down cone (a party hat balanced on its tip).</reveal></td></tr>
+  <tr><td>Rewrite in cylindrical</td><td><reveal>\(\displaystyle\int_0^{2\pi}\!\!\int_0^2\!\!\int_r^2r^2\cdot r\,dz\,dr\,d\theta\)</reveal></td></tr>
+  <tr><td>Evaluate</td><td><reveal>\(\int_r^2r^3\,dz=r^3(2-r)\), \(\int_0^2(2r^3-r^4)\,dr=8-\tfrac{32}5=\tfrac85\). Times \(2\pi\): \(\ \mathbf{\tfrac{16\pi}5}\approx10.05\). The sweep readout ends at the same number.</reveal></td></tr>
+  <tr><td>Why was Cartesian a bad choice?</td><td><reveal>The first integral is easy, but the \(x\) and \(y\) integrals of \(\sqrt{x^2+y^2}\)-type expressions over a disk are miserable. In polar form the disk has constant limits and the \(r\)'s multiply out.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Choosing the Coordinates</div>
+          <div class="step-subtitle">And an integral that only spherical can do</div>
+          <div class="step-body">
+<table>
+  <tr><td>\(x^2+y^2\) appears; axis of symmetry is the \(z\)-axis; bounded by cylinders, planes, paraboloids</td><td><reveal><b>Cylindrical.</b></reveal></td></tr>
+  <tr><td>\(x^2+y^2+z^2\) appears; spheres, balls, cones with the vertex at the origin</td><td><reveal><b>Spherical.</b> The integrand \(\rho\) and boundary \(\rho=c\) both become trivial.</reveal></td></tr>
+  <tr><td>A cone \(z=\sqrt{x^2+y^2}\) with a flat top \(z=c\)</td><td><reveal>Either, but cylindrical is shorter (\(r\le z\le c\)). With a spherical cap on top, spherical is shorter.</reveal></td></tr>
+</table>
+<p class="muted small">
+  <b>Example.</b> Let \(B\) be the unit ball \(x^2+y^2+z^2\le1\). Evaluate
+  \(\displaystyle\iiint_B e^{(x^2+y^2+z^2)^{3/2}}\,dV\).
+  There is no elementary antiderivative in \(x,y,z\), so rectangular coordinates are hopeless. Sweep to watch the slices add up.
+</p>
+<solid-3d axes="xyz" xmin="-1" xmax="1" g1="-sqrt(1-x*x)" g2="sqrt(1-x*x)" u1="-sqrt(1-x*x-y*y)" u2="sqrt(1-x*x-y*y)" f="exp(pow(x*x+y*y+z*z,1.5))" sweep="z" tall></solid-3d>
+<table>
+  <tr><td>The integrand and the ball</td><td><reveal>\((x^2+y^2+z^2)^{3/2}=\rho^3\). Ball: \(0\le\rho\le1,\ 0\le\varphi\le\pi,\ 0\le\theta\le2\pi\).</reveal></td></tr>
+  <tr><td>Set up</td><td><reveal>\(\displaystyle\int_0^{2\pi}\!\!\int_0^{\pi}\!\!\int_0^1e^{\rho^3}\,\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta\)</reveal></td></tr>
+  <tr><td>Evaluate. What substitution is waiting?</td><td><reveal>The Jacobian supplies \(\rho^2\), exactly the derivative of \(\rho^3\) up to a factor: \(\int_0^1\rho^2e^{\rho^3}d\rho=\tfrac13(e-1)\). Then \(\int_0^\pi\sin\varphi\,d\varphi=2\) and \(\int_0^{2\pi}d\theta=2\pi\): \(\ \mathbf{\tfrac{4\pi}3(e-1)}\approx7.20\).</reveal></td></tr>
+  <tr><td>Check the machinery</td><td><reveal>With \(f=1\) and radius \(R\): \(\int_0^{2\pi}\!\!\int_0^\pi\!\!\int_0^R\rho^2\sin\varphi\,d\rho\,d\varphi\,d\theta=\tfrac{4}{3}\pi R^3\). The volume of a ball, with no tricks.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Summary</div>
+          <div class="step-subtitle">The one-page version</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>Cylindrical</b></td><td>\(x=r\cos\theta,\ y=r\sin\theta,\ z=z\). \(\ dV=\boxed{r}\,dz\,dr\,d\theta\). Surfaces: \(r=c\) cylinder, \(\theta=c\) half-plane, \(z=c\) plane.</td></tr>
+  <tr><td><b>Spherical</b></td><td>\(x=\rho\sin\varphi\cos\theta,\ y=\rho\sin\varphi\sin\theta,\ z=\rho\cos\varphi\). \(\ dV=\boxed{\rho^2\sin\varphi}\,d\rho\,d\varphi\,d\theta\). Surfaces: \(\rho=c\) sphere, \(\theta=c\) half-plane, \(\varphi=c\) cone.</td></tr>
+  <tr><td><b>Why the extra factor</b></td><td>Coordinate pieces are curved: arc lengths are \(r\,d\theta\), \(\rho\,d\varphi\), \(\rho\sin\varphi\,d\theta\), not the bare angle.</td></tr>
+  <tr><td><b>Procedure</b></td><td>Sketch \(E\). Rewrite the boundary surfaces. Find the shadow or the angle ranges. Convert \(f\). Multiply by the Jacobian. Integrate inside out.</td></tr>
+  <tr><td><b>Link</b></td><td>\(r=\rho\sin\varphi\) and \(z=\rho\cos\varphi\) turn cylindrical into spherical.</td></tr>
+  <tr><td><b>Answers today</b></td><td>\(\tfrac{4\pi}{15}\), \(\tfrac{5\pi}{6}\), \(\tfrac{8\pi}{3}(2-\sqrt2)\), \(2\pi\), \(\tfrac{16\pi}{5}\), \(\tfrac{4\pi}{3}(e-1)\).</td></tr>
+</table>
+<p class="muted small">Homework: OpenStax 5.5 checkpoints and exercises on converting points, sketching \(\rho=c\), \(\varphi=c\), \(r=c\), and the solid inside the cylinder \(r=1\) and the sphere \(\rho=2\) (volume \(2\pi(\tfrac{16}3-2\sqrt3)\)). Next: line integrals.</p>
           </div>
         </div>
 

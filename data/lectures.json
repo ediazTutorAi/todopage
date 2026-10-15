@@ -212,9 +212,13 @@
     "date": "2026-03-18",
     "title": "Cylindrical and Spherical Integrals",
     "subtitle": "",
-    "description": "",
+    "description": "Triple integrals in cylindrical and spherical coordinates (OpenStax 5.5, a 50 minute class): place a point and fix one coordinate at a time to see the surfaces, cut out the small coordinate piece to see where r and rho^2 sin(phi) come from, then set up and evaluate integrals over cones, paraboloids and balls.",
     "tags": [
-      "Cylindrical Integrals"
+      "cylindrical coordinates",
+      "spherical coordinates",
+      "triple integrals",
+      "change of variables",
+      "volume element"
     ],
     "url": "calculus3/fall2025/2025-10-15-cylindrical-sphericals-coordinates/index.html"
   },

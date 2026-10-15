@@ -773,3 +773,22 @@ Plain HTML/CSS grid diagrams (`css/steps.css`, `.cd`, `.cd-thm`, `.cd-pair`) whe
 instructor fills them in live. Used in `linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation/` (Definition 4.3.1 squares,
 Example 4, change-of-basis triangle, Theorem 4.3.5 diagram, Example 8). Cells go node, `.cd-h` arrow, node, then `.cd-v` arrows on the next row;
 `.cd-thm` is 5 columns with the tall `S` arrows in columns 1 and 5. That lesson also gained Example 7 (plane in R^3) from the book.
+
+### `<coord-3d>` and the Cylindrical/Spherical Integrals lesson (added 2026-10-15)
+
+`<coord-3d mode="cyl|sph" r|rho theta z|phi surfaces wedge d="0.5,30,0.5">` (`js/coord3d.js`, imported by `boot.js`, no CDN tags;
+reuses the `.riemann-*` CSS and `.jsx-transform-controls`/`.jsx-slider-row`). Canvas 3D like `<solid-3d>`, drag to rotate. Colors are fixed on
+this tag: blue = r/rho, orange = theta, green = z/phi. Three uses:
+
+- default: a point with three sliders, the construction drawn (r on the floor, theta arc, z up; or rho, theta on the floor, phi from +z), and a
+  readout converting to x, y, z. Start values in radians, `pi` allowed (`theta="2*pi/3"`).
+- `surfaces`: "fix r / theta / z" (or rho / theta / phi) buttons draw the surface through the point. The chip shows only the held value, never the
+  surface name, so the class can guess first.
+- `wedge`: the small coordinate piece with labeled edges (`dr`, `r dθ`, `dz` / `dρ`, `ρ sin φ dθ`, `ρ dφ`), size sliders (`d` = lengths and DEGREES),
+  and a readout comparing the exact piece volume with `r* dr dθ dz` / `ρ*² sin φ* dρ dφ dθ` and the naive version without the Jacobian. The view
+  zooms to the piece in this mode.
+
+Lesson: `calculus3/fall2025/2025-10-15-cylindrical-sphericals-coordinates/` (OpenStax 5.5, 11 steps timed for 50 minutes in `content.json` `notes`;
+replaced a 7-step stub that used GeoGebra). `content.json` + `index.html` were generated from one step list, so edit both if you hand-edit either.
+Examples use `<solid-3d>` written in Cartesian limits (cone/paraboloid 4pi/15, ice cream cone 8pi(2-sqrt2)/3 and 2pi, converted integral 16pi/5,
+unit ball 4pi(e-1)/3), all checked with sympy and against the sweep readouts. `<solid-3d>` numeric attributes (`xmin`...) have no `sqrt` in scope: write `1.4142`.
