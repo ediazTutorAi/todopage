@@ -55,7 +55,20 @@
 </table>
 <p><b>Definition 4.3.1.</b> Let \(T:V\to V\) be linear, \(\dim V=n\), \(\mathfrak{B}\) a basis. The \(\mathfrak{B}\)-matrix of \(T\) is the standard matrix \(B\) of \(L_{\mathfrak{B}}\circ T\circ L_{\mathfrak{B}}^{-1}\):</p>
 $$[T(f)]_{\mathfrak{B}}=B\,[f]_{\mathfrak{B}}\qquad\text{for all }f\text{ in }V.$$
-<p class="muted small">Diagram: \(f\mapsto T(f)\) on top, \([f]_{\mathfrak{B}}\mapsto[T(f)]_{\mathfrak{B}}\) below (multiply by \(B\)), with \(L_{\mathfrak{B}}\) down the sides.</p>
+<p class="muted small">Fill in the two diagrams (click each blank): the same square for spaces and for elements.</p>
+<div class="cd-pair">
+<div class="cd">
+<div class="cd-n">\(V\)</div><div class="cd-h"><span class="cd-lab">\(T\)</span><span class="cd-glyph">⟶</span></div><div class="cd-n">\(V\)</div>
+<div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div><div></div><div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div>
+<div class="cd-n"><reveal>\(\mathbb{R}^n\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(B\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\(\mathbb{R}^n\)</reveal></div>
+</div>
+<div class="cd">
+<div class="cd-n">\(f\)</div><div class="cd-h"><span class="cd-lab">\(T\)</span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\(T(f)\)</reveal></div>
+<div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div><div></div><div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div>
+<div class="cd-n"><reveal>\([f]_{\mathfrak{B}}\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(B\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\([T(f)]_{\mathfrak{B}}\)</reveal></div>
+</div>
+</div>
+<p class="cd-caption">Across then down, or down then across, gives the same result, so \([T(f)]_{\mathfrak{B}}=B[f]_{\mathfrak{B}}\).</p>
           </div>
         </div>
 
@@ -107,9 +120,13 @@ $$B=\begin{bmatrix}|&&|\\ [T(f_1)]_{\mathfrak{B}}&\cdots&[T(f_n)]_{\mathfrak{B}}
           <div class="step-subtitle">A transformation on matrices: kernel and image through \(B\)</div>
           <div class="step-body">
 <p>Let \(T(M)=\begin{bmatrix}0&1\\0&0\end{bmatrix}M-M\begin{bmatrix}0&1\\0&0\end{bmatrix}\) from \(\mathbb{R}^{2\times2}\) to \(\mathbb{R}^{2\times2}\). Use the standard basis \(\mathfrak{B}=(E_{11},E_{12},E_{21},E_{22})\), so \(\begin{bmatrix}a&b\\c&d\end{bmatrix}\) has coordinates \(\begin{bmatrix}a\\b\\c\\d\end{bmatrix}\).</p>
+<div class="cd">
+<div class="cd-n">\(\begin{bmatrix}a&b\\c&d\end{bmatrix}\)</div><div class="cd-h"><span class="cd-lab">\(T\)</span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\(\begin{bmatrix}c&d-a\\0&-c\end{bmatrix}\)</reveal></div>
+<div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div><div></div><div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div>
+<div class="cd-n">\(\begin{bmatrix}a\\b\\c\\d\end{bmatrix}\)</div><div class="cd-h"><span class="cd-lab"><reveal>\(B\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\(\begin{bmatrix}c\\d-a\\0\\-c\end{bmatrix}\)</reveal></div>
+</div>
 <table>
-  <tr><td>Compute \(T\) on \(\begin{bmatrix}a&b\\c&d\end{bmatrix}\)</td><td><reveal>\(\begin{bmatrix}c&d\\0&0\end{bmatrix}-\begin{bmatrix}0&a\\0&c\end{bmatrix}=\begin{bmatrix}c&d-a\\0&-c\end{bmatrix}\), coordinates \(\begin{bmatrix}c\\d-a\\0\\-c\end{bmatrix}\)</reveal></td></tr>
-  <tr><td>(a) the \(4\times4\) matrix \(B\)</td><td><reveal>\(B=\begin{bmatrix}0&0&1&0\\-1&0&0&1\\0&0&0&0\\0&0&-1&0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>(a) read the \(4\times4\) matrix \(B\) off the bottom arrow</td><td><reveal>\(B=\begin{bmatrix}0&0&1&0\\-1&0&0&1\\0&0&0&0\\0&0&-1&0\end{bmatrix}\)</reveal></td></tr>
   <tr><td>(b) bases of \(\operatorname{im}(B)\) and \(\ker(B)\)</td><td><reveal>Column 2 is \(\vec0\) and column 4 is \(-\)column 1, so \(\vec v_1=\begin{bmatrix}0\\-1\\0\\0\end{bmatrix}\), \(\vec v_3=\begin{bmatrix}1\\0\\0\\-1\end{bmatrix}\) form a basis of the image, and \(\begin{bmatrix}0\\1\\0\\0\end{bmatrix}\), \(\begin{bmatrix}1\\0\\0\\1\end{bmatrix}\) a basis of the kernel.</reveal></td></tr>
   <tr><td>(c) translate back to matrices</td><td><reveal>\(\operatorname{im}(T)\): \(\begin{bmatrix}0&-1\\0&0\end{bmatrix},\begin{bmatrix}1&0\\0&-1\end{bmatrix}\). \(\ker(T)\): \(\begin{bmatrix}0&1\\0&0\end{bmatrix},\ I_2\). So rank 2 and nullity 2.</reveal></td></tr>
 </table>
@@ -123,6 +140,13 @@ $$B=\begin{bmatrix}|&&|\\ [T(f_1)]_{\mathfrak{B}}&\cdots&[T(f_n)]_{\mathfrak{B}}
           <div class="step-body">
 <p>Let \(\mathfrak{A}\) and \(\mathfrak{B}\) be two bases of \(V\). The <b>change of basis matrix</b> from \(\mathfrak{B}\) to \(\mathfrak{A}\) is the standard matrix \(S\) of \(L_{\mathfrak{A}}\circ L_{\mathfrak{B}}^{-1}\):</p>
 $$[f]_{\mathfrak{A}}=S\,[f]_{\mathfrak{B}},\qquad S_{\mathfrak{B}\to\mathfrak{A}}=\begin{bmatrix}|&&|\\ [b_1]_{\mathfrak{A}}&\cdots&[b_n]_{\mathfrak{A}}\\ |&&|\end{bmatrix},\qquad S_{\mathfrak{A}\to\mathfrak{B}}=(S_{\mathfrak{B}\to\mathfrak{A}})^{-1}.$$
+<div class="cd-pair">
+<div class="cd">
+<div class="cd-n"></div><div class="cd-n">\(f\)</div><div class="cd-n"></div>
+<div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↙</span></div><div></div><div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{A}}\)</reveal></span><span class="cd-glyph">↘</span></div>
+<div class="cd-n"><reveal>\([f]_{\mathfrak{B}}\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(S\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\([f]_{\mathfrak{A}}\)</reveal></div>
+</div>
+</div>
 <p class="muted small">
   <b>Example 5.</b> \(V=\operatorname{span}(e^x,e^{-x})\), \(\mathfrak{A}=(e^x,e^{-x})\), \(\mathfrak{B}=(e^x+e^{-x},\ e^x-e^{-x})\). Find \(S=S_{\mathfrak{B}\to\mathfrak{A}}\).
 </p>
@@ -135,6 +159,11 @@ $$[f]_{\mathfrak{A}}=S\,[f]_{\mathfrak{B}},\qquad S_{\mathfrak{B}\to\mathfrak{A}
   Special case (Example 6): if \(\mathfrak{A}\) is the standard basis of \(\mathbb{R}^n\), then \([\vec x]_{\mathfrak{A}}=\vec x\) and \(S=\begin{bmatrix}\vec b_1&\cdots&\vec b_n\end{bmatrix}\),
   the matrix we used in Section 3.4. For a subspace of \(\mathbb{R}^n\) this reads \(\begin{bmatrix}\vec b_1&\cdots&\vec b_n\end{bmatrix}=\begin{bmatrix}\vec a_1&\cdots&\vec a_n\end{bmatrix}S\) (Theorem 4.3.4).
 </p>
+<p class="muted small"><b>Example 7.</b> The plane \(x_1+x_2+x_3=0\) in \(\mathbb{R}^3\) has bases \(\mathfrak{A}=(\vec a_1,\vec a_2)=\left(\begin{bmatrix}0\\1\\-1\end{bmatrix},\begin{bmatrix}1\\0\\-1\end{bmatrix}\right)\) and \(\mathfrak{B}=(\vec b_1,\vec b_2)=\left(\begin{bmatrix}1\\2\\-3\end{bmatrix},\begin{bmatrix}4\\-1\\-3\end{bmatrix}\right)\).</p>
+<table>
+  <tr><td>(a) write \(\vec b_1,\vec b_2\) in terms of \(\vec a_1,\vec a_2\)</td><td><reveal>\(\vec b_1=2\vec a_1+\vec a_2\) and \(\vec b_2=-\vec a_1+4\vec a_2\), so \(S_{\mathfrak{B}\to\mathfrak{A}}=\begin{bmatrix}2&-1\\1&4\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>(b) verify \(\begin{bmatrix}\vec b_1&\vec b_2\end{bmatrix}=\begin{bmatrix}\vec a_1&\vec a_2\end{bmatrix}S\)</td><td><reveal>\(\begin{bmatrix}1&4\\2&-1\\-3&-3\end{bmatrix}=\begin{bmatrix}0&1\\1&0\\-1&-1\end{bmatrix}\begin{bmatrix}2&-1\\1&4\end{bmatrix}\). Columns of \(S\) are the coordinates of \(\vec b_1,\vec b_2\) in \(\mathfrak{A}\).</reveal></td></tr>
+</table>
           </div>
         </div>
 
@@ -145,6 +174,14 @@ $$[f]_{\mathfrak{A}}=S\,[f]_{\mathfrak{B}},\qquad S_{\mathfrak{B}\to\mathfrak{A}
 <p>Let \(T:V\to V\) be linear, \(A\) its \(\mathfrak{A}\)-matrix, \(B\) its \(\mathfrak{B}\)-matrix, and \(S\) the change of basis matrix from \(\mathfrak{B}\) to \(\mathfrak{A}\). Then</p>
 $$AS=SB\qquad\text{or}\qquad A=SBS^{-1}\qquad\text{or}\qquad B=S^{-1}AS,$$
 <p>so \(A\) and \(B\) are <b>similar</b>.</p>
+<div class="cd cd-thm">
+<div class="cd-v cd-tall" style="grid-row:1/6;grid-column:1"><span class="cd-lab"><reveal>\(S\)</reveal></span><span class="cd-glyph">↑</span></div><div class="cd-n"><reveal>\([f]_{\mathfrak{A}}\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(A\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\([T(f)]_{\mathfrak{A}}\)</reveal></div><div class="cd-v cd-tall" style="grid-row:1/6;grid-column:5"><span class="cd-lab"><reveal>\(S\)</reveal></span><span class="cd-glyph">↑</span></div>
+<div class="cd-v" style="grid-column:2"><span class="cd-lab"><reveal>\(L_{\mathfrak{A}}\)</reveal></span><span class="cd-glyph">↑</span></div><div></div><div class="cd-v" style="grid-column:4"><span class="cd-lab"><reveal>\(L_{\mathfrak{A}}\)</reveal></span><span class="cd-glyph">↑</span></div>
+<div class="cd-n">\(f\)</div><div class="cd-h"><span class="cd-lab">\(T\)</span><span class="cd-glyph">⟶</span></div><div class="cd-n">\(T(f)\)</div>
+<div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div><div></div><div class="cd-v"><span class="cd-lab"><reveal>\(L_{\mathfrak{B}}\)</reveal></span><span class="cd-glyph">↓</span></div>
+<div class="cd-n"><reveal>\([f]_{\mathfrak{B}}\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(B\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\([T(f)]_{\mathfrak{B}}\)</reveal></div>
+</div>
+<p class="cd-caption">Click every blank, then read the outside of the diagram.</p>
 <table>
   <tr><td>Start from \(f\) in \(\mathfrak{A}\)-coordinates</td><td><reveal>\([T(f)]_{\mathfrak{A}}=A\,[f]_{\mathfrak{A}}\), and \([f]_{\mathfrak{A}}=S\,[f]_{\mathfrak{B}}\), so \([T(f)]_{\mathfrak{A}}=AS\,[f]_{\mathfrak{B}}\).</reveal></td></tr>
   <tr><td>Go the other way around the diagram</td><td><reveal>\([T(f)]_{\mathfrak{B}}=B\,[f]_{\mathfrak{B}}\), and converting the output to \(\mathfrak{A}\) gives \([T(f)]_{\mathfrak{A}}=S\,[T(f)]_{\mathfrak{B}}=SB\,[f]_{\mathfrak{B}}\).</reveal></td></tr>
@@ -155,6 +192,11 @@ $$AS=SB\qquad\text{or}\qquad A=SBS^{-1}\qquad\text{or}\qquad B=S^{-1}AS,$$
   <b>Example 8.</b> \(V=\operatorname{span}(e^x,e^{-x})\), \(D(f)=f'\), \(\mathfrak{A}=(e^x,e^{-x})\), \(\mathfrak{B}=(e^x+e^{-x},\ e^x-e^{-x})\) as in Example 5.
   (a) Find the \(\mathfrak{A}\)-matrix \(A\). (b) Use (a), Theorem 4.3.5 and Example 5 to find the \(\mathfrak{B}\)-matrix \(B\). (c) Find \(B\) again from Theorem 4.3.2.
 </p>
+<div class="cd">
+<div class="cd-n">\(ae^x+be^{-x}\)</div><div class="cd-h"><span class="cd-lab">\(D\)</span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\(ae^x-be^{-x}\)</reveal></div>
+<div class="cd-v"><span class="cd-lab">\(L_{\mathfrak{A}}\)</span><span class="cd-glyph">↓</span></div><div></div><div class="cd-v"><span class="cd-lab">\(L_{\mathfrak{A}}\)</span><span class="cd-glyph">↓</span></div>
+<div class="cd-n">\(\begin{bmatrix}a\\b\end{bmatrix}\)</div><div class="cd-h"><span class="cd-lab"><reveal>\(A=\begin{bmatrix}1&0\\0&-1\end{bmatrix}\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n"><reveal>\(\begin{bmatrix}a\\-b\end{bmatrix}\)</reveal></div>
+</div>
 <table>
   <tr><td>(a) \(D(e^x)\) and \(D(e^{-x})\)</td><td><reveal>\(D(e^x)=e^x\) and \(D(e^{-x})=-e^{-x}\) (chain rule)</reveal></td></tr>
   <tr><td>(a) \(A\)</td><td><reveal>Columns \(\begin{bmatrix}1\\0\end{bmatrix}\) and \(\begin{bmatrix}0\\-1\end{bmatrix}\): \(A=\begin{bmatrix}1&0\\0&-1\end{bmatrix}\)</reveal></td></tr>

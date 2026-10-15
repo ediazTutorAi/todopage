@@ -577,3 +577,17 @@ reveal.triangle-overlay:not(.is-revealed) {
 .flow-label { fill: var(--muted); font: 700 18px system-ui, sans-serif; }
 
 .jsx-board--angle-sum { aspect-ratio: 2.6 / 1; }
+
+/* Commutative diagrams built from a CSS grid; every node and arrow label can be a <reveal>
+   (see linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation). .cd is the 3x3
+   square (node, arrow, node); .cd-thm is the 5-column "S | square | S" diagram of Theorem 4.3.5. */
+.cd { display: grid; grid-template-columns: auto minmax(5.5em, auto) auto; align-items: center; justify-items: center; gap: 0.3rem 0.8rem; width: fit-content; margin: 0.8rem auto; font-size: 1.1em; }
+.cd-thm { grid-template-columns: auto auto minmax(5.5em, auto) auto auto; }
+.cd-h, .cd-v { display: flex; align-items: center; justify-content: center; color: var(--accent); }
+.cd-h { flex-direction: column; gap: 0; line-height: 1.2; }
+.cd-v { flex-direction: row; gap: 0.5rem; }
+.cd-v.cd-tall { flex-direction: row; }
+.cd-glyph { font-size: 1.7em; line-height: 1; }
+.cd-n { text-align: center; }
+.cd-pair { display: flex; flex-wrap: wrap; gap: 0.5rem 3rem; justify-content: center; align-items: flex-start; }
+.cd-caption { text-align: center; margin: 0; }

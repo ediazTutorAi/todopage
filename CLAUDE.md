@@ -766,3 +766,10 @@ reinstalling this exact version reuses that cache instead of re-downloading.
 
 Do **not** switch back to a caret/range version for `electron` in `editor-app` without a
 good reason — the exact pin is what makes installs there reliable.
+
+### `.cd` commutative diagrams (added 2026-10-14)
+
+Plain HTML/CSS grid diagrams (`css/steps.css`, `.cd`, `.cd-thm`, `.cd-pair`) where every node and arrow label can be a `<reveal>`, so the
+instructor fills them in live. Used in `linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation/` (Definition 4.3.1 squares,
+Example 4, change-of-basis triangle, Theorem 4.3.5 diagram, Example 8). Cells go node, `.cd-h` arrow, node, then `.cd-v` arrows on the next row;
+`.cd-thm` is 5 columns with the tall `S` arrows in columns 1 and 5. That lesson also gained Example 7 (plane in R^3) from the book.
