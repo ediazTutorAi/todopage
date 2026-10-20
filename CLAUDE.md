@@ -827,12 +827,30 @@ checked with sympy (and a grid sum for the parallelogram and the curved region).
 the readout always has the exact values. Always-present "Unit vectors / True lengths" toggle (the normalized field). `fields=` puts several fields behind buttons on one
 board (used for tables of examples and for the matching exercise). `potential=` draws level curves plus the live level curve through the probe and uses the gradient as the
 field (so "grad f is perpendicular to level curves" is watched). `flow` adds Release/Pause/Clear: an RK4 particle with `dr/dt = F(r)` leaves a flow line. `cross` adds the
-cross-partial readout `P_y` vs `Q_x` at the probe ("NOT equal: not conservative"). Expressions are plain JS in x, y (`^` accepted for powers, but write `-(x^3)`, JS rejects `-x**3`).
+cross-partial readout `P_y` vs `Q_x` at the probe ("NOT equal: not conservative"). Expressions are plain JS in x, y (`^` is accepted for powers and rewritten to `pow()` by `powFix`, so `-x^3` and `y^-1` work; no nested parentheses inside a base or exponent).
 Field names are used as labels, so keep them short (F, G, A, W, F+G).
 
-Lesson: `calculus3/fall2025/2025-11-01-vector-fields/` (OpenStax 6.1, 11 steps timed for 40 minutes in `content.json` `notes`, entry in `lectures.json` dated 2026-03-22, just before
-Line Integrals). `content.json` + `index.html` generated from one step list, so edit both if you hand-edit either. Examples follow 6.1 (Examples 6.1 to 6.13, Checkpoints) plus extras:
-a normalization example, a failing potential check, a 3D potential check (`x^2 cos(yz) + y^2 z^2`), finding a potential for `<2xy+3, x^2+4y>` (`x^2 y + 3x + 2y^2`), flow-line
-verifications, constructing fields (Ex. 21 and two more) and the F/G/H matching exercise. Checkpoint answers are not printed on the OpenStax page, so all were checked with sympy.
-The OpenStax text of Checkpoint 6.9 is unreliable in the fetched copy, so a different 3D check was used instead. Teaching point worth keeping: the whirlpool `<y,-x>/(x^2+y^2)` passes
-the cross-partial test (`P_y = Q_x`) but is not conservative (circulation `-2 pi` on the unit circle), which is why the theorem is only a necessary condition.
+`editable` (added 2026-10-21, used in step 1 of the lesson): the point (x, y) and the formulas P and Q become text inputs, and the page draws the point and the vector
+F(point) to scale with its tail there plus the dashed legs P and Q. `p`/`q`/`probe` are the starting values; `presets="Name: P ; Q @ x,y | ..."` adds one-click examples (Example 1,
+Checkpoint 1, the whirlpool at the origin where F is undefined); a button shows/hides the whole field. Typed formulas go through `compileSoft` (no console logging while someone is
+mid-typing; an inline message appears instead: write `2*x`, not `2x`). A vector that leaves the board is flagged "runs off the picture". Step 1 has no static examples anymore;
+the Example 6.1 and Checkpoint 6.1 numbers (`<-2,1>` at (0,-1), `<12,-1>` at (-2,3)) live in the presets.
+
+Every diagram in that lesson has `flow` (Release particle). A particle stops when it leaves the board, reaches a zero or undefined vector, or after 6000 points; the button then resets itself.
+
+Lesson: `calculus3/fall2025/2025-11-01-vector-fields/` (OpenStax 6.1, 12 steps timed for 40 minutes in `content.json` `notes`, entry in `lectures.json` dated 2026-03-22, just before
+Line Integrals). `content.json` + `index.html` generated from one step list, so edit both if you hand-edit either. **Slides carry the textbook's own wording, no added commentary** (user
+preference, 2026-10-21): definitions and theorems are in a `.defbox` (boxed, labeled; styled in `css/steps.css`) with the book's text (vector field, radial, rotational, unit/normalizing,
+gradient field + potential, Theorem 6.1, Theorem 6.2, flow line), then the diagram, then Examples 6.1 to 6.13, Checkpoints and Exercises (15 to 31, 32 to 38) as short reveal rows. The exact
+book text was read from the OpenStax page source (the page is server-rendered; MathML converts cleanly), because summaries of it disagreed: Checkpoint 6.2 is -x/3, -y/3, Checkpoint 6.6 is
+<2, z/2, 1>, Theorem 6.2 asks for continuous *first*-order partials, Example 6.5's answer is sqrt 2. The book is CC BY-NC-SA 4.0: the last slide carries the attribution line. Checkpoint
+6.11's printed field is garbled in the source, so it is left out.
+
+## Using OpenStax text in lessons
+
+OpenStax content is openly licensed, so lesson slides may use the textbook's own wording (definitions, theorems, examples, checkpoints, exercises), and that is the preferred way
+to write them: quote the book rather than paraphrase it, and box definitions and theorems (`.defbox`). Check the license on the book's own "Citation/Attribution" section before
+relying on it: **Calculus Volume 3 is CC BY-NC-SA 4.0** (attribution, noncommercial, share-alike), as stated at the bottom of each of its pages. Some other OpenStax books are plain
+CC BY. For these lessons (free classroom use) that is fine as long as the page carries a short attribution line, e.g. on the last slide: "Source: OpenStax, *Calculus Volume 3*,
+Section X.Y (Strang, Herman), CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3." Reproduce the text from the page source rather than from a summary:
+OpenStax pages are server-rendered, so `curl` the page and convert the MathML (`<math>` elements) to TeX; summaries of the same page have disagreed on exact formulas before.

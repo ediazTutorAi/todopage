@@ -48,208 +48,206 @@
 
         <!-- STEPS -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">What Is a Vector Field?</div>
-          <div class="step-subtitle">Definition, notation, and Example 1</div>
+          <div class="step-title">Vector Fields</div>
+          <div class="step-subtitle">Definition</div>
           <div class="step-body">
-<p>A <b>vector field</b> attaches a vector to every point of its domain. Think of a weather map: at each point of the map, an arrow gives the wind there. Or the surface of a river: at each point, the velocity of the water.</p>
-<p><b>In \(\mathbb{R}^2\):</b> \(\vec F(x,y)=\langle P(x,y),\,Q(x,y)\rangle=P\,\mathbf i+Q\,\mathbf j\), defined on a region \(D\subseteq\mathbb{R}^2\).</p>
-<p><b>In \(\mathbb{R}^3\):</b> \(\vec F(x,y,z)=\langle P,Q,R\rangle=P\,\mathbf i+Q\,\mathbf j+R\,\mathbf k\), defined on \(D\subseteq\mathbb{R}^3\).</p>
-<p class="muted small">The input is a <b>point</b>, the output is a <b>vector</b>. Compare: a scalar function \(f(x,y)\) outputs a number. \(\vec F\) is <b>continuous</b> if \(P\), \(Q\) (and \(R\)) are. To draw it, put the tail of \(\vec F(x,y)\) at the point \((x,y)\).</p>
-<table>
-  <tr><td>Example 1. \(\vec F(x,y)=(2y^2+x-4)\,\mathbf i+\cos x\,\mathbf j\). Find \(\vec F(0,-1)\)</td><td><reveal>\(P(0,-1)=2(1)+0-4=-2\) and \(Q(0,-1)=\cos0=1\). So \(\vec F(0,-1)=-2\,\mathbf i+\mathbf j\), drawn with its tail at \((0,-1)\).</reveal></td></tr>
-  <tr><td>Checkpoint 1. \(\vec G(x,y)=x^2y\,\mathbf i-(x+y)\,\mathbf j\). Find \(\vec G(-2,3)\)</td><td><reveal>\(x^2y=4\cdot3=12\) and \(-(x+y)=-(1)=-1\): \(\ \vec G(-2,3)=12\,\mathbf i-\mathbf j\).</reveal></td></tr>
-  <tr><td>What is the <b>domain</b> of \(\vec F=\Big\langle\dfrac{y}{x^2+y^2},\ \dfrac{-x}{x^2+y^2}\Big\rangle\)?</td><td><reveal>Every point except the origin: \(\mathbb{R}^2\setminus\{(0,0)\}\).</reveal></td></tr>
-</table>
-<p class="muted small">Plan: radial and rotational fields, unit fields, fields in space, gradient (conservative) fields, how to test for them, flow lines, and building fields. Every picture below is live: drag the red point.</p>
+<div class="defbox"><div class="defbox-label">Definition</div>
+<p>A vector field \(\vec F\) in \(\mathbb{R}^2\) is an assignment of a two-dimensional vector \(\vec F(x,y)\) to each point \((x,y)\) of a subset \(D\) of \(\mathbb{R}^2\). The subset \(D\) is the <b>domain</b> of the vector field.</p>
+<p>A vector field \(\vec F\) in \(\mathbb{R}^3\) is an assignment of a three-dimensional vector \(\vec F(x,y,z)\) to each point \((x,y,z)\) of a subset \(D\) of \(\mathbb{R}^3\). The subset \(D\) is the <b>domain</b> of the vector field.</p>
+</div>
+<p>A vector field in \(\mathbb{R}^2\) can be represented in either of two equivalent ways:</p>
+$$\vec F(x,y)=\langle P(x,y),Q(x,y)\rangle,\qquad \vec F(x,y)=P(x,y)\,\mathbf i+Q(x,y)\,\mathbf j.$$
+<p>A vector field is said to be <b>continuous</b> if its component functions are continuous.</p>
+<jsx-vector-field editable p="2*y^2+x-4" q="cos(x)" probe="0,-1" xmin="-8" xmax="14" step="1" presets="Example 6.1: 2*y^2+x-4 ; cos(x) @ 0,-1 | Checkpoint 6.1: x^2*y ; -(x+y) @ -2,3 | Radial: x/2 ; y/2 @ 2,1 | Whirlpool at the origin: y/(x^2+y^2) ; -x/(x^2+y^2) @ 0,0"></jsx-vector-field>
           </div>
         </div>
 
         <div class="step is-visible" data-step="2">
           <div class="step-title">Radial Fields</div>
-          <div class="step-subtitle">Example 2 and Checkpoint 2</div>
+          <div class="step-subtitle">Example 6.2 and Checkpoint 6.2</div>
           <div class="step-body">
-<p>A <b>radial field</b> points directly away from (or toward) the origin, with a magnitude that depends only on the distance from the origin. Each vector is perpendicular to the circle centered at the origin through its tail.</p>
-<p class="muted small">Switch between \(F=\langle \tfrac x2,\tfrac y2\rangle\) (Example 2) and \(G=\langle -x^3,-y^3\rangle\) (Checkpoint 2). Drag the red point and watch the vector there. Arrow lengths are scaled to fit the picture, so read the exact vector in the readout.</p>
-<jsx-vector-field fields="F: x/2 ; y/2 | G: -(x^3) ; -(y^3)" xmin="-6" xmax="6" step="1" probe="2,1"></jsx-vector-field>
-<table>
-  <tr><td>\(F(x,y)=\langle\tfrac x2,\tfrac y2\rangle\). Compute \(F(4,0)\), \(F(0,-2)\), \(F(2,2)\)</td><td><reveal>\(\langle2,0\rangle,\ \langle0,-1\rangle,\ \langle1,1\rangle\). Each points away from the origin.</reveal></td></tr>
-  <tr><td>How does \(\|F\|\) behave?</td><td><reveal>\(\|F\|=\tfrac12\sqrt{x^2+y^2}\): zero at the origin and growing <b>linearly</b> with distance.</reveal></td></tr>
-  <tr><td>Show \(F\) is perpendicular to the circle through \((x,y)\). A tangent vector there is \(\langle-y,x\rangle\)</td><td><reveal>\(F\cdot\langle-y,x\rangle=-\tfrac{xy}2+\tfrac{xy}2=0\). Yes: radial means perpendicular to the circles.</reveal></td></tr>
-  <tr><td>\(G=\langle-x^3,-y^3\rangle\): inward or outward? Compare \(\|G\|\) at \((1,1)\) and \((2,2)\)</td><td><reveal>Inward (it points opposite to \(\langle x,y\rangle\)). \(\|G(1,1)\|=\sqrt2\) but \(\|G(2,2)\|=8\sqrt2\): the magnitude grows like the <b>cube</b> of the position, much faster than \(F\).</reveal></td></tr>
-</table>
+<div class="defbox"><div class="defbox-label">Radial field</div>
+<p>In a radial field, all vectors either point directly toward or directly away from the origin. Furthermore, the magnitude of any vector depends only on its distance from the origin.</p>
+<p>The vector located at point \((x,y)\) is perpendicular to the circle centered at the origin that contains point \((x,y)\), and all other vectors on this circle have the same magnitude.</p>
+</div>
+<p>Example 6.2: sketch the vector field \(\vec F(x,y)=\dfrac x2\,\mathbf i+\dfrac y2\,\mathbf j\). &nbsp; Checkpoint 6.2: draw the radial field \(\vec G(x,y)=-\dfrac x3\,\mathbf i-\dfrac y3\,\mathbf j\).</p>
+<jsx-vector-field fields="F: x/2 ; y/2 | G: -x/3 ; -y/3" xmin="-6" xmax="6" step="1" probe="2,1" flow></jsx-vector-field>
           </div>
         </div>
 
         <div class="step is-visible" data-step="3">
-          <div class="step-title">Rotational Fields and Whirlpools</div>
-          <div class="step-subtitle">Examples 3, 4, 5 and Checkpoints 3, 4</div>
+          <div class="step-title">Rotational Fields</div>
+          <div class="step-subtitle">Examples 6.3, 6.4, 6.5 and Checkpoints 6.3, 6.4</div>
           <div class="step-body">
-<p>A <b>rotational field</b> is tangent to circles centered at the origin, all turning the same way, with magnitude depending only on the distance. Press <b>Release particle</b>: it moves with the field, \(\dfrac{d\vec r}{dt}=\vec F(\vec r)\), and traces its path.</p>
+<div class="defbox"><div class="defbox-label">Rotational field</div>
+<p>In a rotational field, the vector at point \((x,y)\) is tangent (not perpendicular) to a circle with radius \(r=\sqrt{x^2+y^2}\). In a standard rotational field, all vectors point either in a clockwise direction or in a counterclockwise direction, and the magnitude of a vector depends only on its distance from the origin.</p>
+</div>
+<p>A: Example 6.3, \(\vec F=\langle y,-x\rangle\). &nbsp; B: Checkpoint 6.3, \(\vec F=\langle-2y,2x\rangle\). &nbsp; W: Example 6.4, \(\vec F=\dfrac{y}{x^2+y^2}\mathbf i-\dfrac{x}{x^2+y^2}\mathbf j\).</p>
 <jsx-vector-field fields="A: y ; -x | B: -2*y ; 2*x | W: y/(x^2+y^2) ; -x/(x^2+y^2)" xmin="-6" xmax="6" step="1" probe="3,0" flow></jsx-vector-field>
-<p class="muted small">A: \(\langle y,-x\rangle\) (Example 3). B: \(\langle-2y,2x\rangle\) (Checkpoint 3). W: \(\Big\langle\tfrac{y}{x^2+y^2},\tfrac{-x}{x^2+y^2}\Big\rangle\) (Example 4, a whirlpool).</p>
 <table>
-  <tr><td>A. Show the vectors are tangent to circles</td><td><reveal>\(\langle x,y\rangle\cdot\langle y,-x\rangle=xy-xy=0\): perpendicular to the radius, so tangent to the circle.</reveal></td></tr>
-  <tr><td>A. Direction of rotation and \(\|F\|\)</td><td><reveal>Clockwise (at \((1,0)\) it is \(\langle0,-1\rangle\), pointing down). \(\|F\|=\sqrt{y^2+x^2}\), growing with distance.</reveal></td></tr>
-  <tr><td>B. Describe it</td><td><reveal>Rotational, <b>counterclockwise</b> (at \((1,0)\) it is \(\langle0,2\rangle\)), with magnitude \(2\sqrt{x^2+y^2}\), twice as strong as the field \(\langle-y,x\rangle\).</reveal></td></tr>
-  <tr><td>W. Find \(\|F\|\). What happens near the origin?</td><td><reveal>\(\|F\|=\dfrac{\sqrt{y^2+x^2}}{x^2+y^2}=\dfrac1{\sqrt{x^2+y^2}}\to\infty\) as \((x,y)\to(0,0)\). The field is undefined at the origin, and the vectors get huge and turn fast near it: a <b>whirlpool</b>.</reveal></td></tr>
-  <tr><td>Example 5. Water velocity \(\vec v=\Big\langle\dfrac{-2y}{x^2+y^2},\dfrac{2x}{x^2+y^2}\Big\rangle\) m/s. Find the speed at \((1,-1)\)</td><td><reveal>\(\vec v(1,-1)=\langle\tfrac{2}{2},\tfrac{2}{2}\rangle=\langle1,1\rangle\). Speed \(=\|\vec v\|=\sqrt2\approx1.41\) m/s.</reveal></td></tr>
-  <tr><td>Checkpoint 4. \(\vec v=\langle4|x|,\,1\rangle\) m/s. Speed at \((2,3)\)</td><td><reveal>\(\vec v(2,3)=\langle8,1\rangle\), speed \(\sqrt{65}\approx8.06\) m/s. (Only \(x\) matters; this field is neither radial nor rotational.)</reveal></td></tr>
+  <tr><td>Example 6.3. Describe \(\vec F(a,b)=\langle b,-a\rangle\)</td><td><reveal>It points clockwise and is perpendicular to the radial vector \(\langle a,b\rangle\): \(\langle a,b\rangle\cdot\langle-b,a\rangle=-ab+ab=0\). It has length \(r=\sqrt{a^2+b^2}\). So the vector at \((a,b)\) has length \(r\), is tangent to the circle of radius \(r\), and points clockwise.</reveal></td></tr>
+  <tr><td>Example 6.4. \(\|\vec F(a,b)\|\) and the domain</td><td><reveal>\(\|\vec F(a,b)\|=\sqrt{\dfrac{a^2+b^2}{(a^2+b^2)^2}}=\sqrt{\dfrac1{a^2+b^2}}\to\infty\) as \((a,b)\to(0,0)\). The domain is all of \(\mathbb{R}^2\) except \((0,0)\). It models the whirlpool motion of the river.</reveal></td></tr>
+  <tr><td>Checkpoint 6.3. Is \(\langle-2y,2x\rangle\) radial, rotational, or neither?</td><td><reveal>Rotational (counterclockwise).</reveal></td></tr>
+  <tr><td>Example 6.5. \(\vec v=-\dfrac{2y}{x^2+y^2}\mathbf i+\dfrac{2x}{x^2+y^2}\mathbf j\) is the velocity field of a fluid. How fast is it moving at \((1,-1)\), in m/s?</td><td><reveal>\(\vec v(1,-1)=\mathbf i+\mathbf j\), so the speed is \(\|\mathbf i+\mathbf j\|=\sqrt2\) m/s.</reveal></td></tr>
+  <tr><td>Checkpoint 6.4. \(\vec v(x,y)=\langle4|x|,1\rangle\) models the velocity of water on the surface of a river. Speed at \((2,3)\), in m/s?</td><td><reveal>\(\vec v(2,3)=\langle8,1\rangle\), so the speed is \(\sqrt{65}\) m/s.</reveal></td></tr>
 </table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="4">
           <div class="step-title">Unit Vector Fields</div>
-          <div class="step-subtitle">Example 6 and Checkpoint 5: normalizing</div>
+          <div class="step-subtitle">Example 6.6 and Checkpoint 6.5</div>
           <div class="step-body">
-<p>A <b>unit vector field</b> has \(\|\vec F\|=1\) everywhere: only the <b>direction</b> is kept. Given any field with \(\vec F\neq\vec0\), the <b>normalized</b> field is \(\dfrac{\vec F}{\|\vec F\|}\).</p>
-<p class="muted small">Press <b>Unit vectors</b> on field F: all the arrows become the same length, and the picture becomes the field G.</p>
-<jsx-vector-field fields="F: y ; -x | G: y/sqrt(x^2+y^2) ; -x/sqrt(x^2+y^2)" xmin="-6" xmax="6" step="1" probe="2,2"></jsx-vector-field>
+<div class="defbox"><div class="defbox-label">Unit vector field</div>
+<p>A vector field \(\vec F\) is a unit vector field if the magnitude of each vector in the field is \(1\). In a unit vector field, the only relevant information is the direction of each vector.</p>
+<p>If \(\vec F=\langle P,Q,R\rangle\) is a vector field, then the corresponding unit vector field is \(\Big\langle\dfrac{P}{\|\vec F\|},\dfrac{Q}{\|\vec F\|},\dfrac{R}{\|\vec F\|}\Big\rangle\). The process of dividing \(\vec F\) by its magnitude to form the unit vector field \(\vec F/\|\vec F\|\) is called <b>normalizing</b> the field \(\vec F\).</p>
+</div>
+<jsx-vector-field fields="F: y ; -x | G: y/sqrt(x^2+y^2) ; -x/sqrt(x^2+y^2)" xmin="-6" xmax="6" step="1" probe="2,2" flow></jsx-vector-field>
 <table>
-  <tr><td>Example 6. Show \(G=\Big\langle\dfrac{y}{\sqrt{x^2+y^2}},\dfrac{-x}{\sqrt{x^2+y^2}}\Big\rangle\) is a unit field</td><td><reveal>\(\|G\|^2=\dfrac{y^2}{x^2+y^2}+\dfrac{x^2}{x^2+y^2}=1\). So \(\|G\|=1\) at every point except the origin. \(G\) is \(\langle y,-x\rangle\) divided by its length \(\sqrt{x^2+y^2}\).</reveal></td></tr>
-  <tr><td>Checkpoint 5. Is \(\vec F=\langle-y,x\rangle\) a unit field?</td><td><reveal>No: \(\|\vec F\|=\sqrt{x^2+y^2}\), which is \(1\) only on the unit circle. Its unit version is \(\dfrac{\langle-y,x\rangle}{\sqrt{x^2+y^2}}\).</reveal></td></tr>
-  <tr><td>Normalize \(\vec F=\langle x,2\rangle\) and evaluate at \((3,2)\)</td><td><reveal>\(\|\vec F\|=\sqrt{x^2+4}\). At \((3,2)\): \(\vec F=\langle3,2\rangle\), \(\|\vec F\|=\sqrt{13}\), unit vector \(\dfrac1{\sqrt{13}}\langle3,2\rangle\).</reveal></td></tr>
-  <tr><td>Why would we want a unit field?</td><td><reveal>When only the direction matters (flow direction, a compass heading), and it makes a plot readable when the true magnitudes vary wildly (near the whirlpool).</reveal></td></tr>
+  <tr><td>Example 6.6. Show that \(\vec G(x,y)=\Big\langle\dfrac{y}{\sqrt{x^2+y^2}},-\dfrac{x}{\sqrt{x^2+y^2}}\Big\rangle\) is a unit vector field.</td><td><reveal>\(\sqrt{\dfrac{y^2}{x^2+y^2}+\dfrac{x^2}{x^2+y^2}}=\sqrt{\dfrac{x^2+y^2}{x^2+y^2}}=1\). Therefore \(\vec G\) is a unit vector field.</reveal></td></tr>
+  <tr><td>Checkpoint 6.5. Is \(\vec F(x,y)=\langle-y,x\rangle\) a unit vector field?</td><td><reveal>No: \(\|\vec F\|=\sqrt{x^2+y^2}\).</reveal></td></tr>
+  <tr><td>The unit vector field corresponding to \(\vec F(x,y)=\langle y,-x\rangle\) (Example 6.3)</td><td><reveal>\(\|\vec F\|=\sqrt{x^2+y^2}\), so it is the field \(\vec G\) of Example 6.6.</reveal></td></tr>
 </table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="5">
-          <div class="step-title">Vector Fields in Space</div>
-          <div class="step-subtitle">Examples 7, 8: \(\mathbb{R}^3\) and gravity</div>
+          <div class="step-title">Vector Fields in \(\mathbb{R}^3\)</div>
+          <div class="step-subtitle">Examples 6.7, 6.8 and Checkpoints 6.6, 6.7</div>
           <div class="step-body">
-<p>The same idea with three components. <b>Example 7.</b> \(\vec F=\langle1,1,z\rangle\).</p>
+<p>A vector field in \(\mathbb{R}^3\) is written \(\vec F(x,y,z)=\langle P(x,y,z),Q(x,y,z),R(x,y,z)\rangle\) or \(\vec F(x,y,z)=P\,\mathbf i+Q\,\mathbf j+R\,\mathbf k\).</p>
 <table>
-  <tr><td>\(\vec F\) in the \(xy\)-plane (\(z=0\))</td><td><reveal>\(\langle1,1,0\rangle\) everywhere: horizontal vectors, all alike.</reveal></td></tr>
-  <tr><td>\(\vec F(0,0,2)\) and \(\vec F(0,0,-2)\)</td><td><reveal>\(\langle1,1,2\rangle\) (tilting up) and \(\langle1,1,-2\rangle\) (tilting down): the farther from the plane, the steeper the tilt.</reveal></td></tr>
-  <tr><td>Checkpoint 6. \(\vec G=\langle2,z^2,1\rangle\) at \((0,0,2)\) and \((5,-1,0)\)</td><td><reveal>\(\langle2,4,1\rangle\) and \(\langle2,0,1\rangle\). The vector does not depend on \(x\) or \(y\) at all.</reveal></td></tr>
+  <tr><td>Example 6.7. Describe \(\vec F(x,y,z)=\langle1,1,z\rangle\).</td><td><reveal>The \(x\) and \(y\) components are constant. In the \(xy\)-plane (\(z=0\)) each vector is \(\langle1,1,0\rangle\). Slightly above the plane the vector points slightly upward; far above, the \(z\) component is large and the vector is almost vertical.</reveal></td></tr>
+  <tr><td>Checkpoint 6.6. Sketch \(\vec G(x,y,z)=\langle2,\dfrac z2,1\rangle\).</td><td><reveal>At \((a,b,0)\): \(\langle2,0,1\rangle\). At height \(z\): \(\langle2,\tfrac z2,1\rangle\), the \(y\) component growing linearly with \(z\).</reveal></td></tr>
 </table>
-<p><b>Example 8 (Newton's law of gravitation).</b> A mass \(m_1\) at the origin pulls a mass \(m_2\) at \((x,y,z)\) with the force field</p>
-$$\vec F(x,y,z)=-\frac{G\,m_1m_2}{r^2}\,\hat{\mathbf r}=-G\,m_1m_2\,\frac{\langle x,y,z\rangle}{r^3},\qquad r=\sqrt{x^2+y^2+z^2}.$$
+<p><b>Example 6.8.</b> Newton's law of gravitation states that \(\vec F=-G\dfrac{m_1m_2}{r^2}\hat{\mathbf r}\), where \(G\) is the universal gravitational constant. It describes the gravitational field exerted by an object (object 1) of mass \(m_1\) located at the origin on another object (object 2) of mass \(m_2\) located at \((x,y,z)\). The minus sign shows that the force is attractive.</p>
+$$\vec F=-G\,m_1m_2\Big\langle\frac{x}{r^3},\frac{y}{r^3},\frac{z}{r^3}\Big\rangle,\qquad r=\sqrt{x^2+y^2+z^2}.$$
+<p>This is an example of a radial vector field in \(\mathbb{R}^3\). The magnitudes of the vectors increase as the vectors get closer to the origin.</p>
+<jsx-vector-field p="-x/(x^2+y^2)^1.5" q="-y/(x^2+y^2)^1.5" xmin="-4" xmax="4" step="0.5" probe="2,1" flow></jsx-vector-field>
 <table>
-  <tr><td>Why is it radial? Which way does it point?</td><td><reveal>It is a negative multiple of the position vector \(\langle x,y,z\rangle\): always <b>toward</b> the origin.</reveal></td></tr>
-  <tr><td>Show \(\|\vec F\|=\dfrac{Gm_1m_2}{r^2}\)</td><td><reveal>\(\|\langle x,y,z\rangle\|=r\), so \(\|\vec F\|=Gm_1m_2\cdot\dfrac r{r^3}=\dfrac{Gm_1m_2}{r^2}\): an <b>inverse-square</b> law.</reveal></td></tr>
-  <tr><td>Take \(Gm_1m_2=1\). Find \(\vec F(1,2,2)\) and its magnitude</td><td><reveal>\(r=3\): \(\vec F=-\dfrac{\langle1,2,2\rangle}{27}\) and \(\|\vec F\|=\dfrac19\).</reveal></td></tr>
-  <tr><td>Now double the distance: \(\vec F(2,4,4)\)</td><td><reveal>\(r=6\), \(\|\vec F\|=\tfrac1{36}\): doubling the distance divides the force by \(4\).</reveal></td></tr>
+  <tr><td>Checkpoint 6.7. Asteroid 1 (\(750{,}000\) kg) is at the origin and asteroid 2 (\(130{,}000\) kg) is at \((15,-5,10)\), in units of \(10^8\) km. With \(G=6.67384\times10^{-11}\ \text{m}^3\text{kg}^{-1}\text{s}^{-2}\), find the force vector that asteroid 1 exerts on asteroid 2.</td><td><reveal>In meters: \((1.5\times10^{12},\,-5\times10^{11},\,10^{12})\), \(r\approx1.87\times10^{12}\) m, \(Gm_1m_2\approx6.51\). So \(\vec F\approx\langle-1.49\times10^{-24},\ 4.97\times10^{-25},\ -9.94\times10^{-25}\rangle\) N.</reveal></td></tr>
 </table>
-<p class="muted small">Here is the slice \(z=0\) of this field with \(Gm_1m_2=1\). Move the probe inward and watch \(\|\vec F\|\) blow up like \(1/r^2\); the arrows are capped in length so the picture stays readable.</p>
-<jsx-vector-field p="-x/(x^2+y^2)^1.5" q="-y/(x^2+y^2)^1.5" xmin="-4" xmax="4" step="0.5" probe="2,1"></jsx-vector-field>
           </div>
         </div>
 
         <div class="step is-visible" data-step="6">
           <div class="step-title">Gradient Fields</div>
-          <div class="step-subtitle">Example 9, Checkpoint 8, and the definition of conservative</div>
+          <div class="step-subtitle">Example 6.9 and Checkpoint 6.8</div>
           <div class="step-body">
-<p>For a scalar function \(f\), the gradient \(\nabla f=\langle f_x,f_y\rangle\) is a vector field. A field \(\vec F\) is a <b>gradient field</b> (or <b>conservative</b>) if \(\vec F=\nabla f\) for some \(f\); then \(f\) is a <b>potential function</b> for \(\vec F\).</p>
-<p class="muted small"><b>Example 9.</b> \(f(x,y)=x^2y^2\). The grey curves are level curves of \(f\), the green one passes through the red point. The arrows are \(\nabla f\).</p>
-<jsx-vector-field potential="x^2*y^2" levels="0.25 1 4 9 16" xmin="-4" xmax="4" step="0.5" probe="1,1.5"></jsx-vector-field>
+<p>If \(f\) is a scalar function of \(x\) and \(y\), the gradient is \(\nabla f=f_x(x,y)\,\mathbf i+f_y(x,y)\,\mathbf j\), a vector field in \(\mathbb{R}^2\). For \(f(x,y,z)\), \(\nabla f=f_x\,\mathbf i+f_y\,\mathbf j+f_z\,\mathbf k\), a vector field in \(\mathbb{R}^3\).</p>
+<div class="defbox"><div class="defbox-label">Definition: gradient field (conservative field)</div>
+<p>A vector field \(\vec F\) in \(\mathbb{R}^2\) or in \(\mathbb{R}^3\) is a gradient field if there exists a scalar function \(f\) such that \(\nabla f=\vec F\). In this situation, \(f\) is called a <b>potential function</b> for \(\vec F\).</p>
+</div>
+<p>Example 6.9: use technology to plot the gradient vector field of \(f(x,y)=x^2y^2\). The curves are level curves of \(f\).</p>
+<jsx-vector-field potential="x^2*y^2" levels="0.25 1 4 9 16" xmin="-4" xmax="4" step="0.5" probe="1,1.5" flow></jsx-vector-field>
+<p>The gradient vectors are perpendicular to the level curves, and the magnitudes of the vectors get larger as the level curves get closer together.</p>
 <table>
-  <tr><td>Compute \(\nabla f\)</td><td><reveal>\(\nabla f=\langle2xy^2,\ 2x^2y\rangle\). At \((1,2)\): \(\langle8,4\rangle\). At \((1,1)\): \(\langle2,2\rangle\).</reveal></td></tr>
-  <tr><td>Drag the point along a level curve. How is \(\nabla f\) related to that curve?</td><td><reveal>\(\nabla f\) is <b>perpendicular</b> to the level curve through the point, and it points toward larger values of \(f\).</reveal></td></tr>
-  <tr><td>Where are the arrows longest?</td><td><reveal>Where the level curves are close together (steep parts of the graph of \(f\)), and \(\nabla f=\vec0\) on the axes where \(f\) is flat.</reveal></td></tr>
-  <tr><td>Checkpoint 8. Gradient field of \(f=\sin x\cos y\)</td><td><reveal>\(\nabla f=\langle\cos x\cos y,\ -\sin x\sin y\rangle\).</reveal></td></tr>
-  <tr><td>Gradient of \(f=\tfrac12(x^2+y^2)\). Which field from step 2 is it?</td><td><reveal>\(\langle x,y\rangle\): the radial field \(\vec F\) (up to the factor \(\tfrac12\)) of Example 2 is conservative, with level curves that are circles.</reveal></td></tr>
+  <tr><td>Example 6.9. The gradient of \(f(x,y)=x^2y^2\)</td><td><reveal>\(\nabla f=\langle2xy^2,\ 2x^2y\rangle\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.8. The gradient vector field of \(f(x,y)=\sin x\cos y\)</td><td><reveal>\(\nabla f=\langle\cos x\cos y,\ -\sin x\sin y\rangle\)</reveal></td></tr>
 </table>
-<p class="muted small">Some books (physics) define the field as \(-\nabla f\). Same idea, opposite sign.</p>
+<p class="muted small">In some applications (certain contexts in physics) a potential function is defined instead by \(-\nabla f=\vec F\).</p>
           </div>
         </div>
 
         <div class="step is-visible" data-step="7">
-          <div class="step-title">Verifying a Potential Function</div>
-          <div class="step-subtitle">Examples 10, 11, Theorem 6.1 and Checkpoints 9, 10</div>
+          <div class="step-title">Uniqueness of Potential Functions</div>
+          <div class="step-subtitle">Theorem 6.1, Examples 6.10, 6.11 and Checkpoints 6.9, 6.10</div>
           <div class="step-body">
-<p>To check that \(f\) is a potential for \(\vec F\), compute \(\nabla f\) and compare with \(\vec F\), component by component.</p>
+<p>To be <b>connected</b> means: if \(P_1\) and \(P_2\) are any two points in the domain, then you can walk from \(P_1\) to \(P_2\) along a path that stays entirely inside the domain.</p>
+<div class="defbox"><div class="defbox-label">Theorem 6.1: Uniqueness of Potential Functions</div>
+<p>Let \(\vec F\) be a conservative vector field on an open and connected domain and let \(f\) and \(g\) be functions such that \(\nabla f=\vec F\) and \(\nabla g=\vec F\). Then, there is a constant \(C\) such that \(f=g+C\).</p>
+</div>
 <table>
-  <tr><td>Example 10. Is \(f=x^2yz-\sin(xy)\) a potential for \(\vec F=\langle2xyz-y\cos(xy),\ x^2z-x\cos(xy),\ x^2y\rangle\)?</td><td><reveal>\(f_x=2xyz-y\cos(xy)\), \(f_y=x^2z-x\cos(xy)\), \(f_z=x^2y\). All three match. Yes.</reveal></td></tr>
-  <tr><td>Example 11. Is \(f=\tfrac{x^2y}2-\tfrac{y^2}2\) a potential for \(\vec v=\langle xy,\ \tfrac{x^2}2-y\rangle\)?</td><td><reveal>\(f_x=xy\), \(f_y=\tfrac{x^2}2-y\). Yes.</reveal></td></tr>
-  <tr><td>Checkpoint 10. \(f=x^3y^2+1\) and \(\vec F=\langle3x^2y^2,\ 2x^3y\rangle\)</td><td><reveal>\(f_x=3x^2y^2\), \(f_y=2x^3y\). Yes. (The \(+1\) disappears when we differentiate.)</reveal></td></tr>
-  <tr><td>Try one that fails: is \(f=x^2y\) a potential for \(\vec F=\langle2xy,\ xy\rangle\)?</td><td><reveal>\(f_x=2xy\) matches, but \(f_y=x^2\neq xy\). No.</reveal></td></tr>
-  <tr><td>A 3D one: \(f=x^2\cos(yz)+y^2z^2\) and \(\vec F=\langle2x\cos(yz),\ -x^2z\sin(yz)+2yz^2,\ -x^2y\sin(yz)+2y^2z\rangle\)</td><td><reveal>\(f_x=2x\cos(yz)\), \(f_y=-x^2z\sin(yz)+2yz^2\), \(f_z=-x^2y\sin(yz)+2y^2z\). All match. Yes.</reveal></td></tr>
-</table>
-<p><b>Theorem 6.1 (uniqueness).</b> If \(\vec F\) is conservative on an open, <b>connected</b> domain and \(\nabla f=\nabla g=\vec F\), then \(f=g+C\) for some constant \(C\).</p>
-<table>
-  <tr><td>Why? Look at \(h=f-g\)</td><td><reveal>\(\nabla h=\vec F-\vec F=\vec0\), so all partials of \(h\) vanish and \(h\) is constant on a connected domain. (On a domain in two separate pieces, the constant could differ on each piece.)</reveal></td></tr>
-  <tr><td>Another potential for Example 11?</td><td><reveal>Any \(\tfrac{x^2y}2-\tfrac{y^2}2+C\), for example with \(C=5\).</reveal></td></tr>
+  <tr><td>Example 6.10. Is \(f(x,y,z)=x^2yz-\sin(xy)\) a potential function for \(\vec F(x,y,z)=\langle2xyz-y\cos(xy),\ x^2z-x\cos(xy),\ x^2y\rangle\)?</td><td><reveal>\(f_x=2xyz-y\cos(xy)\), \(f_y=x^2z-x\cos(xy)\), \(f_z=x^2y\). Therefore \(\nabla f=\vec F\) and \(f\) is a potential function for \(\vec F\).</reveal></td></tr>
+  <tr><td>Checkpoint 6.9. Is \(f(x,y,z)=x^2\cos(yz)+y^2z^2\) a potential function for \(\vec F=\langle2x\cos(yz),\ -x^2z\sin(yz)+2yz^2,\ y^2\rangle\)?</td><td><reveal>No: \(f_z=-x^2y\sin(yz)+2y^2z\neq y^2\), so \(\nabla f\neq\vec F\).</reveal></td></tr>
+  <tr><td>Example 6.11. The velocity of a fluid is \(\vec v(x,y)=\langle xy,\ \dfrac{x^2}2-y\rangle\). Verify that \(f(x,y)=\dfrac{x^2y}2-\dfrac{y^2}2\) is a potential function for \(\vec v\).</td><td><reveal>\(f_x=xy\) and \(f_y=\dfrac{x^2}2-y\). Therefore \(\nabla f=\vec v\).</reveal></td></tr>
+  <tr><td>Checkpoint 6.10. Verify that \(f(x,y)=x^3y^2+1\) is a potential function for \(\vec v(x,y)=\langle3x^2y^2,\ 2x^3y\rangle\).</td><td><reveal>\(f_x=3x^2y^2\) and \(f_y=2x^3y\). Therefore \(\nabla f=\vec v\).</reveal></td></tr>
 </table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="8">
-          <div class="step-title">The Cross-Partial Test</div>
-          <div class="step-subtitle">Theorem 6.2 and Examples 12, 13</div>
+          <div class="step-title">Cross-Partial Property</div>
+          <div class="step-subtitle">Theorem 6.2, Examples 6.12, 6.13 and Checkpoint 6.12</div>
           <div class="step-body">
-<p><b>Theorem 6.2.</b> If \(\vec F=\langle P,Q\rangle\) is conservative with continuous first partials, then</p>
-$$\frac{\partial P}{\partial y}=\frac{\partial Q}{\partial x}.$$
-<p>In \(\mathbb{R}^3\): \(P_y=Q_x\), \(\ Q_z=R_y\), \(\ R_x=P_z\). The reason: \(P=f_x\) and \(Q=f_y\), so \(P_y=f_{xy}=f_{yx}=Q_x\) (Clairaut).</p>
-<p class="muted small">Pick a field, drag the point, and read both partials. <b>A</b> and <b>W</b> were seen before; <b>B</b> is \(\langle y,x\rangle\); <b>C</b> is \(\langle2xy+3,\ x^2+4y\rangle\).</p>
-<jsx-vector-field fields="A: y ; -x | B: y ; x | C: 2*x*y+3 ; x^2+4*y | W: y/(x^2+y^2) ; -x/(x^2+y^2)" xmin="-6" xmax="6" step="1" probe="2,1" cross></jsx-vector-field>
+<div class="defbox"><div class="defbox-label">Theorem 6.2: The Cross-Partial Property of Conservative Vector Fields</div>
+<p>Let \(\vec F\) be a vector field in two or three dimensions such that the component functions of \(\vec F\) have continuous first-order partial derivatives on the domain of \(\vec F\).</p>
+<p>If \(\vec F(x,y)=\langle P(x,y),Q(x,y)\rangle\) is a conservative vector field in \(\mathbb{R}^2\), then \(\dfrac{\partial P}{\partial y}=\dfrac{\partial Q}{\partial x}\).</p>
+<p>If \(\vec F(x,y,z)=\langle P,Q,R\rangle\) is a conservative vector field in \(\mathbb{R}^3\), then \(\dfrac{\partial P}{\partial y}=\dfrac{\partial Q}{\partial x},\ \dfrac{\partial Q}{\partial z}=\dfrac{\partial R}{\partial y},\ \text{and}\ \dfrac{\partial R}{\partial x}=\dfrac{\partial P}{\partial z}\).</p>
+</div>
+<p>A: \(\langle y,-x\rangle\) (Example 6.12). &nbsp; B: \(\langle x^2y,\ \tfrac{x^3}{3}\rangle\).</p>
+<jsx-vector-field fields="A: y ; -x | B: x^2*y ; x^3/3" xmin="-6" xmax="6" step="1" probe="2,1" cross flow></jsx-vector-field>
 <table>
-  <tr><td>Example 12. \(\vec F=\langle y,-x\rangle\). Conservative?</td><td><reveal>\(P_y=1\) but \(Q_x=-1\). Not equal, so <b>not</b> conservative. (Consistent with the picture: the field circles around, and a potential would have to increase all the way around a loop.)</reveal></td></tr>
-  <tr><td>Example 13. \(\vec F=\langle7,-2,x^3\rangle\)</td><td><reveal>\(R_x=3x^2\) but \(P_z=0\). Not equal: <b>not</b> conservative.</reveal></td></tr>
-  <tr><td>Checkpoint 12. \(\vec G=\langle y,x,xyz\rangle\)</td><td><reveal>\(R_y=xz\) but \(Q_z=0\). Not conservative. (The pair \(P_y=1=Q_x\) passes, but one failure is enough.)</reveal></td></tr>
-  <tr><td>Field B: \(\langle y,x\rangle\). Test it, then guess a potential</td><td><reveal>\(P_y=1=Q_x\). Passes, and \(f=xy\) works: \(\nabla(xy)=\langle y,x\rangle\).</reveal></td></tr>
-  <tr><td>Field C: test it and find a potential</td><td><reveal>\(P_y=2x=Q_x\). Integrate \(P\) in \(x\): \(f=x^2y+3x+g(y)\). Then \(f_y=x^2+g'(y)=x^2+4y\), so \(g=2y^2\) and \(f=x^2y+3x+2y^2\). (This procedure is Section 6.3.)</reveal></td></tr>
+  <tr><td>Example 6.12. Show that the rotational vector field \(\vec F(x,y)=\langle y,-x\rangle\) is not conservative.</td><td><reveal>Let \(P=y\), \(Q=-x\). If \(\vec F\) is conservative then \(P_y=Q_x\). But \(P_y=1\) and \(Q_x=-1\), so the vector field is not conservative.</reveal></td></tr>
+  <tr><td>Example 6.13. Is \(\vec F(x,y,z)=\langle7,-2,x^3\rangle\) conservative?</td><td><reveal>\(P=7\), \(Q=-2\), \(R=x^3\). \(P_y=Q_x=R_y=Q_z=0\), so the first two equalities hold. But \(R_x=3x^2\) and \(P_z=0\), so \(\vec F\) is not conservative.</reveal></td></tr>
+  <tr><td>Checkpoint 6.12. Is \(\vec G(x,y,z)=\langle y,x,xyz\rangle\) conservative?</td><td><reveal>\(R_y=xz\) but \(Q_z=0\). Not conservative.</reveal></td></tr>
 </table>
-<p><b>Warning: only a necessary condition.</b> It can prove a field is <i>not</i> conservative, but not that it is.</p>
-<table>
-  <tr><td>Field W (whirlpool): compute \(P_y\) and \(Q_x\)</td><td><reveal>\(P_y=\dfrac{x^2-y^2}{(x^2+y^2)^2}=Q_x\) at every point of its domain. The test <b>passes</b>, yet W is not conservative: around the unit circle its circulation is \(\int_0^{2\pi}(-1)\,dt=-2\pi\neq0\), while a conservative field gives \(0\) around a closed loop. The hole at the origin is the culprit. Next lesson: line integrals.</reveal></td></tr>
-</table>
+<p>The theorem can only help determine that a field is not conservative; it does not let you conclude that a vector field is conservative. For example, \(\vec F(x,y)=\langle x^2y,\tfrac{x^3}{3}\rangle\) has the cross-partial property, but that alone does not show it is conservative. We learn later how to conclude that \(\vec F\) is conservative.</p>
           </div>
         </div>
 
         <div class="step is-visible" data-step="9">
           <div class="step-title">Flow Lines</div>
-          <div class="step-subtitle">A vector field as a velocity field</div>
+          <div class="step-subtitle">Exercises 30, 31</div>
           <div class="step-body">
-<p>If \(\vec F\) is a velocity field, a particle dropped in the flow follows a <b>flow line</b>: a curve \(\vec r(t)\) with \(\vec{r}'(t)=\vec F(\vec r(t))\). Its velocity at each moment is the field vector at its position. Pick a field, drag the point to choose the starting position, and release.</p>
-<jsx-vector-field fields="A: y ; -x | E: x ; y | S: x ; -y" xmin="-6" xmax="6" step="1" probe="1,2" flow></jsx-vector-field>
-<p class="muted small">A: \(\langle y,-x\rangle\). E: \(\langle x,y\rangle\) (radial). S: \(\langle x,-y\rangle\) (a "saddle", the field H of the matching exercise in step 10).</p>
+<div class="defbox"><div class="defbox-label">Flow line</div>
+<p>A flow line (or streamline) of a vector field \(\vec F\) is a curve \(\vec r(t)\) such that \(d\vec r/dt=\vec F(\vec r(t))\).</p>
+<p>If \(\vec F\) represents the velocity field of a moving particle, then the flow lines are paths taken by the particle. Therefore, flow lines are tangent to the vector field.</p>
+</div>
+<jsx-vector-field fields="F: x ; y | G: -y ; x | H: x ; -y" xmin="-6" xmax="6" step="1" probe="1,2" flow></jsx-vector-field>
 <table>
-  <tr><td>Verify that \(\vec r(t)=\langle\cos t,\,-\sin t\rangle\) is a flow line of A</td><td><reveal>\(\vec{r}'=\langle-\sin t,-\cos t\rangle\) and \(\vec F(\vec r)=\langle y,-x\rangle=\langle-\sin t,-\cos t\rangle\). Equal. The path is the unit circle, traveled clockwise.</reveal></td></tr>
-  <tr><td>Verify that \(\vec r(t)=\langle e^t,\,2e^t\rangle\) is a flow line of E</td><td><reveal>\(\vec{r}'=\langle e^t,2e^t\rangle=\langle x,y\rangle=\vec F(\vec r)\). The path is the ray \(y=2x\) leaving the origin, faster and faster.</reveal></td></tr>
-  <tr><td>Verify that \(\vec r(t)=\langle e^t,\,e^{-t}\rangle\) is a flow line of S. What curve is it?</td><td><reveal>\(\vec{r}'=\langle e^t,-e^{-t}\rangle=\langle x,-y\rangle\). \(\ xy=e^te^{-t}=1\): the hyperbola \(y=1/x\). Release a particle from \((1,1)\) to see it.</reveal></td></tr>
-  <tr><td>Solve for the flow line of E through \((1,2)\) at \(t=0\)</td><td><reveal>\(x'=x\), \(y'=y\) give \(x=c_1e^t\), \(y=c_2e^t\). Initial point: \(c_1=1\), \(c_2=2\). So \(\vec r(t)=\langle e^t,2e^t\rangle\), the one we verified.</reveal></td></tr>
-  <tr><td>In field A, can two flow lines cross?</td><td><reveal>No. At a crossing point they would need two different velocities, but \(\vec F\) has exactly one vector there.</reveal></td></tr>
+  <tr><td>Exercise 30. Show that \(\vec c(t)=\langle e^{2t},\ \ln|t|,\ \tfrac1t\rangle\), \(t\neq0\), is a flow line of \(\vec F(x,y,z)=\langle2x,\ z,\ -z^2\rangle\).</td><td><reveal>\(\vec{c}'(t)=\langle2e^{2t},\ \tfrac1t,\ -\tfrac1{t^2}\rangle=\langle2x,\ z,\ -z^2\rangle\) at \((x,y,z)=\vec c(t)\).</reveal></td></tr>
+  <tr><td>Exercise 31. Show that \(\vec c(t)=\langle\sin t,\ \cos t,\ e^t\rangle\) is a flow line of \(\vec F(x,y,z)=\langle y,\ -x,\ z\rangle\).</td><td><reveal>\(\vec{c}'(t)=\langle\cos t,\ -\sin t,\ e^t\rangle=\langle y,\ -x,\ z\rangle\) at \(\vec c(t)\).</reveal></td></tr>
 </table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="10">
-          <div class="step-title">Build It and Match It</div>
-          <div class="step-subtitle">Constructing fields, and the matching exercise</div>
+          <div class="step-title">Matching and Constructing</div>
+          <div class="step-subtitle">Exercises 21 to 25, 27, 32 to 38</div>
           <div class="step-body">
-<p><b>Constructing.</b> Write a formula for each field.</p>
-<table>
-  <tr><td>(a) A unit field at every point pointing toward \((1,0)\) (Exercise 21)</td><td><reveal>The vector from \((x,y)\) to \((1,0)\) is \(\langle1-x,-y\rangle\), with length \(\sqrt{(x-1)^2+y^2}\). So \(\vec F=\dfrac{\langle1-x,\,-y\rangle}{\sqrt{(x-1)^2+y^2}}\), undefined at \((1,0)\) itself.</reveal></td></tr>
-  <tr><td>(b) Counterclockwise rotational field with constant magnitude \(3\)</td><td><reveal>Tangent direction \(\langle-y,x\rangle\), normalized and times \(3\): \(\vec F=\dfrac{3\langle-y,x\rangle}{\sqrt{x^2+y^2}}\).</reveal></td></tr>
-  <tr><td>(c) A radial field pointing away from the origin with magnitude \(r^2\)</td><td><reveal>Direction \(\dfrac{\langle x,y\rangle}{r}\) times \(r^2\): \(\vec F=r\langle x,y\rangle=\sqrt{x^2+y^2}\,\langle x,y\rangle\).</reveal></td></tr>
-</table>
-<p><b>Matching.</b> Let \(F=\langle x,y\rangle\), \(G=\langle-y,x\rangle\), \(H=\langle x,-y\rangle\). First predict the picture of each combination, then press its button.</p>
+<p>Let \(F=x\,\mathbf i+y\,\mathbf j\), \(G=-y\,\mathbf i+x\,\mathbf j\), \(H=x\,\mathbf i-y\,\mathbf j\). Match \(F\), \(G\), \(H\) with their graphs, then match \(F+G\), \(F+H\), \(G+H\), \(-F+G\).</p>
 <jsx-vector-field fields="F: x ; y | G: -y ; x | H: x ; -y | F+G: x-y ; x+y | F+H: 2*x ; 0 | G+H: x-y ; x-y | -F+G: -x-y ; x-y" xmin="-6" xmax="6" step="1" probe="2,1" flow></jsx-vector-field>
 <table>
-  <tr><td>\(F+G\)</td><td><reveal>\(\langle x-y,\ x+y\rangle\): outward from \(F\) plus counterclockwise from \(G\), an <b>outward counterclockwise spiral</b>.</reveal></td></tr>
-  <tr><td>\(-F+G\)</td><td><reveal>\(\langle-x-y,\ x-y\rangle\): inward plus counterclockwise, an <b>inward spiral</b>.</reveal></td></tr>
-  <tr><td>\(F+H\)</td><td><reveal>\(\langle2x,0\rangle\): purely horizontal, pointing away from the \(y\)-axis on both sides. The \(y\)-components cancel.</reveal></td></tr>
-  <tr><td>\(G+H\)</td><td><reveal>\(\langle x-y,\ x-y\rangle=(x-y)\langle1,1\rangle\): every vector is parallel to \(\langle1,1\rangle\), zero along the line \(y=x\), flipping direction across it.</reveal></td></tr>
+  <tr><td>Exercise 21. A vector field \(\vec F(x,y)\) of unit length that points toward \((1,0)\).</td><td><reveal>\(\vec F=\dfrac{\langle1-x,\,-y\rangle}{\sqrt{(x-1)^2+y^2}}\)</reveal></td></tr>
+  <tr><td>Exercise 22. All vectors are parallel to the \(x\)-axis and all vectors on a vertical line have the same magnitude.</td><td><reveal>\(\vec F(x,y)=M(x)\,\mathbf i\), for example \(\vec F=x\,\mathbf i\).</reveal></td></tr>
+  <tr><td>Exercise 23. All vectors point toward the origin and have constant length \(c\).</td><td><reveal>\(\vec F=-\dfrac{c\,\langle x,y\rangle}{\sqrt{x^2+y^2}}\)</reveal></td></tr>
+  <tr><td>Exercise 24. All vectors are of unit length and perpendicular to the position vector.</td><td><reveal>\(\vec F=\dfrac{\langle-y,x\rangle}{\sqrt{x^2+y^2}}\) (or its negative).</reveal></td></tr>
+  <tr><td>Exercise 25. \(\vec F=\vec 0\) at \((0,0)\); at any other point \((a,b)\), \(\vec F\) is tangent to the circle \(x^2+y^2=a^2+b^2\), points clockwise, with magnitude \(\sqrt{a^2+b^2}\).</td><td><reveal>\(\vec F(x,y)=y\,\mathbf i-x\,\mathbf j\)</reveal></td></tr>
+  <tr><td>Exercise 27. \(\vec F\) points toward the origin and \(\|\vec F\|=\dfrac{10}{x^2+y^2}\).</td><td><reveal>\(\vec F=-\dfrac{10\,\langle x,y\rangle}{(x^2+y^2)^{3/2}}\)</reveal></td></tr>
 </table>
           </div>
         </div>
 
         <div class="step is-visible" data-step="11">
-          <div class="step-title">Summary</div>
-          <div class="step-subtitle">The one-page version</div>
+          <div class="step-title">Gradient Fields: Exercises</div>
+          <div class="step-subtitle">Exercises 15 to 20 and 26</div>
           <div class="step-body">
+<p>Find the gradient vector field of each function.</p>
 <table>
-  <tr><td><b>Vector field</b></td><td>A vector \(\vec F(x,y)=\langle P,Q\rangle\) (or \(\langle P,Q,R\rangle\)) at each point. Draw it with the tail at the point.</td></tr>
-  <tr><td><b>Radial / rotational</b></td><td>Radial \(\parallel\langle x,y\rangle\) (perpendicular to circles). Rotational \(\parallel\langle-y,x\rangle\) (tangent to circles). Magnitude depends only on \(r\).</td></tr>
-  <tr><td><b>Unit field</b></td><td>\(\vec F/\|\vec F\|\): only the direction.</td></tr>
-  <tr><td><b>Gravity</b></td><td>\(\vec F=-Gm_1m_2\langle x,y,z\rangle/r^3\): radial inward, magnitude \(Gm_1m_2/r^2\).</td></tr>
-  <tr><td><b>Conservative</b></td><td>\(\vec F=\nabla f\). Potentials differ by a constant (Thm 6.1). \(\nabla f\perp\) level curves.</td></tr>
-  <tr><td><b>Test</b></td><td>\(P_y=Q_x\) (and \(Q_z=R_y\), \(R_x=P_z\)) is <b>necessary</b>. Failing it proves "not conservative"; passing it proves nothing by itself (the whirlpool passes).</td></tr>
-  <tr><td><b>Flow line</b></td><td>\(\vec{r}'(t)=\vec F(\vec r(t))\).</td></tr>
+  <tr><td>15. \(f(x,y)=x\sin y+\cos y\)</td><td><reveal>\(\nabla f=\langle\sin y,\ x\cos y-\sin y\rangle\)</reveal></td></tr>
+  <tr><td>16. \(f(x,y,z)=z\,e^{-xy}\)</td><td><reveal>\(\nabla f=\langle-yz\,e^{-xy},\ -xz\,e^{-xy},\ e^{-xy}\rangle\)</reveal></td></tr>
+  <tr><td>17. \(f(x,y,z)=x^2y+xy+y^2z\)</td><td><reveal>\(\nabla f=\langle2xy+y,\ x^2+x+2yz,\ y^2\rangle\)</reveal></td></tr>
+  <tr><td>18. \(f(x,y)=x^2\sin(5y)\)</td><td><reveal>\(\nabla f=\langle2x\sin(5y),\ 5x^2\cos(5y)\rangle\)</reveal></td></tr>
+  <tr><td>19. \(f(x,y)=\ln(1+x^2+2y^2)\)</td><td><reveal>\(\nabla f=\Big\langle\dfrac{2x}{1+x^2+2y^2},\ \dfrac{4y}{1+x^2+2y^2}\Big\rangle\)</reveal></td></tr>
+  <tr><td>20. \(f(x,y,z)=x\cos\!\big(\tfrac yz\big)\)</td><td><reveal>\(\nabla f=\Big\langle\cos\tfrac yz,\ -\tfrac xz\sin\tfrac yz,\ \tfrac{xy}{z^2}\sin\tfrac yz\Big\rangle\)</reveal></td></tr>
+  <tr><td>26. Is \(\vec F(x,y)=(\sin x+y)\,\mathbf i+(\cos y+x)\,\mathbf j\) a gradient field?</td><td><reveal>\(P_y=1=Q_x\), and \(f=-\cos x+\sin y+xy\) has \(\nabla f=\vec F\). Yes.</reveal></td></tr>
 </table>
-<p class="muted small">Homework: OpenStax 6.1 Checkpoints 6.1 to 6.12 and exercises on sketching fields (5 to 14), gradient fields (15 to 20), constructing fields (21 to 25), the gradient test (26), electric fields (28, 29), flow lines (30, 31) and matching (32 to 38). Next: line integrals.</p>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="12">
+          <div class="step-title">Electric Field</div>
+          <div class="step-subtitle">Exercises 28, 29</div>
+          <div class="step-body">
+<p>An electric field in the \(xy\)-plane caused by an infinite line of charge along the \(x\)-axis is a gradient field with potential function</p>
+$$V(x,y)=c\,\ln\!\Big(\frac{r_0}{\sqrt{x^2+y^2}}\Big),$$
+<p>where \(c>0\) is a constant and \(r_0\) is a reference distance at which the potential is assumed to be zero.</p>
+<table>
+  <tr><td>Exercise 28. Find the components of the electric field \(\vec E(x,y)=-\nabla V(x,y)\).</td><td><reveal>\(\vec E=\Big\langle\dfrac{c\,x}{x^2+y^2},\ \dfrac{c\,y}{x^2+y^2}\Big\rangle\)</reveal></td></tr>
+  <tr><td>Exercise 29. Show that the electric field is directed outward from the origin and has magnitude \(E=\dfrac cr\), \(r=\sqrt{x^2+y^2}\).</td><td><reveal>\(\vec E=\dfrac{c}{x^2+y^2}\langle x,y\rangle\) is a positive multiple of \(\langle x,y\rangle\), so it points outward, and \(\|\vec E\|=\dfrac{c\,r}{r^2}=\dfrac cr\).</reveal></td></tr>
+</table>
+<p class="muted small">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.1 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3.</p>
           </div>
         </div>
 

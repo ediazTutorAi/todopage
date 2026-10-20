@@ -4389,7 +4389,11 @@ function renderJsxJacobian(el) {
 // singularity (the whirlpool) readable; `scale` overrides the factor. A draggable probe (red) shows the
 // exact F, |F| and its own arrow. Always-present button: "Unit vectors" toggles between true lengths and
 // the normalized field F/|F|. Expressions are plain JS in x and y (sin cos tan exp sqrt abs log pow pi in
-// scope); `^` is accepted for powers, but JS forbids a unary minus right before one: write -(x^3), not -x^3.
+// scope); `^` is accepted for powers (rewritten to pow(), so -x^3 works).
+//   editable     the point and the formulas P and Q become text inputs: the page shows the point and the vector
+//                F(point) drawn to scale with its tail there (dashed legs P and Q). `p`/`q`/`probe` give the starting
+//                values, `presets="Name: P ; Q @ x,y | ..."` adds one-click examples, and the whole field can be shown
+//                with a button. An undefined value (outside the domain) is reported instead of drawn.
 //   fields=...   several fields behind buttons ("name: P ; Q" separated by `|`), so a table of examples
 //                or a matching exercise shares one board. Without it, `p` and `q` give a single field.
 //   potential=f  a scalar function f; the field is its gradient (finite differences). Draws level curves
@@ -4401,6 +4405,29 @@ function renderJsxJacobian(el) {
 //   unit         start in unit-vector mode.     `probe="x,y"` start position.
 const FIELD_ASPECT = 1.6;
 
+// `a^b` -> `pow(a,b)` so authors (and students typing in an `editable` field) can use ^ for powers, including
+// after a unary minus (-x^3), which JS's own ** rejects. Handles x^2, 2.5^y, y^-1, (x+1)^2, sin(x)^2; not nested
+// parentheses inside the base or exponent.
+function powFix(expr) {
+  const alt = '\\w+\\([^()]*\\)|\\w+(?:\\.\\d+)?|\\([^()]*\\)';
+  const re = new RegExp('(' + alt + ')\\s*\\^\\s*(-?(?:' + alt + '))');
+  let out = String(expr); let prev;
+  do { prev = out; out = out.replace(re, 'pow($1,$2)'); } while (out !== prev);
+  return out;
+}
+
+// Compile text a student typed into an `editable` vector field. Returns a function (x, y) or null when the text
+// is not a usable formula (the tag shows that on the page, so this does not log to the console while someone is
+// mid-typing). A trial call catches unknown names such as `z`.
+function compileSoft(text) {
+  try {
+    const f = new Function('x', 'y', 'const {sin,cos,tan,asin,acos,atan,exp,sqrt,abs,log,pow,PI:pi,E:e}=Math; const ln=Math.log; return (' + powFix(text) + ');');
+    return typeof f(1, 1) === 'number' ? f : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 function renderJsxVectorField(el) {
   const TAG = 'jsx-vector-field';
   if (typeof JXG === 'undefined') {
@@ -4408,7 +4435,7 @@ function renderJsxVectorField(el) {
     return;
   }
   const num = (n, d) => evalNumAttr(el, n, d, TAG);
-  const fe = (expr, attr) => compileMath(['x', 'y'], String(expr).replace(/\^/g, '**'), TAG, attr);
+  const fe = (expr, attr) => compileMath(['x', 'y'], powFix(expr), TAG, attr);
   const H = 1e-5;
 
   // ---- the list of fields ----
@@ -4437,8 +4464,10 @@ function renderJsxVectorField(el) {
   const step = num('step', 1);
   const scaleAttr = el.hasAttribute('scale') ? num('scale', 1) : null;
   const flowSpeed = num('flow-speed', 1);
+  const editable = el.hasAttribute('editable');
+  const el0 = { p: el.getAttribute('p') || '0', q: el.getAttribute('q') || '0', presets: el.getAttribute('presets') || '' };
   const probe0 = (el.getAttribute('probe') || '1,1').split(',').map((t) => Number(new Function(`return (${t});`)()));
-  const st = { idx: 0, unit: el.hasAttribute('unit'), x: probe0[0], y: probe0[1], run: false, raf: null, path: [[probe0[0], probe0[1]]] };
+  const st = { idx: 0, unit: el.hasAttribute('unit'), show: !editable, x: probe0[0], y: probe0[1], run: false, raf: null, path: [[probe0[0], probe0[1]]] };
 
   const container = document.createElement('div');
   container.className = 'jsx-diagram jsx-diagram--transform';
@@ -4512,12 +4541,20 @@ function renderJsxVectorField(el) {
   const PR = board.create('point', [st.x, st.y], { name: '', size: POINT_SIZE + 2, fillColor: negative, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false });
   const probeVec = () => {
     const v = Fv(st.x, st.y); const m = Math.hypot(v[0], v[1]);
+    if (editable) return finite(v) ? v : [0, 0];
     if (!finite(v) || !(m > 1e-9)) return [0, 0];
     const len = st.unit ? 0.8 * step : Math.min(m * kScale, 1.15 * step);
     return [(v[0] / m) * len, (v[1] / m) * len];
   };
   const tip = board.create('point', [() => st.x + probeVec()[0], () => st.y + probeVec()[1]], { visible: false, fixed: true, name: '' });
-  board.create('arrow', [PR, tip], { strokeColor: negative, strokeWidth: 5, lastArrow: { type: 2, size: 9 }, highlight: false, fixed: true });
+  const probeArrow = board.create('arrow', [PR, tip], { strokeColor: negative, strokeWidth: 5, lastArrow: { type: 2, size: 9 }, highlight: false, fixed: true });
+  // editable: the dashed components P (horizontal) and Q (vertical) that make up the vector
+  const comps = [];
+  if (editable) {
+    const corner = board.create('point', [() => st.x + probeVec()[0], () => st.y], { visible: false, fixed: true, name: '' });
+    comps.push(board.create('segment', [PR, corner], { strokeColor: ink, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true }));
+    comps.push(board.create('segment', [corner, tip], { strokeColor: ink, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true }));
+  }
 
   // flow line
   const pathCurve = makeDataCurve(board, () => ({ xs: st.path.map((q) => q[0]), ys: st.path.map((q) => q[1]) }), { strokeColor: green, strokeWidth: 4, highlight: false, fixed: true });
@@ -4526,12 +4563,20 @@ function renderJsxVectorField(el) {
   const f3 = (v) => (Number.isFinite(v) ? (Math.abs(v) < 5e-4 ? '0' : String(Math.round(v * 1000) / 1000)).replace('-', '−') : 'undefined');
   const vecHtml = (a, b) => `⟨<b>${f3(a)}</b>, <b>${f3(b)}</b>⟩`;
   const hasCross = el.hasAttribute('cross');
+  let syncInputs = () => {};
 
   function updateReadout() {
     const v = Fv(st.x, st.y);
+    const nz = finite(v) && Math.hypot(v[0], v[1]) > 1e-9;
+    probeArrow.setAttribute({ visible: nz });
+    comps.forEach((c) => c.setAttribute({ visible: nz }));
     let html = `<span class="jsx-trace-chip">(x, y) = (<b>${f3(st.x)}</b>, <b>${f3(st.y)}</b>)</span>` +
-      `<span class="jsx-trace-chip jsx-trace-main" style="color:${negative}">${cur().name}(x, y) = ${vecHtml(v[0], v[1])}</span>` +
-      `<span class="jsx-trace-chip">‖${cur().name}‖ = <b>${f3(Math.hypot(v[0], v[1]))}</b></span>`;
+      (finite(v)
+        ? `<span class="jsx-trace-chip jsx-trace-main" style="color:${negative}">${cur().name}(${f3(st.x)}, ${f3(st.y)}) = ${vecHtml(v[0], v[1])}</span>` +
+          (editable ? `<span class="jsx-trace-chip">= <b>${f3(v[0])}</b> <b>i</b> ${v[1] < 0 ? '−' : '+'} <b>${f3(Math.abs(v[1]))}</b> <b>j</b></span>` : '') +
+          `<span class="jsx-trace-chip">‖${cur().name}‖ = <b>${f3(Math.hypot(v[0], v[1]))}</b></span>` +
+          (editable && (st.x + v[0] < xmin || st.x + v[0] > xmax || st.y + v[1] < ymin || st.y + v[1] > ymax) ? '<span class="jsx-trace-chip is-undef">the vector runs off the picture</span>' : '')
+        : `<span class="jsx-trace-chip jsx-trace-main is-undef">${cur().name} is undefined at this point (it is not in the domain)</span>`);
     if (pot) html += `<span class="jsx-trace-chip">f(x, y) = <b>${f3(pot(st.x, st.y))}</b></span>`;
     if (hasCross) {
       const e = 1e-4; const h2 = 1e-3;
@@ -4542,10 +4587,11 @@ function renderJsxVectorField(el) {
         `<span class="jsx-trace-chip jsx-trace-main ${same ? 'is-parallel' : ''}">${same ? 'equal here (test passes)' : 'NOT equal: not conservative'}</span>`;
     }
     readout.innerHTML = html;
+    syncInputs();
   }
   function refresh() {
     recompute();
-    nodes.forEach((n) => n.arrow.setAttribute({ visible: n.ok, strokeColor: accent }));
+    nodes.forEach((n) => n.arrow.setAttribute({ visible: n.ok && st.show, strokeColor: accent }));
     updateReadout();
     board.update();
   }
@@ -4584,6 +4630,63 @@ function renderJsxVectorField(el) {
     parent.appendChild(b);
     return b;
   };
+  if (editable) {
+    const wrap = document.createElement('div');
+    wrap.className = 'jsx-vf-inputs';
+    controls.appendChild(wrap);
+    const msg = document.createElement('div');
+    msg.className = 'jsx-vf-msg small';
+    const mkField = (label, value, cls) => {
+      const lab = document.createElement('label');
+      lab.innerHTML = `<span>${label}</span><input type="text" class="${cls}" spellcheck="false" autocomplete="off">`;
+      const inp = lab.querySelector('input');
+      inp.value = value;
+      wrap.appendChild(lab);
+      return inp;
+    };
+    const r2 = (v) => String(Math.round(v * 100) / 100);
+    const pIn = mkField('P(x, y) =', el0.p, 'jsx-vf-formula');
+    const qIn = mkField('Q(x, y) =', el0.q, 'jsx-vf-formula');
+    const xIn = mkField('point x =', r2(st.x), 'jsx-vf-num');
+    const yIn = mkField('y =', r2(st.y), 'jsx-vf-num');
+    wrap.appendChild(msg);
+    syncInputs = () => {
+      if (document.activeElement !== xIn) xIn.value = r2(st.x);
+      if (document.activeElement !== yIn) yIn.value = r2(st.y);
+    };
+    const setFormula = (key, inp) => {
+      const f = compileSoft(inp.value);
+      inp.classList.toggle('is-bad', !f);
+      if (f) { fields[0][key] = f; msg.textContent = ''; refresh(); } else {
+        msg.textContent = 'Cannot read that formula. Use x and y, write products with * (2*x, not 2x), powers with ^, and functions like sin(x), sqrt(x), exp(y).';
+      }
+    };
+    pIn.addEventListener('input', () => setFormula('P', pIn));
+    qIn.addEventListener('input', () => setFormula('Q', qIn));
+    const setPoint = () => {
+      const a = parseFloat(xIn.value); const b = parseFloat(yIn.value);
+      if (!Number.isFinite(a) || !Number.isFinite(b)) return;
+      st.x = a; st.y = b; PR.moveTo([a, b]);
+      updateReadout(); board.update();
+    };
+    xIn.addEventListener('input', setPoint);
+    yIn.addEventListener('input', setPoint);
+    const presets = el0.presets.split('|').map((c) => c.trim()).filter(Boolean).map((c) => {
+      const i = c.indexOf(':'); const [formulas, pt] = c.slice(i + 1).split('@'); const [pp, qq] = formulas.split(';');
+      return { name: c.slice(0, i).trim(), p: pp.trim(), q: qq.trim(), pt: pt.split(',').map(Number) };
+    });
+    if (presets.length) {
+      const sw = document.createElement('div');
+      sw.className = 'jsx-switch';
+      controls.appendChild(sw);
+      presets.forEach((pr) => mkBtn(pr.name, () => {
+        pIn.value = pr.p; qIn.value = pr.q; setFormula('P', pIn); setFormula('Q', qIn);
+        xIn.value = r2(pr.pt[0]); yIn.value = r2(pr.pt[1]); setPoint();
+        refresh();
+      }, sw));
+    }
+    mkBtn('Show whole field', (b) => { st.show = !st.show; b.textContent = st.show ? 'Hide whole field' : 'Show whole field'; refresh(); });
+  }
   if (fields.length > 1) {
     const sw = document.createElement('div');
     sw.className = 'jsx-switch';
@@ -4591,7 +4694,7 @@ function renderJsxVectorField(el) {
     const btns = fields.map((f, i) => mkBtn(f.name, () => { st.idx = i; clearFlow(); refresh(); btns.forEach((b, j) => b.classList.toggle('is-on', j === i)); }, sw));
     btns[0].classList.add('is-on');
   }
-  mkBtn(st.unit ? 'True lengths' : 'Unit vectors', (b) => { st.unit = !st.unit; b.textContent = st.unit ? 'True lengths' : 'Unit vectors'; refresh(); });
+  if (!editable) mkBtn(st.unit ? 'True lengths' : 'Unit vectors', (b) => { st.unit = !st.unit; b.textContent = st.unit ? 'True lengths' : 'Unit vectors'; refresh(); });
   let flowBtn = null;
   if (el.hasAttribute('flow')) {
     flowBtn = mkBtn('Release particle', () => {
@@ -4605,7 +4708,7 @@ function renderJsxVectorField(el) {
   const hint = document.createElement('span');
   hint.className = 'muted small';
   hint.textContent = 'Drag the red point to read the field there.';
-  controls.appendChild(hint);
+  if (!editable) controls.appendChild(hint);
   refresh();
 }
 
