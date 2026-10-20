@@ -550,6 +550,10 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-board--basis { aspect-ratio: 1.6 / 1; }
 /* <jsx-projection> (js/jsxgraph.js, Linear Algebra 5.1): projection onto a line. */
 .jsx-board--projection { aspect-ratio: 1.8 / 1; }
+/* <jsx-jacobian> (js/jsxgraph.js, Calculus III 5.7): two boards side by side, each 1.15:1. */
+.jsx-board--jacobian { aspect-ratio: 1.15 / 1; }
+/* <jsx-vector-field> (js/jsxgraph.js, Calculus III 6.1). */
+.jsx-board--field { aspect-ratio: 1.6 / 1; }
 .la-mat { display: inline-grid; grid-template-columns: repeat(2, auto); gap: 0 0.7em; padding: 0 0.45em; margin: 0 0.15em; border-left: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 4px; vertical-align: middle; text-align: right; line-height: 1.25; font-weight: 700; }
 .la-vec { grid-template-columns: auto; }
 

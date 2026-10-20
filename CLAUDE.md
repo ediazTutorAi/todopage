@@ -804,3 +804,35 @@ Lesson: `linear-algebra/fall2025/2025-10-14-orthogonality/index.html` (Bretscher
 file; replaced a bare theorem-list stub, kept the folder and its `lectures.json` entry, whose title/description/tags were updated). Hand-authored, no
 `content.json`. Textbook pages: PDF pages 214 to 229 (book p. 202 to 217); the optional correlation text and Exercises beyond step 10 are homework. All numeric
 answers (Example 4, Theorem 5.1.6 example, Exercises 10, 26, 29, 40 to 43) were checked numerically.
+
+### `<jsx-jacobian>` and the Change of Variables lesson (added 2026-10-20)
+
+`<jsx-jacobian x="u*u-v*v" y="u*v" umin umax vmin vmax n h u v>` (`renderJsxJacobian` in `js/jsxgraph.js`, needs the JSXGraph CDN tags): two boards side by side.
+Left, the uv-rectangle `S` with a grid and a draggable `du x dv` piece (size slider); right, the image `R = T(S)`, the image of the grid, the image of the piece
+(red) and the dashed parallelogram spanned by `T_u du`, `T_v dv`. Readout: `J`, the true image area (shoelace on the traced boundary), `|J| du dv` and their ratio,
+which tends to 1 as the piece shrinks. `x`/`y` are plain JS expressions in `u`, `v` (same convention as `<jsx-lagrange>`); partials are central differences. Bounds fit the
+region automatically, equal axis scales. Uses `.jsx-fubini-grid` for the side-by-side layout. Only rectangular `S` is supported.
+
+Lesson: `calculus3/fall2025/2025-10-20-change-of-variables/` (OpenStax 5.7, 11 steps, 12 examples, timed for 40 minutes in `content.json` `notes`). `content.json` + `index.html`
+were generated from one step list, so edit both if you hand-edit either. Examples: OpenStax 5.65/5.66/5.67/5.68/5.70/5.71/5.72/5.73 plus Checkpoint 5.43, and extra ones added
+for variety (parallelogram with nonzero answer 4, ellipse area and integral 3 pi, `xy`/`y/x` region 225/16 using the inverse-Jacobian rule, ellipsoid volume). All answers
+checked with sympy (and a grid sum for the parallelogram and the curved region). The OpenStax page has no printed answers for its checkpoints. Spherical Jacobian in the order
+(rho, theta, phi) is `-rho^2 sin(phi)`, hence the absolute value.
+
+### `<jsx-vector-field>` and the Vector Fields lesson (added 2026-10-21)
+
+`<jsx-vector-field p q | fields="Name: P ; Q | Name2: P2 ; Q2" | potential="f" levels step xmin xmax probe unit flow flow-speed cross scale>` (`renderJsxVectorField` in
+`js/jsxgraph.js`, needs the JSXGraph CDN tags): a plane vector field drawn as arrows (tail at each grid node, spacing `step`), with a draggable red probe that reads out
+`F`, `|F|` and its own arrow. Arrow lengths are scaled from the 90th percentile of `|F|` and capped at 1.15 cells so singular fields (whirlpool, gravity slice) stay readable;
+the readout always has the exact values. Always-present "Unit vectors / True lengths" toggle (the normalized field). `fields=` puts several fields behind buttons on one
+board (used for tables of examples and for the matching exercise). `potential=` draws level curves plus the live level curve through the probe and uses the gradient as the
+field (so "grad f is perpendicular to level curves" is watched). `flow` adds Release/Pause/Clear: an RK4 particle with `dr/dt = F(r)` leaves a flow line. `cross` adds the
+cross-partial readout `P_y` vs `Q_x` at the probe ("NOT equal: not conservative"). Expressions are plain JS in x, y (`^` accepted for powers, but write `-(x^3)`, JS rejects `-x**3`).
+Field names are used as labels, so keep them short (F, G, A, W, F+G).
+
+Lesson: `calculus3/fall2025/2025-11-01-vector-fields/` (OpenStax 6.1, 11 steps timed for 40 minutes in `content.json` `notes`, entry in `lectures.json` dated 2026-03-22, just before
+Line Integrals). `content.json` + `index.html` generated from one step list, so edit both if you hand-edit either. Examples follow 6.1 (Examples 6.1 to 6.13, Checkpoints) plus extras:
+a normalization example, a failing potential check, a 3D potential check (`x^2 cos(yz) + y^2 z^2`), finding a potential for `<2xy+3, x^2+4y>` (`x^2 y + 3x + 2y^2`), flow-line
+verifications, constructing fields (Ex. 21 and two more) and the F/G/H matching exercise. Checkpoint answers are not printed on the OpenStax page, so all were checked with sympy.
+The OpenStax text of Checkpoint 6.9 is unreliable in the fetched copy, so a different 3D check was used instead. Teaching point worth keeping: the whirlpool `<y,-x>/(x^2+y^2)` passes
+the cross-partial test (`P_y = Q_x`) but is not conservative (circulation `-2 pi` on the unit circle), which is why the theorem is only a necessary condition.

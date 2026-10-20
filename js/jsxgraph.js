@@ -4204,6 +4204,411 @@ function renderJsxProjection(el) {
   refresh();
 }
 
+// <jsx-jacobian x="u*u-v*v" y="u*v" umin="0" umax="1" vmin="0" vmax="1" n="5" h="0.3" u="0.6" v="0.4">
+//
+// Change of variables (Calculus III 5.7): T(u,v) = (x,y). Left board: the uv-region S (a rectangle) with a
+// grid and a small du x dv piece the instructor drags around. Right board: the image R = T(S), the image
+// of the grid, and the image of the small piece (blue) next to the parallelogram spanned by T_u du and
+// T_v dv (dashed). The readout compares the true area of the image piece with |J| du dv, so "dA = |J| du dv"
+// is something watched (the ratio tends to 1 as the piece shrinks), and |J| is seen to vary from place to
+// place for a nonlinear T and to be constant for a linear one.
+// `x`/`y` are plain JS expressions in u and v (sin cos tan exp sqrt abs log pow pi in scope); partial
+// derivatives are central differences, so no derivative is typed in. `n` = grid lines per direction,
+// `h` = starting piece size (slider), `u`/`v` = starting corner of the piece. Axis bounds fit the region
+// automatically; both boards keep equal axis scales.
+const JACOBIAN_ASPECT = 1.15;
+
+function renderJsxJacobian(el) {
+  const TAG = 'jsx-jacobian';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const fx = compileMath(['u', 'v'], el.getAttribute('x') || 'u', TAG, 'x');
+  const fy = compileMath(['u', 'v'], el.getAttribute('y') || 'v', TAG, 'y');
+  if (!fx || !fy) return;
+  const umin = num('umin', 0); const umax = num('umax', 1);
+  const vmin = num('vmin', 0); const vmax = num('vmax', 1);
+  const N = Math.max(1, Math.round(num('n', 5)));
+  const hMax = Math.min(umax - umin, vmax - vmin);
+  const st = { h: Math.min(num('h', 0.3), hMax), u0: num('u', umin + 0.3 * (umax - umin)), v0: num('v', vmin + 0.3 * (vmax - vmin)) };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const grid = document.createElement('div');
+  grid.className = 'jsx-fubini-grid';
+  const mk = (cap) => {
+    const box = document.createElement('div');
+    const c = document.createElement('div');
+    c.className = 'muted small jsx-strip-cap';
+    c.textContent = cap;
+    const host = document.createElement('div');
+    host.className = 'jsx-board jsx-board--jacobian';
+    host.id = `jsx-board-${++boardCounter}`;
+    box.append(c, host);
+    grid.appendChild(box);
+    return host;
+  };
+  const hostUV = mk('uv-plane: the region S and a small piece (drag its corner)');
+  const hostXY = mk('xy-plane: the image R = T(S) and the image of the piece');
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, grid, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+  const green = '#2e8b57';
+
+  // fit bounds from a sample of the region's image
+  let bx0 = Infinity; let bx1 = -Infinity; let by0 = Infinity; let by1 = -Infinity;
+  for (let i = 0; i <= 30; i++) {
+    for (let j = 0; j <= 30; j++) {
+      const u = umin + ((umax - umin) * i) / 30; const v = vmin + ((vmax - vmin) * j) / 30;
+      const X = fx(u, v); const Y = fy(u, v);
+      bx0 = Math.min(bx0, X); bx1 = Math.max(bx1, X); by0 = Math.min(by0, Y); by1 = Math.max(by1, Y);
+    }
+  }
+  const fit = (lo, hi, hLo, hHi) => {
+    const wd = Math.max(hi - lo, 1e-6) * 1.3; const ht = Math.max(hHi - hLo, 1e-6) * 1.3;
+    const w2 = Math.max(wd, ht * JACOBIAN_ASPECT);
+    const cx = (lo + hi) / 2; const cy = (hLo + hHi) / 2;
+    return [cx - w2 / 2, cy + w2 / JACOBIAN_ASPECT / 2, cx + w2 / 2, cy - w2 / JACOBIAN_ASPECT / 2];
+  };
+  const mkBoard = (host, bb) => {
+    const b = JXG.JSXGraph.initBoard(host.id, {
+      boundingbox: bb, axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+      pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+    });
+    styleAxes(b, ink);
+    b.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+    b.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+    return b;
+  };
+  const bdUV = mkBoard(hostUV, fit(umin, umax, vmin, vmax));
+  const bdXY = mkBoard(hostXY, fit(bx0, bx1, by0, by1));
+
+  const du = (k) => umin + ((umax - umin) * k) / N;
+  const dv = (k) => vmin + ((vmax - vmin) * k) / N;
+  const seg = (b, a1, a2, b1, b2, color, w, op) => b.create('segment', [[a1, a2], [b1, b2]], { strokeColor: color, strokeWidth: w, strokeOpacity: op, highlight: false, fixed: true, withLabel: false });
+  const curveOf = (b, fn, t0, t1, color, w, op) => b.create('curve', [(t) => fn(t)[0], (t) => fn(t)[1], t0, t1], { strokeColor: color, strokeWidth: w, strokeOpacity: op, highlight: false, fixed: true, numberPoints: 80 });
+
+  for (let k = 0; k <= N; k++) {
+    const edge = k === 0 || k === N;
+    // u = const (blue) and v = const (green)
+    seg(bdUV, du(k), vmin, du(k), vmax, accent, edge ? 4 : 2, edge ? 0.9 : 0.4);
+    seg(bdUV, umin, dv(k), umax, dv(k), green, edge ? 4 : 2, edge ? 0.9 : 0.4);
+    curveOf(bdXY, (t) => [fx(du(k), t), fy(du(k), t)], vmin, vmax, accent, edge ? 4 : 2, edge ? 0.9 : 0.4);
+    curveOf(bdXY, (t) => [fx(t, dv(k)), fy(t, dv(k))], umin, umax, green, edge ? 4 : 2, edge ? 0.9 : 0.4);
+  }
+
+  // the small piece: corner (u0, v0), sides h
+  const P = bdUV.create('point', [() => st.u0, () => st.v0], { name: '', size: POINT_SIZE + 2, fillColor: negative, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false });
+  const rect = [[0, 0], [1, 0], [1, 1], [0, 1]].map(([a, b]) => bdUV.create('point', [() => st.u0 + a * st.h, () => st.v0 + b * st.h], { visible: false, fixed: true, name: '' }));
+  bdUV.create('polygon', rect, { fillColor: negative, fillOpacity: 0.35, borders: { strokeColor: negative, strokeWidth: 3 }, vertices: { visible: false }, highlight: false, fixed: true });
+
+  // image of the piece's boundary, traced t in [0,4]
+  const pieceImage = (t) => {
+    const h = st.h; const k = Math.floor(Math.min(t, 3.9999)); const f = t - k;
+    let u; let v;
+    if (k === 0) { u = st.u0 + f * h; v = st.v0; } else if (k === 1) { u = st.u0 + h; v = st.v0 + f * h; } else if (k === 2) { u = st.u0 + (1 - f) * h; v = st.v0 + h; } else { u = st.u0; v = st.v0 + (1 - f) * h; }
+    return [fx(u, v), fy(u, v)];
+  };
+  bdXY.create('curve', [(t) => pieceImage(t)[0], (t) => pieceImage(t)[1], 0, 4], { strokeColor: negative, strokeWidth: 3, fillColor: negative, fillOpacity: 0.35, highlight: false, fixed: true, numberPoints: 160 });
+
+  const e = 1e-5;
+  const partials = () => {
+    const u = st.u0; const v = st.v0;
+    return {
+      xu: (fx(u + e, v) - fx(u - e, v)) / (2 * e), xv: (fx(u, v + e) - fx(u, v - e)) / (2 * e),
+      yu: (fy(u + e, v) - fy(u - e, v)) / (2 * e), yv: (fy(u, v + e) - fy(u, v - e)) / (2 * e),
+    };
+  };
+  const tan = (a, b) => { const d = partials(); const base = [fx(st.u0, st.v0), fy(st.u0, st.v0)]; return [base[0] + a * d.xu * st.h + b * d.xv * st.h, base[1] + a * d.yu * st.h + b * d.yv * st.h]; };
+  const tpts = [[0, 0], [1, 0], [1, 1], [0, 1]].map(([a, b]) => bdXY.create('point', [() => tan(a, b)[0], () => tan(a, b)[1]], { visible: false, fixed: true, name: '' }));
+  bdXY.create('polygon', tpts, { fillColor: 'none', borders: { strokeColor: ink, strokeWidth: 2.5, dash: 2 }, vertices: { visible: false }, highlight: false, fixed: true });
+
+  const trueArea = () => {
+    const M = 200; let a = 0; let prev = pieceImage(0);
+    for (let i = 1; i <= M; i++) { const cur = pieceImage((4 * i) / M); a += prev[0] * cur[1] - cur[0] * prev[1]; prev = cur; }
+    return Math.abs(a / 2);
+  };
+  const f3 = (v) => (Math.abs(v) < 5e-4 ? '0' : String(Math.round(v * 1000) / 1000)).replace('-', '−');
+
+  function refresh() {
+    const d = partials();
+    const Jv = d.xu * d.yv - d.xv * d.yu;
+    const approx = Math.abs(Jv) * st.h * st.h;
+    const area = trueArea();
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">(u, v) = (<b>${f3(st.u0)}</b>, <b>${f3(st.v0)}</b>), Δu = Δv = <b>${f3(st.h)}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">J(u, v) = x<sub>u</sub>y<sub>v</sub> − x<sub>v</sub>y<sub>u</sub> = <b>${f3(Jv)}</b></span>` +
+      `<span class="jsx-trace-chip">area of the image piece = <b>${f3(area)}</b></span>` +
+      `<span class="jsx-trace-chip">|J| Δu Δv = <b>${f3(approx)}</b>` + (area > 1e-9 ? ` (ratio <b>${f3(approx / area)}</b>)` : '') + '</span>';
+    bdUV.update(); bdXY.update();
+  }
+  P.on('drag', () => {
+    st.u0 = Math.min(Math.max(P.X(), umin), umax - st.h);
+    st.v0 = Math.min(Math.max(P.Y(), vmin), vmax - st.h);
+    P.moveTo([st.u0, st.v0]);
+    refresh();
+  });
+
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = '<span class="jsx-slider-name">size of the piece</span><input type="range" min="0.02" step="0.01">';
+  const input = row.querySelector('input');
+  input.max = String(hMax);
+  input.value = String(st.h);
+  input.addEventListener('input', () => {
+    st.h = parseFloat(input.value);
+    st.u0 = Math.min(st.u0, umax - st.h); st.v0 = Math.min(st.v0, vmax - st.h);
+    refresh();
+  });
+  input.addEventListener('pointerup', () => input.blur());
+  controls.appendChild(row);
+  const hint = document.createElement('span');
+  hint.className = 'muted small';
+  hint.textContent = 'Dashed: the parallelogram spanned by T_u Δu and T_v Δv. Shrink the piece and the ratio tends to 1.';
+  controls.appendChild(hint);
+  refresh();
+}
+
+// <jsx-vector-field p="y" q="-x" xmin="-6" xmax="6" step="1" probe="2,1" flow cross>
+// <jsx-vector-field fields="Name: P ; Q | Name2: P2 ; Q2" ...>
+// <jsx-vector-field potential="x^2*y^2" levels="1 4 9" ...>
+//
+// Vector fields in the plane (Calculus III 6.1). Draws the field as arrows (tail at the grid node) on a
+// grid with spacing `step`. Arrow lengths are scaled so the longest typical arrow (90th percentile of
+// |F|) fills about 0.85 of a cell and none is longer than 1.15 cells, which keeps fields with a
+// singularity (the whirlpool) readable; `scale` overrides the factor. A draggable probe (red) shows the
+// exact F, |F| and its own arrow. Always-present button: "Unit vectors" toggles between true lengths and
+// the normalized field F/|F|. Expressions are plain JS in x and y (sin cos tan exp sqrt abs log pow pi in
+// scope); `^` is accepted for powers, but JS forbids a unary minus right before one: write -(x^3), not -x^3.
+//   fields=...   several fields behind buttons ("name: P ; Q" separated by `|`), so a table of examples
+//                or a matching exercise shares one board. Without it, `p` and `q` give a single field.
+//   potential=f  a scalar function f; the field is its gradient (finite differences). Draws level curves
+//                (`levels`, space separated; default: 7 values spread over f's range) plus the live level
+//                curve through the probe, so "grad f is perpendicular to level curves" is watched.
+//   flow         adds Release/Clear: a particle starts at the probe and moves with dr/dt = F(r), leaving
+//                its path (a flow line). `flow-speed` scales time (default 1).
+//   cross        adds the cross-partial test at the probe: dP/dy against dQ/dx.
+//   unit         start in unit-vector mode.     `probe="x,y"` start position.
+const FIELD_ASPECT = 1.6;
+
+function renderJsxVectorField(el) {
+  const TAG = 'jsx-vector-field';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const fe = (expr, attr) => compileMath(['x', 'y'], String(expr).replace(/\^/g, '**'), TAG, attr);
+  const H = 1e-5;
+
+  // ---- the list of fields ----
+  const fields = [];
+  const pot = el.getAttribute('potential') ? fe(el.getAttribute('potential'), 'potential') : null;
+  if (pot) {
+    fields.push({ name: '∇f', P: (x, y) => (pot(x + H, y) - pot(x - H, y)) / (2 * H), Q: (x, y) => (pot(x, y + H) - pot(x, y - H)) / (2 * H) });
+  } else if (el.getAttribute('fields')) {
+    el.getAttribute('fields').split('|').forEach((chunk, i) => {
+      const c = chunk.indexOf(':');
+      const name = c >= 0 ? chunk.slice(0, c).trim() : `F${i + 1}`;
+      const [ps, qs] = (c >= 0 ? chunk.slice(c + 1) : chunk).split(';');
+      const P = fe(ps, `fields[${i}] P`); const Q = fe(qs, `fields[${i}] Q`);
+      if (P && Q) fields.push({ name, P, Q });
+    });
+  } else {
+    const P = fe(el.getAttribute('p') || '0', 'p'); const Q = fe(el.getAttribute('q') || '0', 'q');
+    if (P && Q) fields.push({ name: 'F', P, Q });
+  }
+  if (!fields.length) return;
+
+  const xmin = num('xmin', -6); const xmax = num('xmax', 6);
+  const ymid = (num('ymin', -3.75) + num('ymax', 3.75)) / 2;
+  const yhalf = (xmax - xmin) / FIELD_ASPECT / 2;
+  const ymin = ymid - yhalf; const ymax = ymid + yhalf;
+  const step = num('step', 1);
+  const scaleAttr = el.hasAttribute('scale') ? num('scale', 1) : null;
+  const flowSpeed = num('flow-speed', 1);
+  const probe0 = (el.getAttribute('probe') || '1,1').split(',').map((t) => Number(new Function(`return (${t});`)()));
+  const st = { idx: 0, unit: el.hasAttribute('unit'), x: probe0[0], y: probe0[1], run: false, raf: null, path: [[probe0[0], probe0[1]]] };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--field';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+  const muted = cssVar('--muted') || '#6b7280';
+  const green = '#2e8b57';
+
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymax, xmax, ymin], axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+
+  const cur = () => fields[st.idx];
+  const Fv = (x, y) => [cur().P(x, y), cur().Q(x, y)];
+  const finite = (v) => Number.isFinite(v[0]) && Number.isFinite(v[1]);
+
+  // level curves for a potential
+  if (pot) {
+    let levels = (el.getAttribute('levels') || '').split(/[\s,]+/).filter(Boolean).map(Number);
+    if (!levels.length) {
+      let lo = Infinity; let hi = -Infinity;
+      for (let x = xmin; x <= xmax; x += (xmax - xmin) / 40) for (let y = ymin; y <= ymax; y += (ymax - ymin) / 25) { const v = pot(x, y); if (Number.isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }
+      levels = Array.from({ length: 7 }, (_, i) => lo + ((hi - lo) * (i + 1)) / 8);
+    }
+    levels.forEach((c) => board.create('implicitcurve', [(x, y) => pot(x, y) - c], { strokeColor: muted, strokeOpacity: 0.5, strokeWidth: 2, highlight: false, fixed: true }));
+    board.create('implicitcurve', [(x, y) => pot(x, y) - pot(st.x, st.y)], { strokeColor: green, strokeWidth: 4, highlight: false, fixed: true });
+  }
+
+  // grid of arrows
+  const nodes = [];
+  for (let i = Math.ceil(xmin / step); i * step <= xmax + 1e-9; i++) for (let j = Math.ceil(ymin / step); j * step <= ymax + 1e-9; j++) nodes.push({ x: i * step, y: j * step, dx: 0, dy: 0, ok: true });
+  let kScale = 1;
+  function recompute() {
+    const mags = [];
+    nodes.forEach((n) => { const v = Fv(n.x, n.y); n.v = v; if (finite(v)) { const m = Math.hypot(v[0], v[1]); if (m > 1e-9) mags.push(m); } });
+    mags.sort((a, b) => a - b);
+    const ref = mags.length ? mags[Math.floor(0.9 * (mags.length - 1))] : 1;
+    kScale = scaleAttr != null ? scaleAttr : (0.85 * step) / ref;
+    nodes.forEach((n) => {
+      const m = finite(n.v) ? Math.hypot(n.v[0], n.v[1]) : NaN;
+      if (!(m > 1e-9)) { n.ok = false; n.dx = 0; n.dy = 0; return; }
+      n.ok = true;
+      const len = st.unit ? 0.8 * step : Math.min(m * kScale, 1.15 * step);
+      n.dx = (n.v[0] / m) * len; n.dy = (n.v[1] / m) * len;
+    });
+  }
+  recompute();
+  nodes.forEach((n) => {
+    const a = board.create('point', [n.x, n.y], { visible: false, fixed: true, name: '' });
+    const b = board.create('point', [() => n.x + n.dx, () => n.y + n.dy], { visible: false, fixed: true, name: '' });
+    n.arrow = board.create('arrow', [a, b], { strokeColor: accent, strokeWidth: 3, lastArrow: { type: 2, size: 6 }, highlight: false, fixed: true });
+  });
+
+  // probe
+  const PR = board.create('point', [st.x, st.y], { name: '', size: POINT_SIZE + 2, fillColor: negative, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false });
+  const probeVec = () => {
+    const v = Fv(st.x, st.y); const m = Math.hypot(v[0], v[1]);
+    if (!finite(v) || !(m > 1e-9)) return [0, 0];
+    const len = st.unit ? 0.8 * step : Math.min(m * kScale, 1.15 * step);
+    return [(v[0] / m) * len, (v[1] / m) * len];
+  };
+  const tip = board.create('point', [() => st.x + probeVec()[0], () => st.y + probeVec()[1]], { visible: false, fixed: true, name: '' });
+  board.create('arrow', [PR, tip], { strokeColor: negative, strokeWidth: 5, lastArrow: { type: 2, size: 9 }, highlight: false, fixed: true });
+
+  // flow line
+  const pathCurve = makeDataCurve(board, () => ({ xs: st.path.map((q) => q[0]), ys: st.path.map((q) => q[1]) }), { strokeColor: green, strokeWidth: 4, highlight: false, fixed: true });
+  const bug = board.create('point', [() => st.path[st.path.length - 1][0], () => st.path[st.path.length - 1][1]], { name: '', size: POINT_SIZE, fillColor: green, strokeColor: '#fff', strokeWidth: 2, highlight: false, fixed: true, visible: false });
+
+  const f3 = (v) => (Number.isFinite(v) ? (Math.abs(v) < 5e-4 ? '0' : String(Math.round(v * 1000) / 1000)).replace('-', '−') : 'undefined');
+  const vecHtml = (a, b) => `⟨<b>${f3(a)}</b>, <b>${f3(b)}</b>⟩`;
+  const hasCross = el.hasAttribute('cross');
+
+  function updateReadout() {
+    const v = Fv(st.x, st.y);
+    let html = `<span class="jsx-trace-chip">(x, y) = (<b>${f3(st.x)}</b>, <b>${f3(st.y)}</b>)</span>` +
+      `<span class="jsx-trace-chip jsx-trace-main" style="color:${negative}">${cur().name}(x, y) = ${vecHtml(v[0], v[1])}</span>` +
+      `<span class="jsx-trace-chip">‖${cur().name}‖ = <b>${f3(Math.hypot(v[0], v[1]))}</b></span>`;
+    if (pot) html += `<span class="jsx-trace-chip">f(x, y) = <b>${f3(pot(st.x, st.y))}</b></span>`;
+    if (hasCross) {
+      const e = 1e-4; const h2 = 1e-3;
+      const Py = (cur().P(st.x, st.y + h2) - cur().P(st.x, st.y - h2)) / (2 * h2);
+      const Qx = (cur().Q(st.x + h2, st.y) - cur().Q(st.x - h2, st.y)) / (2 * h2);
+      const same = Math.abs(Py - Qx) < 1e-3 + e;
+      html += `<span class="jsx-trace-chip">∂P/∂y = <b>${f3(Py)}</b></span><span class="jsx-trace-chip">∂Q/∂x = <b>${f3(Qx)}</b></span>` +
+        `<span class="jsx-trace-chip jsx-trace-main ${same ? 'is-parallel' : ''}">${same ? 'equal here (test passes)' : 'NOT equal: not conservative'}</span>`;
+    }
+    readout.innerHTML = html;
+  }
+  function refresh() {
+    recompute();
+    nodes.forEach((n) => n.arrow.setAttribute({ visible: n.ok, strokeColor: accent }));
+    updateReadout();
+    board.update();
+  }
+
+  // flow animation (RK4 on dr/dt = F(r))
+  function stopFlow() { st.run = false; if (st.raf) cancelAnimationFrame(st.raf); st.raf = null; if (flowBtn) flowBtn.textContent = 'Release particle'; }
+  function clearFlow() { stopFlow(); st.path = [[st.x, st.y]]; bug.setAttribute({ visible: false }); board.update(); }
+  function tick() {
+    if (!st.run) return;
+    for (let s = 0; s < 4; s++) {
+      const [x, y] = st.path[st.path.length - 1];
+      const v0 = Fv(x, y); const sp = Math.hypot(v0[0], v0[1]);
+      if (!finite(v0) || sp < 1e-8) { stopFlow(); break; }
+      const dt = Math.min(0.012 * flowSpeed, (0.04 * step) / sp);
+      const k1 = v0; const k2 = Fv(x + (dt / 2) * k1[0], y + (dt / 2) * k1[1]);
+      const k3 = Fv(x + (dt / 2) * k2[0], y + (dt / 2) * k2[1]); const k4 = Fv(x + dt * k3[0], y + dt * k3[1]);
+      const nx = x + (dt / 6) * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
+      const ny = y + (dt / 6) * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+      if (!Number.isFinite(nx) || !Number.isFinite(ny) || nx < xmin || nx > xmax || ny < ymin || ny > ymax || st.path.length > 6000) { stopFlow(); break; }
+      st.path.push([nx, ny]);
+    }
+    board.update();
+    if (st.run) st.raf = requestAnimationFrame(tick);
+  }
+
+  PR.on('drag', () => {
+    st.x = Math.min(Math.max(PR.X(), xmin), xmax); st.y = Math.min(Math.max(PR.Y(), ymin), ymax);
+    clearFlow(); updateReadout(); board.update();
+  });
+
+  const mkBtn = (label, on, parent = controls) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => on(b));
+    parent.appendChild(b);
+    return b;
+  };
+  if (fields.length > 1) {
+    const sw = document.createElement('div');
+    sw.className = 'jsx-switch';
+    controls.appendChild(sw);
+    const btns = fields.map((f, i) => mkBtn(f.name, () => { st.idx = i; clearFlow(); refresh(); btns.forEach((b, j) => b.classList.toggle('is-on', j === i)); }, sw));
+    btns[0].classList.add('is-on');
+  }
+  mkBtn(st.unit ? 'True lengths' : 'Unit vectors', (b) => { st.unit = !st.unit; b.textContent = st.unit ? 'True lengths' : 'Unit vectors'; refresh(); });
+  let flowBtn = null;
+  if (el.hasAttribute('flow')) {
+    flowBtn = mkBtn('Release particle', () => {
+      if (st.run) { stopFlow(); return; }
+      if (st.path.length <= 1) { st.path = [[st.x, st.y]]; }
+      bug.setAttribute({ visible: true });
+      st.run = true; flowBtn.textContent = 'Pause'; st.raf = requestAnimationFrame(tick);
+    });
+    mkBtn('Clear path', clearFlow);
+  }
+  const hint = document.createElement('span');
+  hint.className = 'muted small';
+  hint.textContent = 'Drag the red point to read the field there.';
+  controls.appendChild(hint);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -4221,4 +4626,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-poly-map').forEach(renderJsxPolyMap);
   document.querySelectorAll('jsx-angle-sum').forEach(renderJsxAngleSum);
   document.querySelectorAll('jsx-projection').forEach(renderJsxProjection);
+  document.querySelectorAll('jsx-jacobian').forEach(renderJsxJacobian);
+  document.querySelectorAll('jsx-vector-field').forEach(renderJsxVectorField);
 });

@@ -225,6 +225,40 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-20",
+    "title": "Change of Variables in Multiple Integrals",
+    "subtitle": "",
+    "description": "Change of variables in double and triple integrals (OpenStax 5.7, a 40 minute class): watch a small du dv piece be stretched into its image to see the Jacobian, then work many examples: parallelograms, a hard integrand, ellipses, curved boundaries, triple integrals, and the cylindrical and spherical factors as special cases.",
+    "tags": [
+      "change of variables",
+      "jacobian",
+      "double integrals",
+      "triple integrals",
+      "substitution"
+    ],
+    "url": "calculus3/fall2025/2025-10-20-change-of-variables/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
+    "date": "2026-03-22",
+    "title": "Vector Fields",
+    "subtitle": "",
+    "description": "Vector fields (OpenStax 6.1, a 40 minute class): drag a probe through radial, rotational, whirlpool, unit, gravitational and gradient fields, release a particle to trace flow lines, and use a live cross-partial readout to test for conservative fields, with many verified examples.",
+    "tags": [
+      "vector fields",
+      "radial field",
+      "rotational field",
+      "gradient field",
+      "conservative field",
+      "potential function",
+      "flow lines"
+    ],
+    "url": "calculus3/fall2025/2025-11-01-vector-fields/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-16",
     "title": "Triple Integrals",
     "subtitle": "",
