@@ -4050,6 +4050,160 @@ function renderJsxAngleSum(el) {
   refresh();
 }
 
+// <jsx-projection x="1,3" y="4,1" pythag cs>
+//
+// Orthogonal projection onto a line (Linear Algebra 5.1). L = span(y) with a draggable tip, and a
+// draggable x. Draws proj_L(x) (blue, along L) and x-perp (red, translated to the tip of the
+// projection so the right angle is visible), plus the right-angle mark. Default readout: x . u for
+// the unit vector u = y/|y|, proj_L(x) = (x . u) u, and x-perp. `pythag` adds
+// |x|^2 = |proj|^2 + |x-perp|^2 (Theorem 5.1.9/5.1.10); `cs` adds |x . y|, |x||y| and the angle
+// (Cauchy-Schwarz and Definition 5.1.12). Equal axis scales so perpendicular looks perpendicular.
+const PROJECTION_ASPECT = 1.8;
+
+function renderJsxProjection(el) {
+  const TAG = 'jsx-projection';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  let X0; let Y0;
+  try {
+    X0 = parseNumList(el.getAttribute('x') || '1,3');
+    Y0 = parseNumList(el.getAttribute('y') || '4,1');
+  } catch (err) {
+    console.error(`<${TAG}>: could not parse an attribute`, err);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const pythag = el.hasAttribute('pythag');
+  const cs = el.hasAttribute('cs');
+  const xmin = num('xmin', -5);
+  const xmax = num('xmax', 7);
+  const ymid = (num('ymin', -3) + num('ymax', 5)) / 2;
+  const yhalf = (xmax - xmin) / PROJECTION_ASPECT / 2;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--projection';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+  const green = '#2e8b57';
+
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymid + yhalf, xmax, ymid - yhalf],
+    axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  const pt = (opts) => ({ name: '', size: POINT_SIZE + 2, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false, ...opts });
+  const O = board.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+  const py = board.create('point', [...Y0], pt({ fillColor: green }));
+  const px = board.create('point', [...X0], pt({ fillColor: ink }));
+
+  const ylen = () => Math.hypot(py.X(), py.Y());
+  const ux = () => py.X() / (ylen() || 1);
+  const uy = () => py.Y() / (ylen() || 1);
+  const dotU = () => px.X() * ux() + px.Y() * uy();
+  const projX = () => dotU() * ux();
+  const projY = () => dotU() * uy();
+  const proj = board.create('point', [projX, projY], { visible: false, fixed: true, name: '' });
+
+  // L, extended both ways
+  board.create('line', [O, py], { strokeColor: green, strokeOpacity: 0.55, strokeWidth: 3, dash: 0, highlight: false, fixed: true, straightFirst: true, straightLast: true });
+  board.create('arrow', [O, py], { strokeColor: green, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  board.create('arrow', [O, px], { strokeColor: ink, strokeWidth: 5, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  board.create('arrow', [O, proj], { strokeColor: accent, strokeWidth: 7, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  board.create('arrow', [proj, px], { strokeColor: negative, strokeWidth: 5, dash: 2, lastArrow: { size: 9 }, highlight: false, fixed: true });
+
+  // right-angle mark at proj, drawn in the L-direction / perpendicular-direction frame
+  const SQ = 0.35;
+  const sgnAlong = () => (px.X() * ux() + px.Y() * uy() >= 0 ? -1 : 1);
+  const perpSign = () => {
+    const cross = ux() * (px.Y() - projY()) - uy() * (px.X() - projX());
+    return cross >= 0 ? 1 : -1;
+  };
+  const corner = (a, b) => [
+    projX() + a * SQ * ux() + b * SQ * perpSign() * (-uy()),
+    projY() + a * SQ * uy() + b * SQ * perpSign() * ux(),
+  ];
+  const sqA = board.create('point', [() => corner(sgnAlong(), 0)[0], () => corner(sgnAlong(), 0)[1]], { visible: false, fixed: true, name: '' });
+  const sqB = board.create('point', [() => corner(sgnAlong(), 1)[0], () => corner(sgnAlong(), 1)[1]], { visible: false, fixed: true, name: '' });
+  const sqC = board.create('point', [() => corner(0, 1)[0], () => corner(0, 1)[1]], { visible: false, fixed: true, name: '' });
+  board.create('polygon', [sqA, sqB, sqC, proj], { fillColor: 'none', borders: { strokeColor: ink, strokeWidth: 2 }, vertices: { visible: false }, highlight: false, fixed: true });
+
+  const lab = (fn, txt, color) => board.create('text', [() => fn()[0], () => fn()[1], txt], {
+    fontSize: READOUT_VALUE_FONT, color, fixed: true, cssStyle: 'font-weight:800',
+  });
+  lab(() => [py.X() + 0.2, py.Y() + 0.3], 'y', green);
+  lab(() => [px.X() + 0.2, px.Y() + 0.3], 'x', ink);
+  lab(() => [projX() / 2 - 0.2 * uy(), projY() / 2 + 0.2 * ux() - 0.55], 'proj', accent);
+  lab(() => [(projX() + px.X()) / 2 + 0.2, (projY() + px.Y()) / 2], 'x⊥', negative);
+
+  const f2 = (v) => fmtNum(Math.round(v * 100) / 100).replace('-', '−');
+  const vecHtml = (a, b) => `<span class="la-mat la-vec"><span>${f2(a)}</span><span>${f2(b)}</span></span>`;
+
+  function updateReadout() {
+    const xx = px.X() * px.X() + px.Y() * px.Y();
+    const pp = projX() * projX() + projY() * projY();
+    const perpX = px.X() - projX();
+    const perpY = px.Y() - projY();
+    const qq = perpX * perpX + perpY * perpY;
+    let html =
+      `<span class="jsx-trace-chip">x · u = <b>${f2(dotU())}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main" style="color:${accent}">proj = (x · u)u = ${vecHtml(projX(), projY())}</span>` +
+      `<span class="jsx-trace-chip" style="color:${negative}">x⊥ = x − proj = ${vecHtml(perpX, perpY)}</span>`;
+    if (pythag) {
+      html += `<span class="jsx-trace-chip">‖x‖² = <b>${f2(xx)}</b></span>` +
+        `<span class="jsx-trace-chip">‖proj‖² + ‖x⊥‖² = ${f2(pp)} + ${f2(qq)} = <b>${f2(pp + qq)}</b></span>` +
+        `<span class="jsx-trace-chip">‖proj‖ = <b>${f2(Math.sqrt(pp))}</b> ≤ ‖x‖ = <b>${f2(Math.sqrt(xx))}</b></span>`;
+    }
+    if (cs) {
+      const lx = Math.sqrt(xx);
+      const d = px.X() * py.X() + px.Y() * py.Y();
+      const cosT = lx * ylen() > 1e-9 ? Math.max(-1, Math.min(1, d / (lx * ylen()))) : NaN;
+      const ang = Number.isFinite(cosT) ? (Math.acos(cosT) * 180) / Math.PI : NaN;
+      html += `<span class="jsx-trace-chip">|x · y| = <b>${f2(Math.abs(d))}</b></span>` +
+        `<span class="jsx-trace-chip">‖x‖‖y‖ = <b>${f2(lx * ylen())}</b></span>` +
+        `<span class="jsx-trace-chip jsx-trace-main">cos θ = <b>${Number.isFinite(cosT) ? f2(cosT) : '?'}</b>, θ = <b>${Number.isFinite(ang) ? f2(ang) : '?'}°</b></span>`;
+    }
+    readout.innerHTML = html;
+  }
+  function refresh() { updateReadout(); board.update(); }
+  px.on('drag', refresh);
+  py.on('drag', refresh);
+
+  const mkBtn = (label, on) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', on);
+    controls.appendChild(b);
+  };
+  mkBtn('Put x on L', () => { px.moveTo([projX(), projY()]); refresh(); });
+  mkBtn('Make x ⟂ L', () => { px.moveTo([-uy() * Math.hypot(px.X(), px.Y()), ux() * Math.hypot(px.X(), px.Y())]); refresh(); });
+  mkBtn('Reset', () => { py.moveTo(Y0); px.moveTo(X0); refresh(); });
+  const hint = document.createElement('span');
+  hint.className = 'muted small';
+  hint.textContent = 'Drag x, or drag the tip of y to turn the line.';
+  controls.appendChild(hint);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -4066,4 +4220,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-polar-region').forEach(renderJsxPolarRegion);
   document.querySelectorAll('jsx-poly-map').forEach(renderJsxPolyMap);
   document.querySelectorAll('jsx-angle-sum').forEach(renderJsxAngleSum);
+  document.querySelectorAll('jsx-projection').forEach(renderJsxProjection);
 });

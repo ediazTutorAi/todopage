@@ -512,11 +512,15 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-03-17",
-    "title": "Orthogonality",
+    "title": "Orthogonal Projections and Orthonormal Bases",
     "subtitle": "",
-    "description": "",
+    "description": "Section 5.1: orthogonal and orthonormal vectors, projection onto a subspace and its formula, orthogonal complements, Pythagoras, Cauchy-Schwarz and the angle between vectors, with a draggable projection diagram.",
     "tags": [
-      "orthogonality"
+      "orthogonality",
+      "orthonormal basis",
+      "orthogonal projection",
+      "orthogonal complement",
+      "cauchy-schwarz"
     ],
     "url": "linear-algebra/fall2025/2025-10-14-orthogonality/index.html"
   },

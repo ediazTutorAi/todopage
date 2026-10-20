@@ -792,3 +792,15 @@ Lesson: `calculus3/fall2025/2025-10-15-cylindrical-sphericals-coordinates/` (Ope
 replaced a 7-step stub that used GeoGebra). `content.json` + `index.html` were generated from one step list, so edit both if you hand-edit either.
 Examples use `<solid-3d>` written in Cartesian limits (cone/paraboloid 4pi/15, ice cream cone 8pi(2-sqrt2)/3 and 2pi, converted integral 16pi/5,
 unit ball 4pi(e-1)/3), all checked with sympy and against the sweep readouts. `<solid-3d>` numeric attributes (`xmin`...) have no `sqrt` in scope: write `1.4142`.
+
+### `<jsx-projection>` and the Linear Algebra 5.1 lesson (added 2026-10-19)
+
+`<jsx-projection x="1,3" y="4,1" pythag cs>` (`renderJsxProjection` in `js/jsxgraph.js`, needs the JSXGraph CDN tags): a line `L = span(y)` (draggable
+tip) and a draggable `x`, drawn with `proj_L(x)` (blue), `x-perp` (red, translated to the projection's tip, right-angle mark) and a readout of `x . u`,
+the projection and `x-perp`. `pythag` adds `|x|^2 = |proj|^2 + |x-perp|^2` and `|proj| <= |x|`; `cs` adds `|x . y|`, `|x||y|` and the angle
+(Cauchy-Schwarz, Definition 5.1.12). Buttons: "Put x on L", "Make x perp L", Reset. 2D only (no plane projection view).
+
+Lesson: `linear-algebra/fall2025/2025-10-14-orthogonality/index.html` (Bretscher 5.1, 10 steps timed for 40 minutes in an HTML comment at the top of the
+file; replaced a bare theorem-list stub, kept the folder and its `lectures.json` entry, whose title/description/tags were updated). Hand-authored, no
+`content.json`. Textbook pages: PDF pages 214 to 229 (book p. 202 to 217); the optional correlation text and Exercises beyond step 10 are homework. All numeric
+answers (Example 4, Theorem 5.1.6 example, Exercises 10, 26, 29, 40 to 43) were checked numerically.

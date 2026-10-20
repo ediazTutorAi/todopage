@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Orthogonal Projections and Orthonormal Bases</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-projection>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,151 +34,238 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Orthogonality</h1>
-  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Orthogonal Projections and Orthonormal Bases</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-      <div class="step is-visible" data-step="1">
-        <div class="step-title">Definition 5.1.1</div>
-        <div class="step-subtitle">Orthogonality, length, unit vectors</div>
-        <div class="step-body">
-          a. Two vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$ are orthogonal if their dot product is zero, that is, if $\vec{u}\cdot \vec{v}=0$. We write $\vec{u}\perp \vec{v}$ to indicate that $\vec{u}$ and $\vec{v}$ are orthogonal.<br><br>
-          b. The length or norm of a vector $\vec{v}$ in $\mathbb{R}^{n}$ is the non-negative number $\|\vec{v}\|=\sqrt{\vec{v}\cdot \vec{v}}=\sqrt{v_1^2+\cdots+v_n^2}$.<br><br>
-          c. A vector $\vec{u}$ in $\mathbb{R}^{n}$ is a unit vector if its length is 1, that is, if $\|\vec{u}\|=1$.
-        </div>
-      </div>
+        <!-- Section 5.1 (Bretscher), 10 steps for a 40 minute class:
+             1 length/orthogonal (3) · 2 orthonormal (4) · 3 explore projection (4) · 4 projection formula (5) ·
+             5 Example 4 (4) · 6 coordinates (3) · 7 complement (4) · 8 Pythagoras (3) · 9 Cauchy-Schwarz/angle (4) ·
+             10 practice (6). Correlation (optional) and the exercises beyond step 10 are homework. -->
 
-      <div class="step" data-step="2">
-        <div class="step-title">Definition 5.1.2</div>
-        <div class="step-subtitle">Orthonormal vectors</div>
-        <div class="step-body">
-          A set of vectors $\{\vec{u_1},\cdots,\vec{u_m}\}$ in $\mathbb{R}^{n}$ is orthonormal if the vectors are unit vectors and pairwise orthogonal, that is, if $\|\vec{u_i}\|=1$ for all i from 1 to m, and if $\vec{u_i}\cdot \vec{u_j}=0$ whenever $i\ne j$.
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Definition 5.1.1</div>
+          <div class="step-subtitle">Orthogonality, length, unit vectors</div>
+          <div class="step-body">
+<p><b>a.</b> \(\vec v\) and \(\vec w\) in \(\mathbb{R}^n\) are <b>orthogonal</b> (perpendicular) if \(\vec v\cdot\vec w=0\).</p>
+<p><b>b.</b> The <b>length</b> (norm) of \(\vec v\) is \(\|\vec v\|=\sqrt{\vec v\cdot\vec v}=\sqrt{v_1^2+\cdots+v_n^2}\).</p>
+<p><b>c.</b> \(\vec u\) is a <b>unit vector</b> if \(\|\vec u\|=1\). For \(\vec v\neq\vec 0\), \(\ \vec u=\dfrac{1}{\|\vec v\|}\vec v\) is a unit vector.</p>
+<p>A vector \(\vec x\) is <b>orthogonal to a subspace</b> \(V\) if \(\vec x\cdot\vec v=0\) for all \(\vec v\) in \(V\). It is enough to check a basis \(\vec v_1,\dots,\vec v_m\) of \(V\).</p>
+<p class="muted small">Warm up with \(\vec v=\begin{bmatrix}2\\3\\6\end{bmatrix}\) and \(\vec w=\begin{bmatrix}3\\-6\\2\end{bmatrix}\).</p>
+<table>
+  <tr><td>\(\|\vec v\|\)</td><td><reveal>\(\sqrt{4+9+36}=\sqrt{49}=7\)</reveal></td></tr>
+  <tr><td>A unit vector in the direction of \(\vec v\)</td><td><reveal>\(\dfrac17\begin{bmatrix}2\\3\\6\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Is \(\vec v\perp\vec w\)?</td><td><reveal>\(\vec v\cdot\vec w=6-18+12=0\). Yes.</reveal></td></tr>
+  <tr><td>\(\|\vec w\|\)</td><td><reveal>\(\sqrt{9+36+4}=7\). Keep these two, they return in the practice step.</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
 
-      <div class="step" data-step="3">
-        <div class="step-title">Theorem 5.1.3</div>
-        <div class="step-subtitle">Properties of orthonormal vectors</div>
-        <div class="step-body">
-          Let $\{\vec{u_1},\cdots,\vec{u_m}\}$ be an orthonormal set of vectors in $\mathbb{R}^{n}$. Then:<br><br>
-          a. The set $\{\vec{u_1},\cdots,\vec{u_m}\}$ is linearly independent.<br><br>
-          b. Orthonormal vectors form a basis of their span. In particular, if m=n, then $\{\vec{u_1},\cdots,\vec{u_m}\}$ is a basis of $\mathbb{R}^{n}$.<br><br>
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Definition 5.1.2 and Theorem 5.1.3</div>
+          <div class="step-subtitle">Orthonormal vectors</div>
+          <div class="step-body">
+<p>Vectors \(\vec u_1,\dots,\vec u_m\) in \(\mathbb{R}^n\) are <b>orthonormal</b> if they are unit vectors and orthogonal to one another:</p>
+$$\vec u_i\cdot\vec u_j=\begin{cases}1&\text{if }i=j\\0&\text{if }i\neq j.\end{cases}$$
+<table>
+  <tr><td>Example 1. Are \(\vec e_1,\dots,\vec e_n\) orthonormal?</td><td><reveal>Yes: \(\vec e_i\cdot\vec e_i=1\) and \(\vec e_i\cdot\vec e_j=0\) for \(i\neq j\).</reveal></td></tr>
+  <tr><td>Example 2. \(\begin{bmatrix}\cos\theta\\ \sin\theta\end{bmatrix}\) and \(\begin{bmatrix}-\sin\theta\\ \cos\theta\end{bmatrix}\)</td><td><reveal>Dot product \(-\cos\theta\sin\theta+\sin\theta\cos\theta=0\), and each has length \(\sqrt{\cos^2\theta+\sin^2\theta}=1\). Yes, for every \(\theta\).</reveal></td></tr>
+  <tr><td>Example 3. \(\vec u_1=\tfrac12\begin{bmatrix}1\\1\\1\\1\end{bmatrix},\ \vec u_2=\tfrac12\begin{bmatrix}1\\1\\-1\\-1\end{bmatrix},\ \vec u_3=\tfrac12\begin{bmatrix}1\\-1\\1\\-1\end{bmatrix}\). Verify.</td><td><reveal>\(\|\vec u_i\|^2=\tfrac14\cdot4=1\). \(\vec u_1\cdot\vec u_2=\tfrac14(1+1-1-1)=0\), and likewise for the other pairs.</reveal></td></tr>
+  <tr><td>Can we find a \(\vec u_4\) in \(\mathbb{R}^4\) so that all four are orthonormal?</td><td><reveal>Yes: \(\vec u_4=\pm\tfrac12\begin{bmatrix}1\\-1\\-1\\1\end{bmatrix}\). Exactly two choices (Exercise 16).</reveal></td></tr>
+</table>
+<p><b>Theorem 5.1.3.</b> (a) Orthonormal vectors are linearly independent. (b) Orthonormal vectors \(\vec u_1,\dots,\vec u_n\) in \(\mathbb{R}^n\) form a basis of \(\mathbb{R}^n\).</p>
+<table>
+  <tr><td>Proof of (a): start from \(c_1\vec u_1+\cdots+c_m\vec u_m=\vec 0\). Dot both sides with \(\vec u_i\).</td><td><reveal>\(c_1(\vec u_1\cdot\vec u_i)+\cdots+c_i(\vec u_i\cdot\vec u_i)+\cdots+c_m(\vec u_m\cdot\vec u_i)=0\). Every term vanishes except \(c_i\cdot1\), so \(c_i=0\). This holds for each \(i\).</reveal></td></tr>
+  <tr><td>Why (b)?</td><td><reveal>\(n\) independent vectors in an \(n\)-dimensional space form a basis (Section 3.3).</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="4">
-        <div class="step-title">Theorem 5.1.4</div>
-        <div class="step-subtitle">Orthogonal Projection</div>
-        <div class="step-body">
-          Consider a vector $\vec{x}$ in $\mathbb{R}^{n}$ and a subspace V of $\mathbb{R}^{n}$. Then we can write
-          $$\vec{x}=\vec{x}^{||}+\vec{x}^{\perp}$$ 
-          where $\vec{x}^{||}$ is in V and $\vec{x}^{\perp}$ is perpendicular to V, and this representation is unique. The vector $\vec{x}^{||}$ is called the orthogonal projection of $\vec{x}$ onto V, denoted by $proj_V(\vec{x})$. The transformation $proj_V:\mathbb{R}^{n}\to V$ is a linear transformation.
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Explore: Projection onto a Line</div>
+          <div class="step-subtitle">Before the theorem, play with it</div>
+          <div class="step-body">
+<p>The green line \(L\) is spanned by \(\vec y\). The vector \(\vec x\) is split into a part along \(L\) (blue) and a part perpendicular to \(L\) (red). Drag \(\vec x\), then drag the tip of \(\vec y\).</p>
+<jsx-projection x="1,3" y="4,1"></jsx-projection>
+<table>
+  <tr><td>Where does \(\vec x\) sit when \(\vec x^{\perp}=\vec 0\)?</td><td><reveal>On the line \(L\). Then \(\text{proj}_L\vec x=\vec x\).</reveal></td></tr>
+  <tr><td>What happens to the projection when \(\vec x\perp L\)?</td><td><reveal>It collapses to \(\vec 0\).</reveal></td></tr>
+  <tr><td>Rotate \(L\) by dragging \(\vec y\). Does the readout \(\vec x\cdot\vec u\) depend on the length of \(\vec y\)?</td><td><reveal>No. \(\vec u=\vec y/\|\vec y\|\) is the unit vector on \(L\), and the projection is \((\vec x\cdot\vec u)\vec u\). Only the direction of \(L\) matters.</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="5">
-        <div class="step-title">Theorem 5.1.5</div>
-        <div class="step-subtitle">Formula for the orthogonal projection</div>
-        <div class="step-body">
-         If V is subspace of $\mathbb{R}^{n}$ with an orthonormal basis $\{\vec{u_1},\cdots,\vec{u_m}\}$, then for any vector $\vec{x}$ in $\mathbb{R}^{n}$, the orthogonal projection of $\vec{x}$ onto V is given by
-         $$proj_V(\vec{x})=(\vec{x}\cdot \vec{u_1})\vec{u_1}+\cdots+(\vec{x}\cdot \vec{u_m})\vec{u_m}$$
-         for all $\vec{x}$ in $\mathbb{R}^{n}$.
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Theorems 5.1.4 and 5.1.5</div>
+          <div class="step-subtitle">Orthogonal projection onto a subspace</div>
+          <div class="step-body">
+<p><b>Theorem 5.1.4.</b> Let \(V\) be a subspace of \(\mathbb{R}^n\) and \(\vec x\) in \(\mathbb{R}^n\). Then</p>
+$$\vec x=\vec x^{\parallel}+\vec x^{\perp},$$
+<p>where \(\vec x^{\parallel}\) is in \(V\) and \(\vec x^{\perp}\) is perpendicular to \(V\), and this representation is unique. We write \(\vec x^{\parallel}=\text{proj}_V\vec x\), the <b>orthogonal projection</b> of \(\vec x\) onto \(V\). The map \(\vec x\mapsto\text{proj}_V\vec x\) is linear.</p>
+<p><b>Theorem 5.1.5.</b> If \(\vec u_1,\dots,\vec u_m\) is an <b>orthonormal</b> basis of \(V\), then</p>
+$$\text{proj}_V\vec x=(\vec u_1\cdot\vec x)\vec u_1+\cdots+(\vec u_m\cdot\vec x)\vec u_m\qquad\text{for all }\vec x\text{ in }\mathbb{R}^n.$$
+<p class="muted small">Where it comes from: since \(\vec x^{\parallel}\) is in \(V\), write \(\vec x^{\parallel}=c_1\vec u_1+\cdots+c_m\vec u_m\).</p>
+<table>
+  <tr><td>What must be true of \(\vec x^{\perp}=\vec x-c_1\vec u_1-\cdots-c_m\vec u_m\)?</td><td><reveal>It is orthogonal to every \(\vec u_i\): \(\vec u_i\cdot\vec x^{\perp}=0\).</reveal></td></tr>
+  <tr><td>Expand \(\vec u_i\cdot(\vec x-c_1\vec u_1-\cdots-c_m\vec u_m)=0\)</td><td><reveal>\(\vec u_i\cdot\vec x-c_1\cdot0-\cdots-c_i\cdot1-\cdots-c_m\cdot0=0\), so \(c_i=\vec u_i\cdot\vec x\).</reveal></td></tr>
+</table>
+<p class="muted small">Reading the formula: \(\text{proj}_V\vec x\) is the sum of the projections of \(\vec x\) onto the lines spanned by the \(\vec u_i\). Projecting onto the \(x_1x_2\)-plane in \(\mathbb{R}^3\) is projecting onto the \(x_1\)-axis, then the \(x_2\)-axis, and adding. <b>Warning:</b> this needs the \(\vec u_i\) to be orthonormal. Section 5.2 shows how to build such a basis.</p>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="6">
-        <div class="step-title">Theorem 5.1.6</div>
-        <div class="step-subtitle"></div>
-        <div class="step-body">
-          Consider an orthonormal basis $\{\vec{u_1},\cdots,\vec{u_n}\}$ of $\mathbb{R}^{n}$. Then any vector $\vec{x}$ in $\mathbb{R}^{n}$ can be expressed as
-          $$\vec{x}=(\vec{x}\cdot \vec{u_1})\vec{u_1}+\cdots+(\vec{x}\cdot \vec{u_n})\vec{u_n}$$
-          for all $\vec{x}$ in $\mathbb{R}^{n}$.
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Projecting onto an image in \(\mathbb{R}^4\)</div>
+          <div class="step-body">
+<p>Let \(V=\operatorname{im}(A)\) with \(A=\begin{bmatrix}1&1\\1&-1\\1&-1\\1&1\end{bmatrix}\). Find \(\text{proj}_V\vec x\) for \(\vec x=\begin{bmatrix}1\\3\\1\\7\end{bmatrix}\).</p>
+<table>
+  <tr><td>Do the columns form a basis of \(V\)? Are they orthogonal?</td><td><reveal>They are independent, and \(\begin{bmatrix}1\\1\\1\\1\end{bmatrix}\cdot\begin{bmatrix}1\\-1\\-1\\1\end{bmatrix}=1-1-1+1=0\). So yes to both.</reveal></td></tr>
+  <tr><td>Turn them into an orthonormal basis</td><td><reveal>Each has length \(2\). Divide: \(\vec u_1=\tfrac12\begin{bmatrix}1\\1\\1\\1\end{bmatrix}\), \(\vec u_2=\tfrac12\begin{bmatrix}1\\-1\\-1\\1\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>\(\vec u_1\cdot\vec x\) and \(\vec u_2\cdot\vec x\)</td><td><reveal>\(\tfrac12(1+3+1+7)=6\) and \(\tfrac12(1-3-1+7)=2\).</reveal></td></tr>
+  <tr><td>\(\text{proj}_V\vec x=6\vec u_1+2\vec u_2\)</td><td><reveal>\(\begin{bmatrix}3\\3\\3\\3\end{bmatrix}+\begin{bmatrix}1\\-1\\-1\\1\end{bmatrix}=\begin{bmatrix}4\\2\\2\\4\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Check: \(\vec x-\text{proj}_V\vec x\) must be perpendicular to \(\vec u_1\) and \(\vec u_2\)</td><td><reveal>\(\vec x^{\perp}=\begin{bmatrix}-3\\1\\-1\\3\end{bmatrix}\). \(\ \vec x^{\perp}\cdot\vec u_1=\tfrac12(-3+1-1+3)=0\) and \(\vec x^{\perp}\cdot\vec u_2=\tfrac12(-3-1+1+3)=0\). \(\checkmark\)</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="7">
-        <div class="step-title">Definition 5.1.7</div>
-        <div class="step-subtitle">Orthogonal Complement</div>
-        <div class="step-body">
-          Consider a subspace V of $\mathbb{R}^{n}$. The orthogonal complement of V, denoted by $V^{\perp}$, is the set of all vectors in $\mathbb{R}^{n}$ that are orthogonal to every vector in V, that is,
-          $$V^{\perp}=\{\vec{x}\in \mathbb{R}^{n}:\vec{x}\cdot \vec{v}=0\text{ for all }\vec{v}\in V\}$$
-          Note that $V^{\perp}$ is the kernel of the orthogonal projection $proj_V:\mathbb{R}^{n}\to V$.
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Theorem 5.1.6</div>
+          <div class="step-subtitle">Coordinates in an orthonormal basis are dot products</div>
+          <div class="step-body">
+<p>Take \(V=\mathbb{R}^n\) in Theorem 5.1.5. Then \(\text{proj}_V\vec x=\vec x\), so for an orthonormal basis \(\vec u_1,\dots,\vec u_n\) of \(\mathbb{R}^n\):</p>
+$$\vec x=(\vec u_1\cdot\vec x)\vec u_1+\cdots+(\vec u_n\cdot\vec x)\vec u_n\qquad\text{for all }\vec x\text{ in }\mathbb{R}^n.$$
+<p>For a general basis, finding the coordinates \(c_i\) of \(\vec x=c_1\vec v_1+\cdots+c_n\vec v_n\) means solving a linear system. For an orthonormal basis, \(\boxed{c_i=\vec u_i\cdot\vec x}\), with no system to solve.</p>
+<p class="muted small"><b>Example.</b> \(\vec u_1=\begin{bmatrix}3/5\\4/5\end{bmatrix}\), \(\vec u_2=\begin{bmatrix}-4/5\\3/5\end{bmatrix}\) (Example 2 with \(\cos\theta=3/5\)), and \(\vec x=\begin{bmatrix}5\\5\end{bmatrix}\).</p>
+<table>
+  <tr><td>Is \(\vec u_1,\vec u_2\) a basis of \(\mathbb{R}^2\)?</td><td><reveal>Yes. Orthonormal, and \(n=2\) of them (Theorem 5.1.3b).</reveal></td></tr>
+  <tr><td>\(\mathfrak{B}\)-coordinates \(c_1=\vec u_1\cdot\vec x\) and \(c_2=\vec u_2\cdot\vec x\)</td><td><reveal>\(c_1=3+4=7\) and \(c_2=-4+3=-1\), so \([\vec x]_{\mathfrak{B}}=\begin{bmatrix}7\\-1\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>Check</td><td><reveal>\(7\begin{bmatrix}3/5\\4/5\end{bmatrix}-\begin{bmatrix}-4/5\\3/5\end{bmatrix}=\begin{bmatrix}21/5+4/5\\28/5-3/5\end{bmatrix}=\begin{bmatrix}5\\5\end{bmatrix}\). \(\checkmark\)</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="8">
-        <div class="step-title">Theorem 5.1.8</div>
-        <div class="step-subtitle">Properties of the orthogonal complement</div>
-        <div class="step-body">
-          Consider a subspace V of $\mathbb{R}^{n}$. Then:<br><br>
-          a. The orthogonal complement $V^{\perp}$ is a subspace of $\mathbb{R}^{n}$.<br><br>
-          b. The intersection of V and $V^{\perp}$ is $\{\vec{0}\}$.<br><br>
-          c. The dimensions of V and $V^{\perp}$ add up to n, that is, $dim(V)+dim(V^{\perp})=n$.<br><br>
-          d. The orthogonal complement of $V^{\perp}$ is V, that is, $(V^{\perp})^{\perp}=V$.
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Definition 5.1.7 and Theorem 5.1.8</div>
+          <div class="step-subtitle">The orthogonal complement</div>
+          <div class="step-body">
+<p><b>Example 5.</b> Let \(T(\vec x)=\text{proj}_V\vec x\).</p>
+<table>
+  <tr><td>What is \(\operatorname{im}(T)\)?</td><td><reveal>\(V\) itself.</reveal></td></tr>
+  <tr><td>What is \(\ker(T)\)?</td><td><reveal>The \(\vec x\) with \(\vec x^{\parallel}=\vec 0\), that is \(\vec x=\vec x^{\perp}\): the vectors orthogonal to \(V\). This space gets a name.</reveal></td></tr>
+</table>
+<p><b>Definition 5.1.7.</b> The <b>orthogonal complement</b> of a subspace \(V\) of \(\mathbb{R}^n\) is</p>
+$$V^{\perp}=\{\vec x\in\mathbb{R}^n:\ \vec x\cdot\vec v=0\text{ for all }\vec v\text{ in }V\}=\ker(\text{proj}_V).$$
+<p><b>Theorem 5.1.8.</b> For a subspace \(V\) of \(\mathbb{R}^n\): (a) \(V^{\perp}\) is a subspace of \(\mathbb{R}^n\). (b) \(V\cap V^{\perp}=\{\vec 0\}\). (c) \(\dim V+\dim V^{\perp}=n\). (d) \((V^{\perp})^{\perp}=V\).</p>
+<table>
+  <tr><td>Why (a)?</td><td><reveal>It is the kernel of the linear map \(\text{proj}_V\).</reveal></td></tr>
+  <tr><td>Why (b)?</td><td><reveal>If \(\vec x\) is in \(V\) and in \(V^{\perp}\), it is orthogonal to itself: \(\vec x\cdot\vec x=\|\vec x\|^2=0\), so \(\vec x=\vec 0\).</reveal></td></tr>
+  <tr><td>Why (c)?</td><td><reveal>Rank-nullity for \(\text{proj}_V:\mathbb{R}^n\to\mathbb{R}^n\): \(n=\dim\operatorname{im}+\dim\ker=\dim V+\dim V^{\perp}\).</reveal></td></tr>
+  <tr><td>Picture in \(\mathbb{R}^3\): a line \(L\) and a plane \(V\)</td><td><reveal>\(L^{\perp}\) is a plane and \(V^{\perp}\) is a line, with \(1+2=2+1=3\).</reveal></td></tr>
+</table>
+<p class="muted small"><b>Example (Exercise 15).</b> Let \(\vec v=\begin{bmatrix}1\\2\\3\\4\end{bmatrix}\) and \(V=\operatorname{span}(\vec v)\). Find a basis of \(V^{\perp}\).</p>
+<table>
+  <tr><td>\(\vec x\) is in \(V^{\perp}\) exactly when</td><td><reveal>\(\vec x\cdot\vec v=0\), that is \(x_1+2x_2+3x_3+4x_4=0\), a one-equation system.</reveal></td></tr>
+  <tr><td>A basis of the solutions</td><td><reveal>Free variables \(x_2,x_3,x_4\): \(\begin{bmatrix}-2\\1\\0\\0\end{bmatrix},\begin{bmatrix}-3\\0\\1\\0\end{bmatrix},\begin{bmatrix}-4\\0\\0\\1\end{bmatrix}\). So \(\dim V^{\perp}=3=4-1\), as Theorem 5.1.8c predicts.</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="9">
-        <div class="step-title">Theorem 5.1.9</div>
-        <div class="step-subtitle">Pythagorean Theorem</div>
-        <div class="step-body">
-          Consider two vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. The equation $\|\vec{u}+\vec{v}\|^2=\|\vec{u}\|^2+\|\vec{v}\|^2$ holds if and only if $\vec{u}$ and $\vec{v}$ are orthogonal.
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Theorems 5.1.9 and 5.1.10</div>
+          <div class="step-subtitle">The Pythagorean theorem and the size of a projection</div>
+          <div class="step-body">
+<p><b>Theorem 5.1.9 (Pythagoras).</b> \(\|\vec x+\vec y\|^2=\|\vec x\|^2+\|\vec y\|^2\) holds if and only if \(\vec x\perp\vec y\).</p>
+<table>
+  <tr><td>Proof: expand \(\|\vec x+\vec y\|^2=(\vec x+\vec y)\cdot(\vec x+\vec y)\)</td><td><reveal>\(=\|\vec x\|^2+2(\vec x\cdot\vec y)+\|\vec y\|^2\). This equals \(\|\vec x\|^2+\|\vec y\|^2\) exactly when \(\vec x\cdot\vec y=0\).</reveal></td></tr>
+</table>
+<p><b>Theorem 5.1.10.</b> \(\|\text{proj}_V\vec x\|\le\|\vec x\|\), with equality if and only if \(\vec x\) is in \(V\).</p>
+<p class="muted small">Drag \(\vec x\) and watch the two sides of Pythagoras. The green line is \(V\).</p>
+<jsx-projection x="2,3" y="4,1" pythag></jsx-projection>
+<table>
+  <tr><td>Apply Theorem 5.1.9 to \(\vec x=\vec x^{\parallel}+\vec x^{\perp}\)</td><td><reveal>\(\vec x^{\parallel}\perp\vec x^{\perp}\), so \(\|\vec x\|^2=\|\text{proj}_V\vec x\|^2+\|\vec x^{\perp}\|^2\).</reveal></td></tr>
+  <tr><td>Conclude Theorem 5.1.10</td><td><reveal>\(\|\vec x^{\perp}\|^2\ge0\), so \(\|\text{proj}_V\vec x\|^2\le\|\vec x\|^2\). Equality means \(\vec x^{\perp}=\vec 0\), that is \(\vec x\) is in \(V\).</reveal></td></tr>
+  <tr><td>Try it: drag \(\vec x\) so that \(\|\text{proj}\|=\|\vec x\|\)</td><td><reveal>That happens only on the line \(L\) (use the "Put x on L" button).</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="10">
-        <div class="step-title">Theorem 5.1.10</div>
-        <div class="step-subtitle">An inequality for the magnitude of the projection</div>
-        <div class="step-body">
-          Consider a subspace V of $\mathbb{R}^{n}$ and a vector $\vec{x}$ in $\mathbb{R}^{n}$. Then $\|proj_V(\vec{x})\|\le \|\vec{x}\|$, with equality if and only if $\vec{x}$ is in V.
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Theorem 5.1.11 and Definition 5.1.12</div>
+          <div class="step-subtitle">Cauchy-Schwarz and the angle between vectors</div>
+          <div class="step-body">
+<p><b>Theorem 5.1.11 (Cauchy-Schwarz).</b> For \(\vec x,\vec y\) in \(\mathbb{R}^n\): \(\ |\vec x\cdot\vec y|\le\|\vec x\|\,\|\vec y\|\), with equality if and only if \(\vec x\) and \(\vec y\) are parallel.</p>
+<table>
+  <tr><td>Proof for \(\vec y\neq\vec 0\): let \(V=\operatorname{span}(\vec y)\) and \(\vec u=\vec y/\|\vec y\|\). Use Theorem 5.1.10.</td><td><reveal>\(\|\vec x\|\ge\|\text{proj}_V\vec x\|=\|(\vec x\cdot\vec u)\vec u\|=\left|\vec x\cdot\dfrac{\vec y}{\|\vec y\|}\right|=\dfrac{|\vec x\cdot\vec y|}{\|\vec y\|}\). Multiply by \(\|\vec y\|\).</reveal></td></tr>
+</table>
+<p><b>Definition 5.1.12.</b> For nonzero \(\vec x,\vec y\) in \(\mathbb{R}^n\), the <b>angle</b> between them is</p>
+$$\theta=\arccos\frac{\vec x\cdot\vec y}{\|\vec x\|\,\|\vec y\|},\qquad 0\le\theta\le\pi.$$
+<p class="muted small">Cauchy-Schwarz is exactly what makes the fraction land in \([-1,1]\), so the arccosine exists. In \(\mathbb{R}^2,\mathbb{R}^3\) this is the usual angle. Drag the vectors and watch \(|\vec x\cdot\vec y|\) stay below \(\|\vec x\|\|\vec y\|\).</p>
+<jsx-projection x="3,2" y="4,1" cs></jsx-projection>
+<table>
+  <tr><td>When does \(|\vec x\cdot\vec y|=\|\vec x\|\|\vec y\|\)?</td><td><reveal>When \(\theta=0^\circ\) or \(180^\circ\): the vectors are parallel.</reveal></td></tr>
+  <tr><td>Example 7. Angle between \(\begin{bmatrix}1\\0\\0\\0\end{bmatrix}\) and \(\begin{bmatrix}1\\1\\1\\1\end{bmatrix}\)</td><td><reveal>\(\theta=\arccos\dfrac{1}{1\cdot2}=\dfrac{\pi}{3}\)</reveal></td></tr>
+  <tr><td>Acute or obtuse? \(\vec u=\begin{bmatrix}2\\-3\end{bmatrix}\), \(\vec v=\begin{bmatrix}5\\4\end{bmatrix}\)</td><td><reveal>\(\vec u\cdot\vec v=10-12=-2<0\), so \(\cos\theta<0\): the angle is obtuse. (The sign of the dot product is all we need.)</reveal></td></tr>
+  <tr><td>Exercise 4. The angle between \(\begin{bmatrix}1\\1\end{bmatrix}\) and \(\begin{bmatrix}7\\11\end{bmatrix}\)</td><td><reveal>\(\arccos\dfrac{18}{\sqrt2\sqrt{170}}=\arccos\dfrac{18}{\sqrt{340}}\approx0.219\) rad \(\approx12.5^\circ\)</reveal></td></tr>
+</table>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="11">
-        <div class="step-title">Cauchy-Schwarz</div>
-        <div class="step-subtitle">inequality</div>
-        <div class="step-body">
-          If $\vec{u}$ and $\vec{v}$ are vectors in $\mathbb{R}^{n}$, then
-          $$|\vec{u}\cdot \vec{v}|\le \|\vec{u}\|\|\vec{v}\|$$
-          with equality if and only if $\vec{u}$ and $\vec{v}$ are parallel.
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Practice</div>
+          <div class="step-subtitle">Exercises 10, 29, 26, and 40 to 43</div>
+          <div class="step-body">
+<p><b>(a) Exercise 10.</b> For which \(k\) are \(\begin{bmatrix}2\\3\\4\end{bmatrix}\) and \(\begin{bmatrix}1\\k\\1\end{bmatrix}\) perpendicular?</p>
+<reveal class="solution">Set the dot product to zero: \(2+3k+4=0\), so \(k=-2\).</reveal>
+<p><b>(b) Exercise 29.</b> \(\vec u_1,\dots,\vec u_5\) are orthonormal in \(\mathbb{R}^{10}\). Find the length of \(\vec x=7\vec u_1-3\vec u_2+2\vec u_3+\vec u_4-\vec u_5\).</p>
+<reveal class="solution">By Pythagoras (Theorem 5.1.9, repeated), \(\|\vec x\|^2=7^2+3^2+2^2+1^2+1^2=64\), so \(\|\vec x\|=8\). No need to know the vectors themselves.</reveal>
+<p><b>(c) Exercise 26.</b> Find the orthogonal projection of \(\begin{bmatrix}49\\49\\49\end{bmatrix}\) onto the subspace of \(\mathbb{R}^3\) spanned by \(\begin{bmatrix}2\\3\\6\end{bmatrix}\) and \(\begin{bmatrix}3\\-6\\2\end{bmatrix}\) (the vectors from step 1).</p>
+<reveal class="solution">They are orthogonal of length \(7\), so \(\vec u_1=\tfrac17\begin{bmatrix}2\\3\\6\end{bmatrix}\), \(\vec u_2=\tfrac17\begin{bmatrix}3\\-6\\2\end{bmatrix}\). Then \(\vec u_1\cdot\vec x=\tfrac{49\cdot11}{7}=77\) and \(\vec u_2\cdot\vec x=\tfrac{49\cdot(-1)}{7}=-7\), so
+$$\text{proj}_V\vec x=77\vec u_1-7\vec u_2=11\begin{bmatrix}2\\3\\6\end{bmatrix}-\begin{bmatrix}3\\-6\\2\end{bmatrix}=\begin{bmatrix}19\\39\\64\end{bmatrix}.$$
+Check: \(\vec x-\text{proj}=\begin{bmatrix}30\\10\\-15\end{bmatrix}\) is orthogonal to both \((2,3,6)\) and \((3,-6,2)\).</reveal>
+<p><b>(d) Exercises 40 to 43.</b> Vectors \(\vec v_1,\vec v_2,\vec v_3\) in \(\mathbb{R}^4\) have \(\vec v_i\cdot\vec v_j=a_{ij}\), where \(A=\begin{bmatrix}3&5&11\\5&9&20\\11&20&49\end{bmatrix}\). Find \(\|\vec v_2\|\), \(\|\vec v_1+\vec v_2\|\), the angle between \(\vec v_2\) and \(\vec v_3\), and \(\text{proj}_{\vec v_2}(\vec v_1)\) as a multiple of \(\vec v_2\).</p>
+<reveal class="solution">\(\|\vec v_2\|=\sqrt{a_{22}}=3\). \(\ \|\vec v_1+\vec v_2\|^2=a_{11}+2a_{12}+a_{22}=3+10+9=22\), so \(\sqrt{22}\). \(\ \|\vec v_3\|=7\), so \(\cos\theta=\dfrac{a_{23}}{3\cdot7}=\dfrac{20}{21}\) and \(\theta=\arccos\tfrac{20}{21}\approx0.31\) rad. \(\ \text{proj}_{\vec v_2}(\vec v_1)=\dfrac{\vec v_1\cdot\vec v_2}{\vec v_2\cdot\vec v_2}\vec v_2=\dfrac59\vec v_2\). (The last formula is the one-vector case of Theorem 5.1.5, since \(\vec v_2/3\) is the unit vector.)</reveal>
+<p class="muted small"><b>Homework:</b> Exercises 15, 17, 22, 25, 27, 28, 30, 31 and 44 to 46. The optional correlation discussion (pages 212 to 214) is a good read after the Cauchy-Schwarz step.</p>
+          </div>
         </div>
-      </div>
-      <div class="step" data-step="12">
-        <div class="step-title">Definition 5.1.12</div>
-        <div class="step-subtitle">Angle between two vectors</div>
-        <div class="step-body">
-          Consider two non-zero vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^{n}$. The angle $\theta$ between $\vec{u}$ and $\vec{v}$ is defined by
-          $$\cos(\theta)=\frac{\vec{u}\cdot \vec{v}}{\|\vec{u}\|\|\vec{v}\|}$$
-          where $0\le \theta \le \pi$.
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
         </div>
+
       </div>
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
 </body>
+
 </html>
