@@ -36,6 +36,26 @@
 </head>
 
 <body>
+<!-- Lesson 18 timing plan, 60 minutes (18 steps):
+   1. Review of Functions and Inverse Functions          2 min
+   2. One-to-One Functions + horizontal line test demo   5 min
+   3. Example 1                                          2 min
+   4. Explore: Why Restrict the Domain?                  3 min
+   5. Inverse Sine                                       4 min
+   6. Example 2                                          2 min
+   7. Inverse Cosine and Tangent                         5 min
+   8. Example 3                                          3 min
+   9. Other Inverse Functions (sec, csc, cot)            4 min
+  10. Example 4                                          3 min
+  11. Summary Table                                      2 min
+  12. Composition (both explorers)                       4 min
+  13. Example 5                                          3 min
+  14. Example 6                                          4 min
+  15. Calculator Approximations                          3 min
+  16. Example 7                                          4 min
+  17. Reference Triangles + Example 8                    5 min
+  18. Example 9                                          2 min
+  Total 60. If behind: answer Example 4(c) and Example 7(b),(c) verbally, and treat the Summary Table as a handout. -->
 
   <header class="site-header">
     <h1>Inverse Trigonometric Functions</h1>
@@ -134,8 +154,8 @@
           </div>
         </div>
         <div class="step" data-step="7">
-          <div class="step-title">The Inverse Cosine Function</div>
-          <div class="step-subtitle">Restricted cosine and arccosine</div>
+          <div class="step-title">The Inverse Cosine and Tangent Functions</div>
+          <div class="step-subtitle">Restricted cosine and tangent</div>
           <div class="step-body">
 <div class="defbox"><div class="defbox-label">Definition: The Inverse Cosine Function</div>
 <p>Let \(\theta\) be any value such that <reveal>\(0 \le \theta \le \pi\)</reveal>, then \(\theta = \cos^{-1}(y)\) or \(\theta = \arccos(y)\) if and only if \(y = \cos(\theta)\).</p>
@@ -147,12 +167,7 @@
   <tr><td>Arccosine</td><td><reveal>\([-1, 1]\)</reveal></td><td><reveal>\([0, \pi]\)</reveal></td></tr>
 </table>
 <jsx-inverse fn="cos" stage="2"></jsx-inverse>
-          </div>
-        </div>
-        <div class="step" data-step="8">
-          <div class="step-title">The Inverse Tangent Function</div>
-          <div class="step-subtitle">Restricted tangent and arctangent</div>
-          <div class="step-body">
+
 <div class="defbox"><div class="defbox-label">Definition: The Inverse Tangent Function</div>
 <p>Let \(\theta\) be any value such that <reveal>\(-\dfrac{\pi}{2} < \theta < \dfrac{\pi}{2}\)</reveal>, then \(\theta = \tan^{-1}(y)\) or \(\theta = \arctan(y)\) if and only if \(y = \tan(\theta)\).</p>
 <p>Once more \(\tan^{-1}(y)\) and \(\arctan(y)\) are interchangeable. The term arctangent reminds us that we are referring to the inverse of the <b>restricted</b> tangent function.</p>
@@ -166,7 +181,7 @@
 <p class="muted small">The horizontal lines \(y = \pm\pi/2\) are asymptotes of arctangent; the vertical lines \(x = \pm\pi/2\) are asymptotes of restricted tangent.</p>
           </div>
         </div>
-        <div class="step" data-step="9">
+        <div class="step" data-step="8">
           <div class="step-title">Example 3</div>
           <div class="step-subtitle">Evaluate each expression, if possible</div>
           <div class="step-body">
@@ -179,7 +194,7 @@
 <jsx-unit-circle start-angle="150" show-labels="all"></jsx-unit-circle>
           </div>
         </div>
-        <div class="step" data-step="10">
+        <div class="step" data-step="9">
           <div class="step-title">Other Inverse Trigonometric Functions</div>
           <div class="step-subtitle">Secant, cosecant, and cotangent</div>
           <div class="step-body">
@@ -193,7 +208,7 @@
 </table>
           </div>
         </div>
-        <div class="step" data-step="11">
+        <div class="step" data-step="10">
           <div class="step-title">Example 4</div>
           <div class="step-subtitle">Evaluate each expression, if possible</div>
           <div class="step-body">
@@ -204,7 +219,7 @@
 </table>
           </div>
         </div>
-        <div class="step" data-step="12">
+        <div class="step" data-step="11">
           <div class="step-title">Summary Table</div>
           <div class="step-subtitle">Restricted functions and their inverses</div>
           <div class="step-body">
@@ -219,7 +234,7 @@
 </table>
           </div>
         </div>
-        <div class="step" data-step="13">
+        <div class="step" data-step="12">
           <div class="step-title">Inverse Functions and Composition</div>
           <div class="step-subtitle">f(f⁻¹(x)) and f⁻¹(f(x))</div>
           <div class="step-body">
@@ -230,18 +245,13 @@
 <p>Orange is \(y = \sin^{-1}(\sin x)\). Drag \(x\) and watch where it equals \(x\) (the dashed line \(y=x\)).</p>
 <jsx-inverse-compose fn="sin" switch="sin cos tan"></jsx-inverse-compose>
 <p>It equals \(x\) exactly when <reveal>\(x\) is in the restricted interval (between the two dashed horizontal lines)</reveal>.</p>
-          </div>
-        </div>
-        <div class="step" data-step="14">
-          <div class="step-title">Explore: f(f⁻¹(x))</div>
-          <div class="step-subtitle">Always true, where defined</div>
-          <div class="step-body">
-<p>Now the other order: orange is \(y = \sin(\sin^{-1}(x))\).</p>
+
+<p>Now the other order (compare with the first diagram): orange is \(y = \sin(\sin^{-1}(x))\).</p>
 <jsx-inverse-compose fn="sin" order="inner" switch="sin cos tan sec csc cot"></jsx-inverse-compose>
 <p>The graph is the line \(y = x\) but only where <reveal>\(x\) is in the domain of \(f^{-1}\)</reveal>.</p>
           </div>
         </div>
-        <div class="step" data-step="15">
+        <div class="step" data-step="13">
           <div class="step-title">Example 5</div>
           <div class="step-subtitle">True or false? Correct any false statements</div>
           <div class="step-body">
@@ -250,10 +260,10 @@
   <tr><td>(b) \(\sin^{-1}\left(\sin\left(\dfrac{3\pi}{4}\right)\right) = \dfrac{3\pi}{4}\)</td><td><reveal>False: \(\dfrac{3\pi}{4}\) is not in \(\left[-\dfrac{\pi}{2},\dfrac{\pi}{2}\right]\). \(\sin^{-1}\left(\dfrac{\sqrt{2}}{2}\right) = \dfrac{\pi}{4}\)</reveal></td></tr>
   <tr><td>(c) \(\arccos\left(\cos\left(\dfrac{3\pi}{4}\right)\right) = \dfrac{3\pi}{4}\)</td><td><reveal>True: \(\dfrac{3\pi}{4}\) is in \([0,\pi]\)</reveal></td></tr>
 </table>
-<p class="muted small">Check (b) and (c) with the first diagram on the previous step: set \(x = 135^\circ\) and switch between sin and cos.</p>
+<p class="muted small">Check (b) and (c) with the first diagram on the composition step: set \(x = 135^\circ\) and switch between sin and cos.</p>
           </div>
         </div>
-        <div class="step" data-step="16">
+        <div class="step" data-step="14">
           <div class="step-title">Example 6</div>
           <div class="step-subtitle">Evaluate each expression</div>
           <div class="step-body">
@@ -265,7 +275,7 @@
 <p>Approximations like the one in (c) are common. Our calculator will be a great resource when approximations are required.</p>
           </div>
         </div>
-        <div class="step" data-step="17">
+        <div class="step" data-step="15">
           <div class="step-title">Approximating Inverse Function Values with a Calculator</div>
           <div class="step-subtitle">Reciprocal identities and the cotangent mismatch</div>
           <div class="step-body">
@@ -277,7 +287,7 @@
 <jsx-inverse fn="cot" stage="2"></jsx-inverse>
           </div>
         </div>
-        <div class="step" data-step="18">
+        <div class="step" data-step="16">
           <div class="step-title">Example 7</div>
           <div class="step-subtitle">Use a calculator to find the angle θ in radians, if θ exists</div>
           <div class="step-body">
@@ -291,19 +301,14 @@
 </table>
           </div>
         </div>
-        <div class="step" data-step="19">
-          <div class="step-title">Reference Triangles</div>
-          <div class="step-subtitle">Exact values without finding θ</div>
+        <div class="step" data-step="17">
+          <div class="step-title">Reference Triangles: Example 8</div>
+          <div class="step-subtitle">Evaluate cos(sin⁻¹(4/5))</div>
           <div class="step-body">
 <p>Consider a combination of the form \(f(f^{-1}(x))\), such as \(\sin(\cos^{-1}(1))\). We find \(\theta = \cos^{-1}(1) = 0\), then evaluate \(\sin(0) = 0\).</p>
 <p>This works well when \(\theta\) is easily found. For \(\cos\left(\sin^{-1}\left(\dfrac{4}{5}\right)\right)\), the angle \(\theta = \sin^{-1}\left(\dfrac{4}{5}\right) \approx 0.927295\ldots\) is not on the unit circle, and we only get \(\cos(0.927295\ldots) \approx 0.600236\ldots\).</p>
 <p>Since \(\theta\) is just an intermediate step, a <b>reference triangle</b> gives an <b>exact</b> value without calculating \(\theta\).</p>
-          </div>
-        </div>
-        <div class="step" data-step="20">
-          <div class="step-title">Example 8</div>
-          <div class="step-subtitle">Evaluate cos(sin⁻¹(4/5))</div>
-          <div class="step-body">
+
 <p>Evaluate \(\cos\left(\sin^{-1}\left(\dfrac{4}{5}\right)\right)\) by completing the following steps.</p>
 <p>(a) Let \(\sin^{-1}\left(\dfrac{4}{5}\right) = \theta\). Write this statement in its inverse form. <reveal>\(\sin\theta = \dfrac{4}{5}\)</reveal></p>
 <p>(b) Construct a right triangle with measures that satisfy part (a): opposite \(4\), hypotenuse \(5\).</p>
@@ -314,7 +319,7 @@
 <p>(d) Evaluate \(\cos\left(\sin^{-1}\left(\dfrac{4}{5}\right)\right) = \cos\theta = \) <reveal>\(\dfrac{3}{5}\)</reveal></p>
           </div>
         </div>
-        <div class="step" data-step="21">
+        <div class="step" data-step="18">
           <div class="step-title">Example 9</div>
           <div class="step-subtitle">Evaluate tan(sec⁻¹(2))</div>
           <div class="step-body">
