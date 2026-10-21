@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-19",
+    "title": "Inverse Trigonometric Functions",
+    "subtitle": "Lesson 18",
+    "description": "Why trig functions need restricted domains, the six inverse trigonometric functions with their domains and ranges, composition f(f⁻¹(x)) versus f⁻¹(f(x)), calculator values, and exact values with reference triangles, with live reflection and composition explorers.",
+    "tags": [
+      "Inverse Trig",
+      "Arcsine",
+      "Composition"
+    ],
+    "url": "trigonometry/2026/2026-10-19-lesson-18-inverse-trigonometric-functions/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-14",
     "title": "Double- and Half-Angle Identities",
     "subtitle": "Lesson 17",

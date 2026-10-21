@@ -595,6 +595,10 @@ reveal.triangle-overlay:not(.is-revealed) {
 .flow-label { fill: var(--muted); font: 700 18px system-ui, sans-serif; }
 
 .jsx-board--angle-sum { aspect-ratio: 2.6 / 1; }
+.jsx-board--inverse { aspect-ratio: 1.8 / 1; }
+.jsx-board--hlt { aspect-ratio: 2.2 / 1; }
+.jsx-board--compose { aspect-ratio: 2 / 1; }
+.jsx-slider-value { min-width: 5.5em; text-align: right; font-variant-numeric: tabular-nums; }
 
 /* Commutative diagrams built from a CSS grid; every node and arrow label can be a <reveal>
    (see linear-algebra/fall2025/2025-10-08-matrix-of-linear-transformation). .cd is the 3x3

@@ -4712,6 +4712,391 @@ function renderJsxVectorField(el) {
   refresh();
 }
 
+// <jsx-inverse fn="sin" switch="sin cos tan sec csc cot" stage="0">
+// <jsx-inverse-compose fn="sin" order="outer|inner" switch="sin cos tan">
+//
+// Inverse trigonometric functions (Lesson 18). Both tags share the INV table below: each
+// trig function with its restricted interval and its principal inverse (cot^-1 uses the
+// workbook's range (0, pi), i.e. pi/2 - arctan, not the calculator's arctan(1/x)).
+//
+// <jsx-inverse>: one board with equal axis scales so reflecting over y = x is literal.
+// Stage 0 = the whole function plus a draggable horizontal line that counts its crossings
+// (horizontal line test); stage 1 adds the mirror image of the whole graph and the matching
+// vertical line (the reflection fails the vertical line test); stage 2 = restricted branch,
+// its inverse, and a slider that moves a point P on the branch while P' = (y, theta) follows
+// on the inverse. Buttons walk the stages; `stage` sets the start. No domain/range text is
+// printed, since the workbook has students fill those in.
+//
+// <jsx-inverse-compose>: `outer` (default) plots y = f^-1(f(x)), the zigzag that equals x only
+// on the restricted interval, with a slider for x; `inner` plots y = f(f^-1(x)), which is
+// x wherever f^-1 is defined and nothing elsewhere.
+const INV_H = Math.PI / 2;
+const INV = {
+  sin: { f: Math.sin, inv: Math.asin, lo: -INV_H, hi: INV_H, rng: '[−π/2, π/2]', ok: (v) => Math.abs(v) <= 1, deg: 30 },
+  cos: { f: Math.cos, inv: Math.acos, lo: 0, hi: Math.PI, rng: '[0, π]', ok: (v) => Math.abs(v) <= 1, deg: 60 },
+  tan: { f: Math.tan, inv: Math.atan, lo: -INV_H, hi: INV_H, rng: '(−π/2, π/2)', ok: () => true, deg: 45 },
+  sec: { f: (u) => 1 / Math.cos(u), inv: (v) => Math.acos(1 / v), lo: 0, hi: Math.PI, rng: '[0, π], not π/2', ok: (v) => Math.abs(v) >= 1, deg: 60 },
+  csc: { f: (u) => 1 / Math.sin(u), inv: (v) => Math.asin(1 / v), lo: -INV_H, hi: INV_H, rng: '[−π/2, π/2], not 0', ok: (v) => Math.abs(v) >= 1, deg: 30 },
+  cot: { f: (u) => 1 / Math.tan(u), inv: (v) => INV_H - Math.atan(v), lo: 0, hi: Math.PI, rng: '(0, π)', ok: () => true, deg: 45 },
+};
+const INV_BIG = 12;
+const invF3 = (v) => (Math.abs(v) < 5e-4 ? '0' : String(Math.round(v * 1000) / 1000)).replace('-', '−');
+const invDefined = (v) => Number.isFinite(v) && Math.abs(v) < 1e6;
+const invAngle = (t) => { const p = fmtPiMultiple(t); return p ? `${p.replace('-', '−')} (≈ ${invF3(t)})` : invF3(t); };
+
+// y = g(x) sampled on [lo, hi]; NaN breaks where g is undefined, huge, or jumps (asymptotes, branch cuts).
+function invSample(g, lo, hi, n, jump = Infinity) {
+  const xs = []; const ys = []; let prev = null;
+  for (let i = 0; i <= n; i++) {
+    const x = lo + ((hi - lo) * i) / n;
+    const y = g(x);
+    if (!Number.isFinite(y) || Math.abs(y) > INV_BIG || (prev !== null && Math.abs(y - prev) > jump)) {
+      if (prev !== null) { xs.push(NaN); ys.push(NaN); }
+      prev = null;
+      if (!Number.isFinite(y) || Math.abs(y) > INV_BIG) continue;
+    }
+    xs.push(x); ys.push(y); prev = y;
+  }
+  return { xs, ys };
+}
+const invSwap = (d) => ({ xs: d.ys, ys: d.xs });
+
+// x positions where the sampled curve crosses y = c
+function invCrossings(d, c) {
+  const out = [];
+  for (let i = 1; i < d.xs.length; i++) {
+    const y0 = d.ys[i - 1]; const y1 = d.ys[i];
+    if (Number.isNaN(y0) || Number.isNaN(y1)) continue;
+    const s0 = Math.sign(y0 - c); const s1 = Math.sign(y1 - c);
+    // a sample landing exactly on the line counts once (as the end of its interval)
+    if (s0 * s1 < 0) out.push(d.xs[i - 1] + ((c - y0) / (y1 - y0)) * (d.xs[i] - d.xs[i - 1]));
+    else if (s1 === 0 && s0 !== 0) out.push(d.xs[i]);
+  }
+  return out;
+}
+
+function invControls(container) {
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.appendChild(controls);
+  const mkBtn = (label, on, parent = controls) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => on(b));
+    parent.appendChild(b);
+    return b;
+  };
+  const mkSlider = (label, min, max, step, value, on) => {
+    const row = document.createElement('label');
+    row.className = 'jsx-slider-row';
+    row.innerHTML = `<span class="jsx-slider-name">${label}</span><input type="range" min="${min}" max="${max}" step="${step}"><span class="jsx-slider-value"></span>`;
+    const input = row.querySelector('input');
+    input.value = value;
+    input.addEventListener('input', () => on(parseFloat(input.value)));
+    input.addEventListener('pointerup', () => input.blur());
+    controls.appendChild(row);
+    return { row, input };
+  };
+  const mkSwitch = (keys, current, on) => {
+    if (keys.length < 2) return () => {};
+    const sw = document.createElement('div');
+    sw.className = 'jsx-switch';
+    controls.appendChild(sw);
+    const btns = keys.map((k) => mkBtn(k, () => on(k), sw));
+    return (cur) => btns.forEach((b, i) => b.classList.toggle('is-on', keys[i] === cur));
+  };
+  return { controls, mkBtn, mkSlider, mkSwitch };
+}
+
+function renderJsxInverse(el) {
+  const TAG = 'jsx-inverse';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const keys = (el.getAttribute('switch') || '').split(/\s+/).filter((k) => INV[k]);
+  const st = { fn: INV[el.getAttribute('fn')] ? el.getAttribute('fn') : 'sin', stage: evalNumAttr(el, 'stage', 0, TAG), c: 0.5, deg: 0 };
+  st.deg = INV[st.fn].deg;
+  const X = 5.76; const Y = 3.2;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board jsx-board--inverse';
+  board.id = `jsx-board-${++boardCounter}`;
+  container.append(readout, board);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const grey = '#7d838c';
+  const orange = UNIT_CIRCLE_FOUR_COLOR;
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [-X, Y, X, -Y], axis: true, showNavigation: false, showCopyright: false,
+    keepaspectratio: true, pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+
+  const T = () => INV[st.fn];
+  const full = () => invSample(T().f, -X, X, 1400);
+  const restr = () => invSample(T().f, T().lo, T().hi, 700);
+  const mk = (getData, style) => makeDataCurve(bd, getData, { highlight: false, ...style });
+  bd.create('line', [[0, 0], [1, 1]], { strokeColor: grey, strokeWidth: 2, dash: 2, highlight: false, fixed: true, straightFirst: true, straightLast: true });
+  const mirrorFull = mk(() => invSwap(full()), { strokeColor: grey, strokeWidth: CURVE_STROKE - 1, dash: 2 });
+  const fullC = mk(full, { strokeColor: accent, strokeWidth: CURVE_STROKE - 1 });
+  const restrC = mk(restr, { strokeColor: accent, strokeWidth: CURVE_STROKE + 1 });
+  const invC = mk(() => invSwap(restr()), { strokeColor: orange, strokeWidth: CURVE_STROKE + 1 });
+  const hLine = bd.create('line', [[0, () => st.c], [1, () => st.c]], { strokeColor: ink, strokeWidth: 2, dash: 3, highlight: false, fixed: true });
+  const vLine = bd.create('line', [[() => st.c, 0], [() => st.c, 1]], { strokeColor: ink, strokeWidth: 2, dash: 3, highlight: false, fixed: true });
+  st.cross = [];
+  const POOL = 12;
+  const pool = (swap, color) => Array.from({ length: POOL }, (_, i) => bd.create('point', [
+    () => (st.cross[i] === undefined ? NaN : (swap ? st.c : st.cross[i])),
+    () => (st.cross[i] === undefined ? NaN : (swap ? st.cross[i] : st.c)),
+  ], { size: POINT_SIZE - 1, strokeWidth: 2, fillColor: color, strokeColor: color, withLabel: false, fixed: true, highlight: false }));
+  const hitsH = pool(false, '#c0392b');
+  const hitsV = pool(true, '#c0392b');
+  const probe = () => { const t = (st.deg * Math.PI) / 180; return [t, T().f(t)]; };
+  const okP = () => invDefined(probe()[1]);
+  const dot = (get, color) => bd.create('point', [() => (okP() ? get()[0] : NaN), () => (okP() ? get()[1] : NaN)],
+    { size: POINT_SIZE + 1, strokeWidth: POINT_STROKE, fillColor: color, strokeColor: color, withLabel: false, fixed: true, highlight: false });
+  const dotP = dot(probe, accent);
+  const dotQ = dot(() => [probe()[1], probe()[0]], orange);
+  const link = bd.create('segment', [dotP, dotQ], { strokeColor: grey, strokeWidth: 2, dash: 2, highlight: false, fixed: true });
+
+  const ui = invControls(container);
+  const setSwitch = ui.mkSwitch(keys, st.fn, (k) => { st.fn = k; st.deg = INV[k].deg; degS.input.value = st.deg; refresh(); });
+  const stageBtns = ['1  Whole graph', '2  Reflect it', '3  Restrict'].map((l, i) => ui.mkBtn(l, () => { st.stage = i; refresh(); }));
+  const cS = ui.mkSlider('Test line c', -3, 3, 0.05, st.c, (v) => { st.c = v; refresh(); });
+  const degS = ui.mkSlider('Angle θ', Math.round((INV.sin.lo * 180) / Math.PI), 180, 3, st.deg, (v) => { st.deg = v; refresh(); });
+
+  function refresh() {
+    const s = st.stage; const name = st.fn;
+    const nice = s >= 2;
+    fullC.setAttribute(nice ? { strokeColor: grey, strokeWidth: 2, dash: 2 } : { strokeColor: accent, strokeWidth: CURVE_STROKE - 1, dash: 0 });
+    mirrorFull.setAttribute({ visible: s === 1 });
+    restrC.setAttribute({ visible: nice }); invC.setAttribute({ visible: nice });
+    vLine.setAttribute({ visible: s >= 1 });
+    [dotP, dotQ, link].forEach((o) => o.setAttribute({ visible: nice }));
+    st.cross = invCrossings(nice ? restr() : full(), st.c).filter((x) => Math.abs(x) <= X);
+    hitsH.forEach((p) => p.setAttribute({ visible: true }));
+    hitsV.forEach((p) => p.setAttribute({ visible: s >= 1 }));
+    stageBtns.forEach((b, i) => b.classList.toggle('is-on', i === s));
+    setSwitch(name);
+    // probe slider covers the restricted interval of the current function
+    const lo = Math.round((T().lo * 180) / Math.PI); const hi = Math.round((T().hi * 180) / Math.PI);
+    degS.input.min = lo; degS.input.max = hi;
+    st.deg = Math.min(hi, Math.max(lo, st.deg));
+    degS.input.value = st.deg;
+    degS.row.style.display = nice ? '' : 'none';
+    cS.row.querySelector('.jsx-slider-name').textContent = s === 0 ? 'Horizontal line y =' : 'Test line c =';
+    cS.row.querySelector('.jsx-slider-value').textContent = invF3(st.c);
+    const n = st.cross.length; const cc = invF3(st.c);
+    const chips = [];
+    if (s < 2) {
+      chips.push(`<span class="jsx-trace-chip jsx-trace-main">y = ${cc} meets y = ${name}(x) <b>${n}</b> time${n === 1 ? '' : 's'}</span>`);
+      if (s === 1) chips.push(`<span class="jsx-trace-chip ${n > 1 ? 'is-undef' : ''}">x = ${cc} meets the mirror image <b>${n}</b> time${n === 1 ? '' : 's'}${n > 1 ? ': not a function' : ''}</span>`);
+    } else {
+      const [t, y] = probe();
+      chips.push(`<span class="jsx-trace-chip jsx-trace-main">y = ${cc} meets the restricted graph <b>${n}</b> time${n === 1 ? '' : 's'} (never more than 1)</span>`);
+      if (okP()) {
+        chips.push(`<span class="jsx-trace-chip">θ = <b>${invAngle(t)}</b>, ${name}(θ) = <b>${invF3(y)}</b></span>`);
+        chips.push(`<span class="jsx-trace-chip">${name}⁻¹(${invF3(y)}) = <b>${invAngle(INV[name].inv(y))}</b> ✓ back to θ</span>`);
+      } else chips.push(`<span class="jsx-trace-chip is-undef">${name}(θ) is undefined here</span>`);
+    }
+    readout.innerHTML = chips.join('');
+    bd.update();
+  }
+  refresh();
+}
+
+function renderJsxInverseCompose(el) {
+  const TAG = 'jsx-inverse-compose';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const keys = (el.getAttribute('switch') || '').split(/\s+/).filter((k) => INV[k]);
+  const inner = el.getAttribute('order') === 'inner';
+  const st = { fn: INV[el.getAttribute('fn')] ? el.getAttribute('fn') : 'sin', x: evalNumAttr(el, 'x', inner ? 0.5 : 135, TAG) };
+  const XM = inner ? 5.76 : 7.4; const YM = inner ? 3.2 : 3.7;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = `jsx-board ${inner ? 'jsx-board--inverse' : 'jsx-board--compose'}`;
+  board.id = `jsx-board-${++boardCounter}`;
+  container.append(readout, board);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const grey = '#7d838c';
+  const orange = UNIT_CIRCLE_FOUR_COLOR;
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [-XM, YM, XM, -YM], axis: true, showNavigation: false, showCopyright: false,
+    keepaspectratio: true, pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+  if (!inner) {
+    bd.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+    const half = Math.PI / 2; const pos = [];
+    for (let k = Math.ceil(-XM / half); k <= Math.floor(XM / half); k++) pos.push(k * half);
+    bd.create('ticks', [bd.defaultAxes.x, pos], {
+      drawLabels: true, minorTicks: 0, majorHeight: TICK_MAJOR_HEIGHT, strokeColor: ink, strokeWidth: AXIS_STROKE,
+      label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' }, generateLabelText: (t) => piTickLabel(t.usrCoords[1]),
+    });
+  }
+
+  const T = () => INV[st.fn];
+  // outer: f^-1(f(x)); inner: f(f^-1(x)) (only where f^-1 is defined)
+  const g = (x) => {
+    if (inner) { const a = T().inv(x); return T().ok(x) && Number.isFinite(a) ? T().f(a) : NaN; }
+    const v = T().f(x);
+    return invDefined(v) ? T().inv(v) : NaN;
+  };
+  const xval = () => (inner ? st.x : (st.x * Math.PI) / 180);
+  bd.create('line', [[0, 0], [1, 1]], { strokeColor: grey, strokeWidth: 2, dash: 2, highlight: false, fixed: true });
+  if (!inner) {
+    [() => T().lo, () => T().hi].forEach((get) => bd.create('line', [[0, get], [1, get]], { strokeColor: orange, strokeWidth: 1.5, dash: 3, highlight: false, fixed: true }));
+  }
+  makeDataCurve(bd, () => invSample(g, -XM, XM, 1800, 1.2), { strokeColor: orange, strokeWidth: CURVE_STROKE + 1, highlight: false });
+  const val = () => g(xval());
+  const ok = () => Number.isFinite(val());
+  bd.create('point', [() => (ok() ? xval() : NaN), () => (ok() ? val() : NaN)], { size: POINT_SIZE + 1, strokeWidth: POINT_STROKE, fillColor: orange, strokeColor: orange, withLabel: false, fixed: true, highlight: false });
+  bd.create('point', [() => (ok() ? xval() : NaN), () => (ok() ? xval() : NaN)], { size: POINT_SIZE, strokeWidth: 2, fillColor: '#ffffff', strokeColor: grey, withLabel: false, fixed: true, highlight: false });
+
+  const ui = invControls(container);
+  const setSwitch = ui.mkSwitch(keys, st.fn, (k) => { st.fn = k; refresh(); });
+  const xS = inner ? ui.mkSlider('x', -3.5, 3.5, 0.05, st.x, (v) => { st.x = v; refresh(); })
+    : ui.mkSlider('x (degrees)', -420, 420, 5, st.x, (v) => { st.x = v; refresh(); });
+
+  function refresh() {
+    const name = st.fn; const x = xval();
+    setSwitch(name);
+    xS.row.querySelector('.jsx-slider-value').textContent = inner ? invF3(x) : invAngle(x);
+    const chips = [];
+    if (inner) {
+      const a = T().ok(x) ? T().inv(x) : NaN;
+      if (Number.isFinite(a)) {
+        chips.push(`<span class="jsx-trace-chip jsx-trace-main">${name}⁻¹(${invF3(x)}) = <b>${invAngle(a)}</b></span>`);
+        chips.push(`<span class="jsx-trace-chip">${name}(${name}⁻¹(${invF3(x)})) = <b>${invF3(T().f(a))}</b> ✓ equals x</span>`);
+      } else chips.push(`<span class="jsx-trace-chip is-undef">${name}⁻¹(${invF3(x)}) is undefined: ${invF3(x)} is not in its domain, so there is no point on the graph</span>`);
+    } else {
+      const v = T().f(x);
+      if (invDefined(v)) {
+        const r = T().inv(v); const same = Math.abs(r - x) < 1e-9;
+        chips.push(`<span class="jsx-trace-chip jsx-trace-main">${name}(${invAngle(x)}) = <b>${invF3(v)}</b></span>`);
+        chips.push(`<span class="jsx-trace-chip ${same ? '' : 'is-undef'}">${name}⁻¹(${invF3(v)}) = <b>${invAngle(r)}</b> ${same ? '✓ same as x' : '✗ not x'}</span>`);
+        if (!same) chips.push(`<span class="jsx-trace-chip">x is outside ${T().rng}, so the answer is moved into it</span>`);
+      } else chips.push(`<span class="jsx-trace-chip is-undef">${name}(${invAngle(x)}) is undefined</span>`);
+    }
+    readout.innerHTML = chips.join('');
+    bd.update();
+  }
+  refresh();
+}
+
+// <jsx-hlt fns="y = x³ :: x*x*x ; y = x² − 2 :: x*x - 2" xmin="-4" xmax="4" ymin="-3" ymax="3" c="1">
+//
+// Horizontal line test (Lesson 18). One button per function ("label :: expression in x", `;`
+// between them); drag the red handle at the left edge (or use the slider, or Sweep) to move
+// the horizontal line. Every intersection gets a dot and the readout counts them. The verdict
+// tracks the most crossings seen since the function was chosen: once any line meets the graph
+// twice it is "not one-to-one"; until then it only says "so far at most one".
+function renderJsxHlt(el) {
+  const TAG = 'jsx-hlt';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const defs = (el.getAttribute('fns') || 'y = x³ :: x*x*x ; y = x² − 2 :: x*x - 2').split(';').map((s) => {
+    const [label, expr] = s.split('::').map((t) => t.trim());
+    const fn = compileMath(['x'], expr, TAG, 'fns');
+    return { label, f: fn || (() => NaN) };
+  });
+  const xmin = evalNumAttr(el, 'xmin', -4, TAG); const xmax = evalNumAttr(el, 'xmax', 4, TAG);
+  const ymin = evalNumAttr(el, 'ymin', -3, TAG); const ymax = evalNumAttr(el, 'ymax', 3, TAG);
+  const st = { i: 0, c: evalNumAttr(el, 'c', 1, TAG), max: 0, raf: 0 };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const board = document.createElement('div');
+  board.className = 'jsx-board jsx-board--hlt';
+  board.id = `jsx-board-${++boardCounter}`;
+  container.append(readout, board);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const red = '#c0392b';
+  const bd = JXG.JSXGraph.initBoard(board.id, {
+    boundingbox: [xmin, ymax, xmax, ymin], axis: true, showNavigation: false, showCopyright: false,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+
+  const data = () => invSample(defs[st.i].f, xmin, xmax, 1600, Infinity);
+  makeDataCurve(bd, data, { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+  bd.create('line', [[0, () => st.c], [1, () => st.c]], { strokeColor: red, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+  st.cross = [];
+  const POOL = 12;
+  Array.from({ length: POOL }, (_, k) => bd.create('point', [
+    () => (st.cross[k] === undefined ? NaN : st.cross[k]), () => (st.cross[k] === undefined ? NaN : st.c),
+  ], { size: POINT_SIZE + 1, strokeWidth: POINT_STROKE, fillColor: red, strokeColor: red, withLabel: false, fixed: true, highlight: false }));
+  const hx = xmin + 0.07 * (xmax - xmin);
+  const handle = bd.create('point', [hx, () => st.c], { size: POINT_SIZE + 3, strokeWidth: POINT_STROKE, fillColor: '#fff', strokeColor: red, withLabel: false, highlight: false });
+  handle.on('drag', () => {
+    st.c = Math.min(ymax, Math.max(ymin, handle.Y()));
+    handle.moveTo([hx, st.c]);
+    stopSweep(); refresh();
+  });
+
+  const ui = invControls(container);
+  const setSwitch = ui.mkSwitch(defs.map((d) => d.label), defs[0].label, (lab) => {
+    st.i = defs.findIndex((d) => d.label === lab); st.max = 0; stopSweep(); refresh();
+  });
+  const cS = ui.mkSlider('Line y =', ymin, ymax, 0.05, st.c, (v) => { st.c = v; stopSweep(); refresh(); });
+  function stopSweep() { if (st.raf) { cancelAnimationFrame(st.raf); st.raf = 0; sweepBtn.textContent = 'Sweep'; } }
+  const sweepBtn = ui.mkBtn('Sweep', () => {
+    if (st.raf) { stopSweep(); return; }
+    sweepBtn.textContent = 'Stop';
+    let t0 = null; const from = st.c; const dur = 7000;
+    const tick = (now) => {
+      if (t0 === null) t0 = now;
+      const u = ((now - t0) / dur + (from - ymin) / (ymax - ymin)) % 1;
+      st.c = ymin + (ymax - ymin) * (u < 0.5 ? 2 * u : 2 - 2 * u);
+      refresh();
+      st.raf = requestAnimationFrame(tick);
+    };
+    st.raf = requestAnimationFrame(tick);
+  });
+  ui.mkBtn('Reset test', () => { st.max = 0; refresh(); });
+
+  function refresh() {
+    st.cross = invCrossings(data(), st.c);
+    const n = st.cross.length;
+    st.max = Math.max(st.max, n);
+    handle.moveTo([hx, st.c]);
+    cS.input.value = st.c;
+    cS.row.querySelector('.jsx-slider-value').textContent = invF3(st.c);
+    setSwitch(defs[st.i].label);
+    const verdict = st.max >= 2
+      ? '<span class="jsx-trace-chip is-undef">✗ some horizontal line meets it twice: <b>not one-to-one</b></span>'
+      : '<span class="jsx-trace-chip">so far every line meets it at most once: keep moving the line</span>';
+    readout.innerHTML = `<span class="jsx-trace-chip jsx-trace-main">y = ${invF3(st.c)} meets ${defs[st.i].label} <b>${n}</b> time${n === 1 ? '' : 's'}</span>${verdict}`;
+    bd.update();
+  }
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -4731,4 +5116,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-projection').forEach(renderJsxProjection);
   document.querySelectorAll('jsx-jacobian').forEach(renderJsxJacobian);
   document.querySelectorAll('jsx-vector-field').forEach(renderJsxVectorField);
+  document.querySelectorAll('jsx-inverse').forEach(renderJsxInverse);
+  document.querySelectorAll('jsx-hlt').forEach(renderJsxHlt);
+  document.querySelectorAll('jsx-inverse-compose').forEach(renderJsxInverseCompose);
 });

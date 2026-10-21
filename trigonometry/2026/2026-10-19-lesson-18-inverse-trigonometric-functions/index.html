@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Inverse Trigonometric Functions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (inverse-function explorers use <jsx-*> tags) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Inverse Trigonometric Functions</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+                <div class="step is-visible" data-step="1">
+          <div class="step-title">Review of Functions and Inverse Functions</div>
+          <div class="step-subtitle">Relations and functions</div>
+          <div class="step-body">
+<p>The topic of inverse trigonometric functions can be difficult. To better understand them, we first review functions and inverse functions in general.</p>
+<div class="defbox"><div class="defbox-label">Definition: Relations and Functions</div>
+<p>A <b>relation</b> is a correspondence between an input set, called the <b>domain</b>, and an output set, called the <b>range</b>. Generally, a relation is any set of ordered pairs where the first component is an element from the domain, corresponding to the second component, an element from the range.</p>
+<p>A <b>function</b> is a relation in which each element from the domain corresponds to exactly one element from the range.</p>
+</div><div class="defbox"><div class="defbox-label">Procedure: The Vertical Line Test</div>
+<p>When viewing the graph of a relation, if all vertical lines intersect the graph in no more than one location, then the relation is a function.</p>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">One-to-One Functions</div>
+          <div class="step-subtitle">Horizontal line test and inverse functions</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition: One-to-One Functions</div>
+<p>A <b>one-to-one function</b> is a function in which each element from the range corresponds to exactly one element from the domain. It satisfies the qualities of a function in both directions.</p>
+</div><div class="defbox"><div class="defbox-label">Procedure: The Horizontal Line Test</div>
+<p>When viewing the graph of a function, if all horizontal lines intersect the graph in no more than one location, then the function is a one-to-one function.</p>
+</div><jsx-hlt></jsx-hlt>
+<div class="defbox"><div class="defbox-label">Definition: Inverse Functions</div>
+<p>Assume \(f\) and \(g\) are two functions such that</p>
+<p>1. \(f(g(x)) = x\), for every \(x\) in the domain of \(g\).</p>
+<p>2. \(g(f(x)) = x\), for every \(x\) in the domain of \(f\).</p>
+<p>Then \(f\) and \(g\) are mutually inverse, and we write \(g(x) = f^{-1}(x)\). Here \(-1\) is not an exponent. Only one-to-one functions have an inverse function.</p>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Functions, one-to-one, and inverses</div>
+          <div class="step-body">
+<p>For each relation, decide if it is a function. If so, determine if it is one-to-one. Finally, graph the inverse function for those that are one-to-one.</p>
+<table>
+  <tr><th>Relation</th><th>Function?</th><th>One-to-one?</th><th>Inverse</th></tr>
+  <tr><td>\(x^2 + y^2 = 4\)</td><td><reveal>No (a vertical line hits two points)</reveal></td><td><reveal>Not a function</reveal></td><td><reveal>None</reveal></td></tr>
+  <tr><td>\(y = 2\sin(x)\)</td><td><reveal>Yes</reveal></td><td><reveal>No (a horizontal line hits many points)</reveal></td><td><reveal>None</reveal></td></tr>
+  <tr><td>\(y = x^3\)</td><td><reveal>Yes</reveal></td><td><reveal>Yes</reveal></td><td><reveal>\(y = \sqrt[3]{x}\)</reveal></td></tr>
+</table>
+<jsx-graph fn="x*x*x" fn2="Math.cbrt(x)" label="y = x³" label2="inverse: y = ∛x" xmin="-4" xmax="4" ymin="-4" ymax="4"></jsx-graph>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Explore: Why Restrict the Domain?</div>
+          <div class="step-subtitle">Reflect a graph over y = x</div>
+          <div class="step-body">
+<p>The graph of an inverse is the reflection of the graph over the line \(y = x\). Drag the line to count crossings, then step through the three buttons.</p>
+<jsx-inverse fn="sin" switch="sin cos tan sec csc cot"></jsx-inverse>
+<ul>
+  <li>How many times does a horizontal line meet the whole graph? <reveal>Many (infinitely many): not one-to-one</reveal></li>
+  <li>Why is the mirror image not a function? <reveal>It fails the vertical line test</reveal></li>
+  <li>What do we do about it? <reveal>Restrict the domain to an interval where the function is one-to-one</reveal></li>
+</ul>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Inverse Trigonometric Functions</div>
+          <div class="step-subtitle">Notation and restriction</div>
+          <div class="step-body">
+<p>We now relax the acute-angle restriction and consider the full domain and range for these functions.</p>
+<p>\(\sin(\theta) = y \leftrightarrow \theta = \sin^{-1}(y)\) &nbsp; &nbsp; \(\cos(\theta) = y \leftrightarrow \theta = \cos^{-1}(y)\) &nbsp; &nbsp; \(\tan(\theta) = y \leftrightarrow \theta = \tan^{-1}(y)\)</p>
+<p>These functions are not one-to-one! So how do we have inverse trigonometric functions? We restrict the domain to an interval where the function satisfies the requirements for a one-to-one function.</p>
+<div class="defbox"><div class="defbox-label">Definition: The Inverse Sine Function</div>
+<p>Let \(\theta\) be any value such that <reveal>\(-\dfrac{\pi}{2} \le \theta \le \dfrac{\pi}{2}\)</reveal>, then \(\theta = \sin^{-1}(y)\) or \(\theta = \arcsin(y)\) if and only if \(y = \sin(\theta)\).</p>
+<p>The notations \(\sin^{-1}(y)\) and \(\arcsin(y)\) are interchangeable. The term arcsine reminds us that we are referring to the inverse of the <b>restricted</b> sine function.</p>
+</div>
+<table>
+  <tr><th></th><th>Domain</th><th>Range</th></tr>
+  <tr><td>Restricted sine</td><td><reveal>\(\left[-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right]\)</reveal></td><td><reveal>\([-1, 1]\)</reveal></td></tr>
+  <tr><td>Arcsine</td><td><reveal>\([-1, 1]\)</reveal></td><td><reveal>\(\left[-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right]\)</reveal></td></tr>
+</table>
+<jsx-inverse fn="sin" stage="2"></jsx-inverse>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Evaluate each expression, if possible</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\sin^{-1}(1)\)</td><td><reveal>\(-\dfrac{\pi}{2}\le\theta\le\dfrac{\pi}{2},\ \sin\theta = 1 \Rightarrow \theta = \dfrac{\pi}{2}\)</reveal></td></tr>
+  <tr><td>(b) \(\arcsin\left(-\dfrac{\sqrt{3}}{2}\right)\)</td><td><reveal>\(\sin\theta = -\dfrac{\sqrt{3}}{2} \Rightarrow \theta = -\dfrac{\pi}{3}\)</reveal></td></tr>
+  <tr><td>(c) \(\sin^{-1}(-\sqrt{3})\)</td><td><reveal>Not possible: \(-\sqrt{3} < -1\), outside \([-1, 1]\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">The Inverse Cosine Function</div>
+          <div class="step-subtitle">Restricted cosine and arccosine</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition: The Inverse Cosine Function</div>
+<p>Let \(\theta\) be any value such that <reveal>\(0 \le \theta \le \pi\)</reveal>, then \(\theta = \cos^{-1}(y)\) or \(\theta = \arccos(y)\) if and only if \(y = \cos(\theta)\).</p>
+<p>Again \(\cos^{-1}(y)\) and \(\arccos(y)\) are interchangeable. The term arccosine reminds us that we are referring to the inverse of the <b>restricted</b> cosine function.</p>
+</div>
+<table>
+  <tr><th></th><th>Domain</th><th>Range</th></tr>
+  <tr><td>Restricted cosine</td><td><reveal>\([0, \pi]\)</reveal></td><td><reveal>\([-1, 1]\)</reveal></td></tr>
+  <tr><td>Arccosine</td><td><reveal>\([-1, 1]\)</reveal></td><td><reveal>\([0, \pi]\)</reveal></td></tr>
+</table>
+<jsx-inverse fn="cos" stage="2"></jsx-inverse>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">The Inverse Tangent Function</div>
+          <div class="step-subtitle">Restricted tangent and arctangent</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition: The Inverse Tangent Function</div>
+<p>Let \(\theta\) be any value such that <reveal>\(-\dfrac{\pi}{2} < \theta < \dfrac{\pi}{2}\)</reveal>, then \(\theta = \tan^{-1}(y)\) or \(\theta = \arctan(y)\) if and only if \(y = \tan(\theta)\).</p>
+<p>Once more \(\tan^{-1}(y)\) and \(\arctan(y)\) are interchangeable. The term arctangent reminds us that we are referring to the inverse of the <b>restricted</b> tangent function.</p>
+</div>
+<table>
+  <tr><th></th><th>Domain</th><th>Range</th></tr>
+  <tr><td>Restricted tangent</td><td><reveal>\(\left(-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right)\)</reveal></td><td><reveal>\((-\infty, \infty)\)</reveal></td></tr>
+  <tr><td>Arctangent</td><td><reveal>\((-\infty, \infty)\)</reveal></td><td><reveal>\(\left(-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right)\)</reveal></td></tr>
+</table>
+<jsx-inverse fn="tan" stage="2"></jsx-inverse>
+<p class="muted small">The horizontal lines \(y = \pm\pi/2\) are asymptotes of arctangent; the vertical lines \(x = \pm\pi/2\) are asymptotes of restricted tangent.</p>
+          </div>
+        </div>
+        <div class="step" data-step="9">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Evaluate each expression, if possible</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\cos^{-1}(1)\)</td><td><reveal>\(0\le\theta\le\pi,\ \cos\theta = 1 \Rightarrow \theta = 0\)</reveal></td></tr>
+  <tr><td>(b) \(\arccos\left(-\dfrac{\sqrt{3}}{2}\right)\)</td><td><reveal>\(\cos\theta = -\dfrac{\sqrt{3}}{2} \Rightarrow \theta = \dfrac{5\pi}{6}\)</reveal></td></tr>
+  <tr><td>(c) \(\tan^{-1}(-\sqrt{3})\)</td><td><reveal>\(-\dfrac{\pi}{2}<\theta<\dfrac{\pi}{2},\ \tan\theta = -\sqrt{3} \Rightarrow \theta = -\dfrac{\pi}{3}\)</reveal></td></tr>
+</table>
+<p>Note \(\theta \ne \dfrac{5\pi}{3}\) in part (c). Why? <reveal>\(\tan\dfrac{5\pi}{3} = -\sqrt{3}\) too, but \(\dfrac{5\pi}{3}\) is not in \(\left(-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right)\)</reveal></p>
+<jsx-unit-circle start-angle="150" show-labels="all"></jsx-unit-circle>
+          </div>
+        </div>
+        <div class="step" data-step="10">
+          <div class="step-title">Other Inverse Trigonometric Functions</div>
+          <div class="step-subtitle">Secant, cosecant, and cotangent</div>
+          <div class="step-body">
+<p>The remaining trigonometric functions are restricted the same way to achieve a one-to-one function. Choose a function, then step to <b>3 Restrict</b> to see the restricted graph and its inverse.</p>
+<jsx-inverse fn="sec" switch="sec csc cot" stage="2"></jsx-inverse>
+<table>
+  <tr><th>Function</th><th>Restricted domain</th><th>Vertical asymptote of function</th><th>Horizontal asymptote(s) of inverse</th></tr>
+  <tr><td>\(y = \sec(x)\)</td><td><reveal>\([0,\pi]\), \(x \ne \dfrac{\pi}{2}\)</reveal></td><td><reveal>\(x = \dfrac{\pi}{2}\)</reveal></td><td><reveal>\(y = \dfrac{\pi}{2}\)</reveal></td></tr>
+  <tr><td>\(y = \csc(x)\)</td><td><reveal>\(\left[-\dfrac{\pi}{2},\dfrac{\pi}{2}\right]\), \(x \ne 0\)</reveal></td><td><reveal>\(x = 0\)</reveal></td><td><reveal>\(y = 0\)</reveal></td></tr>
+  <tr><td>\(y = \cot(x)\)</td><td><reveal>\((0,\pi)\)</reveal></td><td><reveal>\(x = 0\) and \(x = \pi\)</reveal></td><td><reveal>\(y = 0\) and \(y = \pi\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="11">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Evaluate each expression, if possible</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\cot^{-1}(1)\)</td><td><reveal>\(0<\theta<\pi,\ \cot\theta = 1 \Rightarrow \theta = \dfrac{\pi}{4}\)</reveal></td></tr>
+  <tr><td>(b) \(\operatorname{arcsec}(-2)\)</td><td><reveal>\(\sec\theta = -2 \Rightarrow \cos\theta = -\dfrac{1}{2},\ 0\le\theta\le\pi \Rightarrow \theta = \dfrac{2\pi}{3}\)</reveal></td></tr>
+  <tr><td>(c) \(\csc^{-1}(0)\)</td><td><reveal>Not possible: \(\csc\theta\) is never \(0\) (its range is \(|y|\ge 1\))</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="12">
+          <div class="step-title">Summary Table</div>
+          <div class="step-subtitle">Restricted functions and their inverses</div>
+          <div class="step-body">
+<table>
+  <tr><th>Restricted function</th><th>Domain</th><th>Range</th><th>Inverse function</th><th>Domain</th><th>Range</th></tr>
+  <tr><td>\(y=\sin(x)\)</td><td><reveal>\([-\tfrac{\pi}{2},\tfrac{\pi}{2}]\)</reveal></td><td><reveal>\([-1,1]\)</reveal></td><td>\(y=\sin^{-1}(x)\)</td><td><reveal>\([-1,1]\)</reveal></td><td><reveal>\([-\tfrac{\pi}{2},\tfrac{\pi}{2}]\)</reveal></td></tr>
+  <tr><td>\(y=\csc(x)\)</td><td><reveal>\([-\tfrac{\pi}{2},\tfrac{\pi}{2}],\ x\ne0\)</reveal></td><td><reveal>\((-\infty,-1]\cup[1,\infty)\)</reveal></td><td>\(y=\csc^{-1}(x)\)</td><td><reveal>\((-\infty,-1]\cup[1,\infty)\)</reveal></td><td><reveal>\([-\tfrac{\pi}{2},\tfrac{\pi}{2}],\ y\ne0\)</reveal></td></tr>
+  <tr><td>\(y=\cos(x)\)</td><td><reveal>\([0,\pi]\)</reveal></td><td><reveal>\([-1,1]\)</reveal></td><td>\(y=\cos^{-1}(x)\)</td><td><reveal>\([-1,1]\)</reveal></td><td><reveal>\([0,\pi]\)</reveal></td></tr>
+  <tr><td>\(y=\sec(x)\)</td><td><reveal>\([0,\pi],\ x\ne\tfrac{\pi}{2}\)</reveal></td><td><reveal>\((-\infty,-1]\cup[1,\infty)\)</reveal></td><td>\(y=\sec^{-1}(x)\)</td><td><reveal>\((-\infty,-1]\cup[1,\infty)\)</reveal></td><td><reveal>\([0,\pi],\ y\ne\tfrac{\pi}{2}\)</reveal></td></tr>
+  <tr><td>\(y=\tan(x)\)</td><td><reveal>\((-\tfrac{\pi}{2},\tfrac{\pi}{2})\)</reveal></td><td><reveal>\((-\infty,\infty)\)</reveal></td><td>\(y=\tan^{-1}(x)\)</td><td><reveal>\((-\infty,\infty)\)</reveal></td><td><reveal>\((-\tfrac{\pi}{2},\tfrac{\pi}{2})\)</reveal></td></tr>
+  <tr><td>\(y=\cot(x)\)</td><td><reveal>\((0,\pi)\)</reveal></td><td><reveal>\((-\infty,\infty)\)</reveal></td><td>\(y=\cot^{-1}(x)\)</td><td><reveal>\((-\infty,\infty)\)</reveal></td><td><reveal>\((0,\pi)\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="13">
+          <div class="step-title">Inverse Functions and Composition</div>
+          <div class="step-subtitle">f(f⁻¹(x)) and f⁻¹(f(x))</div>
+          <div class="step-body">
+<p>The definition of inverse functions is rooted in composition:</p>
+<p>1. \(f(f^{-1}(x)) = x\), for every \(x\) in the domain of \(f^{-1}\).</p>
+<p>2. \(f^{-1}(f(x)) = x\), for every \(x\) in the domain of \(f\).</p>
+<p>For trigonometric functions we always satisfy \(f(f^{-1}(x)) = x\), provided \(x\) is in the domain of \(f^{-1}\). Because of the domain restrictions, we will not always satisfy \(f^{-1}(f(x)) = x\).</p>
+<p>Orange is \(y = \sin^{-1}(\sin x)\). Drag \(x\) and watch where it equals \(x\) (the dashed line \(y=x\)).</p>
+<jsx-inverse-compose fn="sin" switch="sin cos tan"></jsx-inverse-compose>
+<p>It equals \(x\) exactly when <reveal>\(x\) is in the restricted interval (between the two dashed horizontal lines)</reveal>.</p>
+          </div>
+        </div>
+        <div class="step" data-step="14">
+          <div class="step-title">Explore: f(f⁻¹(x))</div>
+          <div class="step-subtitle">Always true, where defined</div>
+          <div class="step-body">
+<p>Now the other order: orange is \(y = \sin(\sin^{-1}(x))\).</p>
+<jsx-inverse-compose fn="sin" order="inner" switch="sin cos tan sec csc cot"></jsx-inverse-compose>
+<p>The graph is the line \(y = x\) but only where <reveal>\(x\) is in the domain of \(f^{-1}\)</reveal>.</p>
+          </div>
+        </div>
+        <div class="step" data-step="15">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">True or false? Correct any false statements</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\sin\left(\sin^{-1}\left(\dfrac{\sqrt{2}}{2}\right)\right) = \dfrac{\sqrt{2}}{2}\)</td><td><reveal>True: \(\dfrac{\sqrt{2}}{2}\) is in \([-1,1]\)</reveal></td></tr>
+  <tr><td>(b) \(\sin^{-1}\left(\sin\left(\dfrac{3\pi}{4}\right)\right) = \dfrac{3\pi}{4}\)</td><td><reveal>False: \(\dfrac{3\pi}{4}\) is not in \(\left[-\dfrac{\pi}{2},\dfrac{\pi}{2}\right]\). \(\sin^{-1}\left(\dfrac{\sqrt{2}}{2}\right) = \dfrac{\pi}{4}\)</reveal></td></tr>
+  <tr><td>(c) \(\arccos\left(\cos\left(\dfrac{3\pi}{4}\right)\right) = \dfrac{3\pi}{4}\)</td><td><reveal>True: \(\dfrac{3\pi}{4}\) is in \([0,\pi]\)</reveal></td></tr>
+</table>
+<p class="muted small">Check (b) and (c) with the first diagram on the previous step: set \(x = 135^\circ\) and switch between sin and cos.</p>
+          </div>
+        </div>
+        <div class="step" data-step="16">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Evaluate each expression</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\sin\left(\cos^{-1}\left(-\dfrac{1}{2}\right)\right)\)</td><td><reveal>\(\cos^{-1}\left(-\dfrac{1}{2}\right) = \dfrac{2\pi}{3}\), so \(\sin\dfrac{2\pi}{3} = \dfrac{\sqrt{3}}{2}\)</reveal></td></tr>
+  <tr><td>(b) \(\sin^{-1}\left(\cos\left(\dfrac{7\pi}{6}\right)\right)\)</td><td><reveal>\(\cos\dfrac{7\pi}{6} = -\dfrac{\sqrt{3}}{2}\), so \(\sin^{-1}\left(-\dfrac{\sqrt{3}}{2}\right) = -\dfrac{\pi}{3}\)</reveal></td></tr>
+  <tr><td>(c) \(\arctan\left(\sin\left(\cos^{-1}\left(-\dfrac{\sqrt{3}}{2}\right)\right)\right)\)</td><td><reveal>\(\cos^{-1}\left(-\dfrac{\sqrt{3}}{2}\right) = \dfrac{5\pi}{6}\), \(\sin\dfrac{5\pi}{6} = \dfrac{1}{2}\), \(\arctan\dfrac{1}{2} \approx 0.4636\)</reveal></td></tr>
+</table>
+<p>Approximations like the one in (c) are common. Our calculator will be a great resource when approximations are required.</p>
+          </div>
+        </div>
+        <div class="step" data-step="17">
+          <div class="step-title">Approximating Inverse Function Values with a Calculator</div>
+          <div class="step-subtitle">Reciprocal identities and the cotangent mismatch</div>
+          <div class="step-body">
+<p>When evaluating trigonometric functions, an exact value is generally preferred over an approximation. But in real-world situations we must often use a calculator.</p>
+<p>Most scientific calculators handle arcsine, arccosine, and arctangent, but few can evaluate arcsecant, arccosecant, and arccotangent. Use the reciprocal identities to transform the expression into one the calculator understands:</p>
+<p>\(\sec^{-1}(x) = \) <reveal>\(\cos^{-1}\left(\dfrac{1}{x}\right)\)</reveal> &nbsp; &nbsp; \(\csc^{-1}(x) = \) <reveal>\(\sin^{-1}\left(\dfrac{1}{x}\right)\)</reveal></p>
+<p>Be careful with arccotangent: its range is \((0,\pi)\), but arctangent's range is \(\left(-\dfrac{\pi}{2},\dfrac{\pi}{2}\right)\), a "mismatch".</p>
+<p>\(\cot^{-1}(x) = \tan^{-1}\left(\dfrac{1}{x}\right)\) if <reveal>\(x > 0\)</reveal>, and \(\cot^{-1}(x) = \tan^{-1}\left(\dfrac{1}{x}\right) + \pi\) if <reveal>\(x < 0\)</reveal>.</p>
+<jsx-inverse fn="cot" stage="2"></jsx-inverse>
+          </div>
+        </div>
+        <div class="step" data-step="18">
+          <div class="step-title">Example 7</div>
+          <div class="step-subtitle">Use a calculator to find the angle θ in radians, if θ exists</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\theta = \cos^{-1}\left(\dfrac{2}{3}\right)\)</td><td><reveal>\(\approx 0.8411\)</reveal></td></tr>
+  <tr><td>(b) \(\theta = \arcsin\left(-\dfrac{3}{2}\right)\)</td><td><reveal>Does not exist: \(-\dfrac{3}{2}\) is outside \([-1,1]\)</reveal></td></tr>
+  <tr><td>(c) \(\theta = \sec^{-1}\left(-\dfrac{2}{3}\right)\)</td><td><reveal>Does not exist: \(\cos^{-1}\left(-\dfrac{3}{2}\right)\) is outside \([-1,1]\)</reveal></td></tr>
+  <tr><td>(d) \(\theta = \sec^{-1}\left(\dfrac{3}{2}\right)\)</td><td><reveal>\(\cos^{-1}\left(\dfrac{2}{3}\right) \approx 0.8411\)</reveal></td></tr>
+  <tr><td>(e) \(\theta = \cot^{-1}\left(\dfrac{2}{3}\right)\)</td><td><reveal>\(x>0\): \(\tan^{-1}\left(\dfrac{3}{2}\right) \approx 0.9828\)</reveal></td></tr>
+  <tr><td>(f) \(\theta = \cot^{-1}\left(-\dfrac{2}{3}\right)\)</td><td><reveal>\(x<0\): \(\tan^{-1}\left(-\dfrac{3}{2}\right) + \pi \approx 2.1588\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="19">
+          <div class="step-title">Reference Triangles</div>
+          <div class="step-subtitle">Exact values without finding θ</div>
+          <div class="step-body">
+<p>Consider a combination of the form \(f(f^{-1}(x))\), such as \(\sin(\cos^{-1}(1))\). We find \(\theta = \cos^{-1}(1) = 0\), then evaluate \(\sin(0) = 0\).</p>
+<p>This works well when \(\theta\) is easily found. For \(\cos\left(\sin^{-1}\left(\dfrac{4}{5}\right)\right)\), the angle \(\theta = \sin^{-1}\left(\dfrac{4}{5}\right) \approx 0.927295\ldots\) is not on the unit circle, and we only get \(\cos(0.927295\ldots) \approx 0.600236\ldots\).</p>
+<p>Since \(\theta\) is just an intermediate step, a <b>reference triangle</b> gives an <b>exact</b> value without calculating \(\theta\).</p>
+          </div>
+        </div>
+        <div class="step" data-step="20">
+          <div class="step-title">Example 8</div>
+          <div class="step-subtitle">Evaluate cos(sin⁻¹(4/5))</div>
+          <div class="step-body">
+<p>Evaluate \(\cos\left(\sin^{-1}\left(\dfrac{4}{5}\right)\right)\) by completing the following steps.</p>
+<p>(a) Let \(\sin^{-1}\left(\dfrac{4}{5}\right) = \theta\). Write this statement in its inverse form. <reveal>\(\sin\theta = \dfrac{4}{5}\)</reveal></p>
+<p>(b) Construct a right triangle with measures that satisfy part (a): opposite \(4\), hypotenuse \(5\).</p>
+<triangle type="right" angle="53" opposite="4" hypotenuse="5" label-a="θ" label-c="">
+  <reveal slot="adjacent">3</reveal>
+</triangle>
+<p>(c) Find the missing side. <reveal>\(\sqrt{5^2 - 4^2} = 3\)</reveal></p>
+<p>(d) Evaluate \(\cos\left(\sin^{-1}\left(\dfrac{4}{5}\right)\right) = \cos\theta = \) <reveal>\(\dfrac{3}{5}\)</reveal></p>
+          </div>
+        </div>
+        <div class="step" data-step="21">
+          <div class="step-title">Example 9</div>
+          <div class="step-subtitle">Evaluate tan(sec⁻¹(2))</div>
+          <div class="step-body">
+<p>Use a reference triangle to evaluate \(\tan(\sec^{-1}(2))\).</p>
+<p>Let \(\theta = \sec^{-1}(2)\), so \(\sec\theta = 2 = \dfrac{2}{1}\): hypotenuse \(2\), adjacent \(1\).</p>
+<triangle type="right" angle="60" adjacent="1" hypotenuse="2" label-a="θ" label-c="">
+  <reveal slot="opposite">√3</reveal>
+</triangle>
+<p>\(\tan(\sec^{-1}(2)) = \tan\theta = \dfrac{\text{opposite}}{\text{adjacent}} = \) <reveal>\(\sqrt{3}\)</reveal></p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
