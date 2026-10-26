@@ -613,3 +613,12 @@ reveal.triangle-overlay:not(.is-revealed) {
 .cd-n { text-align: center; }
 .cd-pair { display: flex; flex-wrap: wrap; gap: 0.5rem 3rem; justify-content: center; align-items: flex-start; }
 .cd-caption { text-align: center; margin: 0; }
+
+/* <jsx-solve-trig> (js/jsxgraph.js, Trigonometry Lesson 19): graph of y = f(bx) with a line y = k, optional unit circle beside it. */
+.jsx-solve-grid { display: grid; grid-template-columns: 1.9fr 1fr; gap: 0.8rem; align-items: center; }
+.jsx-solve-grid.no-circle { grid-template-columns: 1fr; }
+.jsx-solve-grid > div { min-width: 0; }
+.jsx-board--solve { aspect-ratio: 1.6 / 1; }
+.jsx-solve-grid.no-circle .jsx-board--solve { aspect-ratio: 2.1 / 1; }
+.jsx-board--solve-circle { aspect-ratio: 1 / 1; }
+@media (max-width: 800px) { .jsx-solve-grid { grid-template-columns: 1fr; } }

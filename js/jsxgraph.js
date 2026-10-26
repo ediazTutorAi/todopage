@@ -5097,6 +5097,788 @@ function renderJsxHlt(el) {
   refresh();
 }
 
+// ---------------------------------------------------------------------------
+// Line integrals (Calculus III 6.2): <jsx-line-scalar> and <jsx-line-vector>.
+// Curves are written as JS expressions in t (`x="cos(t)" y="sin(t)" tmin="0" tmax="pi"`), fields and
+// scalar functions as expressions in x and y (sin cos tan exp sqrt abs log pow pi in scope, `^` accepted).
+const LINE_ASPECT = 1.15;
+const LINE_MAXN = 30;
+const LINE_ORANGE = '#c2740c';
+const LINE_GREEN = '#2e8b57';
+
+// A value as the book would print it: a multiple of pi, a small fraction, or else a decimal.
+function lineFmt(v) {
+  if (!Number.isFinite(v)) return 'undefined';
+  const minus = (s) => s.replace('-', '−');
+  const dec = (w) => minus(String(Math.round(w * 1000) / 1000));
+  if (Math.abs(v) < 2e-6) return '0';
+  const pm = fmtPiMultiple(v, 3e-6);
+  if (pm) return `${minus(pm)} ≈ ${dec(v)}`;
+  for (let d = 1; d <= 24; d++) {
+    const n = v * d;
+    if (Math.abs(n - Math.round(n)) < 3e-6 * d && Math.abs(n) < 5000) return minus(d === 1 ? String(Math.round(n)) : `${Math.round(n)}/${d}`);
+  }
+  return dec(v);
+}
+// a parameter value: a multiple of pi when it is one, else a decimal
+const lineT = (u) => (fmtPiMultiple(u, 3e-6) ?? String(Math.round(u * 100) / 100)).replace('-', '−');
+const lineDec = (v) => (Number.isFinite(v) ? String(Math.round(v * 100) / 100).replace('-', '−') : 'undefined');
+
+function lineFit(lo, hi, hLo, hHi) {
+  const wd = Math.max(hi - lo, 1e-6) * 1.35; const ht = Math.max(hHi - hLo, 1e-6) * 1.35;
+  const w2 = Math.max(wd, ht * LINE_ASPECT);
+  const cx = (lo + hi) / 2; const cy = (hLo + hHi) / 2;
+  return [cx - w2 / 2, cy + w2 / LINE_ASPECT / 2, cx + w2 / 2, cy - w2 / LINE_ASPECT / 2];
+}
+
+function lineBoard(host, bb, ink, equal) {
+  const b = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: bb, axis: true, showNavigation: false, showCopyright: false, keepaspectratio: equal,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(b, ink);
+  b.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  b.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  return b;
+}
+
+// Two boards side by side with captions; returns the hosts and the caption nodes.
+function lineTwoBoards(capL, capR) {
+  const grid = document.createElement('div');
+  grid.className = 'jsx-fubini-grid';
+  const mk = () => {
+    const box = document.createElement('div');
+    const cap = document.createElement('div');
+    cap.className = 'muted small jsx-strip-cap';
+    const host = document.createElement('div');
+    host.className = 'jsx-board jsx-board--jacobian';
+    host.id = `jsx-board-${++boardCounter}`;
+    box.append(cap, host);
+    grid.appendChild(box);
+    return { cap, host };
+  };
+  const L = mk(); const R = mk();
+  L.cap.textContent = capL; R.cap.textContent = capR;
+  return { grid, hostL: L.host, hostR: R.host, capL: L.cap, capR: R.cap };
+}
+
+// `<jsx-case>` children (one per curve/field) or, without them, the tag's own attributes.
+function lineCases(el) {
+  const kids = Array.from(el.children).filter((c) => c.tagName === 'JSX-CASE');
+  return (kids.length ? kids : [el]).map((node, i) => ({
+    name: node.getAttribute('name') || `Case ${i + 1}`,
+    get: (n) => (node.hasAttribute(n) ? node.getAttribute(n) : el.getAttribute(n)),
+  }));
+}
+
+function lineMkBtn(label, on, parent) {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'btn'; b.textContent = label;
+  b.addEventListener('pointerup', () => b.blur());
+  b.addEventListener('click', () => on(b));
+  parent.appendChild(b);
+  return b;
+}
+
+function lineSlider(label, min, max, step, value, on, parent) {
+  const row = document.createElement('label');
+  row.className = 'jsx-slider-row';
+  row.innerHTML = `<span class="jsx-slider-name">${label}</span><input type="range" min="${min}" max="${max}" step="${step}"><span class="jsx-slider-val"></span>`;
+  const input = row.querySelector('input'); const val = row.querySelector('.jsx-slider-val');
+  input.value = String(value);
+  input.addEventListener('input', () => on(parseFloat(input.value)));
+  input.addEventListener('pointerup', () => input.blur());
+  parent.appendChild(row);
+  return { input, val };
+}
+
+// <jsx-line-scalar x="cos(t)" y="sin(t)" tmin="0" tmax="pi" f="2" n="6" speeds="1 2 3">
+//
+// A scalar line integral as a limit of sums f(P_i*) Delta s_i. Left: the plane curve C cut into n pieces of
+// equal width in t (dots = sample points P_i*). Right: the same pieces unrolled along the arc-length axis s, each
+// drawn as a rectangle of width Delta s_i and height f(P_i*), so the sum is a sum of areas (the "sheet" under
+// the curve, flattened). The readout compares the sum with the integral. `speeds="1 2 3"` adds buttons that
+// run through the curve k times as fast (r(kt)): the integral computed from the new parameterization is shown
+// and does not change. The picture is 2D; for curves in space only the formula applies.
+function renderJsxLineScalar(el) {
+  const TAG = 'jsx-line-scalar';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const X = compileMath(['t'], powFix(el.getAttribute('x') || 't'), TAG, 'x');
+  const Y = compileMath(['t'], powFix(el.getAttribute('y') || '0'), TAG, 'y');
+  const F = compileMath(['x', 'y'], powFix(el.getAttribute('f') || '1'), TAG, 'f');
+  if (!X || !Y || !F) return;
+  const a = evalNumAttr(el, 'tmin', 0, TAG); const b = evalNumAttr(el, 'tmax', 1, TAG);
+  const speeds = (el.getAttribute('speeds') || '').split(/[\s,]+/).filter(Boolean).map(Number);
+  const st = { n: Math.min(LINE_MAXN, Math.max(1, Math.round(evalNumAttr(el, 'n', 6, TAG)))), k: 1 };
+
+  // fine geometry: vertices, arc length so far, f along the curve, and the integral as a fine sum
+  const M = 2400; const h = (b - a) / M;
+  const vx = []; const vy = []; const S = [0]; const fv = [];
+  for (let j = 0; j <= M; j++) {
+    const t = a + j * h; vx.push(X(t)); vy.push(Y(t)); fv.push(F(vx[j], vy[j]));
+    if (j) S.push(S[j - 1] + Math.hypot(vx[j] - vx[j - 1], vy[j] - vy[j - 1]));
+  }
+  let exact = 0;
+  for (let j = 0; j < M; j++) { const tm = a + (j + 0.5) * h; exact += F(X(tm), Y(tm)) * (S[j + 1] - S[j]); }
+  const L = S[M];
+  const sAt = (t) => { const u = (t - a) / h; const j = Math.min(M - 1, Math.max(0, Math.floor(u))); return S[j] + (S[j + 1] - S[j]) * (u - j); };
+  const fin = fv.filter(Number.isFinite);
+  const fLo = Math.min(0, ...fin); const fHi = Math.max(0, ...fin);
+
+  // the integral recomputed from r(kt), t in [a/k, b/k]: speed is k |r'(kt)| and dt shrinks by k
+  const viaT = (k) => {
+    const N = 2400; const dt = (b - a) / k / N; const e = dt * 1e-3; let sum = 0;
+    for (let j = 0; j < N; j++) {
+      const t = a / k + (j + 0.5) * dt;
+      const dx = (X(k * (t + e)) - X(k * (t - e))) / (2 * e); const dy = (Y(k * (t + e)) - Y(k * (t - e))) / (2 * e);
+      sum += F(X(k * t), Y(k * t)) * Math.hypot(dx, dy) * dt;
+    }
+    return sum;
+  };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const two = lineTwoBoards('the curve C, cut into n pieces (dots: the points P*)', 'the pieces unrolled: width Δs, height f(P*)');
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, two.grid, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const px = vx.filter(Number.isFinite); const py = vy.filter(Number.isFinite);
+  const bdL = lineBoard(two.hostL, lineFit(Math.min(...px), Math.max(...px), Math.min(...py), Math.max(...py)), ink, true);
+  const padY = Math.max(fHi - fLo, 1e-6) * 0.2;
+  const bdR = lineBoard(two.hostR, [-0.08 * L, fHi + padY, L * 1.08, fLo - padY], ink, false);
+
+  bdL.create('curve', [(t) => X(t), (t) => Y(t), a, b], { strokeColor: ink, strokeWidth: 3, strokeOpacity: 0.35, highlight: false, fixed: true, numberPoints: 600 });
+  bdR.create('curve', [S, fv], { strokeColor: ink, strokeWidth: 3, highlight: false, fixed: true });
+
+  // pools: n pieces, n sample points, n rectangles
+  const T = (i) => a + ((b - a) * i) / st.n;
+  const Tm = (i) => a + ((b - a) * (i + 0.5)) / st.n;
+  const pieces = []; const dotsP = []; const dotsM = []; const rects = [];
+  for (let i = 0; i < LINE_MAXN; i++) {
+    const col = i % 2 ? LINE_GREEN : accent;
+    pieces.push(bdL.create('curve', [(t) => X(t), (t) => Y(t), () => T(i), () => T(i + 1)], { strokeColor: col, strokeWidth: 8, highlight: false, fixed: true, numberPoints: 80, visible: false }));
+    dotsP.push(bdL.create('point', [() => X(T(i)), () => Y(T(i))], { name: '', size: 4, fillColor: ink, strokeColor: '#fff', strokeWidth: 1, highlight: false, fixed: true, visible: false }));
+    dotsM.push(bdL.create('point', [() => X(Tm(i)), () => Y(Tm(i))], { name: '', size: POINT_SIZE, fillColor: cssVar('--negative') || '#c0392b', strokeColor: '#fff', strokeWidth: 2, highlight: false, fixed: true, visible: false }));
+    const x0 = () => sAt(T(i)); const x1 = () => sAt(T(i + 1)); const hh = () => { const v = F(X(Tm(i)), Y(Tm(i))); return Number.isFinite(v) ? v : 0; };
+    rects.push(bdR.create('polygon', [[x0, 0], [x1, 0], [x1, hh], [x0, hh]], { fillColor: col, fillOpacity: 0.35, borders: { strokeColor: col, strokeWidth: 2.5 }, vertices: { visible: false }, highlight: false, fixed: true, visible: false }));
+  }
+
+  function refresh() {
+    let sum = 0;
+    for (let i = 0; i < LINE_MAXN; i++) {
+      const on = i < st.n;
+      pieces[i].setAttribute({ visible: on }); dotsP[i].setAttribute({ visible: on || i === st.n }); dotsM[i].setAttribute({ visible: on }); rects[i].setAttribute({ visible: on });
+      if (on) { const v = F(X(Tm(i)), Y(Tm(i))); if (Number.isFinite(v)) sum += v * (sAt(T(i + 1)) - sAt(T(i))); }
+    }
+    const k = st.k;
+    let html = `<span class="jsx-trace-chip">n = <b>${st.n}</b> pieces</span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">Σ f(P<sub>i</sub>*) Δs<sub>i</sub> = <b>${lineDec(Math.round(sum * 1000) / 1000)}</b></span>` +
+      `<span class="jsx-trace-chip">∫<sub>C</sub> f ds = <b>${lineFmt(exact)}</b></span>`;
+    if (speeds.length) {
+      const tEnd = k === 1 ? lineT(b) : `${lineT(b)}/${k}`;
+      html += `<span class="jsx-trace-chip">r(${k === 1 ? '' : k}t), 0 ≤ t ≤ <b>${tEnd}</b>: ∫ f(r(t)) ‖r′(t)‖ dt = <b>${lineFmt(viaT(k))}</b></span>`;
+    }
+    readout.innerHTML = html;
+    bdL.update(); bdR.update();
+  }
+
+  const nSlider = lineSlider('pieces n', 1, LINE_MAXN, 1, st.n, (v) => { st.n = v; nSlider.val.textContent = String(v); refresh(); }, controls);
+  nSlider.val.textContent = String(st.n);
+  if (speeds.length) {
+    const sw = document.createElement('div');
+    sw.className = 'jsx-switch';
+    controls.appendChild(sw);
+    const btns = speeds.map((k) => lineMkBtn(k === 1 ? 'Original speed' : `${k}× as fast`, () => { st.k = k; btns.forEach((q, j) => q.classList.toggle('is-on', speeds[j] === k)); refresh(); }, sw));
+    btns[0].classList.add('is-on');
+  }
+  refresh();
+}
+
+// <jsx-line-vector x="cos(t)" y="sin(t)" tmin="0" tmax="pi" p="-y" q="x" breaks="2 3 5" mode="work|flux" toggle total>
+//   <jsx-case name="..." x= y= tmin= tmax= p= q= breaks=></jsx-case> ...   (several curves/fields behind buttons)
+//
+// A vector line integral (work, circulation) or a flux, built up as the point moves. Left: the field (faint),
+// the oriented curve (arrows), and at the moving point the field vector F (orange), the unit tangent T (or the
+// unit normal N in flux mode, dark) and the component of F along it (blue if positive, red if negative).
+// Right: the integrand F(r(t))·r′(t) (or F(r(t))·n(t), n = <y′, −x′>) against t, with the signed area up to
+// the red line shaded: that area is the line integral so far. "Reverse orientation" runs the same curve
+// backwards (−C): the integrand flips sign and so does the integral. `breaks` are parameter values where a
+// piecewise smooth curve changes pieces (C1 + C2 + ...): pieces are labelled, and each piece's value is
+// shown once the point has passed it. `toggle` adds a Work/Flux switch, `total` shows the value over the whole
+// curve in the readout from the start (leave it off when the answer is the exercise).
+function renderJsxLineVector(el) {
+  const TAG = 'jsx-line-vector';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const evalList = (s) => (s || '').split(/[\s,]+/).filter(Boolean).map((q) => new Function('pi', `return (${q});`)(Math.PI));
+  const cases = lineCases(el).map((c) => {
+    const nm = { getAttribute: c.get };
+    const X = compileMath(['t'], powFix(c.get('x') || 't'), TAG, 'x');
+    const Y = compileMath(['t'], powFix(c.get('y') || '0'), TAG, 'y');
+    const P = compileMath(['x', 'y'], powFix(c.get('p') || '0'), TAG, 'p');
+    const Q = compileMath(['x', 'y'], powFix(c.get('q') || '0'), TAG, 'q');
+    if (!X || !Y || !P || !Q) return null;
+    const a = evalNumAttr(nm, 'tmin', 0, TAG); const b = evalNumAttr(nm, 'tmax', 1, TAG);
+    return { name: c.name, X, Y, P, Q, a, b, breaks: evalList(c.get('breaks')).filter((q) => q > a && q < b).sort((m, n) => m - n), closed: Math.hypot(X(a) - X(b), Y(a) - Y(b)) < 1e-9 };
+  }).filter(Boolean);
+  if (!cases.length) return;
+  const toggle = el.hasAttribute('toggle'); const showTotal = el.hasAttribute('total');
+  const st = { ci: 0, rev: false, mode: el.getAttribute('mode') === 'flux' ? 'flux' : 'work', frac: evalNumAttr(el, 'start', 0, TAG), raf: 0 };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const two = lineTwoBoards('the curve C in the field F', '');
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, two.grid, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const muted = cssVar('--muted') || '#6b7280';
+  const f3 = (v) => lineDec(v);
+
+  let D = null; let bd = null; let cu = null;
+  const sliderRow = lineSlider('position along C', 0, 1, 0.001, st.frac, (v) => { stopPlay(); st.frac = v; refresh(); }, controls);
+
+  // integrand samples for the current (case, mode, orientation)
+  function compute() {
+    const c = cases[st.ci]; const { a, b } = c;
+    const M = 2400; const h = (b - a) / M; const e = (b - a) * 1e-6;
+    const sg = st.rev ? -1 : 1;
+    const tOf = (u) => (st.rev ? a + b - u : u);
+    const rr = (u) => { const t = tOf(u); return [c.X(t), c.Y(t)]; };
+    const dr = (u) => { const t = tOf(u); return [sg * (c.X(t + e) - c.X(t - e)) / (2 * e), sg * (c.Y(t + e) - c.Y(t - e)) / (2 * e)]; };
+    const gAt = (u) => {
+      const [x, y] = rr(u); const [dx, dy] = dr(u); const P = c.P(x, y); const Q = c.Q(x, y);
+      const v = st.mode === 'flux' ? P * dy - Q * dx : P * dx + Q * dy;
+      return Number.isFinite(v) ? v : 0;
+    };
+    const um = []; const g = []; const cum = [0];
+    for (let j = 0; j < M; j++) { const u = a + (j + 0.5) * h; um.push(u); g.push(gAt(u)); cum.push(cum[j] + g[j] * h); }
+    const cumAt = (u) => { const j = Math.min(M - 1, Math.max(0, Math.floor((u - a) / h))); return cum[j] + g[j] * (u - (a + j * h)); };
+    const bpts = [a, ...c.breaks.map((q) => (st.rev ? a + b - q : q)).sort((m, n) => m - n), b];
+    const totals = bpts.slice(1).map((q, i) => cumAt(q) - cumAt(bpts[i]));
+    const gxs = []; const gys = [];
+    for (let j = 0; j < M; j++) {
+      if (j && bpts.slice(1, -1).some((q) => q > um[j - 1] && q <= um[j])) { gxs.push(NaN); gys.push(NaN); }
+      gxs.push(um[j]); gys.push(g[j]);
+    }
+    D = { c, a, b, h, M, um, g, cum, rr, dr, cumAt, bpts, totals, gxs, gys, total: cum[M] };
+  }
+
+  const sampleU = (u0, u1, n) => {
+    const us = []; for (let i = 0; i <= n; i++) us.push(u0 + ((u1 - u0) * i) / n);
+    D.bpts.forEach((q) => { if (q > u0 && q < u1) us.push(q); });
+    return us.sort((m, n2) => m - n2);
+  };
+
+  function build() {
+    if (bd) { JXG.JSXGraph.freeBoard(bd.L); JXG.JSXGraph.freeBoard(bd.R); }
+    compute();
+    const { c, a, b } = D;
+    two.capR.textContent = st.mode === 'flux' ? 'F · n against t: the signed area up to the red line is the flux so far' : 'F · r′ against t: the signed area up to the red line is the line integral so far';
+
+    const cp = sampleU(a, b, 300).map((u) => D.rr(u));
+    const xs = cp.map((q) => q[0]); const ys = cp.map((q) => q[1]);
+    const bb = lineFit(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys));
+    const L = lineBoard(two.hostL, bb, ink, true);
+    const gl = D.g.filter(Number.isFinite); const gLo = Math.min(0, ...gl); const gHi = Math.max(0, ...gl);
+    const span = gHi - gLo > 1e-9 ? gHi - gLo : 2; const pad = span * 0.22;
+    const R = lineBoard(two.hostR, [a - 0.06 * (b - a), gHi + pad + (gHi - gLo > 1e-9 ? 0 : 1), b + 0.04 * (b - a), gLo - pad - (gHi - gLo > 1e-9 ? 0 : 1)], ink, false);
+    bd = { L, R };
+
+    // the field, faint
+    const wd = bb[2] - bb[0]; const raw = wd / 9;
+    const mag10 = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag10).reduce((best, s) => (Math.abs(s - raw) < Math.abs(best - raw) ? s : best));
+    const nodes = []; const mags = [];
+    for (let i = Math.ceil(bb[0] / step); i * step <= bb[2] + 1e-9; i++) {
+      for (let j = Math.ceil(bb[3] / step); j * step <= bb[1] + 1e-9; j++) {
+        const x = i * step; const y = j * step; const v = [c.P(x, y), c.Q(x, y)];
+        if (Number.isFinite(v[0]) && Number.isFinite(v[1]) && Math.hypot(v[0], v[1]) > 1e-9) { nodes.push({ x, y, v }); mags.push(Math.hypot(v[0], v[1])); }
+      }
+    }
+    mags.sort((m, n) => m - n);
+    const ref = mags.length ? mags[Math.floor(0.9 * (mags.length - 1))] : 1;
+    const kF = (0.8 * step) / ref;
+    D.step = step; D.kF = kF;
+    const ptf = (b0, fx, fy) => b0.create('point', [fx, fy], { visible: false, fixed: true, name: '' });
+    const arrow = (b0, p0, p1, color, w, size) => b0.create('arrow', [p0, p1], { strokeColor: color, strokeWidth: w, lastArrow: { type: 2, size }, highlight: false, fixed: true });
+    nodes.forEach((n) => {
+      const m = Math.hypot(n.v[0], n.v[1]); const len = Math.min(m * kF, 1.1 * step);
+      arrow(L, ptf(L, n.x, n.y), ptf(L, n.x + (n.v[0] / m) * len, n.y + (n.v[1] / m) * len), muted, 2, 5).setAttribute({ strokeOpacity: 0.5 });
+    });
+
+    // the curve: pale base, the part travelled so far, direction arrows, start marker, piece labels
+    const ptsOf = (u0, u1) => { const us = sampleU(u0, u1, 400); const p = us.map((u) => D.rr(u)); return { xs: p.map((q) => q[0]), ys: p.map((q) => q[1]) }; };
+    makeDataCurve(L, () => ptsOf(a, b), { strokeColor: ink, strokeWidth: 4, strokeOpacity: 0.55, highlight: false, fixed: true });
+    makeDataCurve(L, () => ptsOf(a, Math.max(cu ? cu.u : a, a + 1e-9)), { strokeColor: accent, strokeWidth: 8, highlight: false, fixed: true });
+    for (let k = 0; k < 6; k++) {
+      const u = a + ((b - a) * (k + 0.5)) / 6;
+      const p0 = D.rr(u); const d = D.dr(u); const sp = Math.hypot(d[0], d[1]) || 1;
+      arrow(L, ptf(L, p0[0], p0[1]), ptf(L, p0[0] + (d[0] / sp) * 0.45 * step, p0[1] + (d[1] / sp) * 0.45 * step), ink, 4, 7);
+    }
+    const s0 = D.rr(a);
+    L.create('point', [s0[0], s0[1]], { name: 'start', size: 5, fillColor: LINE_GREEN, strokeColor: '#fff', strokeWidth: 2, label: { fontSize: 18, offset: [8, 8], strokeColor: LINE_GREEN }, highlight: false, fixed: true });
+    if (D.bpts.length > 2) {
+      D.bpts.slice(1, -1).forEach((u) => { const p = D.rr(u); L.create('point', [p[0], p[1]], { name: '', size: 5, fillColor: ink, strokeColor: '#fff', strokeWidth: 2, highlight: false, fixed: true }); });
+      D.bpts.slice(0, -1).forEach((u0, i) => {
+        const um0 = (u0 + D.bpts[i + 1]) / 2; const p = D.rr(um0); const d = D.dr(um0); const sp = Math.hypot(d[0], d[1]) || 1;
+        L.create('text', [p[0] + (-d[1] / sp) * 0.5 * step, p[1] + (d[0] / sp) * 0.5 * step, `C${'₁₂₃₄₅₆₇₈₉'[i] || i + 1}`], { fontSize: 22, fontWeight: 'bold', anchorX: 'middle', anchorY: 'middle', strokeColor: ink, highlight: false, fixed: true });
+      });
+    }
+
+    // moving point and the three vectors
+    const at = (f) => () => (cu ? f(cu) : 0);
+    const P0 = ptf(L, at((q) => q.x), at((q) => q.y));
+    arrow(L, P0, ptf(L, at((q) => q.x + q.tx * 0.8 * step), at((q) => q.y + q.ty * 0.8 * step)), ink, 5, 8);
+    arrow(L, P0, ptf(L, at((q) => q.x + q.Fl * q.Fx), at((q) => q.y + q.Fl * q.Fy)), LINE_ORANGE, 5, 9);
+    const comp = arrow(L, P0, ptf(L, at((q) => q.x + q.comp * q.Cl * q.tx), at((q) => q.y + q.comp * q.Cl * q.ty)), accent, 6, 9);
+    D.compArrow = comp;
+    L.create('point', [at((q) => q.x), at((q) => q.y)], { name: '', size: POINT_SIZE + 1, fillColor: negative, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false, fixed: true });
+
+    // right board: the integrand, shaded signed area to the cursor, the cursor, piece boundaries
+    D.bpts.slice(1, -1).forEach((u) => R.create('segment', [[u, gLo - pad], [u, gHi + pad]], { strokeColor: muted, strokeWidth: 2, dash: 2, highlight: false, fixed: true }));
+    const shade = (sign) => makeDataCurve(R, () => {
+      const u = cu ? cu.u : a; const xsh = [a]; const ysh = [0];
+      for (let j = 0; j < D.M && D.um[j] <= u; j++) { xsh.push(D.um[j]); ysh.push(sign > 0 ? Math.max(D.g[j], 0) : Math.min(D.g[j], 0)); }
+      xsh.push(u, u); ysh.push(ysh[ysh.length - 1], 0);
+      return { xs: xsh, ys: ysh };
+    }, { strokeColor: sign > 0 ? accent : negative, strokeWidth: 1, fillColor: sign > 0 ? accent : negative, fillOpacity: 0.4, highlight: false, fixed: true });
+    shade(1); shade(-1);
+    makeDataCurve(R, () => ({ xs: D.gxs, ys: D.gys }), { strokeColor: ink, strokeWidth: 4, highlight: false, fixed: true });
+    R.create('segment', [[() => (cu ? cu.u : a), gLo - pad], [() => (cu ? cu.u : a), gHi + pad]], { strokeColor: negative, strokeWidth: 3, highlight: false, fixed: true });
+    R.create('point', [() => (cu ? cu.u : a), () => (cu ? cu.g : 0)], { name: '', size: POINT_SIZE, fillColor: negative, strokeColor: '#fff', strokeWidth: 2, highlight: false, fixed: true });
+  }
+
+  function refresh() {
+    const { c, a, b } = D;
+    const u = a + st.frac * (b - a);
+    const [x, y] = D.rr(u); const [dx, dy] = D.dr(u);
+    const Fx = c.P(x, y); const Fy = c.Q(x, y);
+    const sp = Math.hypot(dx, dy) || 1;
+    const tx = st.mode === 'flux' ? dy / sp : dx / sp; const ty = st.mode === 'flux' ? -dx / sp : dy / sp;
+    const okF = Number.isFinite(Fx) && Number.isFinite(Fy);
+    const comp = okF ? Fx * tx + Fy * ty : 0;
+    const gv = okF ? (st.mode === 'flux' ? Fx * dy - Fy * dx : Fx * dx + Fy * dy) : 0;
+    cu = { u, x, y, Fx: okF ? Fx : 0, Fy: okF ? Fy : 0, tx, ty, comp, g: gv, W: D.cumAt(u), Fl: Math.min(D.kF, (1.6 * D.step) / Math.max(Math.hypot(Fx, Fy), 1e-9)), Cl: Math.min(D.kF, (1.6 * D.step) / Math.max(Math.abs(comp), 1e-9)) };
+    bd.L.update(); bd.R.update();
+
+    const sign = (v) => (Math.abs(v) < 1e-9 ? ink : v > 0 ? accent : negative);
+    const word = st.mode === 'flux' ? 'flux' : (c.closed ? 'circulation' : 'work');
+    const tail = st.mode === 'flux' ? 'F · n' : 'F · r′';
+    const atEnd = st.frac >= 0.9995;
+    const chips = [];
+    chips.push(`<span class="jsx-trace-chip">t = <b>${lineT(u)}</b></span>`);
+    chips.push(`<span class="jsx-trace-chip">r(t) = (<b>${f3(x)}</b>, <b>${f3(y)}</b>)</span>`);
+    chips.push(`<span class="jsx-trace-chip" style="color:${LINE_ORANGE}">F = ⟨<b style="color:inherit">${f3(Fx)}</b>, <b style="color:inherit">${f3(Fy)}</b>⟩</span>`);
+    chips.push(st.mode === 'flux'
+      ? `<span class="jsx-trace-chip">n(t) = ⟨y′, −x′⟩ = ⟨<b>${f3(dy)}</b>, <b>${f3(-dx)}</b>⟩</span>`
+      : `<span class="jsx-trace-chip">r′(t) = ⟨<b>${f3(dx)}</b>, <b>${f3(dy)}</b>⟩</span>`);
+    chips.push(`<span class="jsx-trace-chip jsx-trace-main" style="color:${sign(gv)}">${tail} = <b style="color:inherit">${f3(gv)}</b></span>`);
+    chips.push(`<span class="jsx-trace-chip jsx-trace-main" style="color:${sign(cu.W)}">${word} so far = <b style="color:inherit">${lineFmt(cu.W)}</b>${atEnd ? ' (all of C)' : ''}</span>`);
+    if (D.bpts.length > 2) {
+      D.totals.forEach((tv, i) => { if (u >= D.bpts[i + 1] - 1e-9) chips.push(`<span class="jsx-trace-chip" style="color:${sign(tv)}">C${'₁₂₃₄₅₆₇₈₉'[i] || i + 1}: <b style="color:inherit">${lineFmt(tv)}</b></span>`); });
+    }
+    if (showTotal) chips.push(`<span class="jsx-trace-chip">over all of ${st.rev ? '−C' : 'C'}: <b>${lineFmt(D.total)}</b></span>`);
+    readout.innerHTML = chips.join('');
+    sliderRow.input.value = String(st.frac);
+    sliderRow.val.textContent = lineT(u);
+  }
+
+  function stopPlay() { if (st.raf) { cancelAnimationFrame(st.raf); st.raf = 0; } playBtn.textContent = 'Play'; }
+  const playBtn = lineMkBtn('Play', () => {
+    if (st.raf) { stopPlay(); return; }
+    if (st.frac >= 0.9995) st.frac = 0;
+    playBtn.textContent = 'Pause';
+    const t0 = performance.now(); const f0 = st.frac; const dur = 7000 * (1 - f0 + 0.05);
+    const tick = (now) => {
+      st.frac = Math.min(1, f0 + ((now - t0) / dur) * (1 - f0));
+      refresh();
+      if (st.frac < 1) st.raf = requestAnimationFrame(tick); else { st.raf = 0; playBtn.textContent = 'Play'; }
+    };
+    st.raf = requestAnimationFrame(tick);
+  }, controls);
+  if (!el.hasAttribute('no-reverse')) {
+    const revBtn = lineMkBtn('Reverse orientation', () => {
+      stopPlay(); st.rev = !st.rev; st.frac = 0;
+      revBtn.textContent = st.rev ? 'Orientation reversed (−C): press again for C' : 'Reverse orientation';
+      revBtn.classList.toggle('is-on', st.rev);
+      build(); refresh();
+    }, controls);
+    revBtn.classList.add('jsx-rev');
+  }
+  const mkSwitch = (labels, onPick) => {
+    const sw = document.createElement('div');
+    sw.className = 'jsx-switch';
+    controls.appendChild(sw);
+    const btns = labels.map((lab, i) => lineMkBtn(lab, () => { stopPlay(); onPick(i); btns.forEach((q, j) => q.classList.toggle('is-on', j === i)); }, sw));
+    return btns;
+  };
+  if (toggle) {
+    const b2 = mkSwitch(['Work / circulation (F · T)', 'Flux (F · N)'], (i) => { st.mode = i ? 'flux' : 'work'; st.frac = 0; build(); refresh(); });
+    b2[st.mode === 'flux' ? 1 : 0].classList.add('is-on');
+  }
+  if (cases.length > 1) {
+    const b3 = mkSwitch(cases.map((c) => c.name), (i) => { st.ci = i; st.rev = false; st.frac = 0; build(); refresh(); });
+    b3[0].classList.add('is-on');
+  }
+  build(); refresh();
+}
+
+// ---------------------------------------------------------------------------
+// Solving trigonometric equations (Trigonometry Lesson 19).
+//
+// <jsx-solve-trig fn="sin|cos|tan|sec|csc|cot" b="1" k="0.5" circle deg show="interval|all" calc
+//   xmin xmax ymin ymax interval="0,2*pi" presets="1 0 -1/2" var="x" fixed-k>
+// or, to solve any equation g(x) = k by graph: expr="2*cos(x)^2-3*cos(x)+1" (k defaults to 0; `expr2`/`label`/`label2`
+// draw a second curve to compare).
+//
+// Graph of y = f(bx) with a horizontal line y = k the instructor drags (it snaps to the usual exact values such as
+// 1/2, sqrt(3)/2, 2/3). Every crossing is a solution: dots inside `interval` are red and labeled, the rest (shown by
+// "All real solutions") are orange, and the readout gives the solutions in the interval and the general solution
+// x = x0 + (period/b) n. With `circle` (sin, cos, csc, sec) a unit circle beside the graph shows the same angles
+// theta = bx where the line y = k (or x = k) meets the circle. `calc` adds the value a calculator's inverse key returns
+// (blue dot on the circle). Expression mode finds roots numerically, so it also checks factoring and identity work.
+// `<jsx-case name fn k b ...>` children put several equations behind buttons; attributes on the parent are fallbacks.
+const SOLVE_SPECIALS = [
+  [0, '0'], [0.5, '1/2'], [Math.SQRT1_2, '√2/2'], [Math.sqrt(3) / 2, '√3/2'], [1, '1'],
+  [Math.sqrt(3) / 3, '√3/3'], [Math.sqrt(3), '√3'], [Math.SQRT2, '√2'], [(2 * Math.sqrt(3)) / 3, '2√3/3'], [2, '2'],
+];
+const SOLVE_SNAP = (() => {
+  const vals = new Set();
+  SOLVE_SPECIALS.forEach(([v]) => { vals.add(v); vals.add(-v); });
+  for (let d = 2; d <= 4; d++) for (let n = 1; n <= 4 * d; n++) { vals.add(n / d); vals.add(-n / d); }
+  return Array.from(vals);
+})();
+const SOLVE_RED = '#c0392b';
+const SOLVE_POOL = 60;
+
+function solveKLabel(k) {
+  const sign = k < -1e-9 ? '−' : '';
+  const a = Math.abs(k);
+  for (const [v, s] of SOLVE_SPECIALS) if (Math.abs(a - v) < 1e-7) return a < 1e-9 ? '0' : sign + s;
+  for (let d = 2; d <= 12; d++) {
+    const n = Math.round(a * d);
+    if (Math.abs(a * d - n) < 1e-7) { const g = gcd(n, d); return d / g === 1 ? `${sign}${n / g}` : `${sign}${n / g}/${d / g}`; }
+  }
+  return sign + String(Math.round(a * 1000) / 1000);
+}
+
+function solveSnapK(k) {
+  let best = k; let bd = 0.02;
+  SOLVE_SNAP.forEach((v) => { if (Math.abs(v - k) < bd) { bd = Math.abs(v - k); best = v; } });
+  return best;
+}
+
+// The solutions of f(theta) = k for theta in [0, T) (T = the period), exact from the inverse functions.
+function solveBases(fn, k) {
+  const T = fn === 'tan' || fn === 'cot' ? Math.PI : 2 * Math.PI;
+  const eps = 1e-9;
+  let raw = [];
+  if (fn === 'sin' || fn === 'csc') {
+    const s = fn === 'csc' ? 1 / k : k;
+    if (!Number.isFinite(s) || Math.abs(s) > 1 + eps) return { T, bases: [] };
+    const a = Math.asin(Math.max(-1, Math.min(1, s)));
+    raw = [a, Math.PI - a];
+  } else if (fn === 'cos' || fn === 'sec') {
+    const s = fn === 'sec' ? 1 / k : k;
+    if (!Number.isFinite(s) || Math.abs(s) > 1 + eps) return { T, bases: [] };
+    const a = Math.acos(Math.max(-1, Math.min(1, s)));
+    raw = [a, -a];
+  } else if (fn === 'tan') raw = [Math.atan(k)];
+  else raw = [k === 0 ? Math.PI / 2 : Math.atan(1 / k)];
+  const bases = [];
+  raw.map((t) => { let v = ((t % T) + T) % T; if (T - v < eps) v = 0; return v; })
+    .sort((p, q) => p - q)
+    .forEach((v) => { if (!bases.length || Math.abs(v - bases[bases.length - 1]) > eps) bases.push(v); });
+  return { T, bases };
+}
+
+// What the calculator's inverse key returns for f(theta) = k.
+function solveCalc(fn, k) {
+  const s = fn === 'csc' || fn === 'sec' || fn === 'cot' ? 1 / k : k;
+  const name = { sin: 'sin⁻¹', csc: 'sin⁻¹', cos: 'cos⁻¹', sec: 'cos⁻¹', tan: 'tan⁻¹', cot: 'tan⁻¹' }[fn];
+  const inv = { sin: Math.asin, csc: Math.asin, cos: Math.acos, sec: Math.acos, tan: Math.atan, cot: Math.atan }[fn];
+  const ok = name !== 'tan⁻¹' ? Math.abs(s) <= 1 + 1e-9 : Number.isFinite(s);
+  return { name, s, val: ok ? inv(s) : NaN };
+}
+
+// All x in [lo, hi] with g(x) = k, found numerically (sign changes by bisection, tangent touches by a minimum search).
+function solveNumeric(g, k, lo, hi) {
+  const N = 4000; const h = (hi - lo) / N; const out = [];
+  const d = (x) => g(x) - k;
+  const bis = (a, b) => {
+    let fa = d(a);
+    for (let i = 0; i < 60; i++) { const m = (a + b) / 2; const fm = d(m); if (Math.sign(fm) === Math.sign(fa)) { a = m; fa = fm; } else b = m; }
+    return (a + b) / 2;
+  };
+  let xs = [lo]; let vs = [d(lo)];
+  for (let i = 1; i <= N; i++) { xs.push(lo + i * h); vs.push(d(lo + i * h)); }
+  for (let i = 1; i <= N; i++) {
+    const v0 = vs[i - 1]; const v1 = vs[i];
+    if (!Number.isFinite(v0) || !Number.isFinite(v1)) continue;
+    if (v1 === 0) out.push(xs[i]);
+    else if (v0 !== 0 && Math.sign(v0) !== Math.sign(v1)) {
+      const r = bis(xs[i - 1], xs[i]);
+      if (Math.abs(d(r)) < 1e-6) out.push(r);
+    } else if (i >= 2 && Number.isFinite(vs[i - 2]) && Math.abs(v0) < Math.abs(vs[i - 2]) && Math.abs(v0) < Math.abs(v1)
+      && Math.sign(vs[i - 2]) === Math.sign(v0) && Math.sign(v0) === Math.sign(v1) && Math.abs(v0) < 0.05) {
+      let a = xs[i - 2]; let b = xs[i];
+      for (let j = 0; j < 80; j++) { const m1 = a + (b - a) / 3; const m2 = b - (b - a) / 3; if (Math.abs(d(m1)) < Math.abs(d(m2))) b = m2; else a = m1; }
+      const r = (a + b) / 2;
+      if (Math.abs(d(r)) < 1e-9) out.push(r);
+    }
+  }
+  out.sort((p, q) => p - q);
+  return out.filter((v, i) => i === 0 || Math.abs(v - out[i - 1]) > 1e-6);
+}
+
+function renderJsxSolveTrig(el) {
+  const TAG = 'jsx-solve-trig';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const deg = el.hasAttribute('deg');
+  const wantCircle = el.hasAttribute('circle');
+  const xmin = evalNumAttr(el, 'xmin', -Math.PI, TAG); const xmax = evalNumAttr(el, 'xmax', 3 * Math.PI, TAG);
+  const cases = lineCases(el);
+  const num = (c, name, dflt) => evalNumAttr({ getAttribute: (n) => c.get(n) }, name, dflt, TAG);
+  const defs = cases.map((c) => {
+    const exprSrc = c.get('expr');
+    const fn = exprSrc ? null : (INV[c.get('fn')] ? c.get('fn') : 'sin');
+    const mk = (src) => (src ? compileMath(['x'], powFix(src), TAG, 'expr') : null);
+    const reciprocal = fn && ['tan', 'cot', 'sec', 'csc'].includes(fn);
+    const def = {
+      name: c.name, fn, expr: mk(exprSrc), expr2: mk(c.get('expr2')),
+      label: c.get('label') || 'y', label2: c.get('label2') || '', v: c.get('var') || 'x',
+      b: num(c, 'b', 1), fixedK: c.get('fixed-k') !== null,
+      ymin: num(c, 'ymin', reciprocal || exprSrc ? -4 : -2), ymax: num(c, 'ymax', reciprocal || exprSrc ? 4 : 2),
+      k: num(c, 'k', exprSrc ? 0 : 0.5), presets: (c.get('presets') || '').split(/\s+/).filter(Boolean),
+      interval: (c.get('interval') || '0,2*pi').split(',').map((t) => evalNumAttr({ getAttribute: () => t }, 'a', 0, TAG)),
+    };
+    if (def.interval.length !== 2) def.interval = [0, 2 * Math.PI];
+    def.circle = wantCircle && def.fn !== null && ['sin', 'cos', 'csc', 'sec'].includes(def.fn);
+    return def;
+  });
+  const st = { i: 0, k: defs[0].k, all: el.getAttribute('show') === 'all', sols: [], bases: [], T: 2 * Math.PI };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const grid = document.createElement('div');
+  grid.className = 'jsx-solve-grid';
+  const mkBox = (cls, cap) => {
+    const box = document.createElement('div');
+    const c = document.createElement('div'); c.className = 'muted small jsx-strip-cap'; c.textContent = cap;
+    const host = document.createElement('div'); host.className = `jsx-board ${cls}`; host.id = `jsx-board-${++boardCounter}`;
+    box.append(c, host); grid.appendChild(box);
+    return { box, host, cap: c };
+  };
+  const G = mkBox('jsx-board--solve', '');
+  const C = wantCircle ? mkBox('jsx-board--solve-circle', 'Unit circle') : null;
+  container.append(readout, grid);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const muted = cssVar('--muted') || '#6b7280';
+  const orange = UNIT_CIRCLE_FOUR_COLOR;
+  const lo = () => defs[st.i].interval[0]; const hi = () => defs[st.i].interval[1];
+  const cur = () => defs[st.i];
+  const bd = JXG.JSXGraph.initBoard(G.host.id, {
+    boundingbox: [xmin, cur().ymax, xmax, cur().ymin], axis: true, showNavigation: false, showCopyright: false,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(bd, ink);
+  bd.defaultAxes.x.defaultTicks.setAttribute({ visible: false });
+  const tstep = (xmax - xmin) / Math.PI > 6 ? Math.PI : Math.PI / 2;
+  const tpos = [];
+  for (let q = Math.ceil(xmin / tstep - 1e-9); q <= Math.floor(xmax / tstep + 1e-9); q++) tpos.push(q * tstep);
+  bd.create('ticks', [bd.defaultAxes.x, tpos], {
+    drawLabels: true, minorTicks: 0, majorHeight: TICK_MAJOR_HEIGHT, strokeColor: ink, strokeWidth: AXIS_STROKE,
+    label: { fontSize: TICK_LABEL_FONT, cssStyle: 'font-weight:600' },
+    generateLabelText: (t) => (deg ? `${Math.round((t.usrCoords[1] * 180) / Math.PI)}°`.replace('-', '−') : piTickLabel(t.usrCoords[1]).replace('-', '−')),
+  });
+
+  const F = () => {
+    const c = cur();
+    if (c.expr) return (x) => c.expr(x);
+    const f = INV[c.fn].f;
+    return (x) => f(c.b * x);
+  };
+  const jump = () => (cur().expr || ['tan', 'cot', 'sec', 'csc'].includes(cur().fn) ? 8 : Infinity);
+  makeDataCurve(bd, () => invSample(F(), xmin, xmax, 2400, jump()), { strokeColor: accent, strokeWidth: CURVE_STROKE, highlight: false });
+  const curve2 = makeDataCurve(bd, () => (cur().expr2 ? invSample((x) => cur().expr2(x), xmin, xmax, 2400, 8) : { xs: [], ys: [] }),
+    { strokeColor: orange, strokeWidth: CURVE_STROKE - 1, dash: 2, highlight: false });
+  const label1 = bd.create('text', [xmin + 0.04 * (xmax - xmin), () => cur().ymax - 0.1 * (cur().ymax - cur().ymin), () => (cur().expr2 ? cur().label : '')],
+    { fontSize: READOUT_VALUE_FONT - 4, color: accent, fixed: true, cssStyle: 'font-weight:700' });
+  const label2 = bd.create('text', [xmin + 0.04 * (xmax - xmin), () => cur().ymax - 0.2 * (cur().ymax - cur().ymin), () => (cur().expr2 ? cur().label2 : '')],
+    { fontSize: READOUT_VALUE_FONT - 4, color: orange, fixed: true, cssStyle: 'font-weight:700' });
+  [lo, hi].forEach((get) => bd.create('line', [[get, 0], [get, 1]], { strokeColor: muted, strokeWidth: 2, dash: 3, highlight: false, fixed: true }));
+  bd.create('line', [[0, () => st.k], [1, () => st.k]], { strokeColor: SOLVE_RED, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+  const dots = Array.from({ length: SOLVE_POOL }, (_, q) => bd.create('point', [() => (st.sols[q] ? st.sols[q].x : NaN), () => (st.sols[q] ? st.k : NaN)],
+    { size: POINT_SIZE + 1, strokeWidth: POINT_STROKE, fillColor: SOLVE_RED, strokeColor: SOLVE_RED, withLabel: false, fixed: true, highlight: false }));
+  const tags = Array.from({ length: 24 }, (_, q) => bd.create('text', [
+    () => (st.sols[q] && st.sols[q].tag ? st.sols[q].x : NaN),
+    () => (st.sols[q] && st.sols[q].tag ? st.k + (st.sols[q].tag === 1 ? 1 : -1.9) * 0.07 * (cur().ymax - cur().ymin) : NaN),
+    () => (st.sols[q] && st.sols[q].tag ? st.sols[q].text : ''),
+  ], { fontSize: READOUT_HEADING_FONT, color: SOLVE_RED, fixed: true, anchorX: 'middle', cssStyle: 'font-weight:700' }));
+  const hx = xmin + 0.045 * (xmax - xmin);
+  const handle = bd.create('point', [hx, () => st.k], { size: POINT_SIZE + 3, strokeWidth: POINT_STROKE, fillColor: '#fff', strokeColor: SOLVE_RED, withLabel: false, highlight: false });
+  handle.on('drag', () => { setK(solveSnapK(Math.min(cur().ymax, Math.max(cur().ymin, handle.Y())))); });
+
+  const solveFmt = (v) => {
+    if (deg) { const d = Math.round(((v * 180) / Math.PI) * 100) / 100; return `${String(d).replace('-', '−')}°`; }
+    return (fmtPiMultiple(v) ?? String(Math.round(v * 1000) / 1000)).replace('-', '−');
+  };
+  const argText = () => { const { b, v } = cur(); return b === 1 ? v : (b > 1 ? `${solveKLabel(b)}${v}` : `${v}/${solveKLabel(1 / b)}`); };
+
+  // unit circle
+  let cb = null; let cShow = false;
+  const cst = { bases: [], kc: 0, vertical: false, calc: NaN };
+  if (C) {
+    cb = JXG.JSXGraph.initBoard(C.host.id, {
+      boundingbox: [-1.7, 1.7, 1.7, -1.7], axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+      pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+    });
+    styleAxes(cb, ink);
+    cb.defaultAxes.x.defaultTicks.setAttribute({ visible: false }); cb.defaultAxes.y.defaultTicks.setAttribute({ visible: false });
+    cb.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 }); cb.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+    cb.create('circle', [[0, 0], 1], { strokeColor: ink, strokeWidth: REF_CIRCLE_STROKE, fillColor: 'none', highlight: false, fixed: true });
+    cst.hLine = cb.create('line', [[0, () => cst.kc], [1, () => cst.kc]], { strokeColor: SOLVE_RED, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+    cst.vLine = cb.create('line', [[() => cst.kc, 0], [() => cst.kc, 1]], { strokeColor: SOLVE_RED, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+    const at = (q) => (cst.bases[q] === undefined ? [NaN, NaN] : [Math.cos(cst.bases[q]), Math.sin(cst.bases[q])]);
+    cst.pts = [0, 1].map((q) => {
+      const pt = cb.create('point', [() => at(q)[0], () => at(q)[1]], { size: POINT_SIZE + 2, strokeWidth: POINT_STROKE, withLabel: false, fixed: true, highlight: false });
+      pt.seg = cb.create('segment', [[0, 0], pt], { strokeColor: SOLVE_RED, strokeWidth: 2, highlight: false, fixed: true });
+      cb.create('text', [() => 1.3 * at(q)[0], () => 1.3 * at(q)[1], () => (cst.bases[q] === undefined ? '' : solveFmt(cst.bases[q]))],
+        { fontSize: READOUT_HEADING_FONT, color: SOLVE_RED, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:700' });
+      return pt;
+    });
+  }
+
+  const ui = invControls(container);
+  const setSwitch = ui.mkSwitch(defs.map((d) => d.name), defs[0].name, (nm) => { st.i = defs.findIndex((d) => d.name === nm); st.k = cur().k; setCase(); });
+  const modeBtns = [
+    ui.mkBtn('In the interval', () => { st.all = false; refresh(); }),
+    ui.mkBtn('All real solutions', () => { st.all = true; refresh(); }),
+  ];
+  const kS = ui.mkSlider('Line y =', -1, 1, 0.01, st.k, (v) => setK(solveSnapK(v)));
+  const presetBox = document.createElement('div'); presetBox.className = 'jsx-switch'; ui.controls.appendChild(presetBox);
+
+  function setK(v) { st.k = v; refresh(); }
+  function setCase() {
+    const c = cur();
+    bd.setBoundingBox([xmin, c.ymax, xmax, c.ymin], false);
+    kS.input.min = c.ymin; kS.input.max = c.ymax;
+    kS.row.style.display = c.fixedK ? 'none' : '';
+    presetBox.textContent = '';
+    if (!c.fixedK) c.presets.forEach((tok) => {
+      const v = evalNumAttr({ getAttribute: () => tok }, 'a', NaN, TAG);
+      if (Number.isFinite(v)) ui.mkBtn(solveKLabel(v), () => setK(v), presetBox);
+    });
+    handle.setAttribute({ visible: !c.fixedK });
+    refresh();
+  }
+
+  function refresh() {
+    const c = cur();
+    st.k = Math.min(c.ymax, Math.max(c.ymin, st.k));
+    const L = lo(); const H = hi(); const eps = 1e-7;
+    let xs; let gen = '';
+    st.bases = []; st.T = 2 * Math.PI;
+    if (c.expr) xs = solveNumeric(c.expr, st.k, xmin, xmax);
+    else {
+      const { T, bases } = solveBases(c.fn, st.k);
+      st.T = T; st.bases = bases; xs = [];
+      bases.forEach((t) => {
+        for (let n = Math.ceil((xmin * c.b - t) / T - 1e-9); n <= Math.floor((xmax * c.b - t) / T + 1e-9); n++) xs.push((t + n * T) / c.b);
+      });
+      xs.sort((p, q) => p - q);
+      const per = (p) => {
+        const lab = solveFmt(p);
+        return deg || lab === 'π' || lab === '2π' ? `${lab}n` : `(${lab})n`;
+      };
+      const merged = bases.length === 2 && Math.abs(bases[1] - bases[0] - T / 2) < 1e-9;
+      const fam = merged ? [bases[0]] : bases;
+      const period = (merged ? T / 2 : T) / c.b;
+      gen = fam.map((t) => `${c.v} = ${Math.abs(t) < 1e-9 ? '' : `${solveFmt(t / c.b)} + `}${per(period)}`).join('  or  ');
+    }
+    st.sols = xs.map((x) => ({ x, inside: x >= L - eps && x < H - eps }));
+    let tagN = 0;
+    st.sols.forEach((s) => { s.tag = 0; if (s.inside && tagN < 24) { s.tag = tagN % 2 ? 2 : 1; s.text = solveFmt(s.x); tagN += 1; } });
+    const shown = st.all ? st.sols : st.sols.filter((s) => s.inside);
+    st.sols = shown.slice(0, SOLVE_POOL);
+    dots.forEach((d, q) => { const s = st.sols[q]; const col = s && !s.inside ? orange : SOLVE_RED; d.setAttribute({ fillColor: col, strokeColor: col }); });
+    st.sols.forEach((s, q) => { if (q >= 24) s.tag = 0; });
+
+    const inside = shown.filter((s) => s.inside);
+    // circle
+    cShow = !!(cb && c.circle);
+    if (C) {
+      C.box.style.display = cShow ? '' : 'none';
+      grid.classList.toggle('no-circle', !cShow);
+      if (cShow) {
+        const rec = c.fn === 'csc' || c.fn === 'sec';
+        cst.kc = rec ? 1 / st.k : st.k; cst.vertical = c.fn === 'cos' || c.fn === 'sec';
+        cst.bases = Number.isFinite(cst.kc) && Math.abs(cst.kc) <= 1 + 1e-9 ? solveBases(c.fn === 'csc' ? 'sin' : (c.fn === 'sec' ? 'cos' : c.fn), cst.kc).bases : [];
+        cst.calc = el.hasAttribute('calc') ? solveCalc(c.fn, st.k).val : NaN;
+        cst.hLine.setAttribute({ visible: !cst.vertical }); cst.vLine.setAttribute({ visible: cst.vertical });
+        cst.pts.forEach((pt, q) => {
+          const isCalc = Math.abs(cst.bases[q] - (((cst.calc % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI))) < 1e-9;
+          const col = isCalc ? accent : SOLVE_RED;
+          pt.setAttribute({ fillColor: col, strokeColor: col, visible: cst.bases[q] !== undefined });
+          pt.seg.setAttribute({ visible: cst.bases[q] !== undefined });
+        });
+        C.cap.textContent = c.b === 1 ? `Unit circle: ${c.fn === 'sin' || c.fn === 'csc' ? 'y' : 'x'}-coordinate = ${solveKLabel(cst.kc)}` : `Unit circle: θ = ${argText()}`;
+        cb.update();
+      }
+    }
+    G.cap.textContent = c.expr ? `Graph of ${c.expr2 ? 'both' : 'the left side'} (zeros mark the solutions)` : `Graph of y = ${c.fn}(${argText()})`;
+
+    // readout
+    const chips = [];
+    const lhs = c.expr ? `${c.label}` : `${c.fn}(${argText()})`;
+    chips.push(`<span class="jsx-trace-chip jsx-trace-main">${lhs} = <b>${solveKLabel(st.k)}</b></span>`);
+    const I = `[${solveFmt(L)}, ${solveFmt(H)})`;
+    if (inside.length) chips.push(`<span class="jsx-trace-chip">${c.v} in ${I}: <b>${inside.map((s) => solveFmt(s.x)).join(', ')}</b> (${inside.length})</span>`);
+    else chips.push(`<span class="jsx-trace-chip is-undef">no solution in ${I}</span>`);
+    if (st.all && gen) chips.push(`<span class="jsx-trace-chip">all real solutions: <b>${gen}</b>, n any integer</span>`);
+    if (st.all && !gen && !c.expr) chips.push('<span class="jsx-trace-chip is-undef">no real solutions</span>');
+    if (el.hasAttribute('calc') && !c.expr) {
+      const cc = solveCalc(c.fn, st.k);
+      chips.push(Number.isFinite(cc.val)
+        ? `<span class="jsx-trace-chip">calculator: ${cc.name}(${solveKLabel(cc.s)}) ≈ <b>${solveFmt(cc.val)}</b>${cc.val < 0 ? ' (negative: not in [0, 2π))' : ''}</span>`
+        : `<span class="jsx-trace-chip is-undef">calculator: ${cc.name}(${solveKLabel(cc.s)}) error</span>`);
+    }
+    readout.innerHTML = chips.join('');
+    kS.input.value = st.k; kS.input.parentNode.querySelector('.jsx-slider-value').textContent = solveKLabel(st.k);
+    modeBtns[0].classList.toggle('is-on', !st.all); modeBtns[1].classList.toggle('is-on', st.all);
+    setSwitch(c.name);
+    handle.moveTo([hx, st.k]);
+    bd.update();
+  }
+  setCase();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -5119,4 +5901,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-inverse').forEach(renderJsxInverse);
   document.querySelectorAll('jsx-hlt').forEach(renderJsxHlt);
   document.querySelectorAll('jsx-inverse-compose').forEach(renderJsxInverseCompose);
+  document.querySelectorAll('jsx-line-scalar').forEach(renderJsxLineScalar);
+  document.querySelectorAll('jsx-line-vector').forEach(renderJsxLineVector);
+  document.querySelectorAll('jsx-solve-trig').forEach(renderJsxSolveTrig);
 });

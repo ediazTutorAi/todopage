@@ -716,6 +716,29 @@ checked with sympy (36, 162, 1/12, 4/3, 1/168, 128pi/15, 441/20, 8, 8, 36pi). Th
 first projection is onto the xy-plane (not xz), and Example 5.40's x-limits must be `sqrt(y) <= x <= 1` (the printed `y <= x <= 1`
 gives 1/96, the lesson uses it as a "common mistake" reveal).
 
+### `<jsx-line-scalar>`, `<jsx-line-vector>` and the Line Integrals lesson (added 2026-10-22)
+
+Both in `js/jsxgraph.js` (need the JSXGraph CDN tags). Curves are JS expressions in `t` (`x="cos(t)" y="sin(t)" tmin="0" tmax="pi"`), fields/scalar functions
+expressions in x, y (`^` accepted). Two boards side by side.
+
+- `<jsx-line-scalar x y tmin tmax f n speeds>`: left, the plane curve cut into `n` pieces of equal width in t (dots = sample points); right, the same pieces
+  unrolled along the arc-length axis as rectangles of width `Delta s_i`, height `f(P_i*)` (the "sheet" flattened). Readout: the sum vs the integral.
+  `speeds="1 2 3"` adds "k times as fast" buttons that recompute the integral from `r(kt)` and show it does not change (independence of parameterization).
+  Single curve only; planar pictures only.
+- `<jsx-line-vector p q mode="work|flux" toggle total no-reverse breaks>` with optional `<jsx-case name x y tmin tmax p q breaks>` children (several
+  curve/field pairs behind buttons; attributes on the parent are fallbacks). A point slides along the oriented curve showing `F` (orange), the unit tangent
+  (or normal in flux mode, `n = <y', -x'>`) and the component of `F` along it (blue if positive, red if negative); right board shows `F.r'` (or `F.n`) against
+  t with the signed area up to the cursor shaded = the integral so far. "Reverse orientation" runs `-C` (sign flips). `breaks` = parameter values where a
+  piecewise smooth curve changes pieces: pieces are labelled C1..Cn and each piece's value appears once passed (rectangle, Example 6.21; write piecewise
+  x(t), y(t) with ternaries, `&lt;` in the attribute). `toggle` adds Work/Flux buttons, `total` shows the whole-curve value up front (leave it off when the answer
+  is the exercise). Closed curves call the work "circulation". Derivatives are central differences, so authors give plain expressions.
+
+Lesson: `calculus3/fall2025/2025-11-03-line-integrals/` (OpenStax 6.2, 11 steps timed for 40 minutes in `content.json` `notes`; replaced a one-step stub, kept its
+`lectures.json` entry, whose description/tags were updated). `content.json` + `index.html` were generated from one step list, so edit both if you hand-edit
+either. Deliberately lean (user preference, 2026-10-22: slides help the teaching, they do not do it): only boxed definitions/theorems, diagrams and short-answer reveal rows (selected Examples/Checkpoints/exercises), no explanatory prose.
+Every printed answer was checked with sympy (checkpoint answers are not printed by OpenStax). Verified in Chrome: readouts match (pi, -pi, 4pi, 2pi, 2 with
+pieces 2/-3/2/2/-1/2, flux 3/2), no console errors. Book typo avoided: Example 6.26 says the particle starts at (1,0) but its parameterization starts at (2,0).
+
 ## editor-app: Electron install gotcha
 
 `npm start` in `editor-app/` can fail one of two ways:
@@ -854,3 +877,15 @@ relying on it: **Calculus Volume 3 is CC BY-NC-SA 4.0** (attribution, noncommerc
 CC BY. For these lessons (free classroom use) that is fine as long as the page carries a short attribution line, e.g. on the last slide: "Source: OpenStax, *Calculus Volume 3*,
 Section X.Y (Strang, Herman), CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3." Reproduce the text from the page source rather than from a summary:
 OpenStax pages are server-rendered, so `curl` the page and convert the MathML (`<math>` elements) to TeX; summaries of the same page have disagreed on exact formulas before.
+
+### `<jsx-solve-trig>` and Trigonometry Lesson 19 (added 2026-10-26)
+
+`<jsx-solve-trig fn="sin|cos|tan|sec|csc|cot" b k circle calc deg show="all" xmin xmax ymin ymax interval presets fixed-k>` (`renderJsxSolveTrig` in `js/jsxgraph.js`,
+needs the JSXGraph CDN tags): graph of `y = f(bx)` with a draggable line `y = k` (snaps to exact values like 1/2, sqrt(3)/2, 2/3); every crossing is a solution, red inside
+`interval` (default `[0, 2pi)`), orange outside ("All real solutions" button). Readout gives solutions in the interval and the general solution `x0 + (T/b) n`. `circle`
+(sin/cos/csc/sec; hidden automatically for other cases) adds a unit circle at theta = bx; `calc` adds the calculator's inverse value (blue dot). `expr="..."` (+ `expr2`, `label`,
+`label2`) solves any `g(x) = k` numerically, used to check factoring/identity work by graph (zeros = solutions); `deg` labels in degrees. `<jsx-case>` children (same convention
+as `<jsx-line-vector>`) put several equations behind buttons.
+
+Lesson: `trigonometry/2026/2026-10-26-lesson-19-solving-trigonometric-equations/index.html` (9 steps, hand-authored, no `content.json`; folder date is a guess, rename if needed).
+Verified in Chrome (circle, calc, degree and expression modes, no console errors).

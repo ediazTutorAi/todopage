@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Solving Trigonometric Equations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (equation explorers use <jsx-*> tags) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+<!-- Lesson 19 plan, 9 steps (instructor supplies the explanations; slides carry the workbook wording and a live graph):
+   1. Solving by Graphing (free explorer)       4. Factoring Methods + Example 3     7. Example 6
+   2. Example 1                                  5. Example 4                         8. Calculator Approximations
+   3. Linear Methods + Example 2                 6. Applying Identities + Example 5   9. Example 7 -->
+
+  <header class="site-header">
+    <h1>Solving Trigonometric Equations</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Solving Trigonometric Equations by Graphing</div>
+          <div class="step-subtitle">Unit circle and rectangular graph</div>
+          <div class="step-body">
+<p>Perhaps the best way to introduce solutions to trigonometric equations is to view them from a graphing perspective. Both the unit circle (circular graph) and the rectangular graphs are helpful when solving these equations.</p>
+<p>Drag the red line (or use the buttons). Every point where it meets the graph is a solution.</p>
+<jsx-solve-trig circle xmin="-6.2832" xmax="6.2832">
+  <jsx-case name="sin x = k" fn="sin" k="0.5" presets="1 0 -1/2 Math.sqrt(3)/2 2"></jsx-case>
+  <jsx-case name="cos x = k" fn="cos" k="0.5" presets="1 0 -1/2 Math.sqrt(3)/2 2"></jsx-case>
+  <jsx-case name="tan x = k" fn="tan" k="1" presets="1 0 -1 Math.sqrt(3)"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Use the provided graphs to help solve each equation</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(\sin(x) = 1\)</td><td><reveal>\(x = \dfrac{\pi}{2} + 2\pi k\), \(k\) any integer</reveal></td></tr>
+  <tr><td>(b) \(\sin(x) = 0\)</td><td><reveal>\(x = \pi k\), \(k\) any integer</reveal></td></tr>
+  <tr><td>(c) \(2\cos(x) + 1 = 0\)</td><td><reveal>\(\cos(x) = -\dfrac{1}{2}\): \(x = \dfrac{2\pi}{3} + 2\pi k\) and \(x = \dfrac{4\pi}{3} + 2\pi k\), \(k\) any integer</reveal></td></tr>
+  <tr><td>(d) \(\cos^2(x) = 1\)</td><td><reveal>\(\cos(x) = \pm 1\): \(x = \pi k\), \(k\) any integer</reveal></td></tr>
+</table>
+<jsx-solve-trig circle show="all" xmin="-6.2832" xmax="6.2832">
+  <jsx-case name="(a)" fn="sin" k="1" fixed-k></jsx-case>
+  <jsx-case name="(b)" fn="sin" k="0" fixed-k></jsx-case>
+  <jsx-case name="(c)" fn="cos" k="-1/2" fixed-k></jsx-case>
+  <jsx-case name="(d)" expr="cos(x)^2" label="cos²(x)" k="1" fixed-k ymin="-1" ymax="2"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Linear Methods</div>
+          <div class="step-subtitle">Isolate the trigonometric function</div>
+          <div class="step-body">
+<p>We can apply the familiar techniques for solving linear equations when solving trigonometric equations. The goal is to isolate the trigonometric function using algebraic operations such as adding, subtracting, multiplying, and dividing on both sides.</p>
+<p><b>Example 2.</b> Solve each equation. Give solutions on the interval \([0, 2\pi)\) and again on the interval \((-\infty, \infty)\).</p>
+<table>
+  <tr><th></th><th>Isolate</th><th>\([0, 2\pi)\)</th><th>\((-\infty, \infty)\)</th></tr>
+  <tr><td>(a) \(3\sqrt{3}\csc(x) = 6\)</td><td><reveal>\(\sin(x) = \dfrac{\sqrt{3}}{2}\)</reveal></td><td><reveal>\(\left\{\dfrac{\pi}{3}, \dfrac{2\pi}{3}\right\}\)</reveal></td><td><reveal>\(x = \dfrac{\pi}{3} + 2\pi k\), \(x = \dfrac{2\pi}{3} + 2\pi k\)</reveal></td></tr>
+  <tr><td>(b) \(3\sqrt{3}\csc(2x) = 6\)</td><td><reveal>\(\sin(2x) = \dfrac{\sqrt{3}}{2}\)</reveal></td><td><reveal>\(\left\{\dfrac{\pi}{6}, \dfrac{\pi}{3}, \dfrac{7\pi}{6}, \dfrac{4\pi}{3}\right\}\)</reveal></td><td><reveal>\(x = \dfrac{\pi}{6} + \pi k\), \(x = \dfrac{\pi}{3} + \pi k\)</reveal></td></tr>
+  <tr><td>(c) \(2\tan\left(\dfrac{x}{2}\right) - 1 = \tan\left(\dfrac{x}{2}\right)\)</td><td><reveal>\(\tan\left(\dfrac{x}{2}\right) = 1\)</reveal></td><td><reveal>\(\left\{\dfrac{\pi}{2}\right\}\)</reveal></td><td><reveal>\(x = \dfrac{\pi}{2} + 2\pi k\)</reveal></td></tr>
+</table>
+<jsx-solve-trig show="all" xmin="-6.2832" xmax="6.2832">
+  <jsx-case name="(a)" fn="csc" k="2*Math.sqrt(3)/3" fixed-k></jsx-case>
+  <jsx-case name="(b)" fn="csc" b="2" k="2*Math.sqrt(3)/3" fixed-k></jsx-case>
+  <jsx-case name="(c)" fn="tan" b="1/2" k="1" fixed-k></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Factoring Methods</div>
+          <div class="step-subtitle">Zero-product property</div>
+          <div class="step-body">
+<p>There are times when basic arithmetic (addition, subtraction, multiplication, and division) is not sufficient to isolate the trigonometric function. In these cases, factoring methods and the zero-product property may be helpful. Recall the zero-product property states if \(a \cdot b = 0\), then either \(a = 0\) or \(b = 0\) (or both).</p>
+<p><b>Example 3.</b> Use factoring and the zero-product property to solve each trigonometric equation. Give solutions on the interval \([0^\circ, 360^\circ)\) and again on \((-\infty, \infty)\).</p>
+<table>
+  <tr><th></th><th>Factor</th><th>\([0^\circ, 360^\circ)\)</th><th>\((-\infty, \infty)\)</th></tr>
+  <tr><td>(a) \(\sin^2(x) = 3\sin(x)\)</td><td><reveal>\(\sin(x)\left(\sin(x) - 3\right) = 0\): \(\sin(x) = 3\) has no solution</reveal></td><td><reveal>\(\{0^\circ, 180^\circ\}\)</reveal></td><td><reveal>\(x = 0^\circ + 180^\circ k\)</reveal></td></tr>
+  <tr><td>(b) \(\sin(x)\sec(x) = -\dfrac{2}{\sqrt{3}}\sin(x)\)</td><td><reveal>\(\sin(x)\left(\sec(x) + \dfrac{2}{\sqrt{3}}\right) = 0\): \(\sin(x) = 0\) or \(\cos(x) = -\dfrac{\sqrt{3}}{2}\)</reveal></td><td><reveal>\(\{0^\circ, 180^\circ, 150^\circ, 210^\circ\}\)</reveal></td><td><reveal>\(x = 180^\circ k\), \(x = 150^\circ + 360^\circ k\), \(x = 210^\circ + 360^\circ k\)</reveal></td></tr>
+</table>
+<p class="muted small">The zeros of the left side minus the right side are the solutions.</p>
+<jsx-solve-trig deg show="all" xmin="-3.1416" xmax="9.4248">
+  <jsx-case name="(a)" expr="sin(x)^2-3*sin(x)" label="sin²x − 3 sin x" k="0" fixed-k ymin="-3" ymax="5"></jsx-case>
+  <jsx-case name="(b)" expr="sin(x)/cos(x)+2*sin(x)/sqrt(3)" label="sin x sec x + (2/√3) sin x" k="0" fixed-k ymin="-4" ymax="4"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Factoring</div>
+          <div class="step-body">
+<p>Use factoring and the zero-product property to solve the trigonometric equation. Give solutions on the interval \([0, 2\pi)\).</p>
+<p>\(2\cos^2(x) - 3\cos(x) + 1 = 0\)</p>
+<ul>
+  <li>Let \(u = \cos(x)\): <reveal>\(2u^2 - 3u + 1 = (2u - 1)(u - 1) = 0\)</reveal></li>
+  <li>\(u = \dfrac{1}{2}\): <reveal>\(\cos(x) = \dfrac{1}{2}\), \(x = \dfrac{\pi}{3}, \dfrac{5\pi}{3}\)</reveal></li>
+  <li>\(u = 1\): <reveal>\(\cos(x) = 1\), \(x = 0\)</reveal></li>
+  <li>Solution set: <reveal>\(\left\{0, \dfrac{\pi}{3}, \dfrac{5\pi}{3}\right\}\)</reveal></li>
+</ul>
+<jsx-solve-trig xmin="-1" xmax="7.2832">
+  <jsx-case name="Graph" expr="2*cos(x)^2-3*cos(x)+1" label="2cos²x − 3cos x + 1" k="0" fixed-k ymin="-1" ymax="7"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Applying Identities</div>
+          <div class="step-subtitle">Example 5</div>
+          <div class="step-body">
+<p>When dealing with equations that involve more than one trigonometric function, or multiple angles, it may be helpful to apply an identity and rewrite the equation in terms of a single trigonometric function or a single angle.</p>
+<p><b>Example 5.</b> Find a useful identity and solve the equation. Give solutions on the interval \((-\infty, \infty)\).</p>
+<p>\(3\sin(2x) = -2\sin(x)\cos(x)\)</p>
+<ul>
+  <li>Identity: <reveal>\(\sin(2x) = 2\sin(x)\cos(x)\), so \(3\sin(2x) = -\sin(2x)\)</reveal></li>
+  <li>Isolate: <reveal>\(4\sin(2x) = 0\), \(\sin(2x) = 0\)</reveal></li>
+  <li>Solve: <reveal>\(2x = \pi k\), \(x = \dfrac{\pi k}{2}\), \(k\) any integer</reveal></li>
+</ul>
+<jsx-solve-trig show="all" xmin="-3.1416" xmax="9.4248">
+  <jsx-case name="Graph" expr="3*sin(2*x)+2*sin(x)*cos(x)" label="3 sin 2x + 2 sin x cos x" k="0" fixed-k ymin="-5" ymax="5"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Find a useful identity and solve the equation</div>
+          <div class="step-body">
+<p>Give solutions on the interval \((-\infty, \infty)\).</p>
+<p>\(-2\sin^2(x) - 3\cos(x) + 3 = 0\)</p>
+<ul>
+  <li>Identity: <reveal>\(\sin^2(x) = 1 - \cos^2(x)\)</reveal></li>
+  <li>One trig function: <reveal>\(-2\left(1 - \cos^2(x)\right) - 3\cos(x) + 3 = 2\cos^2(x) - 3\cos(x) + 1 = 0\)</reveal></li>
+  <li>From Example 4: <reveal>\(x = 0 + 2\pi k\), \(x = \dfrac{\pi}{3} + 2\pi k\), \(x = \dfrac{5\pi}{3} + 2\pi k\)</reveal></li>
+</ul>
+<jsx-solve-trig show="all" xmin="-3.1416" xmax="9.4248">
+  <jsx-case name="Graph" expr="-2*sin(x)^2-3*cos(x)+3" label="−2sin²x − 3cos x + 3" expr2="2*cos(x)^2-3*cos(x)+1" label2="2cos²x − 3cos x + 1" k="0" fixed-k ymin="-1" ymax="7"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">Calculator Approximations</div>
+          <div class="step-subtitle">Inverse functions and two useful identities</div>
+          <div class="step-body">
+<p>We will not always work exclusively with values found along the unit circle. In applications, calculator approximations are frequently required to obtain results. More specifically, we often need the calculator to approximate inverse trigonometric function values. Two identities are particularly helpful in these cases.</p>
+<div class="defbox"><div class="defbox-label">Important Info: Useful Identities for Solving Trigonometric Equations</div>
+<p>For trigonometric equations requiring calculator approximations, the inverse functions are often needed. Due to the restrictions placed on inverse trigonometric functions, it may be convenient to apply the following identities to ensure that all solutions are found.</p>
+<table>
+  <tr><td><b>Even Identity for Cosine</b></td><td>\(\cos(-\theta) = \cos(\theta)\)</td></tr>
+  <tr><td><b>Supplementary Angle Identity for Sine</b><br>(a result of the difference identity for sine)</td><td>\(\sin(\theta) = \sin(\pi - \theta)\), \(\theta\) in radians<br>\(\sin(\theta) = \sin(180^\circ - \theta)\), \(\theta\) in degrees</td></tr>
+</table></div>
+<p>Blue is the angle the calculator returns, red is the other one.</p>
+<jsx-solve-trig circle calc var="θ" xmin="-6.2832" xmax="6.2832">
+  <jsx-case name="sin θ = k" fn="sin" k="0.6" presets="0.6 -0.6 0.25"></jsx-case>
+  <jsx-case name="cos θ = k" fn="cos" k="0.6" presets="0.6 -0.6 0.25"></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+        <div class="step" data-step="9">
+          <div class="step-title">Example 7</div>
+          <div class="step-subtitle">Solve each equation and give solutions on the interval [0, 2π)</div>
+          <div class="step-body">
+<table>
+  <tr><td>(a) \(2\sec(\theta) = 3\)</td><td><reveal>\(\cos(\theta) = \dfrac{2}{3}\), \(\theta = \cos^{-1}\left(\dfrac{2}{3}\right) \approx 0.841\)<br>and \(\theta = -\cos^{-1}\left(\dfrac{2}{3}\right) + 2\pi \approx 5.442\)</reveal></td></tr>
+  <tr><td>(b) \(5\sin(x) + 4 = -2\sin(x)\)</td><td><reveal>\(\sin(x) = -\dfrac{4}{7}\), \(x = \sin^{-1}\left(-\dfrac{4}{7}\right) \approx -0.608\), \(-0.608 + 2\pi \approx 5.675\)<br>and \(x = \pi - \sin^{-1}\left(-\dfrac{4}{7}\right) \approx 3.750\)</reveal></td></tr>
+</table>
+<jsx-solve-trig circle calc xmin="-6.2832" xmax="6.2832">
+  <jsx-case name="(a)" fn="sec" k="3/2" var="θ" fixed-k></jsx-case>
+  <jsx-case name="(b)" fn="sin" k="-4/7" fixed-k></jsx-case>
+</jsx-solve-trig>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

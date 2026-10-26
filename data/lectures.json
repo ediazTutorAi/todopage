@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-26",
+    "title": "Solving Trigonometric Equations",
+    "subtitle": "Lesson 19",
+    "description": "Solving trig equations by graphing on the unit circle and rectangular graph, linear and factoring methods, applying identities, and calculator approximations, with a live graph where a draggable line y = k shows every solution and its general form.",
+    "tags": [
+      "Trig Equations",
+      "Solving",
+      "Identities"
+    ],
+    "url": "trigonometry/2026/2026-10-26-lesson-19-solving-trigonometric-equations/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-19",
     "title": "Inverse Trigonometric Functions",
     "subtitle": "Lesson 18",
@@ -214,9 +228,16 @@
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",
-    "description": "",
+    "description": "Line integrals (OpenStax 6.2, a 40 minute class): unroll a curve into the sheet under it to see the scalar line integral as a limit of sums, watch work build up as a point moves through a field, reverse the orientation and see the sign flip, split a rectangle into pieces, then compare flux and circulation on the same curve, with many verified examples.",
     "tags": [
-      "Line Integrals"
+      "line integrals",
+      "scalar line integral",
+      "vector line integral",
+      "work",
+      "orientation",
+      "piecewise smooth curves",
+      "flux",
+      "circulation"
     ],
     "url": "calculus3/fall2025/2025-11-03-line-integrals/index.html"
   },

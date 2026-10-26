@@ -1,0 +1,109 @@
+{
+  "course": "Calculus III",
+  "semester": "Spring 2026",
+  "date": "2026-03-23",
+  "title": "Line Integrals",
+  "subtitle": "",
+  "description": "Line integrals (OpenStax 6.2, a 40 minute class): unroll a curve into the sheet under it to see the scalar line integral as a limit of sums, watch work build up as a point moves through a field, reverse the orientation and see the sign flip, split a rectangle into pieces, then compare flux and circulation on the same curve, with many verified examples.",
+  "tags": [
+    "line integrals",
+    "scalar line integral",
+    "vector line integral",
+    "work",
+    "orientation",
+    "piecewise smooth curves",
+    "flux",
+    "circulation"
+  ],
+  "steps": [
+    {
+      "tag": "step",
+      "label": "Scalar Line Integrals",
+      "subtitle": "Definition",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Definition: scalar line integral</div>\n<p>Let \\(f\\) be a function with a domain that includes the smooth curve \\(C\\) parameterized by \\(\\vec r(t)=\\langle x(t),y(t),z(t)\\rangle\\), \\(a\\le t\\le b\\). The <b>scalar line integral</b> of \\(f\\) along \\(C\\) is</p>\n$$\\int_C f(x,y,z)\\,ds=\\lim_{n\\to\\infty}\\sum_{i=1}^{n} f(P_i^*)\\,\\Delta s_i$$\n<p>if this limit exists, where \\(\\Delta s_i\\) is the length of the \\(i\\)th piece of \\(C\\) and \\(P_i^*\\) is a point in it.</p>\n</div>\n<jsx-line-scalar x=\"cos(t)\" y=\"sin(t)\" tmin=\"0\" tmax=\"pi\" f=\"2\" n=\"5\"></jsx-line-scalar>\n<table>\n  <tr><td>Example 6.14. \\(\\int_C 2\\,ds\\), where \\(C\\) is the upper half of the unit circle.</td><td><reveal>\\(2\\pi\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Evaluating a Scalar Line Integral",
+      "subtitle": "Theorems 6.3 and 6.4",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Theorem 6.4: Scalar Line Integral Calculation</div>\n$$\\int_C f(x,y,z)\\,ds=\\int_a^b f(\\vec r(t))\\sqrt{(x'(t))^2+(y'(t))^2+(z'(t))^2}\\,dt,\\qquad ds=\\|\\vec r^{\\prime}(t)\\|\\,dt.$$\n</div>\n<jsx-line-scalar x=\"t\" y=\"t^2\" tmin=\"0\" tmax=\"1\" f=\"x*y\" n=\"4\" speeds=\"1 2 3\"></jsx-line-scalar>\n<table>\n  <tr><td>Checkpoint 6.13. \\(\\int_C(x+y)\\,ds\\), \\(x=t\\), \\(y=t\\), \\(0\\le t\\le1\\).</td><td><reveal>\\(\\sqrt2\\)</reveal></td></tr>\n  <tr><td>Example 6.15. \\(\\int_C(x^2+y^2+z)\\,ds\\), \\(\\vec r(t)=\\langle\\cos t,\\sin t,t\\rangle\\), \\(0\\le t\\le2\\pi\\).</td><td><reveal>\\(\\int_0^{2\\pi}(1+t)\\sqrt2\\,dt=2\\sqrt2\\,\\pi+2\\sqrt2\\,\\pi^2\\)</reveal></td></tr>\n  <tr><td>Example 6.16. The same integral with \\(\\vec r(t)=\\langle\\cos2t,\\sin2t,2t\\rangle\\), \\(0\\le t\\le\\pi\\).</td><td><reveal>\\(2\\sqrt2\\int_0^\\pi(1+2t)\\,dt=2\\sqrt2(\\pi+\\pi^2)\\), the same value</reveal></td></tr>\n  <tr><td>Checkpoint 6.15. \\(\\int_C(x^2+yz)\\,ds\\), \\(\\vec r(t)=\\langle2t,5t,-t\\rangle\\), \\(0\\le t\\le10\\).</td><td><reveal>\\(-\\dfrac{1000\\sqrt{30}}{3}\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Arc Length and Mass of a Wire",
+      "subtitle": "Examples 6.17, 6.22",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Arc length</div>\n<p>\\(\\displaystyle\\int_C 1\\,ds=\\text{length}(C)\\)</p>\n</div>\n<div class=\"defbox\"><div class=\"defbox-label\">Mass of a wire with linear density \\(\\rho(x,y,z)\\)</div>\n<p>\\(\\displaystyle\\text{mass}=\\int_C\\rho(x,y,z)\\,ds\\)</p>\n</div>\n<table>\n  <tr><td>Example 6.17. Length of the wire \\(\\vec r(t)=\\langle\\cos t,\\sin t,\\tfrac23t^{3/2}\\rangle\\), \\(0\\le t\\le4\\pi\\).</td><td><reveal>\\(\\int_0^{4\\pi}\\sqrt{1+t}\\,dt=\\dfrac23\\big((1+4\\pi)^{3/2}-1\\big)\\)</reveal></td></tr>\n  <tr><td>Checkpoint 6.16. Length of \\(\\vec r(t)=\\langle3t+1,\\,4-2t,\\,5+2t\\rangle\\), \\(0\\le t\\le4\\).</td><td><reveal>\\(4\\sqrt{17}\\)</reveal></td></tr>\n  <tr><td>Example 6.22. Mass of the spring \\(\\langle t,2\\cos t,2\\sin t\\rangle\\), \\(0\\le t\\le\\tfrac\\pi2\\), with \\(\\rho=e^x+yz\\) kg/m.</td><td><reveal>\\(\\sqrt5\\,(e^{\\pi/2}+1)\\) kg</reveal></td></tr>\n  <tr><td>Exercise 54. Mass of a circle of radius \\(2\\) centered at \\((3,4)\\) with \\(\\rho(x,y)=y^2\\).</td><td><reveal>\\(72\\pi\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Vector Line Integrals",
+      "subtitle": "Orientation and work",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Orientation</div>\n<p>A specified direction along \\(C\\) is an <b>orientation</b>; \\(C\\) is then an <b>oriented curve</b>. \\(-C\\) is the same curve with the opposite orientation. A <b>closed curve</b> has a parameterization with \\(\\vec r(a)=\\vec r(b)\\), traversed exactly once.</p>\n</div>\n<div class=\"defbox\"><div class=\"defbox-label\">Definition: vector line integral</div>\n$$\\int_C\\vec F\\cdot\\mathbf T\\,ds=\\lim_{n\\to\\infty}\\sum_{i=1}^n\\vec F(P_i^*)\\cdot\\mathbf T(P_i^*)\\,\\Delta s_i$$\n<p>The work done by \\(\\vec F\\) moving a particle in the positive direction along \\(C\\) is \\(W=\\int_C\\vec F\\cdot\\mathbf T\\,ds\\).</p>\n</div>\n<jsx-line-vector>\n  <jsx-case name=\"Example 6.18\" x=\"cos(t)\" y=\"sin(t)\" tmin=\"0\" tmax=\"pi\" p=\"-y\" q=\"x\"></jsx-case>\n  <jsx-case name=\"Checkpoint 6.17\" x=\"t\" y=\"t^2\" tmin=\"0\" tmax=\"2\" p=\"x\" q=\"y\"></jsx-case>\n</jsx-line-vector>"
+    },
+    {
+      "tag": "step",
+      "label": "Evaluating a Vector Line Integral",
+      "subtitle": "Equation 6.9",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Equation 6.9</div>\n$$\\int_C\\vec F\\cdot d\\vec r=\\int_C\\vec F\\cdot\\mathbf T\\,ds=\\int_a^b\\vec F(\\vec r(t))\\cdot\\vec r^{\\prime}(t)\\,dt,\\qquad \\int_{-C}\\vec F\\cdot d\\vec r=-\\int_C\\vec F\\cdot d\\vec r.$$\n</div>\n<table>\n  <tr><td>Example 6.18. \\(\\int_C\\vec F\\cdot d\\vec r\\), \\(\\vec r(t)=\\langle\\cos t,\\sin t\\rangle\\), \\(0\\le t\\le\\pi\\), \\(\\vec F=\\langle-y,x\\rangle\\).</td><td><reveal>\\(\\int_0^\\pi1\\,dt=\\pi\\)</reveal></td></tr>\n  <tr><td>Example 6.19. The same field with \\(\\vec r(t)=\\langle\\cos(t+\\pi),\\sin t\\rangle\\), \\(0\\le t\\le\\pi\\).</td><td><reveal>\\(-\\pi\\)</reveal></td></tr>\n  <tr><td>Checkpoint 6.17. \\(\\vec F=x\\,\\mathbf i+y\\,\\mathbf j\\), \\(C:\\langle t,t^2\\rangle\\), \\(0\\le t\\le2\\). Which is greater, \\(\\int_C\\) or \\(\\int_{-C}\\)?</td><td><reveal>\\(\\int_C=10\\), \\(\\int_{-C}=-10\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "The Form P dx + Q dy + R dz",
+      "subtitle": "Equation 6.10",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Equation 6.10</div>\n$$\\int_C\\vec F\\cdot d\\vec r=\\int_C P\\,dx+Q\\,dy+R\\,dz=\\int\\Big(P\\frac{dx}{dt}+Q\\frac{dy}{dt}+R\\frac{dz}{dt}\\Big)dt$$\n</div>\n<table>\n  <tr><td>Example 6.20. \\(\\int_C z\\,dx+x\\,dy+y\\,dz\\), \\(\\vec r(t)=\\langle t^2,\\sqrt t,t\\rangle\\), \\(1\\le t\\le4\\).</td><td><reveal>\\(\\dfrac{793}{15}\\)</reveal></td></tr>\n  <tr><td>Checkpoint 6.18. \\(\\int_C4x\\,dx+z\\,dy+4y^2\\,dz\\), \\(\\vec r(t)=\\langle4\\cos2t,2\\sin2t,3\\rangle\\), \\(0\\le t\\le\\tfrac\\pi4\\).</td><td><reveal>\\(-26\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Piecewise Smooth Curves",
+      "subtitle": "Theorem 6.5",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Piecewise smooth curve</div>\n<p>\\(C=C_1+C_2+\\cdots+C_n\\), smooth curves where the endpoint of \\(C_i\\) is the starting point of \\(C_{i+1}\\).</p>\n</div>\n<div class=\"defbox\"><div class=\"defbox-label\">Theorem 6.5: Properties of Vector Line Integrals</div>\n<p>i. \\(\\int_C(\\vec F+\\vec G)\\cdot d\\vec r=\\int_C\\vec F\\cdot d\\vec r+\\int_C\\vec G\\cdot d\\vec r\\) &nbsp; ii. \\(\\int_C k\\vec F\\cdot d\\vec r=k\\int_C\\vec F\\cdot d\\vec r\\) &nbsp; iii. \\(\\int_{-C}\\vec F\\cdot d\\vec r=-\\int_C\\vec F\\cdot d\\vec r\\)</p>\n<p>iv. \\(\\int_C\\vec F\\cdot d\\vec r=\\int_{C_1}\\vec F\\cdot d\\vec r+\\cdots+\\int_{C_n}\\vec F\\cdot d\\vec r\\)</p>\n</div>\n<jsx-line-vector x=\"(t&lt;2?t:t&lt;3?2:t&lt;5?5-t:0)\" y=\"(t&lt;2?0:t&lt;3?t-2:t&lt;5?1:6-t)\" tmin=\"0\" tmax=\"6\" p=\"x-2*y\" q=\"y-x\" breaks=\"2 3 5\"></jsx-line-vector>\n<table>\n  <tr><td>Example 6.21. \\(\\int_C\\vec F\\cdot d\\vec r\\), \\(C\\) the rectangle with vertices \\((0,0),(2,0),(2,1),(0,1)\\) counterclockwise, \\(\\vec F=\\langle x-2y,\\,y-x\\rangle\\).</td><td><reveal>\\(2-\\tfrac32+2-\\tfrac12=2\\)</reveal></td></tr>\n  <tr><td>Checkpoint 6.19. \\(\\vec F=\\langle y^2,\\,2xy+1\\rangle\\), \\(C\\) the triangle \\((0,0),(4,0),(0,5)\\) counterclockwise.</td><td><reveal>\\(0+5-5=0\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Work Done by a Force",
+      "subtitle": "Example 6.23",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Work</div>\n<p>An object moves along \\(C\\) in force field \\(\\vec F\\): \\(\\;W=\\int_C\\vec F\\cdot d\\vec r\\).</p>\n</div>\n<table>\n  <tr><td>Example 6.23. Work done by \\(\\vec F=\\langle yz,xy,xz\\rangle\\) along \\(\\vec r(t)=\\langle t^2,t,t^4\\rangle\\), \\(0\\le t\\le1\\).</td><td><reveal>\\(\\dfrac{131}{140}\\)</reveal></td></tr>\n  <tr><td>Exercise 65. \\(\\vec F=-x\\,\\mathbf i-2y\\,\\mathbf j\\) along \\(y=x^3\\) from \\((0,0)\\) to \\((2,8)\\).</td><td><reveal>\\(-66\\)</reveal></td></tr>\n  <tr><td>Exercise 98. \\(\\vec F=(x+2y)\\,\\mathbf i+(-x+y^2)\\,\\mathbf j\\) from \\((0,0)\\) to \\((1,1)\\). David: along the \\(x\\)-axis, then up \\(x=1\\). Sandra: along \\(y=x\\). Whose is larger?</td><td><reveal>David \\(-\\tfrac16\\), Sandra \\(\\tfrac43\\). Sandra's is larger by \\(\\tfrac32\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Flux Across a Curve",
+      "subtitle": "Definition, Theorem 6.6",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Definition: flux</div>\n<p>For \\(\\vec r(t)=\\langle x(t),y(t)\\rangle\\), let \\(\\mathbf n(t)=\\langle y'(t),-x'(t)\\rangle\\) (normal, pointing right of the direction of travel) and \\(\\mathbf N=\\mathbf n/\\|\\mathbf n\\|\\). The <b>flux of \\(\\vec F\\) across \\(C\\)</b> is \\(\\int_C\\vec F\\cdot\\mathbf N\\,ds\\).</p>\n</div>\n<div class=\"defbox\"><div class=\"defbox-label\">Theorem 6.6: Calculating Flux across a Curve</div>\n$$\\int_C\\vec F\\cdot\\mathbf N\\,ds=\\int_a^b\\vec F(\\vec r(t))\\cdot\\mathbf n(t)\\,dt$$\n</div>\n<jsx-line-vector mode=\"flux\" toggle>\n  <jsx-case name=\"Example 6.24\" x=\"cos(t)\" y=\"sin(t)\" tmin=\"0\" tmax=\"2*pi\" p=\"2*x\" q=\"2*y\"></jsx-case>\n  <jsx-case name=\"Checkpoint 6.21\" x=\"2*t\" y=\"3*t\" tmin=\"0\" tmax=\"1\" p=\"x+y\" q=\"2*y\"></jsx-case>\n</jsx-line-vector>\n<table>\n  <tr><td>Example 6.24. Flux of \\(\\vec F=\\langle2x,2y\\rangle\\) across the unit circle, counterclockwise.</td><td><reveal>\\(4\\pi\\)</reveal></td></tr>\n  <tr><td>Checkpoint 6.21. Flux of \\(\\vec F=\\langle x+y,2y\\rangle\\) across the segment from \\((0,0)\\) to \\((2,3)\\), left to right.</td><td><reveal>\\(\\tfrac32\\)</reveal></td></tr>\n  <tr><td>Exercise 89. \\(\\vec F=5\\,\\mathbf j\\), \\(C:\\ y=0\\), \\(0\\le x\\le4\\).</td><td><reveal>\\(-20\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Circulation",
+      "subtitle": "Examples 6.25, 6.26",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<div class=\"defbox\"><div class=\"defbox-label\">Circulation</div>\n<p>The line integral of \\(\\vec F\\) along an oriented closed curve is the <b>circulation</b> of \\(\\vec F\\) along \\(C\\), written \\(\\oint_C\\vec F\\cdot\\mathbf T\\,ds\\).</p>\n</div>\n<jsx-line-vector>\n  <jsx-case name=\"Example 6.25\" x=\"cos(t)\" y=\"sin(t)\" tmin=\"0\" tmax=\"2*pi\" p=\"-y\" q=\"x\"></jsx-case>\n  <jsx-case name=\"Example 6.26\" x=\"2*cos(t)\" y=\"2*sin(t)\" tmin=\"0\" tmax=\"2*pi\" p=\"-2\" q=\"y\"></jsx-case>\n  <jsx-case name=\"Checkpoint 6.22\" x=\"cos(t)\" y=\"sin(t)\" tmin=\"0\" tmax=\"2*pi\" p=\"-y/(x^2+y^2)\" q=\"x/(x^2+y^2)\"></jsx-case>\n</jsx-line-vector>\n<table>\n  <tr><td>Example 6.25. Circulation of \\(\\vec F=\\langle-y,x\\rangle\\) along the unit circle, counterclockwise (and clockwise).</td><td><reveal>\\(2\\pi\\) (and \\(-2\\pi\\))</reveal></td></tr>\n  <tr><td>Example 6.26. Work done by \\(\\vec F=\\langle-2,y\\rangle\\) around the circle of radius \\(2\\), counterclockwise.</td><td><reveal>\\(0\\)</reveal></td></tr>\n  <tr><td>Checkpoint 6.22. Circulation of \\(\\Big\\langle-\\dfrac y{x^2+y^2},\\dfrac x{x^2+y^2}\\Big\\rangle\\) along the unit circle, counterclockwise.</td><td><reveal>\\(2\\pi\\)</reveal></td></tr>\n</table>"
+    },
+    {
+      "tag": "step",
+      "label": "Exercises",
+      "subtitle": "Section 6.2",
+      "ggbId": "",
+      "reveal": false,
+      "bodyHtml": "<table>\n  <tr><td>45. \\(\\int_C(x-y)\\,ds\\), \\(\\vec r(t)=4t\\,\\mathbf i+3t\\,\\mathbf j\\), \\(0\\le t\\le2\\).</td><td><reveal>\\(10\\)</reveal></td></tr>\n  <tr><td>58. \\(\\int_Cy\\,ds\\), \\(C\\) the segment from \\((0,1,1)\\) to \\((2,2,3)\\).</td><td><reveal>\\(\\tfrac92\\)</reveal></td></tr>\n  <tr><td>62. \\(\\int_C(2x-y)\\,dx+(x+3y)\\,dy\\), \\(C\\) along the \\(x\\)-axis from \\(x=0\\) to \\(x=5\\).</td><td><reveal>\\(25\\)</reveal></td></tr>\n  <tr><td>69. Work of \\(\\vec F=2x\\,\\mathbf i+3y\\,\\mathbf j-z\\,\\mathbf k\\) along \\(\\vec r(t)=\\langle t,t^2,t^3\\rangle\\), \\(0\\le t\\le1\\).</td><td><reveal>\\(2\\)</reveal></td></tr>\n  <tr><td>74. \\(\\vec F=(2x+3y)\\,\\mathbf i+(3x+2y)\\,\\mathbf j\\) around the unit circle, clockwise.</td><td><reveal>\\(0\\)</reveal></td></tr>\n  <tr><td>87. Flux of \\(\\vec F=x^2\\,\\mathbf i+y\\,\\mathbf j\\) across the segment from \\((0,0)\\) to \\((1,2)\\).</td><td><reveal>\\(-\\tfrac13\\)</reveal></td></tr>\n</table>\n<p class=\"muted small\">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.2 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3.</p>"
+    }
+  ],
+  "notes": "40 minute plan: 1. Scalar line integral definition 4 min; 2. Evaluating scalar line integrals 5 min; 3. Arc length and mass of a wire 3 min; 4. Vector line integrals, orientation and work 5 min; 5. Evaluating a vector line integral 4 min; 6. P dx + Q dy + R dz 3 min; 7. Piecewise smooth curves 4 min; 8. Work done by a force 2 min; 9. Flux 4 min; 10. Circulation 3 min; 11. Exercises 3 min. Slides follow the OpenStax 6.2 wording (definitions and theorems boxed) with no added commentary. Source: OpenStax Calculus Volume 3, CC BY-NC-SA 4.0."
+}
