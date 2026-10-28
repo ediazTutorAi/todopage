@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>The Law of Sines</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (triangle explorers use <jsx-*> tags) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+<!-- Lesson 20 plan, 9 steps (instructor supplies the explanations; slides carry the workbook wording and live triangles):
+   1. Area of a Triangle + Example 1     4. Example 3 (ship)            7. Example 5 + Longest Side Theorem
+   2. Theorem: Area (drag a vertex)      5. Example 4                   8. Example 6
+   3. Law of Sines + Example 2           6. The Ambiguous Case          9. Example 7 -->
+
+  <header class="site-header">
+    <h1>The Law of Sines</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Area of a Triangle</div>
+          <div class="step-subtitle">Combining area of triangles and right triangle trigonometry</div>
+          <div class="step-body">
+<p>We can develop the Law of Sines by combining two familiar topics, <b>area of triangles</b> and <b>right triangle trigonometry</b>.</p>
+<p><b>Example 1.</b> Use the familiar formula for area of a triangle, \(\text{Area} = \dfrac{1}{2}(\text{base})(\text{height})\), along with right triangle trigonometry, to verify each of the area rules given below.</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>(a) \(\text{Area} = \dfrac{1}{2}bc\sin(A)\)</td></tr>
+  <tr><td><reveal>\(\sin(A) = \dfrac{h}{c}\), so \(h = c\sin(A)\)</reveal></td></tr>
+  <tr><td><reveal>\(\text{Area} = \dfrac{1}{2}(b)(c\sin(A)) = \dfrac{1}{2}bc\sin(A)\)</reveal></td></tr>
+  <tr><td>(b) \(\text{Area} = \dfrac{1}{2}ab\sin(C)\)</td></tr>
+  <tr><td><reveal>\(\sin(C) = \dfrac{h}{a}\), so \(h = a\sin(C)\)</reveal></td></tr>
+  <tr><td><reveal>\(\text{Area} = \dfrac{1}{2}(b)(a\sin(C)) = \dfrac{1}{2}ab\sin(C)\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-sines-triangle A="50" B="60" c="6" altitude></jsx-sines-triangle></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">Theorem: Area of a Triangle</div>
+          <div class="step-subtitle"></div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">THEOREM: Area of a Triangle</div>
+<p>For any triangle \(ABC\), with side measures \(a\), \(b\), and \(c\), the area is given by any of the following formulas.</p>
+\[\text{Area} = \frac{1}{2}bc\sin(A) = \frac{1}{2}ac\sin(B) = \frac{1}{2}ab\sin(C)\]</div>
+<p>While the above result provides a useful means for calculating the area of a triangle, perhaps more importantly, it establishes a valuable equivalence relationship. The Law of Sines is a direct consequence of the above statement.</p>
+<jsx-sines-triangle A="50" B="60" c="6" drag area></jsx-sines-triangle>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Applying the Law of Sines</div>
+          <div class="step-subtitle">Example 2</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">THEOREM: Law of Sines</div>
+<p>For any triangle \(ABC\), with side measures \(a\), \(b\), and \(c\), we have the following relationship.</p>
+\[\frac{\sin(A)}{a} = \frac{\sin(B)}{b} = \frac{\sin(C)}{c}\]
+<p>Alternatively, we can restate the above as follows:</p>
+\[\frac{a}{\sin(A)} = \frac{b}{\sin(B)} = \frac{c}{\sin(C)}\]</div>
+<p><b>Example 2.</b> Show that the law of sines is a direct consequence of the area formulas established earlier.</p>
+<table>
+  <tr><td>Multiply by 2:</td><td><reveal>\(bc\sin(A) = ac\sin(B) = ab\sin(C)\)</reveal></td></tr>
+  <tr><td>Divide by \(abc\):</td><td><reveal>\(\dfrac{\sin(A)}{a} = \dfrac{\sin(B)}{b} = \dfrac{\sin(C)}{c}\)</reveal></td></tr>
+</table>
+<jsx-sines-triangle A="50" B="60" c="6" drag ratios></jsx-sines-triangle>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Ship and lighthouse</div>
+          <div class="step-body">
+<p>A ship sailing due east spots a lighthouse 19 km away located at a bearing of \(N\,40^\circ 20'\,E\). Thirty minutes later, the lighthouse is located at a bearing of \(N\,20^\circ 35'\,W\). How fast is the ship sailing in km/hr?</p>
+<div class="jsx-fubini-grid">
+<div><svg viewBox="-10 0 350 240" role="img" aria-label="Ship and lighthouse bearings" style="max-width:420px;width:100%;color:var(--ink)">
+  <g fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="40" y1="200" x2="252.8" y2="200" stroke-dasharray="6 5"/>
+    <line x1="40" y1="200" x2="187.6" y2="26.2" stroke-dasharray="6 5"/>
+    <line x1="252.8" y1="200" x2="187.6" y2="26.2" stroke-dasharray="6 5"/>
+    <line x1="40" y1="200" x2="40" y2="105" stroke-dasharray="2 4" stroke-width="1.5"/>
+    <line x1="252.8" y1="200" x2="252.8" y2="105" stroke-dasharray="2 4" stroke-width="1.5"/>
+  </g>
+  <g fill="none" stroke="var(--accent)" stroke-width="2.5">
+    <path d="M40.0 138.0 A62 62 0 0 1 80.1 152.7"/>
+    <path d="M252.8 138.0 A62 62 0 0 0 231.0 142.0"/>
+  </g>
+  <g fill="currentColor"><circle cx="40" cy="200" r="5"/><circle cx="252.8" cy="200" r="5"/><circle cx="187.6" cy="26.2" r="5"/></g>
+  <g fill="currentColor" font-size="15" font-weight="700" text-anchor="middle">
+    <text x="40" y="222">Ship</text>
+    <text x="252.8" y="222">Ship</text>
+    <text x="187.6" y="16.2">Lighthouse</text>
+    <text x="26" y="150" fill="var(--accent)">40°20′</text>
+    <text x="283" y="150" fill="var(--accent)">20°35′</text>
+    <text x="99.8" y="113.1">19</text>
+    <text x="40" y="100" font-size="13">N</text>
+    <text x="252.8" y="100" font-size="13">N</text>
+  </g>
+</svg></div>
+<div><jsx-sines-triangle A="49.667" B="60.917" c="19" known="A=49°40′;C=69°25′;c=19 km"></jsx-sines-triangle></div>
+</div>
+<table>
+  <tr><td>We know</td><td><reveal>\(A = 90^\circ - 40^\circ 20' = 49^\circ 40'\), \(C = 90^\circ - 20^\circ 35' = 69^\circ 25'\), \(c = 19\)</reveal></td></tr>
+  <tr><td>We need</td><td><reveal>\(b\)</reveal></td></tr>
+  <tr><td>Third angle</td><td><reveal>\(B = 180^\circ - 49^\circ 40' - 69^\circ 25' = 60^\circ 55'\)</reveal></td></tr>
+  <tr><td>Law of Sines</td><td><reveal>\(\dfrac{b}{\sin(B)} = \dfrac{c}{\sin(C)}\), \(b = \sin\left(60^\circ 55'\right)\cdot\dfrac{19}{\sin\left(69^\circ 25'\right)} \approx 17.74\) km</reveal></td></tr>
+  <tr><td>Speed</td><td><reveal>\(b\) is the distance in half an hour: \(2 \times 17.74 \approx 35.47\) km/hr</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Solve the triangle \(ABC\) given \(A = 32.2^\circ\), \(B = 52.4^\circ\) and \(b = 42\) cm</div>
+          <div class="step-body">
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>We know</td><td><reveal>\(A = 32.2^\circ\), \(B = 52.4^\circ\), \(b = 42\)</reveal></td></tr>
+  <tr><td>We need</td><td><reveal>\(C\), \(c\), \(a\)</reveal></td></tr>
+  <tr><td>Angle sum</td><td><reveal>\(C = 180^\circ - 32.2^\circ - 52.4^\circ = 95.4^\circ\)</reveal></td></tr>
+  <tr><td>Find \(c\)</td><td><reveal>\(\dfrac{c}{\sin(C)} = \dfrac{b}{\sin(B)}\), \(c = \sin(95.4^\circ)\cdot\dfrac{42}{\sin(52.4^\circ)} \approx 52.78\) cm</reveal></td></tr>
+  <tr><td>Find \(a\)</td><td><reveal>\(\dfrac{a}{\sin(A)} = \dfrac{b}{\sin(B)}\), \(a = \sin(32.2^\circ)\cdot\dfrac{42}{\sin(52.4^\circ)} \approx 28.25\) cm</reveal></td></tr>
+</table>
+</div>
+<div><jsx-sines-triangle A="32.2" B="52.4" c="5.278" known="A=32.2°;B=52.4°;b=42 cm"></jsx-sines-triangle></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">The Ambiguous Case of the Law of Sines</div>
+          <div class="step-subtitle">One angle and two sides</div>
+          <div class="step-body">
+<p>You may have noticed in each of the preceding examples we were provided with <b>two angle measures and one side measure</b>. With this information, we can quickly determine the third missing angle and apply the law of sines to solve for all remaining side measures. However, we must exercise caution when only one angle measure is provided. In particular, with only one angle and two side measures (one of which must be opposite the given angle to apply the law of sines), we may arrive at one of three possible outcomes, (1) a single unique triangle exists, (2) two triangles exist, and (3) no such triangle exists.</p>
+<p>Drag the sliders. Every point where the dashed circle meets the base is a triangle.</p>
+<jsx-ambiguous>
+  <jsx-case name="Example 5" angle="95" opp="32.2" adj="52.4" adj-label="a"></jsx-case>
+  <jsx-case name="Example 6" angle="65" opp="22.5" adj="18.2" adj-label="a"></jsx-case>
+  <jsx-case name="Example 7" angle="65" opp="29.7" adj="32.5" adj-label="c"></jsx-case>
+</jsx-ambiguous>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">Example 5</div>
+          <div class="step-subtitle">Solve the triangle \(ABC\) given \(a = 52.4\) cm, \(b = 32.2\) cm, and \(B = 95^\circ\)</div>
+          <div class="step-body">
+<table>
+  <tr><td>We know</td><td><reveal>\(a = 52.4\), \(b = 32.2\), \(B = 95^\circ\)</reveal></td></tr>
+  <tr><td>We need</td><td><reveal>\(A\), \(C\), \(c\)</reveal></td></tr>
+  <tr><td>Find \(A\)</td><td><reveal>\(\dfrac{\sin(A)}{a} = \dfrac{\sin(B)}{b}\), \(\sin(A) = \dfrac{a\sin(B)}{b}\), \(A = \sin^{-1}\left(\dfrac{52.4\sin(95^\circ)}{32.2}\right) = \sin^{-1}(1.62)\)</reveal></td></tr>
+  <tr><td>Calculator</td><td><reveal>Error message: \(\sin(A) = 1.62\) is not possible. <b>No triangle exists!</b></reveal></td></tr>
+</table>
+<jsx-ambiguous>
+  <jsx-case name="Example 5" angle="95" opp="32.2" adj="52.4" adj-label="a"></jsx-case>
+</jsx-ambiguous>
+<div class="defbox"><div class="defbox-label">THEOREM: The Longest Side Theorem</div>
+<p>If one side of a triangle is longer than another side, then the angle opposite the longer side is the larger angle.</p>
+<p>Conversely, if one angle of a triangle is larger than another angle, then the side opposite the larger angle is the longer side.</p></div>
+<p>On your own, apply the above theorem to our last example to verify our conclusion that no such triangle exists satisfying the given information.</p>
+<p><reveal>\(a = 52.4 > b = 32.2\), so \(A > B = 95^\circ\). Then \(A + B > 190^\circ > 180^\circ\), which is impossible.</reveal></p>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">Solve the triangle \(ABC\) given \(a = 18.2\) cm, \(b = 22.5\) cm, and \(B = 65^\circ\)</div>
+          <div class="step-body">
+<table>
+  <tr><td>We know</td><td><reveal>\(a = 18.2\), \(b = 22.5\), \(B = 65^\circ\)</reveal></td></tr>
+  <tr><td>Find \(A\)</td><td><reveal>\(\sin(A) = \dfrac{a\sin(B)}{b}\), \(A = \sin^{-1}\left(\dfrac{18.2\sin(65^\circ)}{22.5}\right) \approx 47.15^\circ\). One of two possibilities! Recall \(\sin(\theta) = \sin(180^\circ - \theta)\): \(A_2 = 180^\circ - 47.15^\circ = 132.85^\circ\)</reveal></td></tr>
+  <tr><td>Triangle 1 (\(A_1 \approx 47.15^\circ\))</td><td><reveal>\(C_1 = 180^\circ - 65^\circ - 47.15^\circ \approx 67.85^\circ\)<br>\(\dfrac{c_1}{\sin(C_1)} = \dfrac{b}{\sin(B)}\), \(c_1 = \sin(67.85^\circ)\cdot\dfrac{22.5}{\sin(65^\circ)} \approx 22.99\) cm</reveal></td></tr>
+  <tr><td>Triangle 2 (\(A_2 \approx 132.85^\circ\))</td><td><reveal>\(C_2 = 180^\circ - 65^\circ - 132.85^\circ \approx -17.85^\circ\), not possible</reveal></td></tr>
+  <tr><td>Conclusion</td><td><reveal>Only one triangle.</reveal></td></tr>
+</table>
+<jsx-ambiguous>
+  <jsx-case name="Example 6" angle="65" opp="22.5" adj="18.2" adj-label="a"></jsx-case>
+</jsx-ambiguous>
+          </div>
+        </div>
+        <div class="step" data-step="9">
+          <div class="step-title">Example 7</div>
+          <div class="step-subtitle">Solve the triangle \(ABC\) given \(c = 32.5\) cm, \(b = 29.7\) cm, and \(B = 65^\circ\)</div>
+          <div class="step-body">
+<table>
+  <tr><td>We know</td><td><reveal>\(b = 29.7\), \(c = 32.5\), \(B = 65^\circ\)</reveal></td></tr>
+  <tr><td>Find \(C\)</td><td><reveal>\(\sin(C) = \dfrac{c\sin(B)}{b}\), \(C = \sin^{-1}\left(\dfrac{32.5\sin(65^\circ)}{29.7}\right) \approx 82.64^\circ\). One of two possibilities! \(C_2 = 180^\circ - 82.64^\circ = 97.36^\circ\)</reveal></td></tr>
+  <tr><td>Triangle 1 (\(C_1 \approx 82.64^\circ\))</td><td><reveal>\(A_1 = 180^\circ - 65^\circ - 82.64^\circ \approx 32.36^\circ\)<br>\(a_1 = \sin(32.36^\circ)\cdot\dfrac{29.7}{\sin(65^\circ)} \approx 17.54\) cm</reveal></td></tr>
+  <tr><td>Triangle 2 (\(C_2 \approx 97.36^\circ\))</td><td><reveal>\(A_2 = 180^\circ - 65^\circ - 97.36^\circ \approx 17.64^\circ\)<br>\(a_2 = \sin(17.64^\circ)\cdot\dfrac{29.7}{\sin(65^\circ)} \approx 9.93\) cm</reveal></td></tr>
+  <tr><td>Conclusion</td><td><reveal>Two possible triangles!</reveal></td></tr>
+</table>
+<jsx-ambiguous>
+  <jsx-case name="Example 7" angle="65" opp="29.7" adj="32.5" adj-label="c"></jsx-case>
+</jsx-ambiguous>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

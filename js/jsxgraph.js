@@ -5879,6 +5879,323 @@ function renderJsxSolveTrig(el) {
   setCase();
 }
 
+
+// <jsx-sines-triangle A="50" B="60" c="5" drag altitude area ratios known="A=32.2°;B=52.4°;b=42 cm">
+//
+// A general (scalene) triangle ABC for the Law of Sines lesson. Standard layout: A at the origin, C on the
+// positive x-axis, B above, so side b = AC is the base. `A`/`B` (degrees) and `c` fix the shape (the scale
+// only sets the picture, labels come from `known`). `drag` lets the instructor drag all three vertices.
+// `altitude` draws the height h from B to the base with a right-angle mark. `area` adds chips for the three
+// area formulas (1/2 bc sin A, 1/2 ac sin B, 1/2 ab sin C), `ratios` the three ratios sin X / x. `known`
+// (";"-separated "Name=text") replaces a letter on the picture with the given value; unlisted letters stay
+// as plain letters, so the unknowns read as unknowns.
+const SINES_ASPECT = 1.8;
+
+function renderJsxSinesTriangle(el) {
+  const TAG = 'jsx-sines-triangle';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const A0 = num('A', 50); const B0 = num('B', 60); const c0 = num('c', 6);
+  const drag = el.hasAttribute('drag');
+  const altitude = el.hasAttribute('altitude');
+  const showArea = el.hasAttribute('area');
+  const showRatios = el.hasAttribute('ratios');
+  const known = {};
+  (el.getAttribute('known') || '').split(';').forEach((kv) => {
+    const i = kv.indexOf('=');
+    if (i > 0) known[kv.slice(0, i).trim()] = kv.slice(i + 1).trim();
+  });
+  const rad = (d) => (d * Math.PI) / 180;
+  const C0 = 180 - A0 - B0;
+  const b0 = (c0 * Math.sin(rad(B0))) / Math.sin(rad(C0));
+  const Bpos = [c0 * Math.cos(rad(A0)), c0 * Math.sin(rad(A0))];
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--sines';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(host);
+  if (showArea || showRatios) container.prepend(readout);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const orange = '#c2740c';
+
+  const span = Math.max(b0, Bpos[0], 1);
+  const xlo = -0.4 * span; const xhi = Math.max(b0, Bpos[0]) + 0.4 * span;
+  const w = xhi - xlo; const h = w / SINES_ASPECT;
+  const ymid = Bpos[1] / 2;
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xlo, ymid + h / 2, xhi, ymid - h / 2],
+    axis: false, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+
+  const vpt = (pos) => board.create('point', pos, {
+    name: '', size: POINT_SIZE + (drag ? 2 : 0), strokeColor: '#fff', strokeWidth: POINT_STROKE,
+    fillColor: ink, fixed: !drag, highlight: drag,
+  });
+  const PA = vpt([0, 0]); const PC = vpt([b0, 0]); const PB = vpt(Bpos);
+  board.create('polygon', [PA, PC, PB], {
+    fillColor: accent, fillOpacity: 0.08, vertices: { visible: false }, highlight: false, fixed: true,
+    borders: { strokeColor: ink, strokeWidth: 4, highlight: false },
+  });
+
+  const len = (P, Q) => Math.hypot(P.X() - Q.X(), P.Y() - Q.Y());
+  const sa = () => len(PB, PC); const sb = () => len(PA, PC); const sc = () => len(PA, PB);
+  const ang = (V, P, Q) => {
+    const ux = P.X() - V.X(); const uy = P.Y() - V.Y(); const vx = Q.X() - V.X(); const vy = Q.Y() - V.Y();
+    return Math.acos(Math.max(-1, Math.min(1, (ux * vx + uy * vy) / (Math.hypot(ux, uy) * Math.hypot(vx, vy) || 1))));
+  };
+  const angA = () => ang(PA, PB, PC); const angB = () => ang(PB, PA, PC); const angC = () => ang(PC, PA, PB);
+  const cen = () => [(PA.X() + PB.X() + PC.X()) / 3, (PA.Y() + PB.Y() + PC.Y()) / 3];
+
+  const lab = (fn, txt, color) => board.create('text', [() => fn()[0], () => fn()[1], txt], {
+    fontSize: READOUT_VALUE_FONT, color, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:800',
+  });
+  const out = (P, d) => {
+    const c = cen(); const dx = P[0] - c[0]; const dy = P[1] - c[1]; const m = Math.hypot(dx, dy) || 1;
+    return [P[0] + (dx / m) * d, P[1] + (dy / m) * d];
+  };
+  const D = 0.1 * w;
+  const text = (k) => known[k] || k;
+  lab(() => out([PA.X(), PA.Y()], D), text('A'), accent);
+  lab(() => out([PB.X(), PB.Y()], D), text('B'), accent);
+  lab(() => out([PC.X(), PC.Y()], D), text('C'), accent);
+  const mid = (P, Q) => [(P.X() + Q.X()) / 2, (P.Y() + Q.Y()) / 2];
+  lab(() => out(mid(PB, PC), D * 0.8), text('a'), negative);
+  lab(() => out(mid(PA, PC), D * 0.8), text('b'), negative);
+  lab(() => out(mid(PA, PB), D * 0.8), text('c'), negative);
+
+  if (altitude) {
+    // foot of the perpendicular from B onto line AC
+    const foot = () => {
+      const dx = PC.X() - PA.X(); const dy = PC.Y() - PA.Y();
+      const t = ((PB.X() - PA.X()) * dx + (PB.Y() - PA.Y()) * dy) / (dx * dx + dy * dy || 1);
+      return [PA.X() + t * dx, PA.Y() + t * dy];
+    };
+    const F = board.create('point', [() => foot()[0], () => foot()[1]], { visible: false, fixed: true, name: '' });
+    board.create('segment', [PB, F], { strokeColor: orange, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+    lab(() => { const f = foot(); return [f[0] + 0.07 * w, (f[1] + PB.Y()) / 2]; }, 'h', orange);
+    const SQ = 0.045 * w;
+    const sq = (a, b) => () => {
+      const f = foot(); const dx = PC.X() - PA.X(); const dy = PC.Y() - PA.Y(); const m = Math.hypot(dx, dy) || 1;
+      const ux = dx / m; const uy = dy / m;
+      const sg = ((PB.X() - f[0]) * -uy + (PB.Y() - f[1]) * ux) >= 0 ? 1 : -1;
+      return [f[0] + a * SQ * ux + b * SQ * sg * -uy, f[1] + a * SQ * uy + b * SQ * sg * ux];
+    };
+    const mk = (a, b) => board.create('point', [() => sq(a, b)()[0], () => sq(a, b)()[1]], { visible: false, fixed: true, name: '' });
+    board.create('polygon', [mk(1, 0), mk(1, 1), mk(0, 1), F], {
+      fillColor: 'none', vertices: { visible: false }, highlight: false, fixed: true, borders: { strokeColor: orange, strokeWidth: 2 },
+    });
+  }
+
+  const f2 = (v) => fmtNum(Math.round(v * 100) / 100);
+  const f3 = (v) => fmtNum(Math.round(v * 1000) / 1000);
+  function updateReadout() {
+    const a = sa(); const b = sb(); const c = sc();
+    const A = angA(); const B = angB(); const C = angC();
+    let html = '';
+    if (drag) html += `<span class="jsx-trace-chip">A = <b>${f2((A * 180) / Math.PI)}°</b>, B = <b>${f2((B * 180) / Math.PI)}°</b>, C = <b>${f2((C * 180) / Math.PI)}°</b></span>`;
+    if (showArea) {
+      html += `<span class="jsx-trace-chip">½ bc sin A = <b>${f3(0.5 * b * c * Math.sin(A))}</b></span>` +
+        `<span class="jsx-trace-chip">½ ac sin B = <b>${f3(0.5 * a * c * Math.sin(B))}</b></span>` +
+        `<span class="jsx-trace-chip">½ ab sin C = <b>${f3(0.5 * a * b * Math.sin(C))}</b></span>`;
+    }
+    if (showRatios) {
+      html += `<span class="jsx-trace-chip">sin A / a = <b>${f3(Math.sin(A) / a)}</b></span>` +
+        `<span class="jsx-trace-chip">sin B / b = <b>${f3(Math.sin(B) / b)}</b></span>` +
+        `<span class="jsx-trace-chip">sin C / c = <b>${f3(Math.sin(C) / c)}</b></span>`;
+    }
+    readout.innerHTML = html;
+  }
+  const refresh = () => { updateReadout(); board.update(); };
+  // the board is created while its step is hidden (zero width): re-fit once it has a real size
+  const bb0 = [xlo, ymid + h / 2, xhi, ymid - h / 2];
+  new ResizeObserver(() => {
+    if (host.clientWidth > 0) { board.resizeContainer(host.clientWidth, host.clientHeight, true); board.setBoundingBox(bb0, true); board.update(); }
+  }).observe(host);
+  [PA, PB, PC].forEach((P) => P.on('drag', refresh));
+  if (drag) {
+    container.append(controls);
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = 'Reset';
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => { PA.moveTo([0, 0]); PC.moveTo([b0, 0]); PB.moveTo(Bpos); refresh(); });
+    const hint = document.createElement('span');
+    hint.className = 'muted small';
+    hint.textContent = 'Drag any vertex.';
+    controls.append(b, hint);
+  }
+  refresh();
+}
+
+// <jsx-ambiguous angle="65" opp="22.5" adj="18.2" adj-label="a"> (or <jsx-case name angle opp adj adj-label> children)
+//
+// The ambiguous case (SSA). Angle B at the origin, one side along the positive x-axis, and the given adjacent
+// side (`adj`, named `adj-label` = a or c) running up along the other ray to a vertex P. The side opposite B
+// (`opp`, = b) is a segment from P that must land back on the x-axis: a circle of radius `opp` about P.
+// Each hit on the positive x-axis is a triangle (blue, orange); a hit behind B is not (grey). Sliders change
+// `opp` and the angle live, so 0 / 1 / 2 triangles are watched happening. The readout gives the law-of-sines
+// value sin(angle at the x-axis vertex) = adj sin B / opp, flagged when it exceeds 1.
+function renderJsxAmbiguous(el) {
+  const TAG = 'jsx-ambiguous';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const cases = lineCases(el);
+  const rad = (d) => (d * Math.PI) / 180;
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const orange = '#c2740c';
+  const grey = '#9aa0a6';
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const switchBar = document.createElement('div');
+  switchBar.className = 'jsx-transform-controls';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--ambiguous';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  if (cases.length > 1) container.append(switchBar);
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const st = { B: 65, opp: 22.5, adj: 18.2, L: 'a' };
+  let board = null;
+  let oppS; let angS;
+
+  function build(c) {
+    st.B = parseFloat(c.get('angle')); st.opp = parseFloat(c.get('opp')); st.adj = parseFloat(c.get('adj'));
+    st.L = c.get('adj-label') || 'a';
+    const Pn = st.L === 'a' ? 'C' : 'A'; const Qn = st.L === 'a' ? 'A' : 'C';
+    const Ls = st.L === 'a' ? 'c' : 'a';
+    if (board) JXG.JSXGraph.freeBoard(board);
+    const E = Math.max(st.adj, st.opp);
+    const xlo = -0.7 * E; const xhi = 1.95 * E;
+    const w = xhi - xlo; const hh = w / 1.8;
+    const ylo = -0.3 * E;
+    board = JXG.JSXGraph.initBoard(host.id, {
+      boundingbox: [xlo, ylo + hh, xhi, ylo],
+      axis: false, showNavigation: false, showCopyright: false, keepaspectratio: true,
+      pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+    });
+    const bd = board;
+    const P = () => [st.adj * Math.cos(rad(st.B)), st.adj * Math.sin(rad(st.B))];
+    const xs = () => {
+      const p = P(); const d2 = st.opp * st.opp - p[1] * p[1];
+      if (d2 < -1e-9) return [];
+      const r = Math.sqrt(Math.max(0, d2));
+      return r < 1e-6 ? [p[0]] : [p[0] + r, p[0] - r];
+    };
+
+    const pt = (fx, fy, o) => bd.create('point', [fx, fy], { name: '', fixed: true, highlight: false, size: POINT_SIZE, strokeColor: '#fff', strokeWidth: POINT_STROKE, ...o });
+    const lab = (fx, fy, txt, color) => bd.create('text', [fx, fy, txt], {
+      fontSize: READOUT_VALUE_FONT, color, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:800',
+    });
+    const O = pt(() => 0, () => 0, { fillColor: ink });
+    const Pp = pt(() => P()[0], () => P()[1], { fillColor: ink });
+    const F = bd.create('point', [() => P()[0], () => 0], { visible: false, fixed: true, name: '' });
+    bd.create('segment', [[xlo, 0], [xhi, 0]], { strokeColor: ink, strokeWidth: 2, strokeOpacity: 0.4, fixed: true, highlight: false });
+    bd.create('segment', [O, Pp], { strokeColor: ink, strokeWidth: 4, fixed: true, highlight: false });
+    bd.create('segment', [Pp, F], { strokeColor: orange, strokeWidth: 3, dash: 2, fixed: true, highlight: false });
+    bd.create('circle', [Pp, () => st.opp], { strokeColor: grey, strokeWidth: 2, dash: 2, fillColor: 'none', fixed: true, highlight: false });
+    const R0 = bd.create('point', [() => 1, () => 0], { visible: false, fixed: true, name: '' });
+    bd.create('angle', [R0, O, Pp], { radius: 0.2 * E, strokeColor: accent, fillColor: accent, fillOpacity: 0.15, name: '', fixed: true, highlight: false });
+    lab(() => 0.3 * E * Math.cos(rad(st.B / 2)) + 0.05 * E, () => 0.3 * E * Math.sin(rad(st.B / 2)), () => `${Math.round(st.B)}°`, accent);
+    lab(() => -0.09 * E, () => -0.12 * E, 'B', ink);
+    lab(() => P()[0] - 0.09 * E, () => P()[1] + 0.1 * E, Pn, ink);
+    const side = () => (P()[0] >= 0 ? 1 : -1);
+    lab(() => P()[0] * 0.5 - side() * 0.1 * E, () => P()[1] * 0.5, st.L, negative);
+    lab(() => P()[0] + side() * 0.07 * E, () => P()[1] * 0.3, 'h', orange);
+
+    // one pair per possible landing point on the x-axis; a point behind B is drawn grey and dashed
+    const cols = [accent, orange];
+    const pieces = [0, 1].map((i) => {
+      const Q = pt(() => (xs()[i] === undefined ? NaN : xs()[i]), () => 0, {});
+      const seg = bd.create('segment', [Pp, Q], { strokeWidth: 5, fixed: true, highlight: false });
+      const tag = lab(() => (xs()[i] === undefined ? NaN : xs()[i]), () => -0.12 * E, '', ink);
+      return { Q, seg, tag };
+    });
+    bd.on('update', () => {
+      const v = xs(); const goodN = v.filter((x) => x > 1e-9).length;
+      pieces.forEach((pc, i) => {
+        const ok = v[i] !== undefined && v[i] > 1e-9;
+        const col = ok ? cols[i] : grey;
+        const has = v[i] !== undefined;
+        pc.Q.setAttribute({ fillColor: col, visible: has });
+        pc.seg.setAttribute({ visible: has });
+        pc.tag.setAttribute({ visible: has });
+        pc.seg.setAttribute({ strokeColor: col, dash: ok ? 0 : 2 });
+        pc.tag.setAttribute({ color: col });
+        pc.tag.setText(v[i] === undefined ? '' : (ok ? `${Qn}${goodN > 1 ? i + 1 : ''}` : 'behind B'));
+      });
+    });
+    return { Pn, Qn, Ls };
+  }
+
+  function stats() {
+    const p = [st.adj * Math.cos(rad(st.B)), st.adj * Math.sin(rad(st.B))];
+    const h = p[1];
+    const sinQ = (st.adj * Math.sin(rad(st.B))) / st.opp;
+    const d2 = st.opp * st.opp - h * h;
+    const xsv = d2 < 0 ? [] : (d2 < 1e-6 ? [p[0]] : [p[0] + Math.sqrt(d2), p[0] - Math.sqrt(d2)]);
+    const good = xsv.filter((x) => x > 1e-9);
+    return { h, sinQ, good, behind: xsv.length - good.length };
+  }
+
+  const f2 = (v) => fmtNum(Math.round(v * 100) / 100);
+  const f3 = (v) => fmtNum(Math.round(v * 1000) / 1000);
+  let info = null;
+  function refresh() {
+    const s = stats();
+    const Qn = info.Qn; const Pn = info.Pn;
+    const chips = [];
+    chips.push(`<span class="jsx-trace-chip">h = ${st.L} sin B = <b>${f2(s.h)}</b></span>`);
+    chips.push(`<span class="jsx-trace-chip">sin ${Qn} = ${st.L} sin B / b = <b>${f3(s.sinQ)}</b>${s.sinQ > 1 ? ' (more than 1: impossible)' : ''}</span>`);
+    const n = s.good.length;
+    chips.push(`<span class="jsx-trace-chip jsx-trace-main" style="color:${n === 0 ? negative : accent}">${n === 0 ? 'no triangle' : (n === 1 ? 'one triangle' : 'two triangles')}</span>`);
+    if (s.behind > 0 && n > 0) chips.push(`<span class="jsx-trace-chip is-undef">the other point is behind B, so it is not a triangle</span>`);
+    void Pn;
+    readout.innerHTML = chips.join('');
+    if (board) board.update();
+  }
+
+  function setCase(c) {
+    info = build(c);
+    if (oppS) { controls.innerHTML = ''; }
+    const E = Math.max(st.adj, st.opp);
+    angS = lineSlider('B', 10, 170, 1, st.B, (v) => { st.B = v; angS.val.textContent = `${v}°`; refresh(); }, controls);
+    angS.val.textContent = `${st.B}°`;
+    oppS = lineSlider('b', Math.round(0.1 * E), Math.round(2 * E * 10) / 10, 0.1, st.opp, (v) => { st.opp = v; oppS.val.textContent = f2(v); refresh(); }, controls);
+    oppS.val.textContent = f2(st.opp);
+    refresh();
+  }
+
+  const btns = cases.map((c, i) => lineMkBtn(c.name, () => {
+    btns.forEach((b, j) => b.classList.toggle('is-on', i === j));
+    setCase(c);
+  }, switchBar));
+  btns[0].classList.add('is-on');
+  setCase(cases[0]);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -5904,4 +6221,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-line-scalar').forEach(renderJsxLineScalar);
   document.querySelectorAll('jsx-line-vector').forEach(renderJsxLineVector);
   document.querySelectorAll('jsx-solve-trig').forEach(renderJsxSolveTrig);
+  document.querySelectorAll('jsx-sines-triangle').forEach(renderJsxSinesTriangle);
+  document.querySelectorAll('jsx-ambiguous').forEach(renderJsxAmbiguous);
 });

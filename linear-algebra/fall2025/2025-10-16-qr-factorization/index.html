@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Gram-Schmidt Process and QR Factorization</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,76 +30,227 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Gram-Schmidt</h1>
-  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Gram-Schmidt Process and QR Factorization</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-       <div class="step" data-step="1">
-         <div class="step-title">Definition 5.3.1</div>
-         <div class="step-subtitle">Orthogonal Transformations and orthogonal matrices</div>
-         <div class="step-body">
-           A linear transformation $T$ from $\mathbb{R}^n$ to $\mathbb{R}^n$ is called <em>orthogonal</em> if it preserves the length of vectors:<br>
-            $$\|T(\mathbf{x})\| = \|\mathbf{x}\|$$
-            If $T(\vec{x})=A\vec{x}$ is an orthogonal transformation, we say that A is an orthogonal matrix.
-         </div>
-       </div>
-       <div class="step" data-step="2">
-         <div class="step-title">Theorem 5.3.2</div>
-         <div class="step-subtitle">Orthogonal transformations preserve orthogonality</div>
-         <div class="step-body">
-           Consider an orthogonal transformation T from $$\mathbb{R}^n$$ to $$\mathbb{R}^n$$. If two vectors $$\vec{u}$$ and $$\vec{v}$$ in $$\mathbb{R}^n$$ are orthogonal, then their images $$T(\vec{u})$$ and $$T(\vec{v})$$ are also orthogonal.
-         </div>
-       </div>
-       <div class="step" data-step="3">
-         <div class="step-title">Theorem 5.3.3</div>
-         <div class="step-subtitle">Orthogonal transformations and orthonormal bases</div>
-         <div class="step-body">
-           a) A linear transformation T from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$ is orthogonal if (and only if) the vectors $T(e_1),T(e_2),\cdots,T(e_n)$ form an orthonormal basis of $\mathbb{R}^{n}$<br>
-           b) An $n\times n$ matrix A is orthogonal if (and only if) its columns form and orthonormal basis of $\mathbb{R}^{n}$
-         </div>
-       </div>
-       <div class="step" data-step="4">
-         <div class="step-title">Theorem 5.3.4</div>
-         <div class="step-subtitle">Products and Inverses of orthogonal matrices</div>
-         <div class="step-body">
-           Step body text here.
-         </div>
-       </div>
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        <!-- Section 5.2 (Bretscher), 11 steps for a 50 minute class:
+             1 plane + explorer (6) · 2 Example 1 (5) · 3 three dimensions (4) · 4 Theorem 5.2.1 (3) · 5 QR factorization (4) ·
+             6 Theorem 5.2.2 (4) · 7 Example 2 (5) · 8 Theorem 5.2.3 (3) · 9 Example 3 (6) · 10 Exercise 29 (5) · 11 Exercises 16, 32, 40 (5).
+             Example 3 and Exercises 16/40 are extra to the textbook's own examples; all answers checked numerically. -->
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">The Gram-Schmidt Process</div>
+          <div class="step-subtitle">Low-dimensional cases (Figures 1 to 3)</div>
+          <div class="step-body">
+<p>In Theorem 5.1.5, we gave a formula for the orthogonal projection onto a subspace \(V\) of \(\mathbb{R}^n\),</p>
+$$\text{proj}_V\vec x=(\vec u_1\cdot\vec x)\vec u_1+\cdots+(\vec u_m\cdot\vec x)\vec u_m,$$
+<p>where \(\vec u_1,\dots,\vec u_m\) is an orthonormal basis of \(V\). We now construct such a basis: an algorithm that converts any basis \(\vec v_1,\dots,\vec v_m\) of \(V\) into an orthonormal basis \(\vec u_1,\dots,\vec u_m\) of \(V\).</p>
+<table>
+  <tr><td>\(V\) is a line with basis \(\vec v_1\)</td><td><reveal>\(\vec u_1=\dfrac{1}{\|\vec v_1\|}\vec v_1\)</reveal></td></tr>
+  <tr><td>\(V\) is a plane with basis \(\vec v_1,\vec v_2\). Resolve \(\vec v_2\) relative to the line \(L\) spanned by \(\vec u_1\)</td><td><reveal>\(\vec v_2=\vec v_2^{\parallel}+\vec v_2^{\perp}\)</reveal></td></tr>
+  <tr><td>\(\vec v_2^{\perp}=\)</td><td><reveal>\(\vec v_2-\vec v_2^{\parallel}=\vec v_2-\text{proj}_L(\vec v_2)=\vec v_2-(\vec u_1\cdot\vec v_2)\vec u_1\)</reveal></td></tr>
+  <tr><td>\(\vec u_2=\)</td><td><reveal>\(\dfrac{1}{\|\vec v_2^{\perp}\|}\vec v_2^{\perp}\)</reveal></td></tr>
+</table>
+<gram-schmidt v1="3,1" v2="2,3" drag></gram-schmidt>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">An orthonormal basis of a plane in \(\mathbb{R}^4\), and the change of basis matrix</div>
+          <div class="step-body">
+<p><b>a.</b> Find an orthonormal basis \(\vec u_1,\vec u_2\) of the subspace \(V=\text{span}\left(\begin{bmatrix}1\\1\\1\\1\end{bmatrix},\begin{bmatrix}1\\9\\9\\1\end{bmatrix}\right)\) of \(\mathbb{R}^4\), with basis \(\vec v_1=\begin{bmatrix}1\\1\\1\\1\end{bmatrix}\), \(\vec v_2=\begin{bmatrix}1\\9\\9\\1\end{bmatrix}\).</p>
+<p><b>b.</b> Find the change of basis matrix \(R\) from the basis \(\mathfrak{B}=(\vec v_1,\vec v_2)\) to the basis \(\mathfrak{A}=(\vec u_1,\vec u_2)\) you constructed in part a.</p>
+<table>
+  <tr><td>a. \(\vec u_1=\dfrac{1}{\|\vec v_1\|}\vec v_1\)</td><td><reveal>\(\dfrac{1}{2}\begin{bmatrix}1\\1\\1\\1\end{bmatrix}=\begin{bmatrix}1/2\\1/2\\1/2\\1/2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(\vec v_2^{\perp}=\vec v_2-\vec v_2^{\parallel}=\vec v_2-(\vec u_1\cdot\vec v_2)\vec u_1\)</td><td><reveal>\(\begin{bmatrix}1\\9\\9\\1\end{bmatrix}-10\begin{bmatrix}1/2\\1/2\\1/2\\1/2\end{bmatrix}=\begin{bmatrix}-4\\4\\4\\-4\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(\vec u_2=\dfrac{1}{\|\vec v_2^{\perp}\|}\vec v_2^{\perp}\)</td><td><reveal>\(\dfrac{1}{8}\begin{bmatrix}-4\\4\\4\\-4\end{bmatrix}=\begin{bmatrix}-1/2\\1/2\\1/2\\-1/2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>b. The columns of \(R\) are the coordinate vectors of \(\vec v_1\) and \(\vec v_2\) with respect to \(\mathfrak{A}\)</td><td><reveal>\(\vec v_1=2\vec u_1\) and \(\vec v_2=10\vec u_1+8\vec u_2\), so \(R=\begin{bmatrix}2&10\\0&8\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(\begin{bmatrix}\vec v_1&\vec v_2\end{bmatrix}=\begin{bmatrix}\vec u_1&\vec u_2\end{bmatrix}R\)</td><td><reveal>\(\underbrace{\begin{bmatrix}1&1\\1&9\\1&9\\1&1\end{bmatrix}}_{M}=\underbrace{\begin{bmatrix}1/2&-1/2\\1/2&1/2\\1/2&1/2\\1/2&-1/2\end{bmatrix}}_{Q}\underbrace{\begin{bmatrix}2&10\\0&8\end{bmatrix}}_{R}\)</reveal></td></tr>
+</table>
+<p>In this context, it is customary to denote the matrices on the right-hand side by \(Q\) and \(R\). \(M\) (4 by 2) is written as the product of \(Q\) (4 by 2) with orthonormal columns and the upper triangular \(R\) (2 by 2) with positive entries on the diagonal. This is referred to as the <b>\(QR\) factorization</b> of \(M\).</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">Three Dimensions</div>
+          <div class="step-subtitle">Resolve \(\vec v_3\) relative to a plane (Figure 4)</div>
+          <div class="step-body">
+<p>How do we proceed for a three-dimensional subspace \(V\) of \(\mathbb{R}^n\) with basis \(\vec v_1,\vec v_2,\vec v_3\)? First find an orthonormal basis \(\vec u_1,\vec u_2\) of the plane \(E=\text{span}(\vec v_1,\vec v_2)\), as in Example 1. Next resolve \(\vec v_3\) into its components parallel and perpendicular to the plane \(E\).</p>
+<table>
+  <tr><td>\(\vec v_3=\)</td><td><reveal>\(\vec v_3^{\parallel}+\vec v_3^{\perp}\)</reveal></td></tr>
+  <tr><td>\(\vec v_3^{\perp}=\vec v_3-\vec v_3^{\parallel}=\vec v_3-\text{proj}_E(\vec v_3)=\)</td><td><reveal>\(\vec v_3-(\vec u_1\cdot\vec v_3)\vec u_1-(\vec u_2\cdot\vec v_3)\vec u_2\)</reveal></td></tr>
+  <tr><td>\(\vec u_3=\)</td><td><reveal>\(\dfrac{1}{\|\vec v_3^{\perp}\|}\vec v_3^{\perp}\)</reveal></td></tr>
+</table>
+<gram-schmidt v1="3,0,1" v2="0,3,1" v3="1,1,3"></gram-schmidt>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Theorem 5.2.1</div>
+          <div class="step-subtitle">The Gram-Schmidt process</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.2.1: The Gram-Schmidt process</div>
+<p>Consider a basis \(\vec v_1,\dots,\vec v_m\) of a subspace \(V\) of \(\mathbb{R}^n\). For \(j=2,\dots,m\), we resolve the vector \(\vec v_j\) into its components parallel and perpendicular to the span of the preceding vectors, \(\vec v_1,\dots,\vec v_{j-1}\):</p>
+$$\vec v_j=\vec v_j^{\parallel}+\vec v_j^{\perp},\qquad\text{with respect to }\text{span}(\vec v_1,\dots,\vec v_{j-1}).$$
+<p>Then</p>
+$$\vec u_1=\frac{1}{\|\vec v_1\|}\vec v_1,\quad \vec u_2=\frac{1}{\|\vec v_2^{\perp}\|}\vec v_2^{\perp},\ \dots,\ \vec u_j=\frac{1}{\|\vec v_j^{\perp}\|}\vec v_j^{\perp},\ \dots,\ \vec u_m=\frac{1}{\|\vec v_m^{\perp}\|}\vec v_m^{\perp}$$
+<p>is an orthonormal basis of \(V\). By Theorem 5.1.7, we have</p>
+$$\vec v_j^{\perp}=\vec v_j-\vec v_j^{\parallel}=\vec v_j-(\vec u_1\cdot\vec v_j)\vec u_1-\cdots-(\vec u_{j-1}\cdot\vec v_j)\vec u_{j-1}.$$
+</div>
+<p>Keep computing perpendicular components using the projection formula, and keep dividing vectors by their length.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">The QR Factorization</div>
+          <div class="step-subtitle">Change of basis from \(\mathfrak{B}\) to \(\mathfrak{A}\)</div>
+          <div class="step-body">
+<p>The Gram-Schmidt process represents a change of basis from the "old" basis \(\mathfrak{B}=(\vec v_1,\dots,\vec v_m)\) to a "new" orthonormal basis \(\mathfrak{A}=(\vec u_1,\dots,\vec u_m)\) of \(V\). It is most succinctly described by the change of basis matrix \(R\) from \(\mathfrak{B}\) to \(\mathfrak{A}\) (Theorem 4.3.4):</p>
+$$\underbrace{\begin{bmatrix}\vert&&\vert\\ \vec v_1&\cdots&\vec v_m\\ \vert&&\vert\end{bmatrix}}_{M}=\underbrace{\begin{bmatrix}\vert&&\vert\\ \vec u_1&\cdots&\vec u_m\\ \vert&&\vert\end{bmatrix}}_{Q}R$$
+<p>The preceding equation is called the \(QR\) factorization of \(M\). The relationship among \(M\), \(Q\) and \(R\), where \(\vec x\) is a vector in \(V\):</p>
+<div class="cd">
+<div class="cd-n"><reveal>\([\vec x]_{\mathfrak{A}}\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(Q\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n">\(\vec x\)</div>
+<div class="cd-v"><span class="cd-lab"><reveal>\(R\)</reveal></span><span class="cd-glyph">↑</span></div><div></div><div class="cd-v"><span class="cd-glyph">∥</span></div>
+<div class="cd-n"><reveal>\([\vec x]_{\mathfrak{B}}\)</reveal></div><div class="cd-h"><span class="cd-lab"><reveal>\(M\)</reveal></span><span class="cd-glyph">⟶</span></div><div class="cd-n">\(\vec x\)</div>
+</div>
+<p class="cd-caption">Click every blank.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Theorem 5.2.2</div>
+          <div class="step-subtitle">\(QR\) factorization</div>
+          <div class="step-body">
+<p>The \(j\)th column of \(R\) holds the coordinates of \(\vec v_j\) with respect to \(\mathfrak{A}\):</p>
+$$\vec v_j=\vec v_j^{\parallel}+\vec v_j^{\perp}=r_{1j}\vec u_1+\cdots+r_{ij}\vec u_i+\cdots+r_{j-1,j}\vec u_{j-1}+\|\vec v_j^{\perp}\|\,\vec u_j.$$
+<table>
+  <tr><td>\(r_{ij}=\) if \(i&lt;j\)</td><td><reveal>\(\vec u_i\cdot\vec v_j\)</reveal></td></tr>
+  <tr><td>\(r_{jj}=\)</td><td><reveal>\(\|\vec v_j^{\perp}\|\)</reveal></td></tr>
+  <tr><td>\(r_{ij}=\) if \(i>j\)</td><td><reveal>\(0\): \(R\) is upper triangular, and \(r_{11}=\|\vec v_1\|\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 5.2.2: QR factorization</div>
+<p>Consider an \(n\times m\) matrix \(M\) with linearly independent columns \(\vec v_1,\dots,\vec v_m\). Then there exists an \(n\times m\) matrix \(Q\) whose columns \(\vec u_1,\dots,\vec u_m\) are orthonormal and an upper triangular \(m\times m\) matrix \(R\) with positive diagonal entries such that</p>
+$$M=QR.$$
+<p>This representation is unique. Furthermore, \(r_{11}=\|\vec v_1\|\), \(r_{jj}=\|\vec v_j^{\perp}\|\) (for \(j=2,\dots,m\)), and \(r_{ij}=\vec u_i\cdot\vec v_j\) (for \(i&lt;j\)).</p>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">Find the \(QR\) factorization of \(M\)</div>
+          <div class="step-body">
+<p>Find the \(QR\) factorization of the matrix \(M=\begin{bmatrix}2&2\\1&7\\-2&-8\end{bmatrix}\), with \(\vec v_1=\begin{bmatrix}2\\1\\-2\end{bmatrix}\) and \(\vec v_2=\begin{bmatrix}2\\7\\-8\end{bmatrix}\).</p>
+<p>The factorization has the form \(M=\begin{bmatrix}\vec v_1&\vec v_2\end{bmatrix}=\underbrace{\begin{bmatrix}\vec u_1&\vec u_2\end{bmatrix}}_{Q}\underbrace{\begin{bmatrix}\|\vec v_1\|&\vec u_1\cdot\vec v_2\\0&\|\vec v_2^{\perp}\|\end{bmatrix}}_{R}\).</p>
+<gram-schmidt v1="2,1,-2" v2="2,7,-8" matrices></gram-schmidt>
+<table>
+  <tr><td>\(r_{11}=\|\vec v_1\|\), \(\vec u_1=\dfrac{1}{r_{11}}\vec v_1\)</td><td><reveal>\(r_{11}=3\), \(\vec u_1=\dfrac{1}{3}\begin{bmatrix}2\\1\\-2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(r_{12}=\vec u_1\cdot\vec v_2\), \(\vec v_2^{\perp}=\vec v_2-r_{12}\vec u_1\)</td><td><reveal>\(r_{12}=9\), \(\vec v_2^{\perp}=\begin{bmatrix}-4\\4\\-2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(r_{22}=\|\vec v_2^{\perp}\|\), \(\vec u_2=\dfrac{1}{r_{22}}\vec v_2^{\perp}\)</td><td><reveal>\(r_{22}=\sqrt{36}=6\), \(\vec u_2=\dfrac{1}{3}\begin{bmatrix}-2\\2\\-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(M=QR\)</td><td><reveal>\(\begin{bmatrix}2&2\\1&7\\-2&-8\end{bmatrix}=\left(\dfrac{1}{3}\begin{bmatrix}2&-2\\1&2\\-2&-1\end{bmatrix}\right)\begin{bmatrix}3&9\\0&6\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Theorem 5.2.3</div>
+          <div class="step-subtitle">\(QR\) factorization: the algorithm</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.2.3: QR factorization</div>
+<p>Consider an \(n\times m\) matrix \(M\) with linearly independent columns \(\vec v_1,\dots,\vec v_m\). Then the columns \(\vec u_1,\dots,\vec u_m\) of \(Q\) and the entries \(r_{ij}\) of \(R\) can be computed in the following order:</p>
+<p>first column of \(R\), first column of \(Q\); second column of \(R\), second column of \(Q\); third column of \(R\), third column of \(Q\); and so on. More specifically,</p>
+$$r_{11}=\|\vec v_1\|,\qquad \vec u_1=\frac{1}{r_{11}}\vec v_1;$$
+$$r_{12}=\vec u_1\cdot\vec v_2,\quad \vec v_2^{\perp}=\vec v_2-r_{12}\vec u_1,\quad r_{22}=\|\vec v_2^{\perp}\|,\quad \vec u_2=\frac{1}{r_{22}}\vec v_2^{\perp};$$
+$$r_{13}=\vec u_1\cdot\vec v_3,\quad r_{23}=\vec u_2\cdot\vec v_3,\quad \vec v_3^{\perp}=\vec v_3-r_{13}\vec u_1-r_{23}\vec u_2,\quad r_{33}=\|\vec v_3^{\perp}\|,\quad \vec u_3=\frac{1}{r_{33}}\vec v_3^{\perp};$$
+<p>and so on.</p>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">A \(3\times3\) matrix</div>
+          <div class="step-body">
+<p>Find the \(QR\) factorization of \(M=\begin{bmatrix}2&2&0\\1&7&0\\-2&-8&3\end{bmatrix}\). Its first two columns are those of Example 2.</p>
+<gram-schmidt v1="2,1,-2" v2="2,7,-8" v3="0,0,3" matrices></gram-schmidt>
+<table>
+  <tr><td>First column of \(R\) and \(Q\)</td><td><reveal>\(r_{11}=3\), \(\vec u_1=\dfrac{1}{3}\begin{bmatrix}2\\1\\-2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Second column</td><td><reveal>\(r_{12}=9\), \(r_{22}=6\), \(\vec u_2=\dfrac{1}{3}\begin{bmatrix}-2\\2\\-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(r_{13}=\vec u_1\cdot\vec v_3\), \(r_{23}=\vec u_2\cdot\vec v_3\)</td><td><reveal>\(r_{13}=-2\), \(r_{23}=-1\)</reveal></td></tr>
+  <tr><td>\(\vec v_3^{\perp}=\vec v_3-r_{13}\vec u_1-r_{23}\vec u_2\)</td><td><reveal>\(\begin{bmatrix}0\\0\\3\end{bmatrix}+\dfrac{2}{3}\begin{bmatrix}2\\1\\-2\end{bmatrix}+\dfrac{1}{3}\begin{bmatrix}-2\\2\\-1\end{bmatrix}=\dfrac{2}{3}\begin{bmatrix}1\\2\\2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(r_{33}=\|\vec v_3^{\perp}\|\), \(\vec u_3=\dfrac{1}{r_{33}}\vec v_3^{\perp}\)</td><td><reveal>\(r_{33}=2\), \(\vec u_3=\dfrac{1}{3}\begin{bmatrix}1\\2\\2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(M=QR\)</td><td><reveal>\(\begin{bmatrix}2&2&0\\1&7&0\\-2&-8&3\end{bmatrix}=\left(\dfrac{1}{3}\begin{bmatrix}2&-2&1\\1&2&2\\-2&-1&2\end{bmatrix}\right)\begin{bmatrix}3&9&-2\\0&6&-1\\0&0&2\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Exercise 29</div>
+          <div class="step-subtitle">Gram-Schmidt in \(\mathbb{R}^2\)</div>
+          <div class="step-body">
+<p>Perform the Gram-Schmidt process on the following basis of \(\mathbb{R}^2\): \(\vec v_1=\begin{bmatrix}-3\\4\end{bmatrix}\), \(\vec v_2=\begin{bmatrix}1\\7\end{bmatrix}\). Illustrate your work with sketches, as in Figures 1 through 3.</p>
+<gram-schmidt v1="-3,4" v2="1,7" drag matrices></gram-schmidt>
+<table>
+  <tr><td>\(\vec u_1\)</td><td><reveal>\(\dfrac{1}{5}\begin{bmatrix}-3\\4\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(r_{12}=\vec u_1\cdot\vec v_2\) and \(\vec v_2^{\perp}\)</td><td><reveal>\(r_{12}=5\), \(\vec v_2^{\perp}=\begin{bmatrix}4\\3\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(r_{22}\) and \(\vec u_2\)</td><td><reveal>\(r_{22}=5\), \(\vec u_2=\dfrac{1}{5}\begin{bmatrix}4\\3\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">Exercises 16, 32 and 40</div>
+          <div class="step-subtitle">Selected from Exercises 5.2</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>16.</b> Find the \(QR\) factorization of \(\begin{bmatrix}6&2\\3&-6\\2&3\end{bmatrix}\).</td><td><reveal>\(\vec v_1\cdot\vec v_2=12-18+6=0\), \(\|\vec v_1\|=\|\vec v_2\|=7\), so \(Q=\dfrac{1}{7}\begin{bmatrix}6&2\\3&-6\\2&3\end{bmatrix}\) and \(R=\begin{bmatrix}7&0\\0&7\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>32.</b> Find an orthonormal basis of the plane \(x_1+x_2+x_3=0\).</td><td><reveal>Basis \(\vec v_1=\begin{bmatrix}1\\-1\\0\end{bmatrix}\), \(\vec v_2=\begin{bmatrix}1\\0\\-1\end{bmatrix}\). \(\vec u_1=\dfrac{1}{\sqrt2}\begin{bmatrix}1\\-1\\0\end{bmatrix}\), \(r_{12}=\dfrac{1}{\sqrt2}\), \(\vec v_2^{\perp}=\dfrac12\begin{bmatrix}1\\1\\-2\end{bmatrix}\), \(\vec u_2=\dfrac{1}{\sqrt6}\begin{bmatrix}1\\1\\-2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>40.</b> An invertible \(n\times n\) matrix \(A\) has orthogonal (not necessarily orthonormal) columns. What does the \(QR\) factorization of \(A\) look like?</td><td><reveal>\(r_{ij}=\vec u_i\cdot\vec v_j=0\) for \(i&lt;j\): \(R\) is diagonal with \(r_{jj}=\|\vec v_j\|\), and \(Q\) is \(A\) with each column divided by its length</reveal></td></tr>
+</table>
+<gram-schmidt v1="1,-1,0" v2="1,0,-1"></gram-schmidt>
+
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
 </body>
+
 </html>

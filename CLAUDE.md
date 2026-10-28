@@ -889,3 +889,30 @@ as `<jsx-line-vector>`) put several equations behind buttons.
 
 Lesson: `trigonometry/2026/2026-10-26-lesson-19-solving-trigonometric-equations/index.html` (9 steps, hand-authored, no `content.json`; folder date is a guess, rename if needed).
 Verified in Chrome (circle, calc, degree and expression modes, no console errors).
+
+### `<gram-schmidt>` and the Linear Algebra 5.2 lesson (added 2026-10-27)
+
+`<gram-schmidt v1="3,1" v2="2,3" [v3="..."] drag matrices az el range>` (`js/gramschmidt.js`, imported by `boot.js`, no CDN tags; plain canvas, styles `.gs-*` in `css/steps.css`):
+vectors of 2 or 3 components (1 to 3 of them); Next/Back steps through the textbook's Figures 1 to 4: `u1 = v1/||v1||`, then for each later vector split into `v_j-parallel` (orange)
+and `v_j-perp` (red, right-angle mark, with the span of the earlier u's drawn as a line or plane patch), slide `v_j-perp` to the origin, divide by its length (`u_j`, blue). The readout
+chips give `r_ij`, `v_j-parallel`, `v_j-perp`, `u_j`; `matrices` shows `M = Q R` filling in entry by entry as stages reach it (`·` = not computed yet); `drag` (2D) lets the tips of
+the `v_j` be dragged (snaps to 0.5) so Q and R update live; 3D pictures drag to rotate. Dependent vectors show a red chip instead of failing.
+
+Lesson: `linear-algebra/fall2025/2025-10-16-qr-factorization/index.html` (Bretscher 5.2, PDF pages 230 to 236, 11 steps timed for 50 minutes in an HTML comment; replaced a stub that held 5.3 text).
+Hand-authored, no `content.json`. Boxed Theorems 5.2.1, 5.2.2, 5.2.3 in the book's wording (`.defbox`), Examples 1 and 2 from the book, Example 3 (3x3, continues Example 2) and
+Exercises 16, 29, 32, 40 added; answers checked numerically (numpy). The 5.2 commutative diagram uses the `.cd` grid with reveals.
+
+### `<jsx-sines-triangle>`, `<jsx-ambiguous>` and Trigonometry Lesson 20 (added 2026-10-28)
+
+Both in `js/jsxgraph.js` (need the JSXGraph CDN tags; `.jsx-board--sines`/`--ambiguous` in `css/steps.css`).
+
+- `<jsx-sines-triangle A B c drag altitude area ratios known="A=32.2°;B=52.4°;b=42 cm">`: a general triangle (the `<triangle type="scalene">` stub is still
+  unbuilt) with A at the origin and base b on the x-axis. `A`/`B` (degrees) and `c` only set the shape; `known` replaces letters with given values so unknowns stay letters.
+  `drag` makes all three vertices draggable; `altitude` draws h with a right-angle mark; `area`/`ratios` add live chips for the three area formulas / the three sin X / x ratios.
+  It re-fits itself with a `ResizeObserver` because its step is hidden (zero width) when the board is created.
+- `<jsx-ambiguous>` with `<jsx-case name angle opp adj adj-label="a|c">` children (SSA): angle B at the origin, adjacent side up the second ray, a dashed circle of
+  radius `opp` about its end; each hit on the positive x-axis is a triangle (blue/orange), a hit behind B is grey and not a triangle. Sliders change B and `opp` live; chips give
+  h, the law-of-sines value sin(A or C) (flagged above 1) and "no / one / two triangles".
+
+Lesson: `trigonometry/2026/2026-10-28-lesson-20-law-of-sines/index.html` (9 steps, hand-authored, no `content.json`, entry added to `lectures.json`). Workbook wording with reveal rows;
+Example 3 has a hand-drawn inline SVG of the bearings next to the triangle. All answers rechecked numerically (35.47 km/hr, 52.78 and 28.25 cm, 22.99 cm, 17.54 and 9.93 cm).

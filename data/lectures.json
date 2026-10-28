@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-10-28",
+    "title": "The Law of Sines",
+    "subtitle": "Lesson 20",
+    "description": "Area of a triangle from right triangle trigonometry, the Law of Sines as a consequence of the area formulas, a ship and lighthouse application, solving triangles from two angles and a side, and the ambiguous case (no triangle, one, or two) with a live explorer.",
+    "tags": [
+      "Law of Sines",
+      "Triangles",
+      "Ambiguous Case"
+    ],
+    "url": "trigonometry/2026/2026-10-28-lesson-20-law-of-sines/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-26",
     "title": "Solving Trigonometric Equations",
     "subtitle": "Lesson 19",
@@ -569,11 +583,13 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-03-19",
-    "title": "QR-Factorization",
-    "subtitle": "",
-    "description": "",
+    "title": "Gram-Schmidt Process and QR Factorization",
+    "subtitle": "Section 5.2",
+    "description": "Section 5.2: building an orthonormal basis from any basis (Gram-Schmidt, Theorem 5.2.1), the QR factorization M = QR with its theorems, and worked examples, with a staged plane/3D diagram that fills in Q and R as each vector is processed.",
     "tags": [
-      "qr factorization"
+      "qr factorization",
+      "gram-schmidt",
+      "orthonormal basis"
     ],
     "url": "linear-algebra/fall2025/2025-10-16-qr-factorization/index.html"
   },

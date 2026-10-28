@@ -621,4 +621,17 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-board--solve { aspect-ratio: 1.6 / 1; }
 .jsx-solve-grid.no-circle .jsx-board--solve { aspect-ratio: 2.1 / 1; }
 .jsx-board--solve-circle { aspect-ratio: 1 / 1; }
+/* <jsx-sines-triangle> and <jsx-ambiguous> (js/jsxgraph.js, Trigonometry Lesson 20): Law of Sines. */
+.jsx-board--sines { aspect-ratio: 1.8 / 1; }
+.jsx-board--ambiguous { aspect-ratio: 1.8 / 1; }
 @media (max-width: 800px) { .jsx-solve-grid { grid-template-columns: 1fr; } }
+
+/* <gram-schmidt> (js/gramschmidt.js, Linear Algebra 5.2): staged Gram-Schmidt picture and M = QR panel. */
+.gs-canvas { aspect-ratio: 1.8 / 1; }
+.gs-mats { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 0.8rem; font-size: 1.15rem; }
+.gs-mats .gs-eq { font-size: 1.6rem; }
+.gs-cap { text-align: center; font-weight: 700; color: var(--accent); }
+.gs-mat { border-collapse: separate; border-spacing: 0.7rem 0.15rem; border-left: 3px solid var(--ink); border-right: 3px solid var(--ink); border-radius: 6px; padding: 0.2rem 0; }
+.gs-mat td { min-width: 2.4rem; text-align: center; color: #b3b8c0; font-variant-numeric: tabular-nums; border: 0; padding: 0.1rem 0.2rem; }
+.gs-mat td.is-known { color: var(--ink); font-weight: 600; }
+.gs-mat td.gs-zero { color: var(--ink); }
