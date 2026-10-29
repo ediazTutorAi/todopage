@@ -571,11 +571,14 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-03-31",
-    "title": "Orthogonal Transformation",
-    "subtitle": "",
-    "description": "",
+    "title": "Orthogonal Transformations and Orthogonal Matrices",
+    "subtitle": "Section 5.3",
+    "description": "Section 5.3: orthogonal transformations and matrices (length preserved, orthonormal columns, A^T A = I), products and inverses, the transpose and its properties, and the matrix QQ^T of an orthogonal projection, with a draggable diagram showing ||T(x)|| and A^T A for rotations, reflections and non-orthogonal maps.",
     "tags": [
-      "orthogonal transformation"
+      "orthogonal transformation",
+      "orthogonal matrix",
+      "transpose",
+      "orthogonal projection"
     ],
     "url": "linear-algebra/fall2025/2025-10-21-orthogonal-transformations/index.html"
   },

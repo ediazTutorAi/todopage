@@ -550,6 +550,8 @@ reveal.triangle-overlay:not(.is-revealed) {
 .jsx-board--basis { aspect-ratio: 1.6 / 1; }
 /* <jsx-projection> (js/jsxgraph.js, Linear Algebra 5.1): projection onto a line. */
 .jsx-board--projection { aspect-ratio: 1.8 / 1; }
+/* <jsx-orthogonal> (js/jsxgraph.js, Linear Algebra 5.3): orthogonal transformations of the plane. */
+.jsx-board--ortho { aspect-ratio: 1.8 / 1; }
 /* <jsx-jacobian> (js/jsxgraph.js, Calculus III 5.7): two boards side by side, each 1.15:1. */
 .jsx-board--jacobian { aspect-ratio: 1.15 / 1; }
 /* <jsx-vector-field> (js/jsxgraph.js, Calculus III 6.1). */

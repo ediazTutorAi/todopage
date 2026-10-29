@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Orthogonal Transformations and Orthogonal Matrices</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-orthogonal>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,143 +34,244 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Orthogonal Transformations</h1>
-  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Orthogonal Transformations and Orthogonal Matrices</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-       <div class="step" data-step="1">
-         <div class="step-title">Definition 5.3.1</div>
-         <div class="step-subtitle">Orthogonal Transformations and orthogonal matrices</div>
-         <div class="step-body">
-           A linear transformation $T$ from $\mathbb{R}^n$ to $\mathbb{R}^n$ is called <em>orthogonal</em> if it preserves the length of vectors:<br>
-            $$\|T(\mathbf{x})\| = \|\mathbf{x}\|$$
-            If $T(\vec{x})=A\vec{x}$ is an orthogonal transformation, we say that A is an orthogonal matrix.
-         </div>
-       </div>
-       <div class="step" data-step="2">
-         <div class="step-title">Theorem 5.3.2</div>
-         <div class="step-subtitle">Orthogonal transformations preserve orthogonality</div>
-         <div class="step-body">
-           Consider an orthogonal transformation T from $\mathbb{R}^n$ to $\mathbb{R}^n$. If two vectors $\vec{u}$ and $\vec{v}$ in $\mathbb{R}^n$ are orthogonal, then their images $T(\vec{u})$ and $T(\vec{v})$ are also orthogonal.
-         </div>
-       </div>
-       <div class="step" data-step="3">
-         <div class="step-title">Theorem 5.3.3</div>
-         <div class="step-subtitle">Orthogonal transformations and orthonormal bases</div>
-         <div class="step-body">
-           a) A linear transformation T from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$ is orthogonal if (and only if) the vectors $T(e_1),T(e_2),\cdots,T(e_n)$ form an orthonormal basis of $\mathbb{R}^{n}$<br>
-           b) An $n\times n$ matrix A is orthogonal if (and only if) its columns form and orthonormal basis of $\mathbb{R}^{n}$
-         </div>
-       </div>
-       <div class="step" data-step="4">
-         <div class="step-title">Theorem 5.3.4</div>
-         <div class="step-subtitle">Products and Inverses of orthogonal matrices</div>
-         <div class="step-body">
-           a) The product AB of two orthogonal $n\times n$ matrices A and B is orthogonal<br>
-           b) The inverse $A^{-1}$ of an orthogonal $n\times n$ matrix A is orthogonal.
-         </div>
-       </div>
-       <div class="step" data-step="5">
-         <div class="step-title">The Transpose of a Matrix</div>
-         <div class="step-subtitle">The transpose of a matrix; symmetric and skew-symmetric matrices</div>
-         <div class="step-body">
-           Consider and $m\times n$ matrix A. The transpose $A^T$ of A is the $n \times m$ matrix whose ij-th entry is the ji-th entry of A: The roles of rows and columns are reversed.<br>
-           We say that a square matrix A is symmetric if $A^T=A$, and A is called skew-symmetric if $A^T=-A$
-         </div>
-       </div>
-       <div class="step" data-step="6">
-         <div class="step-title">Theorem 5.3.6</div>
-         <div class="step-subtitle"></div>
-         <div class="step-body">
-           If $\vec{v}$ and $\vec{w}$ are two (column) vectros inf $\mathbb{R}^{n}$, then 
-           $$\vec{v} \cdot \vec{w}=\vec{v}^T \vec{w}$$
-         </div>
-       </div>
-       <div class="step" data-step="7">
-         <div class="step-title">Theorem 5.3.7</div>
-         <div class="step-subtitle"></div>
-         <div class="step-body">
-           Consider an $n\times n$ matrix A. The matrix A is orthogonal if (and only if) $A^TA=I_n$ or, equivalently, if $A^{-1}=A^T$
-         </div>
-       </div>
-       <div class="step" data-step="8">
-         <div class="step-title">Summary 5.3.8</div>
-         <div class="step-subtitle">Orthogonal Matrices</div>
-         <div class="step-body">
-           Consider an $n\times n$ matrix A. Then the following statements are equivalent:
-           <ul>
-            <li> A is an orthogonal matrix</li>
-            <li>The transformation $L(\vec{x})=A \vec{x}$ preserve length; that is $|A \vec{x}|=|\vec{x}|$ for all $\vec{x}$ in $\mathbb{R}^{n}$</li>
-            <li>The columns of A form an orthonormal basis of $\mathbb{R}^{n}$</li>
-            <li>$A^TA=I_n$</li>
-            <li>A^{-1}=A^T</li>
-            <li>A preserves the dot product, meaning that $(A \vec{x})\cdot (A \vec{y})=\vec{x}\cdot \vec{y}$ for all $\vec{x}$ and $\vec{y}$ in $\mathbb{R}^{n}$</li>
-            </ul>
-         </div>
-       </div>
-       <div class="step" data-step="9">
-         <div class="step-title">Theorem 5.3.9</div>
-         <div class="step-subtitle">Properties of the transpose</div>
-         <div class="step-body">
-           <ul>
-            <li>$(A+B)^T=A^T+B^T$</li>
-            <li>$(kA)^T=kA^T$</li>
-            <li>$(AB)^T=B^TA^T$</li>
-            <li>$rank(A^T)=rank(A)$</li>
-            <li>$(A^T)^{-1}=(A^{-1})^T$</li>
-           </ul>
-         </div>
-       </div>
-       <div class="step" data-step="10">
-         <div class="step-title">Theorem 5.3.10</div>
-         <div class="step-subtitle">The matrix of an orthonormal projection</div>
-         <div class="step-body">
-           Consider a subspace V or $\mathbb{R}^{n}$ with orthonormal basis $\vec{u_1},\vec{u_2},\cdots,\vec{u_m}$. The matrix P of the orthogonal projection onto V is:
-           $$P=QQ^T$$
-           where
-           $$Q=\begin{bmatrix}
-            | &  & | \\
-            \vec{u_1} & \cdots & \vec{u_m} \\
-            | &  & | 
-           \end{bmatrix}$$
-           Pay attention to the order of the factors ($QQ^T$ as opposed to $Q^T Q$). Note that matrix P is symmetric, since $P^T=(Q^T)^T Q^T=Q Q^T=P$
-         </div>
-       </div>
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        <!-- Section 5.3 (Bretscher, PDF pages 237 to 245), 11 steps for a 50 minute class:
+             1 Definition 5.3.1 + explorer (6) · 2 Examples 1, 2 (4) · 3 Theorem 5.3.2 (4) · 4 Theorem 5.3.3 + Example 3 (6) ·
+             5 Theorem 5.3.4 (3) · 6 the transpose, Examples 4 to 6 (6) · 7 Theorems 5.3.6, 5.3.7 (5) · 8 Summary 5.3.8 (3) ·
+             9 Theorem 5.3.9 (3) · 10 Theorem 5.3.10 + Example 7 (5) · 11 Exercises (6).
+             The proofs of 5.3.2 and 5.3.9 are reveal rows; all answers checked numerically. -->
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Definition 5.3.1</div>
+          <div class="step-subtitle">Orthogonal transformations and orthogonal matrices</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition 5.3.1: Orthogonal transformations and orthogonal matrices</div>
+<p>A linear transformation \(T\) from \(\mathbb{R}^n\) to \(\mathbb{R}^n\) is called <em>orthogonal</em> if it preserves the length of vectors:</p>
+$$\|T(\vec x)\|=\|\vec x\|,\quad\text{for all }\vec x\text{ in }\mathbb{R}^n.$$
+<p>If \(T(\vec x)=A\vec x\) is an orthogonal transformation, we say that \(A\) is an <em>orthogonal matrix</em>.</p>
+</div>
+<jsx-orthogonal x="2,1" presets="Rotation 30°: 0.8660254,-0.5;0.5,0.8660254 | Reflection: 0.5,0.8660254;0.8660254,-0.5 | A = [4 -3; 3 4]: 4,-3;3,4 | Shear: 1,1;0,1"></jsx-orthogonal>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">Examples 1 and 2</div>
+          <div class="step-subtitle">Rotations and reflections</div>
+          <div class="step-body">
+<p><b>Example 1.</b> The rotation \(T(\vec x)=\begin{bmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{bmatrix}\vec x\) is an orthogonal transformation from \(\mathbb{R}^2\) to \(\mathbb{R}^2\), and \(A=\begin{bmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{bmatrix}\) is an orthogonal matrix, for all angles \(\theta\).</p>
+<p><b>Example 2.</b> Consider a subspace \(V\) of \(\mathbb{R}^n\). For a vector \(\vec x\) in \(\mathbb{R}^n\), the vector \(\text{ref}_V(\vec x)=\vec x^{\parallel}-\vec x^{\perp}\) is called the reflection of \(\vec x\) about \(V\). Compare this with Definition 2.2.2. Show that reflections are orthogonal transformations.</p>
+<table>
+  <tr><td>\(\|\text{ref}_V(\vec x)\|^2=\)</td><td><reveal>\(\|\vec x^{\parallel}-\vec x^{\perp}\|^2=\|\vec x^{\parallel}\|^2+\|-\vec x^{\perp}\|^2\) (Pythagorean theorem)</reveal></td></tr>
+  <tr><td>\(=\)</td><td><reveal>\(\|\vec x^{\parallel}\|^2+\|\vec x^{\perp}\|^2=\|\vec x\|^2\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">Theorem 5.3.2</div>
+          <div class="step-subtitle">Orthogonal transformations preserve orthogonality</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.3.2: Orthogonal transformations preserve orthogonality</div>
+<p>Consider an orthogonal transformation \(T\) from \(\mathbb{R}^n\) to \(\mathbb{R}^n\). If the vectors \(\vec v\) and \(\vec w\) in \(\mathbb{R}^n\) are orthogonal, then so are \(T(\vec v)\) and \(T(\vec w)\).</p>
+</div>
+<p><b>Proof.</b> By the theorem of Pythagoras, we have to show that \(\|T(\vec v)+T(\vec w)\|^2=\|T(\vec v)\|^2+\|T(\vec w)\|^2\).</p>
+<table>
+  <tr><td>\(\|T(\vec v)+T(\vec w)\|^2=\)</td><td><reveal>\(\|T(\vec v+\vec w)\|^2\) (\(T\) is linear)</reveal></td></tr>
+  <tr><td>\(=\)</td><td><reveal>\(\|\vec v+\vec w\|^2\) (\(T\) is orthogonal)</reveal></td></tr>
+  <tr><td>\(=\)</td><td><reveal>\(\|\vec v\|^2+\|\vec w\|^2\) (\(\vec v\) and \(\vec w\) are orthogonal)</reveal></td></tr>
+  <tr><td>\(=\)</td><td><reveal>\(\|T(\vec v)\|^2+\|T(\vec w)\|^2\) (\(T\) is orthogonal)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Theorem 5.3.3</div>
+          <div class="step-subtitle">Orthogonal transformations and orthonormal bases</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.3.3: Orthogonal transformations and orthonormal bases</div>
+<p><b>a.</b> A linear transformation \(T\) from \(\mathbb{R}^n\) to \(\mathbb{R}^n\) is orthogonal if (and only if) the vectors \(T(\vec e_1),T(\vec e_2),\dots,T(\vec e_n)\) form an orthonormal basis of \(\mathbb{R}^n\).</p>
+<p><b>b.</b> An \(n\times n\) matrix \(A\) is orthogonal if (and only if) its columns form an orthonormal basis of \(\mathbb{R}^n\).</p>
+</div>
+<p><b>Note:</b> A matrix with orthogonal columns need not be an orthogonal matrix. As an example, consider \(A=\begin{bmatrix}4&-3\\3&4\end{bmatrix}\).</p>
+<p><b>Example 3.</b> Show that the matrix \(A\) is orthogonal: \(A=\dfrac12\begin{bmatrix}1&-1&-1&-1\\1&-1&1&1\\1&1&-1&1\\1&1&1&-1\end{bmatrix}\).</p>
+<table>
+  <tr><td>Length of each column</td><td><reveal>\(\dfrac12\sqrt{1+1+1+1}=1\)</reveal></td></tr>
+  <tr><td>Dot product of two different columns, e.g. \(\vec v_1\cdot\vec v_2\)</td><td><reveal>\(\dfrac14(-1-1+1+1)=0\), and likewise for every other pair</reveal></td></tr>
+  <tr><td>Conclusion</td><td><reveal>The columns of \(A\) form an orthonormal basis of \(\mathbb{R}^4\), so \(A\) is orthogonal</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Theorem 5.3.4</div>
+          <div class="step-subtitle">Products and inverses of orthogonal matrices</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.3.4: Products and inverses of orthogonal matrices</div>
+<p><b>a.</b> The product \(AB\) of two orthogonal \(n\times n\) matrices \(A\) and \(B\) is orthogonal.</p>
+<p><b>b.</b> The inverse \(A^{-1}\) of an orthogonal \(n\times n\) matrix \(A\) is orthogonal.</p>
+</div>
+<table>
+  <tr><td><b>Proof of a.</b> \(\|AB\vec x\|=\)</td><td><reveal>\(\|B\vec x\|=\|\vec x\|\): \(T(\vec x)=AB\vec x\) preserves length</reveal></td></tr>
+  <tr><td><b>Proof of b.</b> \(\|A^{-1}\vec x\|=\)</td><td><reveal>\(\|A(A^{-1}\vec x)\|=\|\vec x\|\): \(T(\vec x)=A^{-1}\vec x\) preserves length</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">The Transpose of a Matrix</div>
+          <div class="step-subtitle">Example 4, Definition 5.3.5, Examples 5 and 6</div>
+          <div class="step-body">
+<p><b>Example 4.</b> Consider the orthogonal matrix \(A=\dfrac17\begin{bmatrix}2&6&3\\3&2&-6\\6&-3&2\end{bmatrix}\). Form another \(3\times3\) matrix \(B\) whose \(ij\)th entry is the \(ji\)th entry of \(A\): \(B=\dfrac17\begin{bmatrix}2&3&6\\6&2&-3\\3&-6&2\end{bmatrix}\). Note that the rows of \(B\) correspond to the columns of \(A\). Compute \(BA\), and explain the result.</p>
+<table>
+  <tr><td>\(BA=\)</td><td><reveal>\(\dfrac{1}{49}\begin{bmatrix}49&0&0\\0&49&0\\0&0&49\end{bmatrix}=I_3\)</reveal></td></tr>
+  <tr><td>Why? The \(ij\)th entry of \(BA\) is</td><td><reveal>the dot product of the \(i\)th column of \(A\) and the \(j\)th column of \(A\), which is 1 if \(i=j\) and 0 otherwise, since \(A\) is orthogonal</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Definition 5.3.5: The transpose of a matrix; symmetric and skew-symmetric matrices</div>
+<p>Consider an \(m\times n\) matrix \(A\). The <em>transpose</em> \(A^T\) of \(A\) is the \(n\times m\) matrix whose \(ij\)th entry is the \(ji\)th entry of \(A\): the roles of rows and columns are reversed.</p>
+<p>We say that a square matrix \(A\) is <em>symmetric</em> if \(A^T=A\), and \(A\) is called <em>skew-symmetric</em> if \(A^T=-A\).</p>
+</div>
+<table>
+  <tr><td><b>Example 5.</b> If \(A=\begin{bmatrix}1&2&3\\9&7&5\end{bmatrix}\), then \(A^T=\)</td><td><reveal>\(\begin{bmatrix}1&9\\2&7\\3&5\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>Example 6.</b> The symmetric \(2\times2\) matrices are those of the form</td><td><reveal>\(\begin{bmatrix}a&b\\b&c\end{bmatrix}\): a three-dimensional subspace of \(\mathbb{R}^{2\times2}\), with basis \(\begin{bmatrix}1&0\\0&0\end{bmatrix},\begin{bmatrix}0&1\\1&0\end{bmatrix},\begin{bmatrix}0&0\\0&1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>The skew-symmetric \(2\times2\) matrices are those of the form</td><td><reveal>\(\begin{bmatrix}0&b\\-b&0\end{bmatrix}\): a one-dimensional space with basis \(\begin{bmatrix}0&1\\-1&0\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Theorems 5.3.6 and 5.3.7</div>
+          <div class="step-subtitle">The dot product as a matrix product; the characterization \(A^TA=I_n\)</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.3.6</div>
+<p>If \(\vec v\) and \(\vec w\) are two (column) vectors in \(\mathbb{R}^n\), then</p>
+$$\underbrace{\vec v\cdot\vec w}_{\text{dot product}}=\underbrace{\vec v^{\,T}\vec w}_{\text{matrix product}}.$$
+</div>
+<p>For example, \(\begin{bmatrix}1\\2\\3\end{bmatrix}\cdot\begin{bmatrix}1\\-1\\1\end{bmatrix}=\begin{bmatrix}1&2&3\end{bmatrix}\begin{bmatrix}1\\-1\\1\end{bmatrix}=\) <reveal>\(2\)</reveal></p>
+<div class="defbox"><div class="defbox-label">Theorem 5.3.7</div>
+<p>Consider an \(n\times n\) matrix \(A\). The matrix \(A\) is orthogonal if (and only if) \(A^TA=I_n\) or, equivalently, if \(A^{-1}=A^T\).</p>
+</div>
+<p><b>Proof.</b> Write \(A\) in terms of its columns, \(A=\begin{bmatrix}\vec v_1&\vec v_2&\cdots&\vec v_n\end{bmatrix}\). Then</p>
+<table>
+  <tr><td>\(A^TA=\)</td><td><reveal>\(\begin{bmatrix}\vec v_1\cdot\vec v_1&\vec v_1\cdot\vec v_2&\cdots&\vec v_1\cdot\vec v_n\\ \vec v_2\cdot\vec v_1&\vec v_2\cdot\vec v_2&\cdots&\vec v_2\cdot\vec v_n\\ \vdots&\vdots&\ddots&\vdots\\ \vec v_n\cdot\vec v_1&\vec v_n\cdot\vec v_2&\cdots&\vec v_n\cdot\vec v_n\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>This product is \(I_n\) if and only if</td><td><reveal>the columns form an orthonormal basis (Theorem 5.3.3b), that is, \(A\) is orthogonal</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Summary 5.3.8</div>
+          <div class="step-subtitle">Orthogonal matrices</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Summary 5.3.8: Orthogonal matrices</div>
+<p>Consider an \(n\times n\) matrix \(A\). Then the following statements are equivalent:</p>
+<ol type="i">
+  <li>\(A\) is an orthogonal matrix.</li>
+  <li>The transformation \(L(\vec x)=A\vec x\) preserves length; that is, \(\|A\vec x\|=\|\vec x\|\) for all \(\vec x\) in \(\mathbb{R}^n\).</li>
+  <li>The columns of \(A\) form an orthonormal basis of \(\mathbb{R}^n\).</li>
+  <li>\(A^TA=I_n\).</li>
+  <li>\(A^{-1}=A^T\).</li>
+  <li>\(A\) preserves the dot product, meaning that \((A\vec x)\cdot(A\vec y)=\vec x\cdot\vec y\) for all \(\vec x\) and \(\vec y\) in \(\mathbb{R}^n\).</li>
+</ol>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Theorem 5.3.9</div>
+          <div class="step-subtitle">Properties of the transpose</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 5.3.9: Properties of the transpose</div>
+<table>
+  <tr><td><b>a.</b> \((A+B)^T=A^T+B^T\)</td><td>for all \(m\times n\) matrices \(A\) and \(B\)</td></tr>
+  <tr><td><b>b.</b> \((kA)^T=kA^T\)</td><td>for all \(m\times n\) matrices \(A\) and for all scalars \(k\)</td></tr>
+  <tr><td><b>c.</b> \((AB)^T=B^TA^T\)</td><td>for all \(m\times p\) matrices \(A\) and for all \(p\times n\) matrices \(B\)</td></tr>
+  <tr><td><b>d.</b> \(\text{rank}(A^T)=\text{rank}(A)\)</td><td>for all matrices \(A\)</td></tr>
+  <tr><td><b>e.</b> \((A^T)^{-1}=(A^{-1})^T\)</td><td>for all invertible \(n\times n\) matrices \(A\)</td></tr>
+</table>
+</div>
+<table>
+  <tr><td><b>Proof of c.</b> The \(ij\)th entry of \((AB)^T\) is the \(ji\)th entry of \(AB\), which is</td><td><reveal>\(\vec w_j\cdot\vec v_i\), where \(\vec w_j\) is the \(j\)th row of \(A\) and \(\vec v_i\) the \(i\)th column of \(B\)</reveal></td></tr>
+  <tr><td>The \(ij\)th entry of \(B^TA^T\) is</td><td><reveal>\(\vec v_i^{\,T}\cdot\vec w_j^{\,T}=\vec w_j\cdot\vec v_i\): the same</reveal></td></tr>
+  <tr><td><b>Proof of d.</b> \(\text{rank}(A^T)=\)</td><td><reveal>dim of the span of the columns of \(A^T\) = dim of the span of the rows of \(A\) = \(\text{rank}(A)\)</reveal></td></tr>
+  <tr><td><b>Proof of e.</b> Transpose \(AA^{-1}=I_n\):</td><td><reveal>\((AA^{-1})^T=(A^{-1})^TA^T=I_n\), so \(A^T\) is invertible and \((A^T)^{-1}=(A^{-1})^T\) (Theorem 2.4.8)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Theorem 5.3.10</div>
+          <div class="step-subtitle">The matrix of an orthogonal projection; Example 7</div>
+          <div class="step-body">
+<p>For a line \(L\) with unit vector \(\vec u_1\): \(\text{proj}_L\vec x=\vec u_1(\vec u_1\cdot\vec x)=\vec u_1\vec u_1^{\,T}\vec x=M\vec x\), where \(M=\vec u_1\vec u_1^{\,T}\). More generally, for a subspace \(V\) with orthonormal basis \(\vec u_1,\dots,\vec u_m\):</p>
+$$\text{proj}_V\vec x=\vec u_1\vec u_1^{\,T}\vec x+\cdots+\vec u_m\vec u_m^{\,T}\vec x=\left(\vec u_1\vec u_1^{\,T}+\cdots+\vec u_m\vec u_m^{\,T}\right)\vec x.$$
+<div class="defbox"><div class="defbox-label">Theorem 5.3.10: The matrix of an orthogonal projection</div>
+<p>Consider a subspace \(V\) of \(\mathbb{R}^n\) with orthonormal basis \(\vec u_1,\vec u_2,\dots,\vec u_m\). The matrix \(P\) of the orthogonal projection onto \(V\) is</p>
+$$P=QQ^T,\quad\text{where }Q=\begin{bmatrix}\vert&\vert&&\vert\\ \vec u_1&\vec u_2&\cdots&\vec u_m\\ \vert&\vert&&\vert\end{bmatrix}.$$
+<p>Pay attention to the order of the factors (\(QQ^T\) as opposed to \(Q^TQ\)). Note that the matrix \(P\) is symmetric, since \(P^T=(QQ^T)^T=(Q^T)^TQ^T=QQ^T=P\).</p>
+</div>
+<p><b>Example 7.</b> Find the matrix \(P\) of the orthogonal projection onto the subspace of \(\mathbb{R}^4\) spanned by \(\vec u_1=\dfrac12\begin{bmatrix}1\\1\\1\\1\end{bmatrix}\), \(\vec u_2=\dfrac12\begin{bmatrix}1\\-1\\-1\\1\end{bmatrix}\).</p>
+<table>
+  <tr><td>The vectors \(\vec u_1,\vec u_2\) are orthonormal, so \(P=QQ^T=\)</td><td><reveal>\(\dfrac14\begin{bmatrix}1&1\\1&-1\\1&-1\\1&1\end{bmatrix}\begin{bmatrix}1&1&1&1\\1&-1&-1&1\end{bmatrix}=\dfrac12\begin{bmatrix}1&0&0&1\\0&1&1&0\\0&1&1&0\\1&0&0&1\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">Exercises 5.3</div>
+          <div class="step-subtitle">Selected exercises</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>1 to 4.</b> Which of the matrices are orthogonal? (1) \(\begin{bmatrix}0.6&0.8\\0.8&0.6\end{bmatrix}\) (2) \(\begin{bmatrix}-0.8&0.6\\0.6&0.8\end{bmatrix}\) (3) \(\dfrac13\begin{bmatrix}2&-2&1\\1&2&2\\2&1&-2\end{bmatrix}\) (4) \(\dfrac17\begin{bmatrix}2&6&-3\\6&-3&2\\3&2&6\end{bmatrix}\)</td><td><reveal>(1) No: the columns have dot product \(0.96\). (2) Yes. (3) Yes: the columns are orthogonal unit vectors. (4) No: columns 1 and 3 have dot product \(24/49\)</reveal></td></tr>
+  <tr><td><b>5 to 11.</b> If the \(n\times n\) matrices \(A\) and \(B\) are orthogonal, which of these must be orthogonal as well? \(3A\), \(-B\), \(AB\), \(A+B\), \(B^{-1}\), \(B^{-1}AB\), \(A^T\)</td><td><reveal>\(-B\), \(AB\), \(B^{-1}\), \(B^{-1}AB\) and \(A^T\) are orthogonal. \(3A\) triples every length, and \(A+B\) fails in general (take \(B=-A\))</reveal></td></tr>
+  <tr><td><b>21 to 26.</b> If \(A\) and \(B\) are arbitrary \(n\times n\) matrices, which must be symmetric? \(A^TA\), \(BB^T\), \(A-A^T\), \(A^TBA\), \(A^TB^TBA\), \(B(A+A^T)B^T\)</td><td><reveal>\(A^TA\), \(BB^T\), \(A^TB^TBA\) and \(B(A+A^T)B^T\) are symmetric. \(A-A^T\) is skew-symmetric, and \((A^TBA)^T=A^TB^TA\) need not equal \(A^TBA\)</reveal></td></tr>
+  <tr><td><b>31.</b> Are the rows of an orthogonal matrix \(A\) necessarily orthonormal?</td><td><reveal>Yes: \(A^T\) is orthogonal by Theorem 5.3.4b and 5.3.7 (\(AA^T=I_n\) too), so its columns, the rows of \(A\), are orthonormal</reveal></td></tr>
+  <tr><td><b>33.</b> Find all orthogonal \(2\times2\) matrices.</td><td><reveal>The first column is a unit vector \(\begin{bmatrix}\cos\theta\\ \sin\theta\end{bmatrix}\), the second a unit vector perpendicular to it: \(\begin{bmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{bmatrix}\) (rotations) or \(\begin{bmatrix}\cos\theta&\sin\theta\\ \sin\theta&-\cos\theta\end{bmatrix}\) (reflections)</reveal></td></tr>
+  <tr><td><b>40.</b> Find the matrix of the orthogonal projection onto \(W=\text{span}\left(\begin{bmatrix}1\\1\\1\\1\end{bmatrix},\begin{bmatrix}1\\9\\-5\\3\end{bmatrix}\right)\).</td><td><reveal>\(\vec u_1=\frac12(1,1,1,1)\), \(\vec v_2^{\perp}=(-1,7,-7,1)\), \(\vec u_2=\frac1{10}(-1,7,-7,1)\), so \(P=QQ^T=\dfrac1{50}\begin{bmatrix}13&9&16&12\\9&37&-12&16\\16&-12&37&9\\12&16&9&13\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>41.</b> Find the matrix of the orthogonal projection onto the line in \(\mathbb{R}^n\) spanned by \(\begin{bmatrix}1\\1\\ \vdots\\1\end{bmatrix}\).</td><td><reveal>\(\vec u=\frac1{\sqrt n}(1,\dots,1)\), so \(P=\vec u\vec u^{\,T}\) has every entry equal to \(\dfrac1n\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
 </body>
+
 </html>

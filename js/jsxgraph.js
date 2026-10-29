@@ -6196,6 +6196,136 @@ function renderJsxAmbiguous(el) {
   setCase(cases[0]);
 }
 
+// <jsx-orthogonal matrix="0.866,-0.5;0.5,0.866" x="2,1" presets="Name: a,b;c,d | Name2: ...">
+//
+// Orthogonal transformations in the plane (Linear Algebra 5.3). T(x) = Ax for a 2x2 matrix. Draws the unit
+// square and its image, T(e1) (blue) and T(e2) (orange) as the columns of A, and a draggable x with T(x).
+// Readout: ||x|| vs ||T(x)||, the lengths of the columns, T(e1) . T(e2), and A^T A, flagged when A^T A = I
+// (Definition 5.3.1, Theorem 5.3.3, Theorem 5.3.7). `presets` puts matrices behind buttons (a rotation, a
+// reflection, a matrix with orthogonal but not unit columns, a shear). Equal axis scales.
+const ORTHO_ASPECT = 1.8;
+const ORTHO_ORANGE = '#c2740c';
+
+function renderJsxOrthogonal(el) {
+  const TAG = 'jsx-orthogonal';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  let A; let X0; const presets = [];
+  try {
+    A = parseMatrix(el.getAttribute('matrix') || '0.866,-0.5;0.5,0.866');
+    X0 = parseNumList(el.getAttribute('x') || '2,1');
+    (el.getAttribute('presets') || '').split('|').map((t) => t.trim()).filter(Boolean).forEach((t) => {
+      const i = t.indexOf(':');
+      presets.push({ name: t.slice(0, i).trim(), m: parseMatrix(t.slice(i + 1)) });
+    });
+  } catch (err) {
+    console.error(`<${TAG}>: could not parse an attribute`, err);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const xmin = num('xmin', -5);
+  const xmax = num('xmax', 5);
+  const ymid = (num('ymin', -2.5) + num('ymax', 2.5)) / 2;
+  const yhalf = (xmax - xmin) / ORTHO_ASPECT / 2;
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--ortho';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymid + yhalf, xmax, ymid - yhalf],
+    axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  const img = (x, y) => [A[0][0] * x + A[0][1] * y, A[1][0] * x + A[1][1] * y];
+  const O = board.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+  const px = board.create('point', [...X0], { name: '', size: POINT_SIZE + 2, fillColor: ink, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false });
+  const hid = (f) => board.create('point', [() => f()[0], () => f()[1]], { visible: false, fixed: true, name: '' });
+  const E1 = hid(() => [1, 0]);
+  const E2 = hid(() => [0, 1]);
+  const C = hid(() => [1, 1]);
+  const T1 = hid(() => img(1, 0));
+  const T2 = hid(() => img(0, 1));
+  const TC = hid(() => img(1, 1));
+  const Tx = hid(() => img(px.X(), px.Y()));
+
+  // unit square (dashed) and its image (parallelogram)
+  board.create('polygon', [O, E1, C, E2], { fillColor: ink, fillOpacity: 0.06, borders: { strokeColor: ink, strokeOpacity: 0.5, strokeWidth: 2, dash: 2 }, vertices: { visible: false }, highlight: false, fixed: true });
+  board.create('polygon', [O, T1, TC, T2], { fillColor: accent, fillOpacity: 0.12, borders: { strokeColor: accent, strokeWidth: 2 }, vertices: { visible: false }, highlight: false, fixed: true });
+  const arrow = (a, b, color, w) => board.create('arrow', [a, b], { strokeColor: color, strokeWidth: w, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  arrow(O, E1, ink, 3); arrow(O, E2, ink, 3);
+  arrow(O, T1, accent, 6); arrow(O, T2, ORTHO_ORANGE, 6);
+  arrow(O, px, ink, 5);
+  arrow(O, Tx, negative, 6);
+
+  const lab = (fn, txt, color) => board.create('text', [() => fn()[0], () => fn()[1], txt], { fontSize: READOUT_VALUE_FONT, color, fixed: true, cssStyle: 'font-weight:800' });
+  lab(() => [px.X() + 0.15, px.Y() + 0.25], 'x', ink);
+  lab(() => [Tx.X() + 0.15, Tx.Y() + 0.25], 'T(x)', negative);
+  lab(() => [T1.X() + 0.15, T1.Y() - 0.45], 'T(e₁)', accent);
+  lab(() => [T2.X() + 0.15, T2.Y() + 0.25], 'T(e₂)', ORTHO_ORANGE);
+
+  const f2 = (v) => fmtNum(Math.round(v * 100) / 100).replace('-', '−');
+  const near = (a, b) => Math.abs(a - b) < 0.006;
+  const mark = (good) => `<b style="color:${good ? '#2e8b57' : negative}">${good ? '✓' : '✗'}</b>`;
+  function updateReadout() {
+    const t1 = img(1, 0); const t2 = img(0, 1);
+    const lx = Math.hypot(px.X(), px.Y()); const lt = Math.hypot(Tx.X(), Tx.Y());
+    const n1 = Math.hypot(t1[0], t1[1]); const n2 = Math.hypot(t2[0], t2[1]);
+    const d = t1[0] * t2[0] + t1[1] * t2[1];
+    const isI = near(n1 * n1, 1) && near(n2 * n2, 1) && near(d, 0);
+    readout.innerHTML =
+      `<span class="jsx-trace-chip">‖x‖ = <b>${f2(lx)}</b></span>` +
+      `<span class="jsx-trace-chip" style="color:${negative}">‖T(x)‖ = <b>${f2(lt)}</b> ${mark(near(lx, lt))}</span>` +
+      `<span class="jsx-trace-chip" style="color:${accent}">‖T(e₁)‖ = <b>${f2(n1)}</b></span>` +
+      `<span class="jsx-trace-chip" style="color:${ORTHO_ORANGE}">‖T(e₂)‖ = <b>${f2(n2)}</b></span>` +
+      `<span class="jsx-trace-chip">T(e₁) · T(e₂) = <b>${f2(d)}</b></span>` +
+      `<span class="jsx-trace-chip jsx-trace-main">AᵀA = <span class="la-mat"><span>${f2(n1 * n1)}</span><span>${f2(d)}</span><span>${f2(d)}</span><span>${f2(n2 * n2)}</span></span> ${isI ? '= I₂' : '≠ I₂'} ${mark(isI)}</span>`;
+  }
+  function refresh() { updateReadout(); board.update(); }
+  px.on('drag', refresh);
+
+  const mkBtn = (label, on) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn'; b.textContent = label;
+    b.addEventListener('pointerup', () => b.blur());
+    b.addEventListener('click', () => on(b));
+    controls.appendChild(b);
+    return b;
+  };
+  const btns = presets.map((p) => mkBtn(p.name, (b) => {
+    A = p.m;
+    btns.forEach((o) => o.classList.toggle('is-on', o === b));
+    refresh();
+  }));
+  if (btns.length) btns[0].classList.add('is-on');
+  mkBtn('Reset x', () => { px.moveTo(X0); refresh(); });
+  const hint = document.createElement('span');
+  hint.className = 'muted small';
+  hint.textContent = 'Drag x.';
+  controls.appendChild(hint);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -6213,6 +6343,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-poly-map').forEach(renderJsxPolyMap);
   document.querySelectorAll('jsx-angle-sum').forEach(renderJsxAngleSum);
   document.querySelectorAll('jsx-projection').forEach(renderJsxProjection);
+  document.querySelectorAll('jsx-orthogonal').forEach(renderJsxOrthogonal);
   document.querySelectorAll('jsx-jacobian').forEach(renderJsxJacobian);
   document.querySelectorAll('jsx-vector-field').forEach(renderJsxVectorField);
   document.querySelectorAll('jsx-inverse').forEach(renderJsxInverse);
