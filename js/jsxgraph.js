@@ -6079,7 +6079,7 @@ function renderJsxAmbiguous(el) {
 
   const st = { B: 65, opp: 22.5, adj: 18.2, L: 'a' };
   let board = null;
-  let oppS; let angS;
+  let oppS; let angS; let adjS;
 
   function build(c) {
     st.B = parseFloat(c.get('angle')); st.opp = parseFloat(c.get('opp')); st.adj = parseFloat(c.get('adj'));
@@ -6185,6 +6185,8 @@ function renderJsxAmbiguous(el) {
     angS.val.textContent = `${st.B}°`;
     oppS = lineSlider('b', Math.round(0.1 * E), Math.round(2 * E * 10) / 10, 0.1, st.opp, (v) => { st.opp = v; oppS.val.textContent = f2(v); refresh(); }, controls);
     oppS.val.textContent = f2(st.opp);
+    adjS = lineSlider(st.L, Math.round(0.1 * E), Math.round(1.6 * E * 10) / 10, 0.1, st.adj, (v) => { st.adj = v; adjS.val.textContent = f2(v); refresh(); }, controls);
+    adjS.val.textContent = f2(st.adj);
     refresh();
   }
 
