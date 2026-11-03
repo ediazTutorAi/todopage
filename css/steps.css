@@ -659,3 +659,9 @@ input.det-cell-input.is-bad { outline: 2px solid var(--negative, #c0392b); }
 .det-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
 .det-chip { font: inherit; font-size: 1.05rem; font-weight: 700; min-width: 3.2rem; padding: 0.15rem 0.6rem; border: 2px solid var(--line); border-radius: 999px; background: transparent; color: #9aa0a8; cursor: pointer; font-variant-numeric: tabular-nums; }
 .det-chip.is-current { border-color: var(--accent); background: #eaf3fb; }
+
+/* Figures of curves and regions (calculus3 conservative fields lesson, step 1). */
+.cr-figs { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem 1.4rem; margin: 0.6rem 0; }
+.cr-fig { margin: 0; text-align: center; flex: 0 1 200px; }
+.cr-fig svg { width: 100%; height: auto; display: block; }
+.cr-fig figcaption { font-size: 1.05rem; color: var(--muted, #555); margin-top: 0.1rem; }

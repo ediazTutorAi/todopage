@@ -6336,6 +6336,205 @@ function renderJsxOrthogonal(el) {
   refresh();
 }
 
+// <jsx-path-independence p="2*x" q="4*y" a="0,0" b="2,2" m1="1,0" m2="0,1" potential="x^2+2*y^2" hole="0,0" no-l>
+//   with optional <jsx-case name p q a b m1 m2 potential hole> children (attributes on the parent are fallbacks)
+//
+// Path independence (OpenStax 6.3). Two draggable endpoints A and B, and two draggable "through" points M1 and
+// M2 that bend two curves C1 and C2 from A to B (the circular arc through A, M, B; a straight segment when the
+// three are collinear). A third path C3 goes along x then along y (`no-l` hides it). The readout gives
+// the line integral of F along each path, computed numerically, the difference f(B) - f(A) when `potential` is
+// given, and a verdict: equal for every path = independent of path. Faint arrows show the direction of F.
+// `hole="x,y"` marks a point missing from the domain (a path that comes close to it is reported, not integrated).
+// The integrals along C1, C2, C3 are shown, plus the loop "C1 then C2 backwards" (circulation).
+const PATHIND_ASPECT = 1.6;
+const PATHIND_N = 1600;
+
+function renderJsxPathIndependence(el) {
+  const TAG = 'jsx-path-independence';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const pt = (txt, d) => (txt ? txt.split(',').map((t) => Number(new Function(`return (${t});`)())) : d);
+  const cases = lineCases(el).map((c, i) => {
+    const P = compileMath(['x', 'y'], powFix(c.get('p') || '0'), TAG, `case ${i} p`);
+    const Q = compileMath(['x', 'y'], powFix(c.get('q') || '0'), TAG, `case ${i} q`);
+    const pot = c.get('potential') ? compileMath(['x', 'y'], powFix(c.get('potential')), TAG, `case ${i} potential`) : null;
+    const A = pt(c.get('a'), [0, 0]); const B = pt(c.get('b'), [2, 2]);
+    const mid = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+    return {
+      name: c.name, P, Q, pot, A, B,
+      m1: pt(c.get('m1'), mid), m2: pt(c.get('m2'), [mid[0] - (B[1] - A[1]) / 3, mid[1] + (B[0] - A[0]) / 3]),
+      hole: c.get('hole') ? pt(c.get('hole')) : null,
+    };
+  }).filter((c) => c.P && c.Q);
+  if (!cases.length) return;
+
+  const xmin = num('xmin', -4); const xmax = num('xmax', 4);
+  const ymid = (num('ymin', -2.5) + num('ymax', 2.5)) / 2;
+  const yhalf = (xmax - xmin) / PATHIND_ASPECT / 2;
+  const noL = el.hasAttribute('no-l');
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--field';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+  const COL = [accent, LINE_ORANGE, LINE_GREEN];
+
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymid + yhalf, xmax, ymid - yhalf],
+    axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  let cur = cases[0];
+  const dragOpts = { showInfobox: false, name: '', size: POINT_SIZE + 2, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false };
+  const Apt = board.create('point', [...cases[0].A], { ...dragOpts, fillColor: ink });
+  const Bpt = board.create('point', [...cases[0].B], { ...dragOpts, fillColor: ink });
+  const M1 = board.create('point', [...cases[0].m1], { ...dragOpts, fillColor: COL[0] });
+  const M2 = board.create('point', [...cases[0].m2], { ...dragOpts, fillColor: COL[1] });
+  const lab = (fn, txt, color) => board.create('text', [() => fn()[0], () => fn()[1], txt], { fontSize: READOUT_VALUE_FONT, color, fixed: true, cssStyle: 'font-weight:800' });
+  lab(() => [Apt.X() - 0.3, Apt.Y() - 0.45], 'A', ink);
+  lab(() => [Bpt.X() + 0.15, Bpt.Y() + 0.25], 'B', ink);
+  lab(() => [M1.X() + 0.15, M1.Y() + 0.2], 'C₁', COL[0]);
+  lab(() => [M2.X() + 0.15, M2.Y() + 0.2], 'C₂', COL[1]);
+  const holePt = board.create('point', [() => (cur.hole ? cur.hole[0] : 0), () => (cur.hole ? cur.hole[1] : 0)], {
+    visible: false, fixed: true, name: '', size: 7, fillColor: '#fff', strokeColor: negative, strokeWidth: 3, highlight: false,
+  });
+
+  // a path is r(t), dr(t) for t in [0, 1]
+  const arcPath = (Mp) => {
+    const a = [Apt.X(), Apt.Y()]; const b = [Bpt.X(), Bpt.Y()]; const m = [Mp.X(), Mp.Y()];
+    const straight = { r: (t) => [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])], dr: () => [b[0] - a[0], b[1] - a[1]] };
+    const d = 2 * (a[0] * (m[1] - b[1]) + m[0] * (b[1] - a[1]) + b[0] * (a[1] - m[1]));
+    if (Math.abs(d) < 1e-9) return straight;
+    const a2 = a[0] ** 2 + a[1] ** 2; const m2 = m[0] ** 2 + m[1] ** 2; const b2 = b[0] ** 2 + b[1] ** 2;
+    const ox = (a2 * (m[1] - b[1]) + m2 * (b[1] - a[1]) + b2 * (a[1] - m[1])) / d;
+    const oy = (a2 * (b[0] - m[0]) + m2 * (a[0] - b[0]) + b2 * (m[0] - a[0])) / d;
+    const R = Math.hypot(a[0] - ox, a[1] - oy);
+    if (R > 60) return straight;
+    const TAU = 2 * Math.PI;
+    const wrap = (v) => ((v % TAU) + TAU) % TAU;
+    const tA = Math.atan2(a[1] - oy, a[0] - ox);
+    const ccw = wrap(Math.atan2(b[1] - oy, b[0] - ox) - tA);
+    const toM = wrap(Math.atan2(m[1] - oy, m[0] - ox) - tA);
+    const sweep = toM <= ccw ? ccw : ccw - TAU;
+    return {
+      r: (t) => [ox + R * Math.cos(tA + sweep * t), oy + R * Math.sin(tA + sweep * t)],
+      dr: (t) => [-R * sweep * Math.sin(tA + sweep * t), R * sweep * Math.cos(tA + sweep * t)],
+    };
+  };
+  const lPath = () => {
+    const a = [Apt.X(), Apt.Y()]; const b = [Bpt.X(), Bpt.Y()];
+    return {
+      r: (t) => (t < 0.5 ? [a[0] + 2 * t * (b[0] - a[0]), a[1]] : [b[0], a[1] + (2 * t - 1) * (b[1] - a[1])]),
+      dr: (t) => (t < 0.5 ? [2 * (b[0] - a[0]), 0] : [0, 2 * (b[1] - a[1])]),
+    };
+  };
+  const paths = [() => arcPath(M1), () => arcPath(M2)];
+  if (!noL) paths.push(lPath);
+
+  paths.forEach((mk, k) => {
+    board.create('curve', [(t) => mk().r(t)[0], (t) => mk().r(t)[1], 0, 1], {
+      strokeColor: COL[k], strokeWidth: 6, strokeOpacity: 0.9, highlight: false, fixed: true, lastArrow: { size: 9 }, dash: k === 2 ? 2 : 0,
+    });
+  });
+  // keep the draggable points above the curves
+  // snapping is switched on only after creation: on a hidden (zero-size) board it would move the start positions
+  [Apt, Bpt, M1, M2].forEach((q) => q.setAttribute({ layer: 9, snapToGrid: true, snapSizeX: 0.25, snapSizeY: 0.25 }));
+
+  let fieldArrows = [];
+  function drawField() {
+    fieldArrows.forEach((a) => board.removeObject(a));
+    fieldArrows = [];
+    for (let x = Math.ceil(xmin); x <= xmax; x++) {
+      for (let y = Math.ceil(ymid - yhalf); y <= ymid + yhalf; y++) {
+        if (cur.hole && Math.hypot(x - cur.hole[0], y - cur.hole[1]) < 0.3) continue;
+        const u = cur.P(x, y); const v = cur.Q(x, y); const n = Math.hypot(u, v);
+        if (!Number.isFinite(n) || n < 1e-9) continue;
+        fieldArrows.push(board.create('arrow', [[x, y], [x + 0.42 * u / n, y + 0.42 * v / n]], {
+          strokeColor: ink, strokeOpacity: 0.3, strokeWidth: 2.5, lastArrow: { size: 5 }, fixed: true, highlight: false, layer: 1,
+        }));
+      }
+    }
+  }
+
+  function integral(path) {
+    let sum = 0; let near = Infinity;
+    for (let i = 0; i < PATHIND_N; i++) {
+      const t = (i + 0.5) / PATHIND_N;
+      const r = path.r(t); const d = path.dr(t);
+      sum += cur.P(r[0], r[1]) * d[0] + cur.Q(r[0], r[1]) * d[1];
+      if (cur.hole) near = Math.min(near, Math.hypot(r[0] - cur.hole[0], r[1] - cur.hole[1]));
+    }
+    return { v: sum / PATHIND_N, bad: near < 0.12 };
+  }
+
+  const names = ['C₁', 'C₂', 'C₃'];
+  function updateReadout() {
+    const res = paths.map((mk) => integral(mk()));
+    let html = '';
+    res.forEach((r, k) => {
+      html += `<span class="jsx-trace-chip" style="color:${COL[k]}">∫<sub>${names[k]}</sub> F · dr = <b>${r.bad ? 'undefined (on the hole)' : lineFmt(r.v)}</b></span>`;
+    });
+    const ok = res.every((r) => !r.bad);
+    if (cur.pot) {
+      const d = cur.pot(Bpt.X(), Bpt.Y()) - cur.pot(Apt.X(), Apt.Y());
+      html += `<span class="jsx-trace-chip">f(B) − f(A) = <b>${lineFmt(d)}</b></span>`;
+    }
+    if (ok) {
+      const scale = Math.max(1, ...res.map((r) => Math.abs(r.v)));
+      const same = res.every((r) => Math.abs(r.v - res[0].v) < 2e-3 * scale);
+      html += `<span class="jsx-trace-chip jsx-trace-main ${same ? 'is-parallel' : 'is-undef'}">${same ? 'Same value on every path' : 'The value depends on the path'}</span>`;
+      html += `<span class="jsx-trace-chip">C₁ then C₂ backwards: <b>${lineFmt(res[0].v - res[1].v)}</b></span>`;
+    }
+    readout.innerHTML = html;
+  }
+  function refresh() { updateReadout(); board.update(); }
+  [Apt, Bpt, M1, M2].forEach((q) => q.on('drag', refresh));
+
+  // The first load skips moveTo: the step is hidden (zero width) when the board is built, and moveTo would
+  // snap the points on a board with no size. The points are already created at the first case's positions.
+  function load(c, first = false) {
+    cur = c;
+    holePt.setAttribute({ visible: !!c.hole });
+    if (!first) { Apt.moveTo(c.A); Bpt.moveTo(c.B); M1.moveTo(c.m1); M2.moveTo(c.m2); }
+    drawField();
+    refresh();
+  }
+  const btns = [];
+  if (cases.length > 1) {
+    cases.forEach((c) => btns.push(lineMkBtn(c.name, (b) => {
+      btns.forEach((o) => o.classList.toggle('is-on', o === b));
+      load(c);
+    }, controls)));
+    btns[0].classList.add('is-on');
+  }
+  lineMkBtn('Reset points', () => load(cur), controls);
+  const hint = document.createElement('span');
+  hint.className = 'muted small';
+  hint.textContent = 'Drag A, B and the paths.';
+  controls.appendChild(hint);
+  load(cur, true);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -6364,4 +6563,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-solve-trig').forEach(renderJsxSolveTrig);
   document.querySelectorAll('jsx-sines-triangle').forEach(renderJsxSinesTriangle);
   document.querySelectorAll('jsx-ambiguous').forEach(renderJsxAmbiguous);
+  document.querySelectorAll('jsx-path-independence').forEach(renderJsxPathIndependence);
 });

@@ -932,3 +932,15 @@ Both in `js/determinant.js` (imported by `boot.js`; plain DOM/SVG/canvas, no CDN
 Lesson: `linear-algebra/fall2025/2025-11-04-determinants/index.html` (Bretscher 6.1, PDF pages 277 to 287, 12 steps timed for 50 minutes in an HTML comment; replaced a stub that also held
 Section 6.2 headings, kept the folder and `lectures.json` entry; the old stub is in git history). Hand-authored, no `content.json`. Boxed definitions/theorems in the book's wording, Examples 1 to 12 and selected
 Exercises as reveal rows; all answers checked with sympy and by running every `<det-patterns>` to its final sum in Chrome (-3, 0, 11, -480, -144, 120, -252).
+
+### `<jsx-path-independence>` and the Calculus III 6.3 lesson (added 2026-11-03)
+
+`<jsx-path-independence p q potential a b m1 m2 hole no-l>` with optional `<jsx-case name p q potential a b m1 m2 hole>` children (`renderJsxPathIndependence` in `js/jsxgraph.js`,
+needs the JSXGraph CDN tags). Draggable endpoints A and B (snap 0.25) and two draggable through-points M1, M2 that bend paths C1, C2 (circular arc through A, M, B; a straight segment
+when collinear); C3 goes along x then along y (`no-l` hides it). Readout: the numerically computed line integral along each path, `f(B) - f(A)` when `potential` is given, "Same value on every
+path" / "The value depends on the path", and the loop "C1 then C2 backwards". `hole="x,y"` draws a missing point; a path within 0.12 of it reports undefined. Faint arrows show the direction of F.
+Snapping is switched on after the points are created and the first load skips `moveTo`: the step is hidden (zero width) when the board is built, and snapping then moved the start points.
+
+Lesson: `calculus3/fall2025/2025-11-05-conservative-fields/index.html` (OpenStax 6.3, 8 steps timed for 20 minutes in an HTML comment; replaced a 10-step plain-text stub, entry added to
+`lectures.json`, dated 2026-03-24). Hand-authored, no `content.json`. Book wording in `.defbox`, Examples 6.27 to 6.37 and Checkpoints as reveal rows, selected exercises (101, 102, 109, 126, 130, 131);
+attribution on the last slide. Whirlpool step reproduces the book's -pi and pi. All answers checked with sympy (12, e^4+e^3-1, -2, 23/4, 57/10, 136/15 vs 10, -10pi, -65535, 4, 0, -8pi).

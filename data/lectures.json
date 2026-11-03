@@ -239,6 +239,23 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-24",
+    "title": "Conservative Vector Fields",
+    "subtitle": "",
+    "description": "Conservative vector fields (OpenStax 6.3, a 20 minute class): the Fundamental Theorem for Line Integrals, path independence you can test by dragging the endpoints and the paths, finding potential functions, the cross-partial test, and the whirlpool field that shows why the domain must be simply connected.",
+    "tags": [
+      "conservative vector fields",
+      "fundamental theorem for line integrals",
+      "path independence",
+      "potential function",
+      "cross-partial test",
+      "simply connected"
+    ],
+    "url": "calculus3/fall2025/2025-11-05-conservative-fields/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",
