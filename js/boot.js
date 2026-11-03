@@ -8,6 +8,7 @@ import './riemann.js';
 import './solid.js';
 import './coord3d.js';
 import './gramschmidt.js';
+import './determinant.js';
 import './staged-svg.js';
 
 document.addEventListener('DOMContentLoaded', () => {

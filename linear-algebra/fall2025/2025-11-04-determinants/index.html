@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Introduction to Determinants</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-          onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -22,170 +31,240 @@
   <link rel="stylesheet" href="/todopage/css/ggb-float.css">
 
 </head>
+
 <body>
 
-<header class="site-header">
-  <h1>Determinants</h1>
-  <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
-</header>
+  <header class="site-header">
+    <h1>Introduction to Determinants</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
 
-<main class="container">
-  <section class="single-col">
-    <div class="card" id="left-card">
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
 
-      <!-- STEPS -->
-       <div class="step" data-step="1">
-         <div class="step-title">Definition 6.1.1</div>
-         <div class="step-subtitle">Determinant of a 3x3 matrix, in terms of the columns</div>
-         <div class="step-body">
-           If $A=[\vec{u} \vec{v} \vec{w}]$,then
-           $$detA=\vec{u}\cdot(\vec{v}\times\vec{w})$$
-           A $3\times 3$ matrix A is invertible if (and only if) $det(A)\neq 0$
-         </div>
-       </div>
-       <div class="step" data-step="2">
-         <div class="step-title">Theorem 6.1.2</div>
-         <div class="step-subtitle">Sarru's rule</div>
-         <div class="step-body">
-           To find the determinant of a $3\times 3$ matrix, extend the columns of the matrix and multiply accross the diagonals as show in class.
-         </div>
-       </div>
-       <div class="step" data-step="3">
-         <div class="step-title">Example</div>
-         <div class="step-subtitle"></div>
-         <div class="step-body">
-           For which of the values of the scalar $\lambda$ is the matrix
-           $$A=\begin{bmatrix}
-            \lambda & 1 & 1 \\
-            1 & \lambda & 1 \\
-            1 & 1 & \lambda 
-           \end{bmatrix}$$ invertible?
-         </div>
-       </div>
-       <div class="step" data-step="4">
-         <div class="step-title">Example</div>
-         <div class="step-subtitle"></div>
-         <div class="step-body">
-           For three column vectors $\vec{u},\vec{v},\vec{w}$ in $\mathbb{R}^3$, what is the relationship between the determinants of $A=[\vec{u}\vec{v}\vec{w}]$ and $B=[\vec{u}\vec{w}\vec{v}]$
-         </div>
-       </div>
-       <div class="step" data-step="5">
-         <div class="step-title">Example</div>
-         <div class="step-subtitle"></div>
-         <div class="step-body">
-           Is the determinant, linear? Is the determinant over a column or a row,linear?
-         </div>
-       </div>
-       <div class="step" data-step="6">
-         <div class="step-title">Definition 6.1.3</div>
-         <div class="step-subtitle">Patterns, inversions, and determinants</div>
-         <div class="step-body">
-           A patter in an nxn matrix A is a way to choose n entries of the matrix so that there is one chosen entry in each row and in each column of A<br>
-           With a pattern P we associate the product of all its entries, denoted prod P. <br>
-           Two entries in a pattern are said to be inverted if one of them is located to the right and above the other in the matrix<br>
-           The signature of a pattern P is defined as $sgn P=(-1)^\text{number of inversions in P}$<br>
-           The determinant of A is defined as<br>
-           $$det(A)=\sum (sgn P)(prod P)$$
-           where the sum is taken over all $n!$ patterns P in the matrix A. Thus, we are summing up the products associated with all patterns with an even number of inversions, and we are subtracting the products associated with the patterns with an odd number of inversions.
+        <!-- Section 6.1 (Bretscher, PDF pages 277 to 287), 12 steps for a 50 minute class:
+             1 from 2x2 (3) · 2 Definition 6.1.1 + det-3d (6) · 3 Sarrus + Example 1 (5) · 4 Examples 2, 3 (4) · 5 Example 4 swap (4) ·
+             6 linearity, Examples 5, 6 (4) · 7 patterns, n! (4) · 8 Definition 6.1.3, Example 7 (5) · 9 Examples 8, 9 (5) ·
+             10 Theorem 6.1.4, Example 10 (3) · 11 Theorem 6.1.5, Example 12 (4) · 12 Exercises (3).
+             Replaced a stub that also held Section 6.2 headings. Tags: <det-3d>, <det-patterns> (js/determinant.js). -->
 
-         </div>
-       </div>
-       <div class="step" data-step="7">
-         <div class="step-title">Theorem 6.1.4</div>
-         <div class="step-subtitle">Determinant of a triangular matrix</div>
-         <div class="step-body">
-           The determinant of an (upper or lower) triangular matrix is the product of the diagonal entries of the matrix<br>
-           In particular, the determinant of a diagonal matrix is the product of its diagonal entries.
-         </div>
-       </div>
-       <div class="step" data-step="8">
-         <div class="step-title">Theorem 6.2.1</div>
-         <div class="step-subtitle">Determinant of the Transpose</div>
-         <div class="step-body">
-           If A is a square matrix, then<br>
-           $$det(A^T)=det(A)$$
-         </div>
-       </div>
-       <div class="step" data-step="9">
-         <div class="step-title">Theorem 6.2.2</div>
-         <div class="step-subtitle">Linearity of the determinant in the rows and columns</div>
-         <div class="step-body">
-           Consider fixed row vectors $\vec{v_1},\cdots,\vec{v_{i-1}},\vec{v_{i+1}},\vec{v_n}$ with n components. Then the function:<br>
-           $$T(\vec{x})=$$ from $\mathbb{R}^{1\times n}$ to $\mathbb{R}$ is a linear transformation. This property is referred to as linearity of the determinant in the ith row. Likewise, the determinant is linear in all the columns.
-         </div>
-       </div>
-       <div class="step" data-step="10">
-         <div class="step-title">Theorem 6.2.3</div>
-         <div class="step-subtitle">Elementary row operations and determinants</div>
-         <div class="step-body">
-           a. If B is obtained from A by dividing a row of A by a scalar k, then $$det(B)=\frac{1}{k}det(A)$$
-           b. If B is obtained from A by a row swap,then 
-           $$det(B)=-det(A)$$
-           c. If B is obtained from A by adding a multiple of a row of A to another row, then
-           $$det(B)=det(A)$$
-         </div>
-         Analogous results hold for elementary column operations.
-       </div>
-       <div class="step" data-step="11">
-         <div class="step-title">Theorem 6.2.4</div>
-         <div class="step-subtitle">Invertibility and determinant</div>
-         <div class="step-body">
-           A square matrix A is invertible if and only if $det(A)\neq 0$
-         </div>
-       </div>
-       <div class="step" data-step="12">
-         <div class="step-title">Theorem 6.2.6</div>
-         <div class="step-subtitle">Determinants of products and powers</div>
-         <div class="step-body">
-           If A and B are nxn matrices and m is a positive integer, then<br>
-           a. $det(AB)=(detA)(detB)$, and<br>
-           b. $det(A^m)=(detA)^m$<br>
-           Interesting consequences are<br>
-           If matrix A is similar to matrix B then, what is the relationship between $det(A)$ and $det(B)$?<br>
-           If A is invertible, what is the relationship between $det(A)$ and $det(A^{-1})$?
-         </div>
-       </div>
-       <div class="step" data-step="13">
-         <div class="step-title">Minors and Laplace Expansion</div>
-         <div class="step-subtitle">Laplace Expansion of cofactor expansion</div>
-         <div class="step-body">
-           Step body text here.
-         </div>
-       </div>
-       <div class="step" data-step="14">
-         <div class="step-title">The determinant of a linear transformation</div>
-         <div class="step-subtitle">Theorem 6.2.11</div>
-         <div class="step-body">
-           The determinant of a linear transformation is...
-         </div>
-       </div>
-      <!-- Controls -->
-      <div class="reveal-controls" role="group" aria-label="Slide controls">
-        <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
-        <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
-        <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Introduction to Determinants</div>
+          <div class="step-subtitle">From 2 × 2 to larger matrices</div>
+          <div class="step-body">
+<p>In Chapter 2 we found a criterion for the invertibility of a \(2\times2\) matrix: the matrix \(A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\) is invertible if (and only if)</p>
+$$\det A=ad-bc\neq0,$$
+<p>by Theorem 2.4.9a.</p>
+<p>Can the concept of a determinant be generalized to square matrices of arbitrary size? Can we assign a number \(\det A\) to a square matrix \(A\), expressed in terms of the entries of \(A\), such that \(A\) is invertible if (and only if) \(\det A\neq0\)?</p>
+<table>
+  <tr><td>For \(A=\begin{bmatrix}3&5\\7&11\end{bmatrix}\), \(\det A=\)</td><td><reveal>\(3\cdot11-5\cdot7=-2\), so \(A\) is invertible (Exercise 3)</reveal></td></tr>
+  <tr><td>For \(A=\begin{bmatrix}2&3\\4&6\end{bmatrix}\), \(\det A=\)</td><td><reveal>\(12-12=0\), so \(A\) is not invertible: the columns are parallel</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">Definition 6.1.1</div>
+          <div class="step-subtitle">The determinant of a 3 × 3 matrix, in terms of the columns</div>
+          <div class="step-body">
+<p>Let \(A=\begin{bmatrix}a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\end{bmatrix}=\begin{bmatrix}\vert&\vert&\vert\\ \vec u&\vec v&\vec w\\ \vert&\vert&\vert\end{bmatrix}\). The matrix \(A\) fails to be invertible if the image of \(A\) isn't all of \(\mathbb{R}^3\), meaning that the three column vectors \(\vec u,\vec v,\vec w\) are contained in some plane \(V\). In this case, the cross product \(\vec v\times\vec w\), being perpendicular to \(V\), is perpendicular to the vector \(\vec u\), so that \(\vec u\cdot(\vec v\times\vec w)=0\). If \(A\) is invertible, on the other hand, then \(\vec v\times\vec w\) fails to be perpendicular to \(\vec u\), so that \(\vec u\cdot(\vec v\times\vec w)\neq0\).</p>
+<div class="defbox"><div class="defbox-label">Definition 6.1.1: Determinant of a 3 × 3 matrix, in terms of the columns</div>
+<p>If \(A=\begin{bmatrix}\vec u&\vec v&\vec w\end{bmatrix}\), then</p>
+$$\det A=\vec u\cdot(\vec v\times\vec w).$$
+<p>A \(3\times3\) matrix \(A\) is invertible if (and only if) \(\det A\neq0\).</p>
+</div>
+<det-3d u="2,0,0" v="0,2,0" w="1,1,2" box></det-3d>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">Theorem 6.1.2</div>
+          <div class="step-subtitle">Sarrus's rule</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.1.2: Sarrus's rule</div>
+<p>To find the determinant of a \(3\times3\) matrix \(A\), write the first two columns of \(A\) to the right of \(A\). Then multiply the entries along the six diagonals. Add or subtract these diagonal products:</p>
+$$\det A=a_{11}a_{22}a_{33}+a_{12}a_{23}a_{31}+a_{13}a_{21}a_{32}-a_{13}a_{22}a_{31}-a_{11}a_{23}a_{32}-a_{12}a_{21}a_{33}.$$
+</div>
+<p><b>Example 1.</b> Find the determinant of \(A=\begin{bmatrix}1&2&3\\4&5&6\\7&8&10\end{bmatrix}\).</p>
+<det-patterns matrix="1,2,3;4,5,6;7,8,10" sarrus all></det-patterns>
+<table>
+  <tr><td>\(\det A=\)</td><td><reveal>\(1\cdot5\cdot10+2\cdot6\cdot7+3\cdot4\cdot8-3\cdot5\cdot7-1\cdot6\cdot8-2\cdot4\cdot10=-3\). Matrix \(A\) is invertible</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Examples 2 and 3</div>
+          <div class="step-subtitle">Triangular matrices; for which \(\lambda\)?</div>
+          <div class="step-body">
+<p><b>Example 2.</b> Find the determinant of the upper triangular matrix \(A=\begin{bmatrix}a&b&c\\0&d&e\\0&0&f\end{bmatrix}\).</p>
+<table>
+  <tr><td>\(\det A=\)</td><td><reveal>\(adf\), since all other terms in Sarrus's formula are zero. A triangular \(3\times3\) matrix is invertible if (and only if) all its diagonal entries are nonzero</reveal></td></tr>
+</table>
+<p><b>Example 3.</b> For which values of the scalar \(\lambda\) (lambda) is the matrix \(A=\begin{bmatrix}\lambda&1&1\\1&\lambda&-1\\1&1&\lambda\end{bmatrix}\) invertible?</p>
+<table>
+  <tr><td>\(\det A=\)</td><td><reveal>\(\lambda^3-1+1+\lambda-\lambda-\lambda=\lambda^3-\lambda=\lambda(\lambda-1)(\lambda+1)\)</reveal></td></tr>
+  <tr><td>Invertible if</td><td><reveal>\(\lambda\) is any real number other than \(0\), \(1\) and \(-1\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Swapping two columns: the alternating property</div>
+          <div class="step-body">
+<p>For three column vectors \(\vec u,\vec v,\vec w\) in \(\mathbb{R}^3\), what is the relationship between the determinants of \(A=\begin{bmatrix}\vec u&\vec v&\vec w\end{bmatrix}\) and \(B=\begin{bmatrix}\vec u&\vec w&\vec v\end{bmatrix}\)? Note that matrix \(B\) is obtained by swapping the last two columns of \(A\).</p>
+<det-patterns matrix="1,2,3;4,5,6;7,8,10" sarrus swap all></det-patterns>
+<table>
+  <tr><td>\(\det B=\vec u\cdot(\vec w\times\vec v)=\)</td><td><reveal>\(-\vec u\cdot(\vec v\times\vec w)=-\det A\), since the cross product is anticommutative: \(\vec w\times\vec v=-(\vec v\times\vec w)\)</reveal></td></tr>
+</table>
+<p>It turns out that \(\det B=-\det A\) if \(B\) is obtained by swapping any two columns or any two rows of a \(3\times3\) matrix \(A\). This is referred to as the <em>alternating property</em> of the determinant on the columns and on the rows. The \(2\times2\) determinant is alternating as well (verify this!).</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Linearity Properties of the Determinant</div>
+          <div class="step-subtitle">Examples 5 and 6</div>
+          <div class="step-body">
+<p><b>Example 5.</b> Is the function \(F(A)=\det A\) from the linear space \(\mathbb{R}^{3\times3}\) to \(\mathbb{R}\) a linear transformation?</p>
+<table>
+  <tr><td>Test \(F(I_3+I_3)\) against \(F(I_3)+F(I_3)\)</td><td><reveal>No: \(F(I_3+I_3)=F(2I_3)=8\), while \(F(I_3)+F(I_3)=1+1=2\)</reveal></td></tr>
+</table>
+<p><b>Example 6.</b> Is the function \(T\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}=\det\begin{bmatrix}2&x_1&5\\3&x_2&6\\4&x_3&7\end{bmatrix}\) from \(\mathbb{R}^3\) to \(\mathbb{R}\) a linear transformation? Here we are placing the input variables in the second column, choosing arbitrary constants for all the other entries.</p>
+<table>
+  <tr><td>\(T\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}=\)</td><td><reveal>\((6\cdot4-3\cdot7)x_1+(2\cdot7-5\cdot4)x_2+(5\cdot3-2\cdot6)x_3=3x_1-6x_2+3x_3\), a linear combination of the input variables: \(T\) is linear</reveal></td></tr>
+</table>
+<p>We say that the \(3\times3\) determinant is <em>linear in the second column</em>. Likewise, the determinant is linear in the two other columns and in all three rows. For example, linearity in the third row means that \(L(\vec x)=\det\begin{bmatrix}-\vec v_1-\\-\vec v_2-\\-\vec x-\end{bmatrix}\) is linear on row vectors \(\vec x\) with three components, for any two fixed row vectors \(\vec v_1\) and \(\vec v_2\). That is, \(L(\vec x+\vec y)=L(\vec x)+L(\vec y)\) and \(L(k\vec x)=kL(\vec x)\).</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">The Determinant of an n × n Matrix</div>
+          <div class="step-subtitle">Patterns</div>
+          <div class="step-body">
+<p>A naive generalization of Sarrus's rule to \(4\times4\) matrices fails: for the <em>invertible</em> matrix \(A=\begin{bmatrix}1&0&0&0\\0&1&0&0\\0&0&0&1\\0&0&1&0\end{bmatrix}\), the expression given by this generalization of Sarrus's rule is 0.</p>
+<p>Each of the six terms in the formula for the \(3\times3\) determinant is a product of three factors involving exactly one entry from each row and each column of the matrix. We call such a choice of a number in each row and column of a square matrix a <em>pattern</em> in the matrix.</p>
+<table>
+  <tr><td>How many patterns are there in an \(n\times n\) matrix? (\(n\) choices in column 1, then \(n-1\) in column 2, ...)</td><td><reveal>\(n(n-1)(n-2)\cdots3\cdot2\cdot1=n!\)</reveal></td></tr>
+</table>
+<det-patterns matrix="1,2,3;4,5,6;7,8,9" all></det-patterns>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Definition 6.1.3</div>
+          <div class="step-subtitle">Patterns, inversions, and determinants</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition 6.1.3: Patterns, inversions, and determinants</div>
+<p>A <em>pattern</em> in an \(n\times n\) matrix \(A\) is a way to choose \(n\) entries of the matrix so that there is one chosen entry in each row and in each column of \(A\).</p>
+<p>With a pattern \(P\) we associate the product of all its entries, denoted \(\text{prod }P\). Two entries in a pattern are said to be <em>inverted</em> if one of them is located to the right and above the other in the matrix.</p>
+<p>The <em>signature</em> of a pattern \(P\) is defined as \(\text{sgn }P=(-1)^{(\text{number of inversions in }P)}\). The determinant of \(A\) is defined as</p>
+$$\det A=\sum(\text{sgn }P)(\text{prod }P),$$
+<p>where the sum is taken over all \(n!\) patterns \(P\) in the matrix \(A\). Thus, we are summing up the products associated with all patterns with an even number of inversions, and we are subtracting the products associated with the patterns with an odd number of inversions.</p>
+</div>
+<p><b>Example 7.</b> Apply Definition 6.1.3 to a \(2\times2\) matrix \(A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\) and verify that the result agrees with the formula given in Theorem 2.4.9a.</p>
+<det-patterns matrix="3,5;2,7" editable all></det-patterns>
+<table>
+  <tr><td>The two patterns, \((a,d)\) and \((b,c)\), have</td><td><reveal>No inversions and one inversion, so \(\det A=(-1)^0ad+(-1)^1bc=ad-bc\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Examples 8 and 9</div>
+          <div class="step-subtitle">Only one pattern contributes</div>
+          <div class="step-body">
+<p><b>Example 8.</b> Find \(\det A\) for the \(6\times6\) matrix with six nonzero entries. <b>Example 9.</b> Find \(\det A\) for the \(5\times5\) matrix below. In both, look for the patterns with a nonzero product.</p>
+<det-patterns matrix="0,2,0,0,0,0;0,0,0,8,0,0;0,0,0,0,0,2;3,0,0,0,0,0;0,0,0,0,5,0;0,0,1,0,0,0" presets="Example 8: 0,2,0,0,0,0;0,0,0,8,0,0;0,0,0,0,0,2;3,0,0,0,0,0;0,0,0,0,5,0;0,0,1,0,0,0 | Example 9: 6,0,1,0,0;9,3,2,3,7;8,0,3,2,9;0,0,4,0,0;5,0,5,0,1"></det-patterns>
+<table>
+  <tr><td>Example 8: the one nonzero pattern has 7 inversions, so \(\det A=\)</td><td><reveal>\((-1)^7\,2\cdot8\cdot2\cdot3\cdot5\cdot1=-480\)</reveal></td></tr>
+  <tr><td>Example 9: pick column by column (column 2 forces the 2nd row, column 4 the 3rd row, ...); 1 inversion, so \(\det A=\)</td><td><reveal>\((-1)^1\,6\cdot3\cdot2\cdot4\cdot1=-144\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Theorem 6.1.4</div>
+          <div class="step-subtitle">Determinant of a triangular matrix (Example 10)</div>
+          <div class="step-body">
+<p><b>Example 10.</b> Find \(\det A\) for the upper triangular matrix \(A=\begin{bmatrix}1&2&3&4&5\\0&2&3&4&5\\0&0&3&4&5\\0&0&0&4&5\\0&0&0&0&5\end{bmatrix}\).</p>
+<det-patterns matrix="1,2,3,4,5;0,2,3,4,5;0,0,3,4,5;0,0,0,4,5;0,0,0,0,5" nonzero></det-patterns>
+<table>
+  <tr><td>A nonzero pattern contains the first entry of column 1, the second of column 2, and so on, so \(\det A=\)</td><td><reveal>\((-1)^0\,1\cdot2\cdot3\cdot4\cdot5=5!=120\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.1.4: Determinant of a triangular matrix</div>
+<p>The determinant of an (upper or lower) triangular matrix is the product of the diagonal entries of the matrix. In particular, the determinant of a diagonal matrix is the product of its diagonal entries.</p>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">Theorem 6.1.5</div>
+          <div class="step-subtitle">The determinant of a block matrix (optional): Examples 11 and 12</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.1.5: Determinant of a block matrix</div>
+<p>If \(M=\begin{bmatrix}A&B\\0&C\end{bmatrix}\), where \(A\) and \(C\) are square matrices (not necessarily of the same size), then</p>
+$$\det\begin{bmatrix}A&B\\0&C\end{bmatrix}=(\det A)(\det C).$$
+<p>Likewise, \(\det\begin{bmatrix}A&0\\B&C\end{bmatrix}=(\det A)(\det C)\).</p>
+</div>
+<p>However, the formula \(\det\begin{bmatrix}A&B\\C&D\end{bmatrix}=(\det A)(\det D)-(\det B)(\det C)\) does not always hold. See Exercise 48.</p>
+<p><b>Example 12.</b> Find \(\det\begin{bmatrix}1&0&0&0&0&0\\2&7&0&0&0&0\\3&8&6&0&0&0\\4&9&5&2&1&4\\5&8&4&0&2&5\\6&7&3&0&3&6\end{bmatrix}\).</p>
+<det-patterns matrix="1,0,0,0,0,0;2,7,0,0,0,0;3,8,6,0,0,0;4,9,5,2,1,4;5,8,4,0,2,5;6,7,3,0,3,6" nonzero></det-patterns>
+<table>
+  <tr><td>Split into blocks \(\begin{bmatrix}A&0\\B&C\end{bmatrix}\): \(\det A=\)</td><td><reveal>\(\det\begin{bmatrix}1&0&0\\2&7&0\\3&8&6\end{bmatrix}=1\cdot7\cdot6=42\)</reveal></td></tr>
+  <tr><td>\(\det C=\)</td><td><reveal>\(\det\begin{bmatrix}2&1&4\\0&2&5\\0&3&6\end{bmatrix}=2\cdot2\cdot6-2\cdot5\cdot3=-6\)</reveal></td></tr>
+  <tr><td>\(\det M=\)</td><td><reveal>\((\det A)(\det C)=42\cdot(-6)=-252\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="12">
+          <div class="step-title">Exercises 6.1</div>
+          <div class="step-subtitle">Selected exercises</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>3, 6, 9.</b> Find the determinant, and decide whether the matrix is invertible: \(\begin{bmatrix}3&5\\7&11\end{bmatrix}\), \(\begin{bmatrix}6&0&0\\5&4&0\\3&2&1\end{bmatrix}\), \(\begin{bmatrix}0&1&2\\7&8&3\\6&5&4\end{bmatrix}\)</td><td><reveal>\(-2\) (invertible), \(24\) (invertible), \(-36\) (invertible)</reveal></td></tr>
+  <tr><td><b>7, 8.</b> \(\begin{bmatrix}1&1&1\\2&2&2\\3&3&3\end{bmatrix}\) and \(\begin{bmatrix}1&2&3\\1&1&1\\3&2&1\end{bmatrix}\)</td><td><reveal>Both have determinant \(0\): not invertible (dependent rows or columns)</reveal></td></tr>
+  <tr><td><b>13, 15, 17.</b> For which \(k\) is the matrix invertible? \(\begin{bmatrix}k&3&5\\0&2&6\\0&0&4\end{bmatrix}\), \(\begin{bmatrix}0&k&1\\2&3&4\\5&6&7\end{bmatrix}\), \(\begin{bmatrix}1&1&1\\1&k&-1\\1&k^2&1\end{bmatrix}\)</td><td><reveal>\(\det=8k\): \(k\neq0\). \(\det=6k-3\): \(k\neq\tfrac12\). \(\det=2(k-1)(k+1)\): \(k\neq\pm1\)</reveal></td></tr>
+  <tr><td><b>19, 21.</b> \(\begin{bmatrix}1&1&k\\1&k&k\\k&k&k\end{bmatrix}\) and \(\begin{bmatrix}k&1&1\\1&k&1\\1&1&k\end{bmatrix}\)</td><td><reveal>\(\det=-k(k-1)^2\): \(k\neq0,1\). \(\det=(k-1)^2(k+2)\): \(k\neq1,-2\)</reveal></td></tr>
+  <tr><td><b>23, 27, 29.</b> For which \(\lambda\) does \(A-\lambda I_n\) fail to be invertible? \(\begin{bmatrix}1&2\\0&4\end{bmatrix}\), \(\begin{bmatrix}2&0&0\\5&3&0\\7&6&4\end{bmatrix}\), \(\begin{bmatrix}3&5&6\\0&4&2\\0&2&7\end{bmatrix}\)</td><td><reveal>\(\lambda=1,4\). \(\lambda=2,3,4\). \(\det(A-\lambda I_3)=(3-\lambda)(\lambda^2-11\lambda+24)=(3-\lambda)(\lambda-3)(\lambda-8)\), so \(\lambda=3,8\)</reveal></td></tr>
+  <tr><td><b>31, 36, 39.</b> Find the determinant: the \(4\times4\) upper triangular matrix with diagonal \(1,2,3,4\) (and rows \(1\,9\,8\,7\), \(0\,2\,9\,6\), \(0\,0\,3\,5\), \(0\,0\,0\,4\)); the \(4\times4\) matrix with 1's on the other diagonal; the \(5\times5\) matrix with entries \(a_{15}=1,a_{23}=2,a_{32}=4,a_{44}=3,a_{51}=5\)</td><td><reveal>\(24\). \(1\) (6 inversions). \(120\) (\(1\cdot2\cdot4\cdot3\cdot5\) with an even number of inversions)</reveal></td></tr>
+  <tr><td><b>43, 44.</b> If \(A\) is an \(n\times n\) matrix and \(k\) a constant, what are \(\det(-A)\) and \(\det(kA)\)?</td><td><reveal>\(\det(kA)=k^n\det A\) (each pattern product gains \(n\) factors of \(k\)), so \(\det(-A)=(-1)^n\det A\)</reveal></td></tr>
+  <tr><td><b>53, 56.</b> \(\det\begin{bmatrix}0&I_n\\I_n&0\end{bmatrix}\); and \(\det M_n\) for the \(n\times n\) matrix with 1's on the other diagonal</td><td><reveal>\((-1)^n\), and \(\det M_n=(-1)^{n(n-1)/2}\): \(-1,-1,1,1,-1,-1\) for \(n=2,\dots,7\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
       </div>
     </div>
-  </section>
-</main>
-
-<!-- FLOATING GEO GEBRA WINDOW -->
-<div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
-  <div class="ggb-float-header" id="ggb-float-drag">
-    <span class="ggb-float-title">GeoGebra Applet</span>
-    <div class="ggb-actions">
-      <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
-      <button id="ggb-close" class="btn small" type="button">× Close</button>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
     </div>
   </div>
-  <div id="ggb-host" class="ggb-float-host">
-    <div class="ggb-placeholder muted small">Open an applet with ▶</div>
-  </div>
-</div>
-<div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
 
-<!-- JS entry (ES modules) -->
-<script type="module" src="/todopage/js/boot.js"></script>
 </body>
+
 </html>

@@ -916,3 +916,19 @@ Both in `js/jsxgraph.js` (need the JSXGraph CDN tags; `.jsx-board--sines`/`--amb
 
 Lesson: `trigonometry/2026/2026-10-28-lesson-20-law-of-sines/index.html` (9 steps, hand-authored, no `content.json`, entry added to `lectures.json`). Workbook wording with reveal rows;
 Example 3 has a hand-drawn inline SVG of the bearings next to the triangle. All answers rechecked numerically (35.47 km/hr, 52.78 and 28.25 cm, 22.99 cm, 17.54 and 9.93 cm).
+
+### `<det-patterns>`, `<det-3d>` and the Linear Algebra 6.1 lesson (added 2026-11-02)
+
+Both in `js/determinant.js` (imported by `boot.js`; plain DOM/SVG/canvas, no CDN tags; styles `.det-*` in `css/steps.css`).
+
+- `<det-patterns matrix="1,2,3;4,5,6;7,8,10" editable swap sarrus nonzero|all presets="Name: r1;r2;.. | ...">`: Definition 6.1.3 stepped through live on an n x n matrix (n up to 6).
+  The current pattern is circled, a line joins every inverted pair, and the readout shows prod P, inversions, sgn P, the term and a running sum; Next/Prev/Play/Show all, and the term chips
+  underneath are clickable and stay `?` until visited. Default lists all n! patterns for n <= 3 and only nonzero-product ones for n >= 4 (button toggles; `nonzero`/`all` force it), which
+  is what makes the 5x5/6x6 examples (one or two nonzero patterns) readable. `editable` makes entries typeable, `swap` adds swap-columns/rows buttons (alternating property), `sarrus` (3x3) adds a
+  Patterns / Sarrus switch (six diagonals of the extended matrix, down-right plus, up-right minus), `presets` puts matrices (any size) behind buttons.
+- `<det-3d u="2,0,0" v="0,2,0" w="1,1,2" box>`: Definition 6.1.1 / Figure 1. u, v, w, the plane span(u, v), v x w (drawn at a capped length, exact value in the readout), optional parallelepiped; pick a
+  vector and set components with sliders, "Put w in the plane" gives det 0 (plane turns red), "Swap v and w" flips the sign; drag to rotate.
+
+Lesson: `linear-algebra/fall2025/2025-11-04-determinants/index.html` (Bretscher 6.1, PDF pages 277 to 287, 12 steps timed for 50 minutes in an HTML comment; replaced a stub that also held
+Section 6.2 headings, kept the folder and `lectures.json` entry; the old stub is in git history). Hand-authored, no `content.json`. Boxed definitions/theorems in the book's wording, Examples 1 to 12 and selected
+Exercises as reveal rows; all answers checked with sympy and by running every `<det-patterns>` to its final sum in Chrome (-3, 0, 11, -480, -144, 120, -252).

@@ -559,11 +559,14 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-04-02",
-    "title": "determinants",
-    "subtitle": "",
-    "description": "",
+    "title": "Introduction to Determinants",
+    "subtitle": "Section 6.1",
+    "description": "Section 6.1: the 3x3 determinant as u.(v x w) with a rotatable picture of when the columns lie in a plane, Sarrus's rule, linearity and the alternating property, then patterns, inversions and signatures (Definition 6.1.3) stepped through live on any matrix, triangular and block matrices.",
     "tags": [
-      "determinants"
+      "determinants",
+      "sarrus",
+      "patterns",
+      "triangular matrices"
     ],
     "url": "linear-algebra/fall2025/2025-11-04-determinants/index.html"
   },

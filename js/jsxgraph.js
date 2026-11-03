@@ -5505,6 +5505,14 @@ function renderJsxLineVector(el) {
   const playBtn = lineMkBtn('Play', () => {
     if (st.raf) { stopPlay(); return; }
     if (st.frac >= 0.9995) st.frac = 0;
+    // The chips wrap onto a different number of lines as the numbers change width, which resizes the readout and
+    // shifts the boards below it every frame. Sample the whole path once and reserve the tallest readout.
+    const fStart = st.frac;
+    readout.style.minHeight = '';
+    let tall = 0;
+    for (let i = 0; i <= 40; i++) { st.frac = i / 40; refresh(); tall = Math.max(tall, readout.offsetHeight); }
+    readout.style.minHeight = `${tall}px`;
+    st.frac = fStart; refresh();
     playBtn.textContent = 'Pause';
     const t0 = performance.now(); const f0 = st.frac; const dur = 7000 * (1 - f0 + 0.05);
     const tick = (now) => {
