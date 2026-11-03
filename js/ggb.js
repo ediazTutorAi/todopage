@@ -49,7 +49,11 @@ export function loadGeoGebra(id) {
       showAlgebraInput: true,
       showResetIcon: true,
       appName: 'classic',
-      appletOnLoad: (api) => { ggbApi = api; },
+      appletOnLoad: (api) => {
+        ggbApi = api;
+        // keep the applet filling the panel however its size changes
+        if (window.ResizeObserver) new ResizeObserver(resizeGeoGebra).observe(host);
+      },
     }, true);
     applet.inject(container.id);
   }).catch(err => console.error('[ggb]', err));

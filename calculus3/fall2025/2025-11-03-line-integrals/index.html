@@ -47,7 +47,7 @@
       <div class="card" id="left-card">
 
         <!-- STEPS -->
-        <div class="step is-visible" data-step="1">
+        <div class="step is-visible" data-step="1" data-ggb-id="G9bvfb9g">
           <div class="step-title">Scalar Line Integrals</div>
           <div class="step-subtitle">Definition</div>
           <div class="step-body">
@@ -56,7 +56,6 @@
 $$\int_C f(x,y,z)\,ds=\lim_{n\to\infty}\sum_{i=1}^{n} f(P_i^*)\,\Delta s_i$$
 <p>if this limit exists, where \(\Delta s_i\) is the length of the \(i\)th piece of \(C\) and \(P_i^*\) is a point in it.</p>
 </div>
-<jsx-line-scalar x="cos(t)" y="sin(t)" tmin="0" tmax="pi" f="2" n="5"></jsx-line-scalar>
 <table>
   <tr><td>Example 6.14. \(\int_C 2\,ds\), where \(C\) is the upper half of the unit circle.</td><td><reveal>\(2\pi\)</reveal></td></tr>
 </table>
@@ -70,7 +69,6 @@ $$\int_C f(x,y,z)\,ds=\lim_{n\to\infty}\sum_{i=1}^{n} f(P_i^*)\,\Delta s_i$$
 <div class="defbox"><div class="defbox-label">Theorem 6.4: Scalar Line Integral Calculation</div>
 $$\int_C f(x,y,z)\,ds=\int_a^b f(\vec r(t))\sqrt{(x'(t))^2+(y'(t))^2+(z'(t))^2}\,dt,\qquad ds=\|\vec r^{\prime}(t)\|\,dt.$$
 </div>
-<jsx-line-scalar x="t" y="t^2" tmin="0" tmax="1" f="x*y" n="4" speeds="1 2 3"></jsx-line-scalar>
 <table>
   <tr><td>Checkpoint 6.13. \(\int_C(x+y)\,ds\), \(x=t\), \(y=t\), \(0\le t\le1\).</td><td><reveal>\(\sqrt2\)</reveal></td></tr>
   <tr><td>Example 6.15. \(\int_C(x^2+y^2+z)\,ds\), \(\vec r(t)=\langle\cos t,\sin t,t\rangle\), \(0\le t\le2\pi\).</td><td><reveal>\(\int_0^{2\pi}(1+t)\sqrt2\,dt=2\sqrt2\,\pi+2\sqrt2\,\pi^2\)</reveal></td></tr>
