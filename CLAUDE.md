@@ -944,3 +944,12 @@ Snapping is switched on after the points are created and the first load skips `m
 Lesson: `calculus3/fall2025/2025-11-05-conservative-fields/index.html` (OpenStax 6.3, 8 steps timed for 20 minutes in an HTML comment; replaced a 10-step plain-text stub, entry added to
 `lectures.json`, dated 2026-03-24). Hand-authored, no `content.json`. Book wording in `.defbox`, Examples 6.27 to 6.37 and Checkpoints as reveal rows, selected exercises (101, 102, 109, 126, 130, 131);
 attribution on the last slide. Whirlpool step reproduces the book's -pi and pi. All answers checked with sympy (12, e^4+e^3-1, -2, 23/4, 57/10, 136/15 vs 10, -10pi, -65535, 4, 0, -8pi).
+
+### `<jsx-cosines>` and Trigonometry Lesson 21 (added 2026-11-04)
+
+`<jsx-cosines mode="sas|sss" ...>` with optional `<jsx-case name ...>` children (`renderJsxCosines` in `js/jsxgraph.js`, needs the JSXGraph CDN tags; `.jsx-board--cosines` in `css/steps.css`).
+
+- `mode="sas"` (`vertex="A|B|C" angle p q derive`): the angle at `vertex` sits at the origin, `p` is the adjacent side along the x-axis, `q` the other; letters follow the vertex (vertex C gives `a`, `b`, opposite `c`). Sliders for the angle and both sides; chips show `b^2 + c^2`, `2bc cos A`, the opposite side squared and the side, and flag the 90 degree case (Pythagorean theorem). `derive` draws the altitude h and labels x and b - x (Example 1).
+- `mode="sss"` (`a b c`): base b, a dashed circle of radius c about A and of radius a about C; B is where they meet, so the triangle inequality is seen as the circles failing to meet. Sliders for a, b, c; chips for the three inequalities, the angles from the law of cosines (sum 180) and Heron's area.
+
+Lesson: `trigonometry/2026/2026-11-04-lesson-21-law-of-cosines/index.html` (8 steps, hand-authored, no `content.json`, entry added to `lectures.json`; folder date is a guess). Workbook wording with reveal rows; answers checked numerically (15.64, 42.89, 74.61, 7, 93.82/29.93/56.25, 7.48, 11.5 acres). The annotated PDF's a^2 for Example 2 reads 244.60..., the exact value is 244.61.

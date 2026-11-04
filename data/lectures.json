@@ -2,6 +2,20 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-11-04",
+    "title": "The Law of Cosines",
+    "subtitle": "Lesson 21",
+    "description": "Deriving the Law of Cosines from the Pythagorean theorem and right triangle trigonometry, solving triangles from two sides and the included angle or from three sides, the triangle inequality, and Heron's formula for area, with live triangle explorers.",
+    "tags": [
+      "Law of Cosines",
+      "Triangle Inequality",
+      "Heron's Formula"
+    ],
+    "url": "trigonometry/2026/2026-11-04-lesson-21-law-of-cosines/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-10-28",
     "title": "The Law of Sines",
     "subtitle": "Lesson 20",

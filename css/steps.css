@@ -627,6 +627,7 @@ reveal.triangle-overlay:not(.is-revealed) {
 /* <jsx-sines-triangle> and <jsx-ambiguous> (js/jsxgraph.js, Trigonometry Lesson 20): Law of Sines. */
 .jsx-board--sines { aspect-ratio: 1.8 / 1; }
 .jsx-board--ambiguous { aspect-ratio: 1.8 / 1; }
+.jsx-board--cosines { aspect-ratio: 1.8 / 1; }
 @media (max-width: 800px) { .jsx-solve-grid { grid-template-columns: 1fr; } }
 
 /* <gram-schmidt> (js/gramschmidt.js, Linear Algebra 5.2): staged Gram-Schmidt picture and M = QR panel. */

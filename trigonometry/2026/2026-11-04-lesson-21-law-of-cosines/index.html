@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>The Law of Cosines</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (triangle explorers use <jsx-cosines>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+<!-- Lesson 21 plan, 8 steps (instructor supplies the explanations; slides carry the workbook wording and live triangles):
+   1. Derivation (Example 1)         4. Example 3 (lighthouse)        7. Heron's Formula + Example 5
+   2. Theorem: Law of Cosines        5. Triangle Inequality           8. Example 6 (field)
+   3. Example 2                      6. Example 4 -->
+
+  <header class="site-header">
+    <h1>The Law of Cosines</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">The Law of Cosines</div>
+          <div class="step-subtitle">Derivation</div>
+          <div class="step-body">
+<p>The Law of Cosines can be developed by combining two familiar topics, the <b>Pythagorean theorem</b> and <b>right triangle trigonometry</b>.</p>
+<p><b>Example 1.</b> Complete each step outlined below to derive the rule for the Law of Cosines.</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>(a) (eqn. 1)</td><td>\(\cos(A) = \) <reveal>\(\dfrac{x}{c}\)</reveal></td></tr>
+  <tr><td>(eqn. 2)</td><td>\(h^2 = \) <reveal>\(c^2 - x^2\)</reveal></td></tr>
+  <tr><td>(eqn. 3)</td><td>\(a^2 = \) <reveal>\((b - x)^2 + h^2 = b^2 - 2bx + x^2 + h^2\)</reveal></td></tr>
+  <tr><td>(b) Substitute (eqn. 2) into (eqn. 3)</td><td><reveal>\(a^2 = b^2 - 2bx + x^2 + (c^2 - x^2) = b^2 - 2bx + c^2\)</reveal></td></tr>
+  <tr><td>(c) Solve (eqn. 1) for \(x\)</td><td><reveal>\(x = c\cos(A)\)</reveal></td></tr>
+  <tr><td>Substitute into (b)</td><td><reveal>\(a^2 = b^2 - 2b\,(c\cos(A)) + c^2 = b^2 + c^2 - 2bc\cos(A)\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-cosines mode="sas" angle="62.5" p="12" q="17" derive></jsx-cosines></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">Theorem: The Law of Cosines</div>
+          <div class="step-subtitle">Drag the angle</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">THEOREM: Law of Cosines</div>
+<p>For any triangle \(ABC\), with side measures \(a\), \(b\), and \(c\), we have the following relationships.</p>
+\[a^2 = b^2 + c^2 - 2bc\cos(A)\]
+\[b^2 = a^2 + c^2 - 2ac\cos(B)\]
+\[c^2 = a^2 + b^2 - 2ab\cos(C)\]</div>
+<jsx-cosines mode="sas" angle="62.5" p="12" q="17"></jsx-cosines>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Applying the Law of Cosines</div>
+          <div class="step-subtitle">Example 2</div>
+          <div class="step-body">
+<p><b>Example 2.</b> Solve the triangle \(ABC\) given \(A = 62.5^\circ\), \(b = 12\) cm, and \(c = 17\) cm.</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>We know</td><td><reveal>\(A = 62.5^\circ\), \(b = 12\), \(c = 17\)</reveal></td></tr>
+  <tr><td>We need</td><td><reveal>\(a\), \(B\), \(C\)</reveal></td></tr>
+  <tr><td>Find \(a\)</td><td><reveal>\(a^2 = b^2 + c^2 - 2bc\cos(A) = 12^2 + 17^2 - 2(12)(17)\cos(62.5^\circ) \approx 244.61\), \(a \approx 15.64\) cm</reveal></td></tr>
+  <tr><td>Find \(B\)</td><td><reveal>\(b^2 = a^2 + c^2 - 2ac\cos(B)\), \(\cos(B) = \dfrac{b^2 - a^2 - c^2}{-2ac} = \dfrac{12^2 - (15.6399)^2 - 17^2}{-2(15.6399)(17)} \approx 0.7327\), \(B = \cos^{-1}(0.7327) \approx 42.89^\circ\)</reveal></td></tr>
+  <tr><td>Find \(C\)</td><td><reveal>\(C = 180^\circ - 62.5^\circ - 42.89^\circ \approx 74.61^\circ\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-cosines mode="sas" angle="62.5" p="12" q="17"></jsx-cosines></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Two ships and a lighthouse</div>
+          <div class="step-body">
+<p><b>Example 3.</b> Two ships are anchored near a lighthouse. One is located 5 km from the lighthouse while the other is 3 km away. The lighthouse beacon shines its light on one ship and then the other exactly 20 seconds later. If the beacon rotates at a rate of one revolution per minute, how far apart are these two ships?</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>Rotation</td><td><reveal>\(\dfrac{360^\circ}{1\text{ min}}\), so in 20 seconds \(\theta = 120^\circ\)</reveal></td></tr>
+  <tr><td>We know</td><td><reveal>\(C = 120^\circ\) (the lighthouse), \(a = 5\), \(b = 3\)</reveal></td></tr>
+  <tr><td>We need</td><td><reveal>\(c\)</reveal></td></tr>
+  <tr><td>Law of Cosines</td><td><reveal>\(c^2 = a^2 + b^2 - 2ab\cos(C) = 5^2 + 3^2 - 2(5)(3)\cos(120^\circ) = 49\)</reveal></td></tr>
+  <tr><td>Answer</td><td><reveal>\(c = 7\): the ships are 7 km apart.</reveal></td></tr>
+</table>
+</div>
+<div><jsx-cosines mode="sas" vertex="C" angle="120" p="5" q="3"></jsx-cosines></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">The Triangle Inequality</div>
+          <div class="step-subtitle">Can a triangle be built from three side lengths?</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">THEOREM: The Triangle Inequality (for a Proper Triangle)</div>
+<p>In a proper triangle, the sum of the lengths of any two sides must be greater than the length of the third remaining side. That is, if \(a\), \(b\), and \(c\) are any three sides of a triangle, then \(a + b > c\).</p></div>
+<p>Drag the sliders. The triangle exists only where the two dashed circles meet.</p>
+<jsx-cosines mode="sss">
+  <jsx-case name="Example 4(a): 6, 3, 2" a="6" b="3" c="2"></jsx-case>
+  <jsx-case name="Example 4(b): 6, 3, 5" a="6" b="3" c="5"></jsx-case>
+</jsx-cosines>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Determine if constructing a triangle is possible with the given side measures. If so, solve the resulting triangle.</div>
+          <div class="step-body">
+<div class="jsx-fubini-grid">
+<div>
+<p><b>(a)</b> 6 in, 3 in, 2 in</p>
+<table>
+  <tr><td>\(6 + 3 > 2\)</td><td><reveal>true</reveal></td></tr>
+  <tr><td>\(6 + 2 > 3\)</td><td><reveal>true</reveal></td></tr>
+  <tr><td>\(2 + 3 > 6\)</td><td><reveal>false, so no such triangle exists</reveal></td></tr>
+</table>
+<p><b>(b)</b> 6 in, 3 in, 5 in</p>
+<table>
+  <tr><td>Inequalities</td><td><reveal>\(6 + 3 > 5\), \(6 + 5 > 3\), \(3 + 5 > 6\): a triangle is possible</reveal></td></tr>
+  <tr><td>\(\cos(A)\)</td><td><reveal>\(\dfrac{a^2 - b^2 - c^2}{-2bc} = \dfrac{6^2 - 3^2 - 5^2}{-2(3)(5)} = -\dfrac{1}{15}\), \(A = \cos^{-1}\left(-\dfrac{1}{15}\right) \approx 93.82^\circ\)</reveal></td></tr>
+  <tr><td>\(\cos(B)\)</td><td><reveal>\(\dfrac{b^2 - a^2 - c^2}{-2ac} = \dfrac{3^2 - 6^2 - 5^2}{-2(6)(5)} = \dfrac{13}{15}\), \(B = \cos^{-1}\left(\dfrac{13}{15}\right) \approx 29.93^\circ\)</reveal></td></tr>
+  <tr><td>\(\cos(C)\)</td><td><reveal>\(\dfrac{c^2 - a^2 - b^2}{-2ab} = \dfrac{5^2 - 6^2 - 3^2}{-2(6)(3)} = \dfrac{5}{9}\), \(C = \cos^{-1}\left(\dfrac{5}{9}\right) \approx 56.25^\circ\)</reveal></td></tr>
+  <tr><td>Check</td><td><reveal>\(93.82^\circ + 29.93^\circ + 56.25^\circ = 180^\circ\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-cosines mode="sss" a="6" b="3" c="5"></jsx-cosines></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">Heron's Formula for the Area of a Triangle</div>
+          <div class="step-subtitle">Example 5</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">THEOREM: Heron's Formula</div>
+<p>For any triangle \(ABC\), with side measures \(a\), \(b\), \(c\), and semiperimeter</p>
+\[s = \frac{1}{2}(a + b + c),\]
+<p>the area of the triangle is given by the following formula.</p>
+\[\text{Area} = \sqrt{s(s-a)(s-b)(s-c)}\]</div>
+<p><b>Example 5.</b> Revisit Example 4 and find the area of the resulting triangle.</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>We know</td><td><reveal>\(a = 6\) in, \(b = 3\) in, \(c = 5\) in</reveal></td></tr>
+  <tr><td>Semiperimeter</td><td><reveal>\(s = \dfrac{1}{2}(6 + 3 + 5) = 7\)</reveal></td></tr>
+  <tr><td>Area</td><td><reveal>\(\sqrt{7(7-6)(7-3)(7-5)} = \sqrt{7(1)(4)(2)} = \sqrt{56} \approx 7.48\) in\(^2\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-cosines mode="sss" a="6" b="3" c="5"></jsx-cosines></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">Example 6</div>
+          <div class="step-subtitle">A triangular field</div>
+          <div class="step-body">
+<p><b>Example 6.</b> A triangular-shaped field is bordered on two sides by a fence and on the third side by a relatively straight river. If the length along the river is 1257 ft and the fencing length is 1020 ft along one side and 1015 ft along the other, determine the acreage of the field. Round your answer to the nearest tenth of an acre (1 acre = 43,560 square feet).</p>
+<table>
+  <tr><td>We know</td><td><reveal>\(a = 1257\) ft, \(b = 1020\) ft, \(c = 1015\) ft</reveal></td></tr>
+  <tr><td>Semiperimeter</td><td><reveal>\(s = \dfrac{1}{2}(1257 + 1020 + 1015) = 1646\)</reveal></td></tr>
+  <tr><td>Area</td><td><reveal>\(\sqrt{1646(1646-1257)(1646-1020)(1646-1015)} = \sqrt{1646(389)(626)(631)} \approx 502{,}911.5\) ft\(^2\)</reveal></td></tr>
+  <tr><td>Acreage</td><td><reveal>\(\dfrac{502{,}911.5}{43{,}560} \approx 11.5\) acres</reveal></td></tr>
+</table>
+<jsx-cosines mode="sss" a="1257" b="1020" c="1015"></jsx-cosines>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

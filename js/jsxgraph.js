@@ -6206,6 +6206,222 @@ function renderJsxAmbiguous(el) {
   setCase(cases[0]);
 }
 
+// <jsx-cosines mode="sas" vertex="A" angle="62.5" p="12" q="17" derive> (or <jsx-case name angle p q> children)
+// <jsx-cosines mode="sss" a="6" b="3" c="5"> (or <jsx-case name a b c> children)
+//
+// The Law of Cosines lesson (Trigonometry 21). Both modes keep every length on screen live.
+// sas: the angle at `vertex` (A, B or C; default A) sits at the origin. `p` is the adjacent side along the x-axis
+//   (side b for vertex A), `q` the other adjacent side (c for vertex A). Sliders change the angle and both sides;
+//   the readout shows b^2 + c^2, the term 2bc cos A, a^2 and a (letters follow the vertex), and flags the
+//   right-angle case where the cosine term vanishes (the Pythagorean theorem). `derive` draws the altitude h and
+//   labels x and p - x, the construction used to prove the law (Example 1).
+// sss: base b from A to C, a circle of radius c about A and of radius a about C. B is where they meet, so when
+//   the circles miss (the triangle inequality fails) there is no triangle. Sliders change a, b, c; chips give the
+//   three inequality tests, the angles from the law of cosines (sum 180), and the area from Heron's formula.
+const COSINES_ASPECT = 1.8;
+
+function renderJsxCosines(el) {
+  const TAG = 'jsx-cosines';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const mode = (el.getAttribute('mode') || 'sas').toLowerCase();
+  if (mode !== 'sas' && mode !== 'sss') { console.error(`<${TAG}>: mode must be sas or sss, got "${mode}"`); return; }
+  const derive = el.hasAttribute('derive');
+  const cases = lineCases(el);
+  const rad = (d) => (d * Math.PI) / 180;
+  const deg = (r) => (r * 180) / Math.PI;
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const orange = '#c2740c';
+  const grey = '#9aa0a6';
+  const green = '#2e8b57';
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const switchBar = document.createElement('div');
+  switchBar.className = 'jsx-transform-controls';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--cosines';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  if (cases.length > 1) container.append(switchBar);
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const f2 = (v) => fmtNum(Math.round(v * 100) / 100).replace('-', '−');
+  const f3 = (v) => fmtNum(Math.round(v * 1000) / 1000).replace('-', '−');
+  const tick = (ok) => `<b style="color:${ok ? green : negative}">${ok ? '✓' : '✗'}</b>`;
+  const st = { angle: 60, p: 5, q: 4, a: 6, b: 3, c: 5 };
+  let board = null;
+  let info = {};
+
+  function lab(bd, fn, txt, color) {
+    return bd.create('text', [() => fn()[0], () => fn()[1], txt], {
+      fontSize: READOUT_VALUE_FONT, color, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:800',
+    });
+  }
+  function pt(bd, fx, fy, o) {
+    return bd.create('point', [fx, fy], { name: '', fixed: true, highlight: false, size: POINT_SIZE, strokeColor: '#fff', strokeWidth: POINT_STROKE, fillColor: ink, ...o });
+  }
+  function initBoard(xlo, xhi, ylo) {
+    if (board) JXG.JSXGraph.freeBoard(board);
+    const w = xhi - xlo; const h = w / COSINES_ASPECT;
+    board = JXG.JSXGraph.initBoard(host.id, {
+      boundingbox: [xlo, ylo + h, xhi, ylo],
+      axis: false, showNavigation: false, showCopyright: false, keepaspectratio: true,
+      pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+    });
+    return board;
+  }
+
+  // ---------- sas ----------
+  function buildSas(c) {
+    st.angle = parseFloat(c.get('angle') ?? 60); st.p = parseFloat(c.get('p') ?? 5); st.q = parseFloat(c.get('q') ?? 4);
+    const V = (c.get('vertex') || 'A').toUpperCase();
+    const L = ['A', 'B', 'C']; const i = L.indexOf(V);
+    const X = L[(i + 2) % 3]; const Y = L[(i + 1) % 3];
+    const lc = (s) => s.toLowerCase();
+    // base side runs V to X (named after Y), upper side V to Y (named after X), opposite side X to Y (named after V)
+    const nBase = lc(Y); const nUp = lc(X); const nOpp = lc(V);
+    const E = Math.max(st.p, st.q);
+    const bd = initBoard(-0.6 * E, 2.1 * E, -0.4 * E);
+    const rr = () => Math.max(0.12 * E, 0.3 * Math.min(st.p, st.q));
+    const Up = () => [st.q * Math.cos(rad(st.angle)), st.q * Math.sin(rad(st.angle))];
+    const O = pt(bd, () => 0, () => 0);
+    const PX = pt(bd, () => st.p, () => 0);
+    const PY = pt(bd, () => Up()[0], () => Up()[1]);
+    bd.create('polygon', [O, PX, PY], { fillColor: accent, fillOpacity: 0.08, vertices: { visible: false }, highlight: false, fixed: true, borders: { strokeColor: ink, strokeWidth: 4, highlight: false } });
+    const R0 = bd.create('point', [() => 1, () => 0], { visible: false, fixed: true, name: '' });
+    bd.create('angle', [R0, O, PY], { radius: () => rr(), strokeColor: accent, fillColor: accent, fillOpacity: 0.2, name: '', fixed: true, highlight: false });
+    lab(bd, () => [(rr() + 0.2 * E) * Math.cos(rad(st.angle / 2)), (rr() + 0.2 * E) * Math.sin(rad(st.angle / 2))], () => `${f2(st.angle)}°`, accent);
+    lab(bd, () => [-0.1 * E, -0.1 * E], V, ink);
+    lab(bd, () => [st.p + 0.1 * E, -0.08 * E], X, ink);
+    lab(bd, () => { const u = Up(); return [u[0] - 0.09 * E, u[1] + 0.1 * E]; }, Y, ink);
+    lab(bd, () => [st.p / 2, (derive ? -0.24 : -0.14) * E], () => `${nBase} = ${f2(st.p)}`, negative);
+    lab(bd, () => { const u = Up(); return [u[0] / 2 - 0.2 * E, u[1] / 2 + 0.05 * E]; }, () => `${nUp} = ${f2(st.q)}`, negative);
+    lab(bd, () => { const u = Up(); return [(u[0] + st.p) / 2 + 0.32 * E, (u[1]) / 2 + 0.05 * E]; }, () => `${nOpp} = ${f2(oppSide())}`, orange);
+    if (derive) {
+      const F = pt(bd, () => Up()[0], () => 0, { visible: false });
+      bd.create('segment', [PY, F], { strokeColor: orange, strokeWidth: 3, dash: 2, fixed: true, highlight: false });
+      lab(bd, () => [Up()[0] - 0.08 * E, Up()[1] / 2], 'h', orange);
+      lab(bd, () => [Up()[0] / 2, -0.09 * E], 'x', accent);
+      lab(bd, () => [(Up()[0] + st.p) / 2, -0.09 * E], () => `${nBase} − x`, accent);
+    }
+    return { V, nBase, nUp, nOpp };
+  }
+  const oppSide = () => Math.sqrt(Math.max(0, st.p * st.p + st.q * st.q - 2 * st.p * st.q * Math.cos(rad(st.angle))));
+
+  function refreshSas() {
+    const { V, nBase, nUp, nOpp } = info;
+    const t1 = st.p * st.p + st.q * st.q; const t2 = 2 * st.p * st.q * Math.cos(rad(st.angle));
+    const right = Math.abs(st.angle - 90) < 0.5;
+    const chips = [
+      `<span class="jsx-trace-chip">${nBase}² + ${nUp}² = <b>${f2(t1)}</b></span>`,
+      `<span class="jsx-trace-chip" style="color:${right ? green : negative}">2${nBase}${nUp} cos ${V} = <b>${right ? '0' : f2(t2)}</b></span>`,
+      `<span class="jsx-trace-chip jsx-trace-main">${nOpp}² = <b>${f2(t1 - t2)}</b>, ${nOpp} = <b>${f2(oppSide())}</b></span>`,
+    ];
+    if (right) chips.push(`<span class="jsx-trace-chip is-parallel">${V} = 90°: the cosine term vanishes, this is the Pythagorean theorem</span>`);
+    else chips.push(`<span class="jsx-trace-chip">${st.angle < 90 ? `${V} acute: ${nOpp}² is less than ${nBase}² + ${nUp}²` : `${V} obtuse: ${nOpp}² is more than ${nBase}² + ${nUp}²`}</span>`);
+    readout.innerHTML = chips.join('');
+    board.update();
+  }
+
+  function setupSas() {
+    controls.innerHTML = '';
+    const E = Math.max(st.p, st.q);
+    const aS = lineSlider(`∠${info.V}`, 5, 175, 0.5, st.angle, (v) => { st.angle = v; aS.val.textContent = `${f2(v)}°`; refreshSas(); }, controls);
+    aS.val.textContent = `${f2(st.angle)}°`;
+    const pS = lineSlider(info.nBase, Math.max(1, Math.round(0.2 * E)), Math.round(1.6 * E), 0.5, st.p, (v) => { st.p = v; pS.val.textContent = f2(v); refreshSas(); }, controls);
+    pS.val.textContent = f2(st.p);
+    const qS = lineSlider(info.nUp, Math.max(1, Math.round(0.2 * E)), Math.round(1.6 * E), 0.5, st.q, (v) => { st.q = v; qS.val.textContent = f2(v); refreshSas(); }, controls);
+    qS.val.textContent = f2(st.q);
+    const sync = () => { aS.input.value = String(st.angle); aS.val.textContent = `${f2(st.angle)}°`; refreshSas(); };
+    lineMkBtn(`${info.V} = 90°`, () => { st.angle = 90; sync(); }, controls);
+  }
+
+  // ---------- sss ----------
+  const sssB = () => {
+    const x = (st.b * st.b + st.c * st.c - st.a * st.a) / (2 * st.b);
+    const y2 = st.c * st.c - x * x;
+    return y2 > 1e-9 ? [x, Math.sqrt(y2)] : null;
+  };
+  function buildSss(c) {
+    st.a = parseFloat(c.get('a') ?? 6); st.b = parseFloat(c.get('b') ?? 3); st.c = parseFloat(c.get('c') ?? 5);
+    const E = Math.max(st.a, st.b, st.c);
+    const bd = initBoard(-0.9 * E, 2.1 * E, -0.3 * E);
+    const grey2 = { strokeColor: grey, strokeWidth: 2, dash: 2, fillColor: 'none', fixed: true, highlight: false };
+    const O = pt(bd, () => 0, () => 0);
+    const PC = pt(bd, () => st.b, () => 0);
+    bd.create('circle', [O, () => st.c], grey2);
+    bd.create('circle', [PC, () => st.a], grey2);
+    const PB = pt(bd, () => (sssB() ? sssB()[0] : NaN), () => (sssB() ? sssB()[1] : NaN));
+    const base = bd.create('segment', [O, PC], { strokeColor: ink, strokeWidth: 4, fixed: true, highlight: false });
+    const sc = bd.create('segment', [O, PB], { strokeColor: ink, strokeWidth: 4, fixed: true, highlight: false });
+    const sa = bd.create('segment', [PC, PB], { strokeColor: ink, strokeWidth: 4, fixed: true, highlight: false });
+    const tri = bd.create('polygon', [O, PC, PB], { fillColor: accent, fillOpacity: 0.08, vertices: { visible: false }, highlight: false, fixed: true, borders: { visible: false } });
+    lab(bd, () => [-0.1 * E, -0.1 * E], 'A', ink);
+    lab(bd, () => [st.b + 0.1 * E, -0.1 * E], 'C', ink);
+    const tB = lab(bd, () => (sssB() ? [sssB()[0] - 0.08 * E, sssB()[1] + 0.1 * E] : [NaN, NaN]), 'B', ink);
+    lab(bd, () => [st.b / 2, -0.14 * E], () => `b = ${f2(st.b)}`, negative);
+    lab(bd, () => [-0.18 * E + (sssB() ? sssB()[0] / 2 : -st.c / 2 * 0.7), sssB() ? sssB()[1] / 2 + 0.06 * E : 0.6 * E], () => `c = ${f2(st.c)}`, negative);
+    lab(bd, () => [(sssB() ? (sssB()[0] + st.b) / 2 : st.b + st.a * 0.7) + 0.2 * E, sssB() ? sssB()[1] / 2 + 0.06 * E : 0.6 * E], () => `a = ${f2(st.a)}`, negative);
+    bd.on('update', () => {
+      const ok = !!sssB();
+      [PB, sc, sa, tri, tB].forEach((o) => o.setAttribute({ visible: ok }));
+    });
+    return {};
+  }
+  function refreshSss() {
+    const { a, b, c } = st;
+    const tests = [[a, b, c, 'a + b > c'], [a, c, b, 'a + c > b'], [b, c, a, 'b + c > a']];
+    const chips = tests.map(([x, y, z, name]) => {
+      const ok = x + y > z + 1e-9;
+      return `<span class="jsx-trace-chip" style="color:${ok ? green : negative}">${name}: ${f2(x + y)} ${ok ? '>' : '≤'} ${f2(z)} ${tick(ok)}</span>`;
+    });
+    const good = !!sssB();
+    if (good) {
+      const cosA = (b * b + c * c - a * a) / (2 * b * c);
+      const cosB = (a * a + c * c - b * b) / (2 * a * c);
+      const cosC = (a * a + b * b - c * c) / (2 * a * b);
+      const A = deg(Math.acos(cosA)); const B = deg(Math.acos(cosB)); const C = deg(Math.acos(cosC));
+      const s = (a + b + c) / 2;
+      const area = Math.sqrt(Math.max(0, s * (s - a) * (s - b) * (s - c)));
+      chips.push(`<span class="jsx-trace-chip">A = <b>${f2(A)}°</b>, B = <b>${f2(B)}°</b>, C = <b>${f2(C)}°</b>, sum = <b>${f2(A + B + C)}°</b></span>`);
+      chips.push(`<span class="jsx-trace-chip jsx-trace-main">s = <b>${f2(s)}</b>, Area = <b>${f2(area)}</b></span>`);
+    } else {
+      chips.push(`<span class="jsx-trace-chip jsx-trace-main is-undef">No triangle: the circles do not meet</span>`);
+    }
+    readout.innerHTML = chips.join('');
+    board.update();
+  }
+  function setupSss() {
+    controls.innerHTML = '';
+    const E = Math.max(st.a, st.b, st.c);
+    const mk = (k) => {
+      const s = lineSlider(k, Math.max(0.5, Math.round(0.1 * E * 2) / 2), Math.round(1.3 * E * 2) / 2, 0.5, st[k], (v) => { st[k] = v; s.val.textContent = f2(v); refreshSss(); }, controls);
+      s.val.textContent = f2(st[k]);
+    };
+    mk('a'); mk('b'); mk('c');
+  }
+
+  function setCase(c) {
+    if (mode === 'sas') { info = buildSas(c); setupSas(); refreshSas(); }
+    else { info = buildSss(c); setupSss(); refreshSss(); }
+  }
+  const btns = cases.length > 1 ? cases.map((c, i) => lineMkBtn(c.name, () => {
+    btns.forEach((b, j) => b.classList.toggle('is-on', i === j));
+    setCase(c);
+  }, switchBar)) : [];
+  if (btns.length) btns[0].classList.add('is-on');
+  setCase(cases[0]);
+}
+
 // <jsx-orthogonal matrix="0.866,-0.5;0.5,0.866" x="2,1" presets="Name: a,b;c,d | Name2: ...">
 //
 // Orthogonal transformations in the plane (Linear Algebra 5.3). T(x) = Ax for a 2x2 matrix. Draws the unit
@@ -6563,5 +6779,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-solve-trig').forEach(renderJsxSolveTrig);
   document.querySelectorAll('jsx-sines-triangle').forEach(renderJsxSinesTriangle);
   document.querySelectorAll('jsx-ambiguous').forEach(renderJsxAmbiguous);
+  document.querySelectorAll('jsx-cosines').forEach(renderJsxCosines);
   document.querySelectorAll('jsx-path-independence').forEach(renderJsxPathIndependence);
 });
