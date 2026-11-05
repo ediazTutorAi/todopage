@@ -6751,6 +6751,356 @@ function renderJsxPathIndependence(el) {
   load(cur, true);
 }
 
+// ---------------------------------------------------------------------------
+// Green's theorem (Calculus III 6.4): <jsx-green>.
+//
+// <jsx-green p="x^2*y" q="y-3" g1="1" g2="5" xmin="1" xmax="4" | polar="0,2" scale="1,1"
+//            mode="circ|flux" toggle cells="4" field no-reverse>
+//   with optional <jsx-case name p q g1 g2 xmin xmax polar scale> children (several regions behind buttons).
+//
+// A region D with boundary C and a field F = <P, Q>. Region description: Type I (`g1`, `g2` in x over
+// [xmin, xmax]) or polar (`polar="r1,r2"`, optional `scale="a,b"` stretches x and y, so `polar="0,1" scale="3,2"`
+// is an ellipse; r1 > 0 is an annulus, whose inner circle is run clockwise). The region is cut into a grid of
+// cells (the image of a uv grid), and every cell gets its own counterclockwise loop. Three views: the region and
+// its boundary; the cells shaded by their own loop value (blue positive, red negative); each cell's loop drawn
+// on its own, so the two arrows on every interior edge point opposite ways while only the boundary edges are
+// unpaired. In flux mode a loop is drawn as the outward normals of the cell. The readout compares the line
+// integral around C with the double integral over D and with the sum of the cell loops, and a Riemann sum of
+// the integrand over the cells shows the double integral being built from the pieces.
+// Expressions are plain JS in x, y (sin cos tan exp sqrt abs log pow pi in scope, `^` accepted).
+const GREEN_ASPECT = 1.6;
+const GREEN_MAXN = 8;
+
+// A value as the book would print it, tolerant of the quadrature error (about 1e-5 relative).
+function greenFmt(v) {
+  if (!Number.isFinite(v)) return 'undefined';
+  const minus = (s) => s.replace('-', '−');
+  const dec = (w) => minus(String(Math.round(w * 1000) / 1000));
+  if (Math.abs(v) < 2e-4) return '0';
+  const pm = fmtPiMultiple(v, 2e-4);
+  if (pm) return `${minus(pm)} ≈ ${dec(v)}`;
+  for (let d = 1; d <= 12; d++) {
+    const n = v * d;
+    if (Math.abs(n - Math.round(n)) < 4e-4 * Math.max(1, Math.abs(n)) && Math.abs(n) < 5000) return minus(d === 1 ? String(Math.round(n)) : `${Math.round(n)}/${d}`);
+  }
+  return dec(v);
+}
+
+function renderJsxGreen(el) {
+  const TAG = 'jsx-green';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const evalList = (s) => (s || '').split(/[\s,]+/).filter(Boolean).map((q) => new Function('pi', `return (${q});`)(Math.PI));
+  const cases = lineCases(el).map((c, i) => {
+    const nm = { getAttribute: c.get };
+    const P = compileMath(['x', 'y'], powFix(c.get('p') || '0'), TAG, `case ${i} p`);
+    const Q = compileMath(['x', 'y'], powFix(c.get('q') || '0'), TAG, `case ${i} q`);
+    if (!P || !Q) return null;
+    let map; let comps; let polar = null; let dimsFor;
+    if (c.get('polar')) {
+      const [r1, r2] = evalList(c.get('polar'));
+      const [sa, sb] = c.get('scale') ? evalList(c.get('scale')) : [1, 1];
+      map = (u, v) => { const r = r1 + u * (r2 - r1); const th = 2 * Math.PI * v; return [sa * r * Math.cos(th), sb * r * Math.sin(th)]; };
+      // u is the radius and v the angle, so the map keeps orientation: the outer circle (u = 1) runs
+      // counterclockwise and the inner one (u = 0) clockwise, with the region on the left of both.
+      comps = [[[1, 0, 1, 1]]];
+      if (r1 > 1e-9) comps.push([[0, 1, 0, 0]]);
+      polar = { r1, r2 };
+      dimsFor = (n) => [n, 2 * n];
+    } else {
+      const g1 = compileMath(['x'], powFix(c.get('g1') || '0'), TAG, `case ${i} g1`);
+      const g2 = compileMath(['x'], powFix(c.get('g2') || '1'), TAG, `case ${i} g2`);
+      if (!g1 || !g2) return null;
+      const x0 = evalNumAttr(nm, 'xmin', 0, TAG); const x1 = evalNumAttr(nm, 'xmax', 1, TAG);
+      map = (u, v) => { const x = x0 + u * (x1 - x0); const lo = g1(x); const hi = g2(x); return [x, lo + v * (hi - lo)]; };
+      comps = [[[0, 0, 1, 0], [1, 0, 1, 1], [1, 1, 0, 1], [0, 1, 0, 0]]];
+      dimsFor = (n) => [n, n];
+    }
+    return { name: c.name, P, Q, map, comps, polar, dimsFor, field: c.get('field') !== null || el.hasAttribute('field') };
+  }).filter(Boolean);
+  if (!cases.length) return;
+
+  const st = {
+    ci: 0, rev: false, view: el.getAttribute('view') || 'region', n: Math.min(GREEN_MAXN, Math.max(1, Math.round(evalNumAttr(el, 'cells', 4, TAG)))),
+    mode: el.getAttribute('mode') === 'flux' ? 'flux' : 'circ', fieldOn: false,
+  };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--field';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb';
+  const negative = cssVar('--negative') || '#c0392b';
+
+  const sampleEdge = (map, ua, va, ub, vb, steps) => {
+    const out = [];
+    for (let k = 0; k <= steps; k++) { const s = k / steps; out.push(map(ua + (ub - ua) * s, va + (vb - va) * s)); }
+    return out;
+  };
+  const polyline = (map, edges, steps) => {
+    const pts = [];
+    edges.forEach((e, idx) => { const p = sampleEdge(map, e[0], e[1], e[2], e[3], steps); pts.push(...(idx ? p.slice(1) : p)); });
+    return pts;
+  };
+
+  // bounding box of the region (and the origin, so the axes stay in view), fitted to the board's aspect ratio
+  function boundsOf(c) {
+    let x0 = 0; let x1 = 0; let y0 = 0; let y1 = 0;
+    c.comps.forEach((edges) => polyline(c.map, edges, 120).forEach(([x, y]) => {
+      if (Number.isFinite(x) && Number.isFinite(y)) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    }));
+    const padX = Math.max(x1 - x0, 1e-6) * 0.14; const padY = Math.max(y1 - y0, 1e-6) * 0.14;
+    x0 -= padX; x1 += padX; y0 -= padY; y1 += padY;
+    const w = Math.max(x1 - x0, (y1 - y0) * GREEN_ASPECT);
+    const cx = (x0 + x1) / 2; const cy = (y0 + y1) / 2;
+    return [cx - w / 2, cy + w / GREEN_ASPECT / 2, cx + w / 2, cy - w / GREEN_ASPECT / 2];
+  }
+
+  let cs = cases[0];
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: boundsOf(cs), axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 });
+  board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  // ----- the numbers -----
+  const isFlux = () => st.mode === 'flux';
+  const sgn = () => (st.rev ? -1 : 1);
+  // boundary integrand: F . dr (circulation) or F . N ds = -Q dx + P dy (flux)
+  const lineInt = (pts) => {
+    let s = 0;
+    for (let k = 0; k + 1 < pts.length; k++) {
+      const mx = (pts[k][0] + pts[k + 1][0]) / 2; const my = (pts[k][1] + pts[k + 1][1]) / 2;
+      const dx = pts[k + 1][0] - pts[k][0]; const dy = pts[k + 1][1] - pts[k][1];
+      s += isFlux() ? -cs.Q(mx, my) * dx + cs.P(mx, my) * dy : cs.P(mx, my) * dx + cs.Q(mx, my) * dy;
+    }
+    return s;
+  };
+  const areaInt = (pts) => {
+    let s = 0;
+    for (let k = 0; k + 1 < pts.length; k++) {
+      const mx = (pts[k][0] + pts[k + 1][0]) / 2; const my = (pts[k][1] + pts[k + 1][1]) / 2;
+      s += 0.5 * (mx * (pts[k + 1][1] - pts[k][1]) - my * (pts[k + 1][0] - pts[k][0]));
+    }
+    return s;
+  };
+  // integrand of the double integral: Q_x - P_y (circulation) or P_x + Q_y (flux), by central differences
+  const dens = (x, y) => {
+    const h = 1e-4;
+    const px = (cs.P(x + h, y) - cs.P(x - h, y)) / (2 * h); const py = (cs.P(x, y + h) - cs.P(x, y - h)) / (2 * h);
+    const qx = (cs.Q(x + h, y) - cs.Q(x - h, y)) / (2 * h); const qy = (cs.Q(x, y + h) - cs.Q(x, y - h)) / (2 * h);
+    return isFlux() ? px + qy : qx - py;
+  };
+  function doubleInt() {
+    const N = 100; const h = 1e-5; let s = 0;
+    for (let i = 0; i < N; i++) {
+      for (let j = 0; j < N; j++) {
+        const u = (i + 0.5) / N; const v = (j + 0.5) / N;
+        const a = cs.map(u + h, v); const b = cs.map(u - h, v); const c2 = cs.map(u, v + h); const d = cs.map(u, v - h);
+        const xu = (a[0] - b[0]) / (2 * h); const yu = (a[1] - b[1]) / (2 * h);
+        const xv = (c2[0] - d[0]) / (2 * h); const yv = (c2[1] - d[1]) / (2 * h);
+        const p = cs.map(u, v);
+        s += dens(p[0], p[1]) * Math.abs(xu * yv - xv * yu);
+      }
+    }
+    return s / (N * N);
+  }
+
+  // ----- cells -----
+  let cells = [];
+  function buildCells() {
+    const [nu, nv] = cs.dimsFor(st.n);
+    const steps = Math.max(6, Math.ceil(240 / st.n));
+    cells = [];
+    for (let i = 0; i < nu; i++) {
+      for (let j = 0; j < nv; j++) {
+        const u0 = i / nu; const u1 = (i + 1) / nu; const v0 = j / nv; const v1 = (j + 1) / nv;
+        const edges = [[u0, v0, u1, v0], [u1, v0, u1, v1], [u1, v1, u0, v1], [u0, v1, u0, v0]];
+        const pts = polyline(cs.map, edges, steps);
+        const centre = cs.map((u0 + u1) / 2, (v0 + v1) / 2);
+        cells.push({
+          loop: lineInt(pts), area: areaInt(pts), dens: dens(centre[0], centre[1]), centre,
+          draw: polyline(cs.map, edges, 8),
+          corners: [cs.map(u0, v0), cs.map(u1, v0), cs.map(u1, v1), cs.map(u0, v1)],
+        });
+      }
+    }
+  }
+
+  // ----- drawing -----
+  let dyn = [];
+  const keep = (o) => { dyn.push(o); return o; };
+  let fieldArrows = [];
+
+  function drawField() {
+    fieldArrows.forEach((a) => board.removeObject(a));
+    fieldArrows = [];
+    if (!cs.field) return;
+    const bb = boundsOf(cs);
+    const span = bb[2] - bb[0];
+    const stepSize = [0.25, 0.5, 1, 2, 5].find((s) => span / s <= 13) || 5;
+    for (let x = Math.ceil(bb[0] / stepSize) * stepSize; x <= bb[2]; x += stepSize) {
+      for (let y = Math.ceil(bb[3] / stepSize) * stepSize; y <= bb[1]; y += stepSize) {
+        const u = cs.P(x, y); const v = cs.Q(x, y); const n = Math.hypot(u, v);
+        if (!Number.isFinite(n) || n < 1e-9) continue;
+        fieldArrows.push(board.create('arrow', [[x, y], [x + 0.42 * stepSize * u / n, y + 0.42 * stepSize * v / n]], {
+          strokeColor: ink, strokeOpacity: 0.3, strokeWidth: 2.5, lastArrow: { size: 5 }, fixed: true, highlight: false, layer: 1, visible: st.fieldOn,
+        }));
+      }
+    }
+  }
+
+  function draw() {
+    dyn.forEach((o) => board.removeObject(o));
+    dyn = [];
+    const mk = (type, args, attrs) => keep(board.create(type, args, { fixed: true, highlight: false, ...attrs }));
+    const maxAbs = Math.max(1e-12, ...cells.map((c) => Math.abs(c.loop)));
+
+    if (st.view === 'region') {
+      // one filled path: the outer boundary, then the inner one run the other way, so a hole stays empty
+      const xs = []; const ys = [];
+      cs.comps.forEach((edges) => polyline(cs.map, edges, 80).forEach(([x, y]) => { xs.push(x); ys.push(y); }));
+      mk('curve', [xs, ys], { strokeWidth: 0, fillColor: accent, fillOpacity: 0.14, layer: 2 });
+    } else {
+      cells.forEach((c) => {
+        const val = c.loop * sgn();
+        const col = val >= 0 ? accent : negative;
+        const op = 0.1 + 0.5 * Math.min(1, Math.abs(c.loop) / maxAbs);
+        mk('curve', [c.draw.map((p) => p[0]), c.draw.map((p) => p[1])], {
+          strokeColor: ink, strokeOpacity: 0.55, strokeWidth: 1.5, fillColor: col, fillOpacity: op, layer: 2,
+        });
+      });
+    }
+
+    if (st.view === 'loops') {
+      if (cells.length > 64) {
+        readoutNote = 'Too many cells to draw each loop. Use fewer.';
+      } else {
+        readoutNote = '';
+        const arrowAttrs = { strokeColor: ink, strokeWidth: 2.5, lastArrow: { size: 5 }, layer: 5 };
+        cells.forEach((c) => {
+          const [cx, cy] = c.centre;
+          if (isFlux()) {
+            // outward normals: one arrow per edge, from inside the cell out to the edge midpoint
+            for (let k = 0; k < 4; k++) {
+              const a = c.corners[k]; const b = c.corners[(k + 1) % 4];
+              const mx = (a[0] + b[0]) / 2 - cx; const my = (a[1] + b[1]) / 2 - cy;
+              if (Math.hypot(mx, my) < 1e-9) continue;
+              const from = [cx + 0.55 * mx, cy + 0.55 * my]; const to = [cx + 1.0 * mx, cy + 1.0 * my];
+              mk('arrow', sgn() > 0 ? [from, to] : [to, from], arrowAttrs);
+            }
+          } else {
+            const q = c.corners.map(([x, y]) => [cx + 0.78 * (x - cx), cy + 0.78 * (y - cy)]);
+            for (let k = 0; k < 4; k++) {
+              const a = q[k]; const b = q[(k + 1) % 4];
+              if (Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-9) continue;
+              mk('arrow', sgn() > 0 ? [a, b] : [b, a], arrowAttrs);
+            }
+          }
+        });
+      }
+    } else {
+      readoutNote = '';
+    }
+
+    // the boundary C, with its orientation marked by arrows
+    cs.comps.forEach((edges) => {
+      const pts = polyline(cs.map, edges, 200);
+      const col = st.rev ? negative : accent;
+      mk('curve', [pts.map((p) => p[0]), pts.map((p) => p[1])], { strokeColor: col, strokeWidth: CURVE_STROKE + 1, layer: 6 });
+      const ordered = st.rev ? pts.slice().reverse() : pts;
+      for (let m = 0; m < 4; m++) {
+        const i0 = Math.floor(((m + 0.5) / 4) * (ordered.length - 1));
+        const i1 = Math.min(ordered.length - 1, i0 + 6);
+        if (i1 > i0) mk('arrow', [ordered[i0], ordered[i1]], { strokeColor: col, strokeWidth: CURVE_STROKE + 1, lastArrow: { size: 9 }, layer: 7 });
+      }
+    });
+    board.update();
+  }
+
+  let readoutNote = '';
+  function updateReadout() {
+    const flux = isFlux();
+    const lhs = flux ? '∮<sub>C</sub> F · N ds' : '∮<sub>C</sub> F · dr';
+    const dn = flux ? 'P<sub>x</sub> + Q<sub>y</sub>' : 'Q<sub>x</sub> − P<sub>y</sub>';
+    const parts = cs.comps.map((edges) => sgn() * lineInt(polyline(cs.map, edges, 600)));
+    const boundary = parts.reduce((a, b) => a + b, 0);
+    const dbl = doubleInt();
+    const sumLoops = cells.reduce((a, c) => a + c.loop, 0) * sgn();
+    const riemann = cells.reduce((a, c) => a + c.dens * c.area, 0);
+    const scale = Math.max(1, Math.abs(dbl));
+    let html = '';
+    html += `<span class="jsx-trace-chip" style="color:${st.rev ? negative : accent}">${lhs} = <b>${greenFmt(boundary)}</b></span>`;
+    html += `<span class="jsx-trace-chip">∬<sub>D</sub> (${dn}) dA = <b>${greenFmt(dbl)}</b></span>`;
+    if (st.rev) {
+      html += '<span class="jsx-trace-chip jsx-trace-main is-undef">C runs clockwise: the line integral is −(double integral)</span>';
+    } else {
+      const same = Math.abs(boundary - dbl) < 1e-3 * scale;
+      html += `<span class="jsx-trace-chip jsx-trace-main ${same ? 'is-parallel' : 'is-undef'}">${same ? 'Equal' : 'Not equal'}</span>`;
+    }
+    if (cs.polar && cs.polar.r1 > 1e-9) {
+      html += `<span class="jsx-trace-chip">outer circle (counterclockwise): <b>${greenFmt(parts[0])}</b></span>`;
+      html += `<span class="jsx-trace-chip">inner circle (clockwise): <b>${greenFmt(parts[1])}</b></span>`;
+    }
+    if (st.view !== 'region') {
+      html += `<span class="jsx-trace-chip">sum of the ${cells.length} cell loops = <b>${greenFmt(sumLoops)}</b></span>`;
+      html += `<span class="jsx-trace-chip">Σ (${dn}) ΔA over the cells = <b>${greenFmt(riemann)}</b></span>`;
+    }
+    if (readoutNote) html += `<span class="jsx-trace-chip is-undef">${readoutNote}</span>`;
+    readout.innerHTML = html;
+  }
+
+  function refresh() { buildCells(); draw(); updateReadout(); }
+
+  // ----- controls -----
+  const caseBtns = [];
+  if (cases.length > 1) {
+    cases.forEach((c, i) => caseBtns.push(lineMkBtn(c.name, (b) => {
+      cs = c; st.ci = i;
+      caseBtns.forEach((o) => o.classList.toggle('is-on', o === b));
+      board.setBoundingBox(boundsOf(cs), true);
+      drawField();
+      refresh();
+    }, controls)));
+    caseBtns[0].classList.add('is-on');
+  }
+  const modeBtns = [];
+  if (el.hasAttribute('toggle')) {
+    [['circ', 'Circulation'], ['flux', 'Flux']].forEach(([key, label]) => {
+      const b = lineMkBtn(label, () => { st.mode = key; modeBtns.forEach((o) => o.classList.toggle('is-on', o.dataset.m === key)); refresh(); }, controls);
+      b.dataset.m = key; b.classList.toggle('is-on', key === st.mode); modeBtns.push(b);
+    });
+  }
+  const viewBtns = [];
+  [['region', 'Region'], ['cells', 'Cut into cells'], ['loops', 'Each cell’s own loop']].forEach(([key, label]) => {
+    const b = lineMkBtn(label, () => { st.view = key; viewBtns.forEach((o) => o.classList.toggle('is-on', o.dataset.v === key)); refresh(); }, controls);
+    b.dataset.v = key; b.classList.toggle('is-on', key === st.view); viewBtns.push(b);
+  });
+  const sl = lineSlider('cells', 1, GREEN_MAXN, 1, st.n, (v) => { st.n = Math.round(v); sl.val.textContent = String(st.n); refresh(); }, controls);
+  sl.val.textContent = String(st.n);
+  if (!el.hasAttribute('no-reverse')) lineMkBtn('Reverse C', (b) => { st.rev = !st.rev; b.classList.toggle('is-on', st.rev); refresh(); }, controls);
+  if (cases.some((c) => c.field)) {
+    lineMkBtn('Show F', (b) => { st.fieldOn = !st.fieldOn; b.classList.toggle('is-on', st.fieldOn); fieldArrows.forEach((a) => a.setAttribute({ visible: st.fieldOn })); board.update(); }, controls);
+  }
+  drawField();
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
@@ -6781,4 +7131,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-ambiguous').forEach(renderJsxAmbiguous);
   document.querySelectorAll('jsx-cosines').forEach(renderJsxCosines);
   document.querySelectorAll('jsx-path-independence').forEach(renderJsxPathIndependence);
+  document.querySelectorAll('jsx-green').forEach(renderJsxGreen);
 });

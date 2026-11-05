@@ -2,7 +2,7 @@
 // Pieces with no data-stage are always visible. The instructor reveals the stages one at a
 // time with the Next button (or by clicking the diagram itself), Back undoes one, Reset clears.
 // A piece may carry data-caption="..." (plain text); the caption of the latest revealed stage is
-// shown under the diagram. Built for flow charts (arrow by arrow), but works for any figure drawn
+// shown under the diagram. Optional attributes on <staged-svg>: data-next (button label), data-intro (caption at stage 0). Built for flow charts (arrow by arrow), but works for any figure drawn
 // as inline SVG. Plain DOM, no library; independent of <reveal> and of slideMode's Next/Prev.
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('staged-svg').forEach((el) => {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return b;
     };
     const back = mk('◀ Back', () => set(stage - 1));
-    const next = mk('Next arrow ▶', () => set(stage + 1));
+    const next = mk(el.dataset.next || 'Next arrow ▶', () => set(stage + 1));
     mk('↺ Reset', () => set(0));
     const count = document.createElement('span');
     count.className = 'muted small';
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         p.classList.toggle('staged-new', s === stage && stage > 0);
       });
       const cur = pieces.find((p) => parseInt(p.dataset.stage, 10) === stage && p.dataset.caption);
-      caption.textContent = stage === 0 ? 'Click the diagram or press Next to follow the first arrow.' : (cur ? cur.dataset.caption : '');
+      caption.textContent = stage === 0 ? (el.dataset.intro || 'Click the diagram or press Next to follow the first arrow.') : (cur ? cur.dataset.caption : '');
       back.disabled = stage === 0;
       next.disabled = stage === max;
       count.textContent = `${stage} / ${max}`;

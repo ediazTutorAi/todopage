@@ -270,6 +270,24 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-25",
+    "title": "Green's Theorem",
+    "subtitle": "",
+    "description": "Green's theorem (OpenStax 6.4, a 50 minute class): cut a region into cells and watch the interior edges cancel, so the circulation around the boundary equals the double integral of Q_x - P_y. Circulation and flux forms, area from a boundary integral, source-free fields, and regions with holes, with many verified examples.",
+    "tags": [
+      "Green's theorem",
+      "circulation form",
+      "flux form",
+      "line integrals",
+      "area from a line integral",
+      "stream function",
+      "regions with holes"
+    ],
+    "url": "calculus3/fall2025/2025-11-07-greens-theorem/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",

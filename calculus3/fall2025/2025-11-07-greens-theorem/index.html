@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Green's Theorem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-green>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Green's Theorem</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- Timed for a 50 minute class: about 2 / 6 / 5 / 6 / 5 / 7 / 4 / 6 / 9 minutes per step. -->
+<!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Extending the Fundamental Theorem of Calculus</div>
+          <div class="step-subtitle">Idea</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Recall: two versions of the Fundamental Theorem</div>
+<p>The Fundamental Theorem of Calculus says that</p>
+$$\int_a^b F'(x)\,dx=F(b)-F(a).$$
+<p>The same idea is true of the Fundamental Theorem for Line Integrals:</p>
+$$\int_C\nabla f\cdot d\mathbf r=f(\mathbf r(b))-f(\mathbf r(a)).$$
+<p>When we have a potential function (an "antiderivative"), we can calculate the line integral based solely on information about the boundary of curve \(C\).</p>
+</div>
+<div class="defbox"><div class="defbox-label">Green's theorem</div>
+<p>Green's theorem takes this idea and extends it to calculating double integrals. Green's theorem says that we can calculate a double integral over region \(D\) based solely on information about the boundary of \(D\). Green's theorem also says we can calculate a line integral over a simple closed curve \(C\) based solely on information about the region that \(C\) encloses. In particular, Green's theorem connects a double integral over region \(D\) to a line integral around the boundary of \(D\).</p>
+</div>
+<table>
+  <tr><td>In the Fundamental Theorem of Calculus, what is the "boundary" of \([a,b]\)?</td><td><reveal>the two endpoints \(a\) and \(b\)</reveal></td></tr>
+  <tr><td>In Green's theorem, what is the boundary of the region \(D\)?</td><td><reveal>the closed curve \(C\) that encloses it</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Circulation Form of Green's Theorem</div>
+          <div class="step-subtitle">Theorem 6.12</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.12: Green's Theorem, Circulation Form</div>
+<p>Let \(D\) be an open, simply connected region with a boundary curve \(C\) that is a piecewise smooth, simple closed curve oriented counterclockwise. Let \(\mathbf F=\langle P,Q\rangle\) be a vector field with component functions that have continuous partial derivatives on \(D\). Then,</p>
+$$\oint_C\mathbf F\cdot d\mathbf r=\oint_C P\,dx+Q\,dy=\iint_D (Q_x-P_y)\,dA.$$
+</div>
+<jsx-green mode="circ" cells="4" field>
+  <jsx-case name="Disk, F = ⟨−y, x⟩" p="-y" q="x" polar="0,2"></jsx-case>
+  <jsx-case name="Between y = x² and y = √x, F = ⟨y², xy⟩" p="y*y" q="x*y" g1="x*x" g2="sqrt(x)" xmin="0" xmax="1"></jsx-case>
+  <jsx-case name="Rectangle, F = ⟨0, x²/2⟩" p="0" q="x*x/2" g1="0" g2="2" xmin="-1" xmax="2"></jsx-case>
+</jsx-green>
+<div class="defbox"><div class="defbox-label">Tangential form</div>
+<p>Notice that Green's theorem can be used only for a two-dimensional vector field \(\mathbf F\). If \(\mathbf F\) is a three-dimensional field, then Green's theorem does not apply. Since</p>
+$$\int_C P\,dx+Q\,dy=\int_C\mathbf F\cdot\mathbf T\,ds,$$
+<p>this version of Green's theorem is sometimes referred to as the tangential form of Green's theorem.</p>
+</div>
+<table>
+  <tr><td>If \(\mathbf F\) is conservative, both sides of the theorem are \(0\). Why?</td><td><reveal>the circulation is zero in a conservative field, and \(P_y=Q_x\) makes \(Q_x-P_y=0\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Why It Works</div>
+          <div class="step-subtitle">Proof for a rectangle</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Proof, when \(D\) is a rectangle</div>
+<p>Let \(D\) be the rectangle \([a,b]\times[c,d]\) oriented counterclockwise. Then the boundary \(C\) of \(D\) consists of four piecewise smooth pieces \(C_1,C_2,C_3,C_4\). We parameterize each side of \(D\) as follows:</p>
+$$C_1:\mathbf r_1(t)=\langle t,c\rangle,\ a\le t\le b\qquad C_2:\mathbf r_2(t)=\langle b,t\rangle,\ c\le t\le d$$
+$$-C_3:\mathbf r_3(t)=\langle t,d\rangle,\ a\le t\le b\qquad -C_4:\mathbf r_4(t)=\langle a,t\rangle,\ c\le t\le d.$$
+</div>
+<table>
+  <tr><td>\(\displaystyle\oint_C\mathbf F\cdot d\mathbf r=\int_{C_1}+\int_{C_2}-\int_{-C_3}-\int_{-C_4}=\)</td><td><reveal>\(\displaystyle\int_a^b\big(P(t,c)-P(t,d)\big)dt+\int_c^d\big(Q(b,t)-Q(a,t)\big)dt\)</reveal></td></tr>
+  <tr><td>By the Fundamental Theorem of Calculus, \(P(t,d)-P(t,c)=\)  and  \(Q(b,t)-Q(a,t)=\)</td><td><reveal>\(\displaystyle\int_c^d\frac{\partial}{\partial y}P(t,y)\,dy\)  and  \(\displaystyle\int_a^b\frac{\partial}{\partial x}Q(x,t)\,dx\)</reveal></td></tr>
+  <tr><td>Why? Fix \(t\) and let \(y\) go from \(c\) to \(d\). A small step \(dy\) changes \(P\) by about</td><td><reveal>\(\dfrac{\partial P}{\partial y}(t,y)\,dy\) (linear approximation); adding up all these small changes gives the total change \(P(t,d)-P(t,c)\). The same holds for \(Q\) in the \(x\) direction.</reveal></td></tr>
+  <tr><td>Therefore</td><td><reveal>\(\displaystyle\oint_C\mathbf F\cdot d\mathbf r=\int_a^b\!\!\int_c^d(Q_x-P_y)\,dy\,dx=\iint_D(Q_x-P_y)\,dA\)</reveal></td></tr>
+</table>
+<staged-svg data-next="Next ▶" data-intro="Click the diagram or press Next.">
+<svg viewBox="0 0 720 340" role="img" aria-label="Graph of P(t,y) against y for fixed t, with the change from y=c to y=d built from small steps"><g style="stroke:var(--ink,#151515);stroke-width:2.5;fill:none"><path d="M90 300 V30"/><path d="M90 300 H690"/></g><text x="90" y="22" text-anchor="middle" font-size="19" style="fill:var(--ink,#151515)" font-style="italic">P(t, y)</text><text x="700" y="306" text-anchor="start" font-size="19" style="fill:var(--ink,#151515)" font-style="italic">y</text><g style="stroke:var(--ink,#151515);stroke-width:1.5;stroke-dasharray:5 5;opacity:.5"><path d="M140 270 V300"/><path d="M600 110 V300"/></g><text x="140" y="326" text-anchor="middle" font-size="19" style="fill:var(--ink,#151515)" >c</text><text x="600" y="326" text-anchor="middle" font-size="19" style="fill:var(--ink,#151515)" >d</text><polyline points="140.0,270.0 147.7,268.4 155.3,266.7 163.0,265.0 170.7,263.3 178.3,261.6 186.0,259.8 193.7,257.9 201.3,256.1 209.0,254.2 216.7,252.2 224.3,250.2 232.0,248.2 239.7,246.2 247.3,244.1 255.0,242.0 262.7,239.8 270.3,237.7 278.0,235.4 285.7,233.2 293.3,230.9 301.0,228.6 308.7,226.2 316.3,223.8 324.0,221.4 331.7,218.9 339.3,216.4 347.0,213.8 354.7,211.3 362.3,208.6 370.0,206.0 377.7,203.3 385.3,200.6 393.0,197.8 400.7,195.0 408.3,192.2 416.0,189.4 423.7,186.5 431.3,183.5 439.0,180.6 446.7,177.6 454.3,174.5 462.0,171.4 469.7,168.3 477.3,165.2 485.0,162.0 492.7,158.8 500.3,155.5 508.0,152.2 515.7,148.9 523.3,145.6 531.0,142.2 538.7,138.7 546.3,135.3 554.0,131.8 561.7,128.2 569.3,124.6 577.0,121.0 584.7,117.4 592.3,113.7 600.0,110.0" style="fill:none;stroke:var(--accent,#0f6ab4);stroke-width:4.5"/><text x="610" y="96.0" text-anchor="start" font-size="17" style="fill:var(--ink,#151515)" font-style="italic">t fixed</text><g data-stage="1" data-caption="Fix t. Then P(t, y) is a function of y alone, with value P(t, c) at y = c and P(t, d) at y = d."><g style="stroke:var(--ink,#151515);stroke-width:1.5;stroke-dasharray:5 5;opacity:.5"><path d="M90 270 H140"/><path d="M90 110 H600"/></g><circle cx="140" cy="270" r="7" style="fill:var(--ink,#151515)"/><circle cx="600" cy="110" r="7" style="fill:var(--ink,#151515)"/><text x="82" y="276" text-anchor="end" font-size="19" style="fill:var(--ink,#151515)" >P(t, c)</text><text x="82" y="116" text-anchor="end" font-size="19" style="fill:var(--ink,#151515)" >P(t, d)</text></g><g data-stage="2" data-caption="The total change of P as y goes from c to d is P(t, d) − P(t, c)."><path d="M630 110 H650 V270 H630" style="fill:none;stroke:var(--negative,#c0392b);stroke-width:4"/><text x="658" y="186" text-anchor="start" font-size="17" style="fill:var(--negative,#c0392b)">total change</text><text x="658" y="208" text-anchor="start" font-size="17" style="fill:var(--negative,#c0392b)" >P(t,d) − P(t,c)</text></g><g data-stage="3" data-caption="A small step dy changes P by about (∂P/∂y)(t, y) dy: the rise along the tangent line (linear approximation).">
+<line x1="282.5" y1="234.9" x2="383.9" y2="201.9" style="stroke:var(--orange,#c2740c);stroke-width:2;opacity:.7"/>
+<path d="M312.5 225.1 H353.9 V211.7" style="fill:none;stroke:var(--orange,#c2740c);stroke-width:5"/>
+<circle cx="333.2" cy="218.4" r="6" style="fill:var(--orange,#c2740c)"/>
+<text x="333.2" y="251.1" text-anchor="middle" font-size="18" style="fill:var(--orange,#c2740c)">dy</text>
+<text x="363.9" y="224.4" text-anchor="start" font-size="18" style="fill:var(--orange,#c2740c)">(∂P/∂y) dy</text></g><g data-stage="4" data-caption="Adding up all the small changes gives the total change: P(t, d) − P(t, c) = the integral of (∂P/∂y)(t, y) dy from c to d."><line x1="140.0" y1="270.2" x2="186.0" y2="259.9" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:1"/><rect x="100" y="259.8" width="22" height="10.2" style="fill:var(--orange,#c2740c);opacity:0.95"/><line x1="186.0" y1="259.9" x2="232.0" y2="248.4" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:0.55"/><rect x="100" y="248.2" width="22" height="11.5" style="fill:var(--orange,#c2740c);opacity:0.5"/><line x1="232.0" y1="248.4" x2="278.0" y2="235.6" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:1"/><rect x="100" y="235.4" width="22" height="12.8" style="fill:var(--orange,#c2740c);opacity:0.95"/><line x1="278.0" y1="235.6" x2="324.0" y2="221.5" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:0.55"/><rect x="100" y="221.4" width="22" height="14.1" style="fill:var(--orange,#c2740c);opacity:0.5"/><line x1="324.0" y1="221.5" x2="370.0" y2="206.2" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:1"/><rect x="100" y="206.0" width="22" height="15.4" style="fill:var(--orange,#c2740c);opacity:0.95"/><line x1="370.0" y1="206.2" x2="416.0" y2="189.5" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:0.55"/><rect x="100" y="189.4" width="22" height="16.6" style="fill:var(--orange,#c2740c);opacity:0.5"/><line x1="416.0" y1="189.5" x2="462.0" y2="171.6" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:1"/><rect x="100" y="171.4" width="22" height="17.9" style="fill:var(--orange,#c2740c);opacity:0.95"/><line x1="462.0" y1="171.6" x2="508.0" y2="152.4" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:0.55"/><rect x="100" y="152.2" width="22" height="19.2" style="fill:var(--orange,#c2740c);opacity:0.5"/><line x1="508.0" y1="152.4" x2="554.0" y2="131.9" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:1"/><rect x="100" y="131.8" width="22" height="20.5" style="fill:var(--orange,#c2740c);opacity:0.95"/><line x1="554.0" y1="131.9" x2="600.0" y2="110.2" style="stroke:var(--orange,#c2740c);stroke-width:5;opacity:0.55"/><rect x="100" y="110.0" width="22" height="21.8" style="fill:var(--orange,#c2740c);opacity:0.5"/><text x="131" y="196" text-anchor="start" font-size="16" style="fill:var(--orange,#c2740c)">sum of the small rises</text></g></svg>
+</staged-svg>
+<jsx-green mode="circ" cells="3" view="loops">
+  <jsx-case name="Rectangle, F = ⟨0, x²/2⟩" p="0" q="x*x/2" g1="0" g2="2" xmin="-1" xmax="2"></jsx-case>
+  <jsx-case name="Disk, F = ⟨−y, x⟩" p="-y" q="x" polar="0,2"></jsx-case>
+</jsx-green>
+<div class="defbox"><div class="defbox-label">General regions</div>
+<p>To prove Green's theorem over a general region \(D\), we can decompose \(D\) into many tiny rectangles and use the proof that the theorem works over rectangles.</p>
+</div>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Applying the Circulation Form</div>
+          <div class="step-subtitle">Examples 6.38, 6.39 and Checkpoint 6.34</div>
+          <div class="step-body">
+<jsx-green mode="circ" cells="4" view="cells">
+  <jsx-case name="Example 6.38" p="x^2*y" q="y-3" g1="1" g2="5" xmin="1" xmax="4"></jsx-case>
+  <jsx-case name="Example 6.39" p="y+sin(x)" q="exp(y)-x" polar="0,2"></jsx-case>
+  <jsx-case name="Checkpoint 6.34" p="sin(x*x)" q="3*x-y" g1="2" g2="2+0.6*(x+1)" xmin="-1" xmax="4"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Example 6.38. \(\displaystyle\int_C x^2y\,dx+(y-3)\,dy\), where \(C\) is a rectangle with vertices \((1,1)\), \((4,1)\), \((4,5)\), \((1,5)\) oriented counterclockwise.</td><td><reveal>\(Q_x-P_y=-x^2\), so \(\displaystyle\int_1^5\!\!\int_1^4-x^2\,dx\,dy=-84\)</reveal></td></tr>
+  <tr><td>Example 6.39. The work done on a particle by \(\mathbf F(x,y)=\langle y+\sin x,\ e^y-x\rangle\) as it traverses the circle \(x^2+y^2=4\) once counterclockwise.</td><td><reveal>\(Q_x-P_y=-2\), so \(W=-2\,\mathrm{area}(D)=-2\pi(2^2)=-8\pi\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.34. \(\displaystyle\int_C\sin(x^2)\,dx+(3x-y)\,dy\), where \(C\) is a right triangle with vertices \((-1,2)\), \((4,2)\), \((4,5)\) oriented counterclockwise.</td><td><reveal>\(Q_x-P_y=3\), area \(=\tfrac{15}{2}\), so \(\tfrac{45}{2}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Area from a Boundary</div>
+          <div class="step-subtitle">Example 6.40, Equation 6.14 and Checkpoint 6.35</div>
+          <div class="step-body">
+<jsx-green mode="circ" cells="4" view="cells">
+  <jsx-case name="Ellipse x²/9 + y²/4 = 1" p="-y/2" q="x/2" polar="0,1" scale="3,2"></jsx-case>
+  <jsx-case name="Disk of radius 2" p="-y/2" q="x/2" polar="0,2"></jsx-case>
+  <jsx-case name="Checkpoint 6.35 region" p="-y/2" q="x/2" g1="0" g2="1" xmin="0" xmax="1"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Example 6.40. The area enclosed by the ellipse \(\dfrac{x^2}{a^2}+\dfrac{y^2}{b^2}=1\), \(x=a\cos t\), \(y=b\sin t\), \(0\le t\le 2\pi\). Take \(\mathbf F=\langle-\tfrac y2,\tfrac x2\rangle\). Then \(Q_x-P_y=\)</td><td><reveal>\(\tfrac12+\tfrac12=1\), so \(\displaystyle\iint_D dA=\oint_C\mathbf F\cdot d\mathbf r=\tfrac12\int_0^{2\pi}ab\,dt=\pi ab\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Equation 6.14: area from the boundary</div>
+<p>Let \(D\) be any region with a boundary that is a simple closed curve \(C\) oriented counterclockwise. If \(\mathbf F(x,y)=\langle-\tfrac y2,\tfrac x2\rangle\), then \(Q_x-P_y=1\). Therefore,</p>
+$$\text{area of }D=\iint_D dA=\frac12\oint_C -y\,dx+x\,dy.$$
+</div>
+<table>
+  <tr><td>Checkpoint 6.35. The area of the region enclosed by \(\mathbf r(t)=\langle\sin t\cos t,\ \sin t\rangle\), \(0\le t\le\pi\).</td><td><reveal>\(\tfrac12\int_0^\pi(-y\,x'+x\,y')\,dt=\tfrac12\int_0^\pi\sin^3t\,dt=\tfrac23\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Flux Form of Green's Theorem</div>
+          <div class="step-subtitle">Theorem 6.13</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.13: Green's Theorem, Flux Form</div>
+<p>Let \(D\) be an open, simply connected region with a boundary curve \(C\) that is a piecewise smooth, simple closed curve that is oriented counterclockwise. Let \(\mathbf F=\langle P,Q\rangle\) be a vector field with component functions that have continuous partial derivatives on an open region containing \(D\). Then,</p>
+$$\oint_C\mathbf F\cdot\mathbf N\,ds=\iint_D (P_x+Q_y)\,dA.$$
+</div>
+<jsx-green mode="flux" cells="4" view="loops" field>
+  <jsx-case name="Example 6.41: circle, F = ⟨x, y⟩" p="x" q="y" polar="0,2"></jsx-case>
+  <jsx-case name="Example 6.42: triangle" p="x*x+exp(y)" q="x+y" g1="0" g2="3-3*x" xmin="0" xmax="1"></jsx-case>
+  <jsx-case name="Example 6.43: rectangle" p="5*x+y" q="x+3*y" g1="-2" g2="3" xmin="-1" xmax="1"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Example 6.41. The flux of \(\mathbf F(x,y)=\langle x,y\rangle\) across a circle of radius \(r\) centered at the origin.</td><td><reveal>\(P_x+Q_y=2\), so \(2\iint_D dA=2\pi r^2\)</reveal></td></tr>
+  <tr><td>Example 6.42. The flux of \(\mathbf F=\langle x^2+e^y,\ x+y\rangle\) across the triangle with vertices \((0,0)\), \((1,0)\), \((0,3)\) oriented clockwise.</td><td><reveal>\(P_x+Q_y=2x+1\); clockwise gives a minus sign: \(-\displaystyle\int_0^1\!\!\int_0^{3-3x}(2x+1)\,dy\,dx=-\tfrac52\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.36. The flux of \(\mathbf F(x,y)=\langle x^3,y^3\rangle\) across a unit circle oriented counterclockwise.</td><td><reveal>\(P_x+Q_y=3(x^2+y^2)\); \(3\displaystyle\int_0^{2\pi}\!\!\int_0^1r^3\,dr\,d\theta=\tfrac{3\pi}2\)</reveal></td></tr>
+  <tr><td>Example 6.43. Water flows with velocity \(\mathbf v=\langle5x+y,\ x+3y\rangle\) m/sec. The amount flowing per second across the rectangle with vertices \((-1,-2)\), \((1,-2)\), \((1,3)\), \((-1,3)\), counterclockwise.</td><td><reveal>\(P_x+Q_y=8\), so \(8\cdot(\text{area }10)=80\) m<sup>2</sup>/sec</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Source-Free Fields</div>
+          <div class="step-subtitle">Examples 6.44, 6.45 and Checkpoints</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Source-free vector fields</div>
+<p>If we replace "circulation of \(\mathbf F\)" with "flux of \(\mathbf F\)," then we get a definition of a source-free vector field. The following statements are all equivalent ways of defining a source-free field \(\mathbf F=\langle P,Q\rangle\) on a simply connected domain:</p>
+<ol>
+<li>The flux \(\displaystyle\int_C\mathbf F\cdot\mathbf N\,ds\) across any closed curve \(C\) is zero.</li>
+<li>If \(C_1\) and \(C_2\) are curves in the domain of \(\mathbf F\) with the same starting points and endpoints, then \(\displaystyle\int_{C_1}\mathbf F\cdot\mathbf N\,ds=\int_{C_2}\mathbf F\cdot\mathbf N\,ds\). In other words, flux is independent of path.</li>
+<li>There is a stream function \(g(x,y)\) for \(\mathbf F\): a function \(g\) such that \(P=g_y\) and \(Q=-g_x\).</li>
+<li>\(P_x+Q_y=0\).</li>
+</ol>
+</div>
+<table>
+  <tr><td>Example 6.44. Verify that the rotation field \(\mathbf F(x,y)=\langle y,-x\rangle\) is source free, and find a stream function.</td><td><reveal>\(P_x+Q_y=0+0=0\). From \(g_y=y\): \(g=\tfrac{y^2}2+h(x)\); \(-g_x=-x\) gives \(h'=x\); \(g=\tfrac{x^2}2+\tfrac{y^2}2\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.37. A stream function for \(\mathbf F(x,y)=\langle x\sin y,\ \cos y\rangle\).</td><td><reveal>\(P_x+Q_y=\sin y-\sin y=0\); \(g(x,y)=-x\cos y\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Harmonic functions</div>
+<p>Any potential function \(f\) of a conservative and source-free vector field on a simply connected domain satisfies Laplace's equation \(f_{xx}+f_{yy}=0\). A function that satisfies Laplace's equation is called a harmonic function.</p>
+</div>
+<table>
+  <tr><td>Example 6.45. For \(\mathbf F(x,y)=\langle e^x\sin y,\ e^x\cos y\rangle\): conservative? source free? A potential function? Is it harmonic?</td><td><reveal>\(P_y=e^x\cos y=Q_x\); \(P_x+Q_y=e^x\sin y-e^x\sin y=0\); \(f=e^x\sin y\); \(f_{xx}+f_{yy}=0\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.38. Is \(f(x,y)=e^{x+5y}\) harmonic?</td><td><reveal>no: \(f_{xx}+f_{yy}=e^{x+5y}+25e^{x+5y}\neq0\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Green's Theorem on General Regions</div>
+          <div class="step-subtitle">Regions with holes, Examples 6.46 and 6.47</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Orientation of the boundary</div>
+<p>Let \(D\) be a region and let \(C\) be a component of the boundary of \(D\). We say that \(C\) is positively oriented if, as we walk along \(C\) in the direction of orientation, region \(D\) is always on our left. Curve \(C\) is negatively oriented if, as we walk along \(C\) in the direction of orientation, region \(D\) is always on our right.</p>
+<p>Let \(D\) be a region with finitely many holes and denote the boundary of \(D\) by \(\partial D\), with the inner holes given a negative orientation and the outer boundary a positive orientation. Then</p>
+$$\int_{\partial D}\mathbf F\cdot d\mathbf r=\iint_D (Q_x-P_y)\,dA\qquad\text{and}\qquad \int_{\partial D}\mathbf F\cdot\mathbf N\,ds=\iint_D (P_x+Q_y)\,dA.$$
+</div>
+<jsx-green mode="circ" cells="3" view="loops">
+  <jsx-case name="Example 6.46" p="sin(x)-y^3/3" q="x^3/3+sin(y)" polar="1,2"></jsx-case>
+  <jsx-case name="Example 6.47: the whirlpool" p="y/(x*x+y*y)" q="-x/(x*x+y*y)" polar="1,2"></jsx-case>
+  <jsx-case name="Checkpoint 6.39" p="x^3" q="5*x+exp(y)*sin(y)" polar="2,5"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Example 6.46. \(\displaystyle\oint_{\partial D}\Big(\sin x-\frac{y^3}3\Big)dx+\Big(\frac{x^3}3+\sin y\Big)dy\), where \(D\) is the annulus \(1\le r\le2\), \(0\le\theta\le2\pi\).</td><td><reveal>\(Q_x-P_y=x^2+y^2\); \(\displaystyle\int_0^{2\pi}\!\!\int_1^2r^3\,dr\,d\theta=\tfrac{15\pi}2\)</reveal></td></tr>
+  <tr><td>Example 6.47. \(\mathbf F=\Big\langle\dfrac{y}{x^2+y^2},\dfrac{-x}{x^2+y^2}\Big\rangle\) and \(C\) any simple closed curve oriented counterclockwise. What are the possible values of \(\displaystyle\int_C\mathbf F\cdot d\mathbf r\)?</td><td><reveal>\(0\) if \(C\) does not encompass the origin; \(-2\pi\) if it does (\(\displaystyle\int_C=-\int_{C_1}\), \(C_1\) a clockwise circle about the origin inside \(C\))</reveal></td></tr>
+  <tr><td>Checkpoint 6.39. \(\displaystyle\int_{\partial D}\mathbf F\cdot d\mathbf r\), \(D\) the annulus \(2\le r\le5\), \(\mathbf F(x,y)=\langle x^3,\ 5x+e^y\sin y\rangle\).</td><td><reveal>\(Q_x-P_y=5\), area \(=21\pi\), so \(105\pi\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Practice</div>
+          <div class="step-subtitle">Exercises from Section 6.4</div>
+          <div class="step-body">
+<table>
+  <tr><td>146. \(\displaystyle\int_C2xy\,dx+(x+y)\,dy\), \(C\) from \((0,0)\) to \((1,1)\) along \(y=x^3\) and from \((1,1)\) to \((0,0)\) along \(y=x\) (counterclockwise).</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_{x^3}^{x}(1-2x)\,dy\,dx=-\tfrac1{60}\)</reveal></td></tr>
+  <tr><td>147. \(\displaystyle\int_C2xy\,dx+(x+y)\,dy\), \(C\) the boundary of the region between \(y=0\) and \(y=4-x^2\) (counterclockwise).</td><td><reveal>\(\displaystyle\int_{-2}^{2}(1-2x)(4-x^2)\,dx=\tfrac{32}3\)</reveal></td></tr>
+  <tr><td>150. \(\displaystyle\int_Cxy\,dx+(x+y)\,dy\), \(C\) the boundary of the region between \(x^2+y^2=1\) and \(x^2+y^2=9\) (counterclockwise).</td><td><reveal>\(Q_x-P_y=1-x\); \(\iint_D 1\,dA-\iint_D x\,dA=8\pi-0=8\pi\)</reveal></td></tr>
+  <tr><td>161. The area between the ellipse \(\dfrac{x^2}9+\dfrac{y^2}4=1\) and the circle \(x^2+y^2=25\).</td><td><reveal>\(25\pi-6\pi=19\pi\)</reveal></td></tr>
+  <tr><td>164. The area of the pentagon with vertices \((0,4)\), \((4,1)\), \((3,0)\), \((-1,-1)\), \((-2,2)\).</td><td><reveal>\(\tfrac12\oint -y\,dx+x\,dy\) over the five sides: \(17\) (this order of vertices is clockwise, so the sum is \(-17\))</reveal></td></tr>
+  <tr><td>177. A particle starts at \((-2,0)\), moves along the \(x\)-axis to \((2,0)\), then along the semicircle \(y=\sqrt{4-x^2}\) back. The work done by \(\mathbf F=x\,\mathbf i+(x^3+3xy^2)\,\mathbf j\).</td><td><reveal>\(Q_x-P_y=3(x^2+y^2)\); \(3\displaystyle\int_0^\pi\!\!\int_0^2r^3\,dr\,d\theta=12\pi\)</reveal></td></tr>
+  <tr><td>178. Counterclockwise circles of radius 2 (David) and 3 (Sandra); the wind is \(\mathbf F=(x^2y+10y)\,\mathbf i+(x^3+2xy^2)\,\mathbf j\). The work done on each skater.</td><td><reveal>\(Q_x-P_y=2x^2+2y^2-10\); \(W=\pi R^4-10\pi R^2\): David \(-24\pi\), Sandra \(-9\pi\)</reveal></td></tr>
+  <tr><td>189. \(\displaystyle\int_C(y+x)\,dx+(x+\sin y)\,dy\), \(C\) any smooth simple closed curve joining the origin to itself, counterclockwise.</td><td><reveal>\(Q_x-P_y=1-1=0\), so \(0\)</reveal></td></tr>
+  <tr><td>199. The outward flux of \(\mathbf F=-x\,\mathbf i+2y\,\mathbf j\) over the square with corners \((\pm1,\pm1)\).</td><td><reveal>\(P_x+Q_y=-1+2=1\); area \(4\), so \(4\)</reveal></td></tr>
+  <tr><td>201. The flux of \(\mathbf F=-x\,\mathbf i+y\,\mathbf j\) across \(x^2+y^2=16\) (counterclockwise).</td><td><reveal>\(P_x+Q_y=-1+1=0\), so \(0\)</reveal></td></tr>
+</table>
+<p class="muted small">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.4 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
