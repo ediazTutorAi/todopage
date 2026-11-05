@@ -622,6 +622,23 @@
   {
     "course": "Linear Algebra",
     "semester": "Spring 2026",
+    "date": "2026-04-03",
+    "title": "Properties of the Determinant",
+    "subtitle": "Section 6.2",
+    "description": "Section 6.2: the determinant of the transpose, linearity in the rows, and how the three row operations change det A, tracked live as you eliminate; invertibility iff det A is nonzero, det(AB) = det A det B, similar matrices and inverses, Laplace expansion along any row or column, and the determinant of a linear transformation.",
+    "tags": [
+      "determinants",
+      "row operations",
+      "invertibility",
+      "determinant of a product",
+      "laplace expansion",
+      "cofactor expansion"
+    ],
+    "url": "linear-algebra/fall2025/2025-11-06-properties-of-determinants/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
     "date": "2026-03-31",
     "title": "Orthogonal Transformations and Orthogonal Matrices",
     "subtitle": "Section 5.3",

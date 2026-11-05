@@ -933,6 +933,27 @@ Lesson: `linear-algebra/fall2025/2025-11-04-determinants/index.html` (Bretscher 
 Section 6.2 headings, kept the folder and `lectures.json` entry; the old stub is in git history). Hand-authored, no `content.json`. Boxed definitions/theorems in the book's wording, Examples 1 to 12 and selected
 Exercises as reveal rows; all answers checked with sympy and by running every `<det-patterns>` to its final sum in Chrome (-3, 0, 11, -480, -144, 120, -252).
 
+### `<det-elim>`, `<det-product>`, `<det-laplace>` and the Linear Algebra 6.2 lesson (added 2026-11-05)
+
+All three are in `js/determinant.js` (imported by `boot.js`; plain DOM, no CDN tags; styles at the end of `css/steps.css`) and use exact rational
+arithmetic (small `Fr` fractions), so every readout is exact and nothing is rounded.
+
+- `<det-elim matrix="0,7,5,3;1,1,2,1;1,1,2,-1;1,1,1,2" editable presets="Name: r1;r2;.. | ...">`: Theorem 6.2.3 and Algorithm 6.2.5. The instructor applies row
+  operations (swap, divide a row by k, add k times a row to another) from the controls, or presses "Next step", which performs the next operation of Gaussian
+  elimination to an upper triangular matrix (on Example 4 it makes exactly the book's two swaps). A log keeps the bookkeeping, and the readout always shows
+  `det A = (-1)^s k1...kr det B`, `det B`, and that product. `det A` computed directly stays `?` until its chip is clicked, so it can be predicted first. Undo and Reset.
+- `<det-product a="1,2;3,4" b="0,1;5,2" power="3" editable>` (2 x 2 or 3 x 3): AB, A^T, A^m, A^-1 with the matching determinants (Theorems 6.2.1, 6.2.6, 6.2.8).
+  Each right-hand side, (det A)(det B), (det A)^m, 1/det A, is a chip that stays `?` until clicked. A button cycles the power m from 2 to 6.
+- `<det-laplace matrix="1,0,1,2;9,1,3,0;9,2,2,0;5,0,0,3" along="col 2">`: Theorem 6.2.10. Pick any row or column (default: the line with the most zeros); the
+  checkerboard sign sits in the corner of every entry, each term a_ij det(A_ij) is a card showing the minor, and its value stays `?` until the card is clicked
+  (which also strikes out that entry's row and column in the big matrix). "Expand this minor" makes the minor the new matrix (Example 6 expands a 3 x 3 minor
+  again) and Back returns.
+
+Lesson: `linear-algebra/fall2025/2025-11-06-properties-of-determinants/index.html` (Bretscher 6.2, PDF pages 289 to 304, 12 steps timed for 50 minutes in an HTML comment;
+steps 9 to 11 are the book's optional parts, drop them for about 38 minutes; hand-authored, no `content.json`, entry added to `lectures.json`, folder and entry dates
+are guesses). Book wording in `.defbox`, Examples 1 to 7 and selected Exercises (1 to 5, 11 to 19, 21, 24, 27, 37 to 41, 46) as reveal rows. Every answer was checked with
+sympy and by running the widgets in Chrome (Example 4 gives 14, Example 6 gives 55, det(AB) = 10 for the default demo).
+
 ### `<jsx-path-independence>` and the Calculus III 6.3 lesson (added 2026-11-03)
 
 `<jsx-path-independence p q potential a b m1 m2 hole no-l>` with optional `<jsx-case name p q potential a b m1 m2 hole>` children (`renderJsxPathIndependence` in `js/jsxgraph.js`,

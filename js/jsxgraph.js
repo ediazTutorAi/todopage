@@ -6779,9 +6779,9 @@ function greenFmt(v) {
   if (Math.abs(v) < 2e-4) return '0';
   const pm = fmtPiMultiple(v, 2e-4);
   if (pm) return `${minus(pm)} ≈ ${dec(v)}`;
-  for (let d = 1; d <= 12; d++) {
+  for (let d = 1; d <= 24; d++) {
     const n = v * d;
-    if (Math.abs(n - Math.round(n)) < 4e-4 * Math.max(1, Math.abs(n)) && Math.abs(n) < 5000) return minus(d === 1 ? String(Math.round(n)) : `${Math.round(n)}/${d}`);
+    if (Math.abs(n - Math.round(n)) < 1.5e-4 * Math.max(1, Math.abs(n)) && Math.abs(n) < 5000) return minus(d === 1 ? String(Math.round(n)) : `${Math.round(n)}/${d}`);
   }
   return dec(v);
 }
@@ -6925,7 +6925,7 @@ function renderJsxGreen(el) {
   let cells = [];
   function buildCells() {
     const [nu, nv] = cs.dimsFor(st.n);
-    const steps = Math.max(6, Math.ceil(240 / st.n));
+    const steps = Math.max(12, Math.ceil(720 / st.n));
     cells = [];
     for (let i = 0; i < nu; i++) {
       for (let j = 0; j < nv; j++) {
@@ -7059,7 +7059,7 @@ function renderJsxGreen(el) {
     }
     if (st.view !== 'region') {
       html += `<span class="jsx-trace-chip">sum of the ${cells.length} cell loops = <b>${greenFmt(sumLoops)}</b></span>`;
-      html += `<span class="jsx-trace-chip">Σ (${dn}) ΔA over the cells = <b>${greenFmt(riemann)}</b></span>`;
+      html += `<span class="jsx-trace-chip">Σ (${dn}) ΔA over the cells ≈ <b>${Number.isFinite(riemann) ? String(Math.round(riemann * 1000) / 1000).replace('-', '−') : 'undefined'}</b></span>`;
     }
     if (readoutNote) html += `<span class="jsx-trace-chip is-undef">${readoutNote}</span>`;
     readout.innerHTML = html;

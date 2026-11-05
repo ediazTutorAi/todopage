@@ -666,3 +666,13 @@ input.det-cell-input.is-bad { outline: 2px solid var(--negative, #c0392b); }
 .cr-fig { margin: 0; text-align: center; flex: 0 1 200px; }
 .cr-fig svg { width: 100%; height: auto; display: block; }
 .cr-fig figcaption { font-size: 1.05rem; color: var(--muted, #555); margin-top: 0.1rem; }
+
+/* <det-elim>, <det-product>, <det-laplace> (js/determinant.js, Linear Algebra 6.2) */
+.det-diagram .btn.is-on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.det-diagram .btn.small { font-size: 0.95rem; padding: 0.2rem 0.7rem; margin-top: 0.3rem; }
+.det-hidden-chip { font: inherit; font-size: 1.05rem; cursor: pointer; background: transparent; color: var(--ink); }
+.det-hidden-chip.is-open { border-color: #2e8b57; background: #e8f6ee; }
+.det-select, .det-kinput { font: inherit; font-size: 1.05rem; padding: 0.2rem 0.4rem; border: 2px solid var(--line); border-radius: 8px; background: transparent; color: inherit; }
+.det-kinput { width: 4.2rem; text-align: center; }
+.det-diagram .riemann-chip.is-undef { border-color: var(--negative, #c0392b); background: #fdecea; }
+.jsx-trace-readout .riemann-chip { margin: 0.15rem 0; }

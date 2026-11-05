@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Properties of the Determinant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Properties of the Determinant</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- Section 6.2 (Bretscher, PDF pages 289 to 304, book pages 277 to 292), 12 steps for a 50 minute class:
+             1 transpose, Example 1 (4) · 2 linearity, Thm 6.2.2 (3) · 3 Gauss-Jordan and the 2x2 case (3) · 4 Thm 6.2.3, Examples 2, 3 (6) ·
+             5 Thm 6.2.4, Algorithm 6.2.5 (4) · 6 Example 4 (3) · 7 product, Thm 6.2.6 (5) · 8 similar matrices, inverse (3) ·
+             9 minors (Optional) (3) · 10 Laplace expansion, Example 6 (Optional) (5) · 11 determinant of a linear transformation (Optional) (3) ·
+             12 Exercises (6). Steps 9 to 11 are marked Optional in the book: drop them for a 38 minute class.
+             Tags: <det-elim>, <det-product>, <det-laplace> (js/determinant.js), plus <det-patterns> from 6.1. -->
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">The Determinant of the Transpose</div>
+          <div class="step-subtitle">Example 1 and Theorem 6.2.1</div>
+          <div class="step-body">
+<p>Goal: a square matrix is invertible if (and only if) its determinant is nonzero. First, some properties.</p>
+<p><b>Example 1.</b> Let \(A=\begin{bmatrix}1&2&3&4&5\\6&7&8&9&8\\7&6&5&4&3\\2&1&2&3&4\\5&6&7&8&9\end{bmatrix}\). Express \(\det(A^T)\) in terms of \(\det A\). You need not compute \(\det A\).</p>
+<det-patterns matrix="1,2,3;4,5,6;7,8,10" presets="A: 1,2,3;4,5,6;7,8,10 | Aᵀ: 1,4,7;2,5,8;3,6,10" all></det-patterns>
+<table>
+  <tr><td>A pattern \(P\) in \(A\) and its transposed pattern \(P^T\) in \(A^T\) use the same numbers. Their inversions?</td><td><reveal>the same number: each inversion just reverses roles</reveal></td></tr>
+  <tr><td>So \((\operatorname{sgn}P)(\operatorname{prod}P)\) and \((\operatorname{sgn}P^T)(\operatorname{prod}P^T)\) are</td><td><reveal>equal, for every pattern, so \(\det(A^T)=\det A\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.2.1: Determinant of the transpose</div>
+<p>If \(A\) is a square matrix, then</p>
+$$\det(A^T)=\det A.$$
+</div>
+<p>Rows and columns are interchangeable: any property of the rows holds for the columns too.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">Linearity Properties of the Determinant</div>
+          <div class="step-subtitle">Theorem 6.2.2</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.2.2: Linearity of the determinant in the rows and columns</div>
+<p>Consider fixed row vectors \(\vec v_1,\dots,\vec v_{i-1},\vec v_{i+1},\dots,\vec v_n\) with \(n\) components. Then the function</p>
+$$T(\vec x)=\det\begin{bmatrix}-\ \vec v_1\ -\\ \vdots\\ -\ \vec v_{i-1}\ -\\ -\ \vec x\ -\\ -\ \vec v_{i+1}\ -\\ \vdots\\ -\ \vec v_n\ -\end{bmatrix}\quad\text{from }\mathbb{R}^{1\times n}\text{ to }\mathbb{R}$$
+<p>is a linear transformation. This property is referred to as <em>linearity of the determinant in the \(i\)th row</em>. Likewise, the determinant is <em>linear in all the columns</em>.</p>
+</div>
+<p>In equations:</p>
+$$\det\begin{bmatrix}-\ \vec v_1\ -\\ \vdots\\ -\ \vec x+\vec y\ -\\ \vdots\\ -\ \vec v_n\ -\end{bmatrix}=\det\begin{bmatrix}-\ \vec v_1\ -\\ \vdots\\ -\ \vec x\ -\\ \vdots\\ -\ \vec v_n\ -\end{bmatrix}+\det\begin{bmatrix}-\ \vec v_1\ -\\ \vdots\\ -\ \vec y\ -\\ \vdots\\ -\ \vec v_n\ -\end{bmatrix}\quad\text{and}\quad \det\begin{bmatrix}-\ \vec v_1\ -\\ \vdots\\ -\ k\vec x\ -\\ \vdots\\ -\ \vec v_n\ -\end{bmatrix}=k\det\begin{bmatrix}-\ \vec v_1\ -\\ \vdots\\ -\ \vec x\ -\\ \vdots\\ -\ \vec v_n\ -\end{bmatrix}.$$
+<p>All other rows fixed; \(\vec x,\vec y\) any rows; \(k\) any number.</p>
+<table>
+  <tr><td>Why is \(\det\) linear in every row and column?</td><td><reveal>each \(\operatorname{prod}P\) has one factor from every row and column, and \(\det\) is a combination of these</reveal></td></tr>
+  <tr><td>If \(A\) is \(n\times n\) and \(k\) is a constant, \(\det(kA)=\)</td><td><reveal>\(k^n\det A\): each of the \(n\) rows contributes a factor \(k\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">Determinants and Gauss–Jordan Elimination</div>
+          <div class="step-subtitle">The \(2\times2\) case</div>
+          <div class="step-body">
+<p>By patterns, a \(30\times30\) determinant takes about \(7\cdot10^{33}\) multiplications: over a trillion years on a supercomputer.</p>
+<p>Instead, row-reduce. How does each elementary row operation change \(\det A\)?</p>
+<ol type="a">
+<li><em>Row division:</em> dividing a row by a nonzero scalar \(k\),</li>
+<li><em>Row swap:</em> swapping two rows, and</li>
+<li><em>Row addition:</em> adding a multiple of a row to another row.</li>
+</ol>
+<p>Start with \(2\times2\): \(\det A=ad-bc\).</p>
+<table>
+  <tr><td>a. \(B=\begin{bmatrix}a/k&b/k\\c&d\end{bmatrix}\), then \(\det B=\)</td><td><reveal>\(\dfrac ak d-\dfrac bk c=\dfrac1k\det A\)</reveal></td></tr>
+  <tr><td>a. Divide row 2 by \(k\): \(B=\begin{bmatrix}a&b\\c/k&d/k\end{bmatrix}\)</td><td><reveal>\(a\dfrac dk-b\dfrac ck=\dfrac1k(ad-bc)\)</reveal></td></tr>
+  <tr><td>b. \(B=\begin{bmatrix}c&d\\a&b\end{bmatrix}\), then \(\det B=\)</td><td><reveal>\(cb-da=-\det A\)</reveal></td></tr>
+  <tr><td>c. \(B=\begin{bmatrix}a+kc&b+kd\\c&d\end{bmatrix}\), then \(\det B=\)</td><td><reveal>\((a+kc)d-(b+kd)c=ad+kcd-bc-kdc=\det A\)</reveal></td></tr>
+  <tr><td>c. Add \(k\times\)row 1 to row 2: \(B=\begin{bmatrix}a&b\\c+ka&d+kb\end{bmatrix}\)</td><td><reveal>\(a(d+kb)-b(c+ka)=ad+kab-bc-kab=\det A\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Elementary Row Operations and Determinants</div>
+          <div class="step-subtitle">Theorem 6.2.3, Examples 2 and 3</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.2.3: Elementary row operations and determinants</div>
+<ol type="a">
+<li>If \(B\) is obtained from \(A\) by dividing a row of \(A\) by a scalar \(k\), then \(\det B=(1/k)\det A\).</li>
+<li>If \(B\) is obtained from \(A\) by a row swap, then \(\det B=-\det A\). We say that the determinant is <em>alternating</em> on the rows.</li>
+<li>If \(B\) is obtained from \(A\) by adding a multiple of a row of \(A\) to another row, then \(\det B=\det A\).</li>
+</ol>
+<p>Analogous results hold for elementary column operations.</p>
+</div>
+<det-elim matrix="1,2,3;4,5,6;7,8,10" presets="A: 1,2,3;4,5,6;7,8,10 | Two equal rows: 1,2,3;4,5,6;1,2,3"></det-elim>
+<p>Division: linearity in the \(i\)th row.</p>
+<p><b>Example 2.</b> Let \(A=\begin{bmatrix}1&2&3&4&5\\6&7&8&9&8\\7&6&5&4&3\\2&1&2&3&4\\5&6&7&8&9\end{bmatrix}\) and \(B=\begin{bmatrix}6&7&8&9&8\\1&2&3&4&5\\7&6&5&4&3\\2&1&2&3&4\\5&6&7&8&9\end{bmatrix}\). \(B\) is \(A\) with the first two rows swapped. \(\det B\) in terms of \(\det A\)?</p>
+<table>
+  <tr><td>Compare a pattern \(P\) in \(A\) with \(P_{swap}\) in \(B\):</td><td><reveal>same product, one inversion more or less, so the sign flips</reveal></td></tr>
+  <tr><td>\(\det B=\)</td><td><reveal>\(-\det A\) (non-adjacent rows: an odd number of adjacent swaps, Exercise 60)</reveal></td></tr>
+</table>
+<p><b>Example 3.</b> A matrix \(A\) has two equal rows. \(\det A\)?</p>
+<table>
+  <tr><td>Swap the equal rows: the matrix does not change, so</td><td><reveal>\(\det A=\det B=-\det A\), so \(\det A=0\)</reveal></td></tr>
+  <tr><td><b>Row addition.</b> \(B\) is \(A\) with \(k\vec v_i\) added to row \(j\). By linearity in the \(j\)th row, \(\det B=\)</td><td><reveal>\(\det A+k\det\big(\text{matrix with rows }i\text{ and }j\text{ both equal to }\vec v_i\big)=\det A+0=\det A\), by Example 3</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Invertibility and the Determinant</div>
+          <div class="step-subtitle">Theorem 6.2.4, Algorithm 6.2.5, Example 4</div>
+          <div class="step-body">
+<p>Reduce to \(\operatorname{rref}A\) with \(s\) swaps and divisions by \(k_1,\dots,k_r\):</p>
+$$\det(\operatorname{rref}A)=(-1)^s\frac1{k_1k_2\cdots k_r}(\det A),\qquad\text{or}\qquad \det A=(-1)^sk_1k_2\cdots k_r\det(\operatorname{rref}A),$$
+<table>
+  <tr><td>\(A\) invertible: \(\operatorname{rref}A=I_n\), so \(\det A=\)</td><td><reveal>\((-1)^sk_1k_2\cdots k_r\neq0\), since all the scalars \(k_i\) are nonzero</reveal></td></tr>
+  <tr><td>\(A\) noninvertible: \(\operatorname{rref}A\) has a zero row, so \(\det(\operatorname{rref}A)=\)</td><td><reveal>\(0\) (by linearity in the last row), and therefore \(\det A=0\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.2.4: Invertibility and determinant</div>
+<p>A square matrix \(A\) is invertible if and only if \(\det A\neq0\).</p>
+</div>
+<div class="defbox"><div class="defbox-label">Algorithm 6.2.5: Using Gauss–Jordan elimination to compute the determinant</div>
+<ol type="a">
+<li>Consider an invertible \(n\times n\) matrix \(A\). Suppose you swap rows \(s\) times as you compute \(\operatorname{rref}A=I_n\), and you divide various rows by the scalars \(k_1,k_2,\dots,k_r\). Then \(\det A=(-1)^sk_1k_2\cdots k_r\).</li>
+<li>No need to reach \(\operatorname{rref}\): if row operations (\(s\) swaps, divisions by \(k_1,\dots,k_r\)) take \(A\) to some \(B\) with an easy determinant, e.g. triangular, then \(\det A=(-1)^sk_1k_2\cdots k_r\det B\).</li>
+</ol>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">Computing a determinant by elimination</div>
+          <div class="step-body">
+<p><b>Example 4.</b> Find \(\det\begin{bmatrix}0&7&5&3\\1&1&2&1\\1&1&2&-1\\1&1&1&2\end{bmatrix}\).</p>
+<p>Keep track of the swaps and divisions. Upper triangular is enough: no need to reach \(\operatorname{rref}\).</p>
+<det-elim matrix="0,7,5,3;1,1,2,1;1,1,2,-1;1,1,1,2"></det-elim>
+<table>
+  <tr><td>The elimination swaps rows twice and divides by no scalar, so \(\det A=(-1)^2\det B=\)</td><td><reveal>\(\det\begin{bmatrix}1&1&2&1\\0&7&5&3\\0&0&-1&1\\0&0&0&-2\end{bmatrix}=1\cdot7\cdot(-1)\cdot(-2)=14\), using Theorem 6.1.4: the determinant of a triangular matrix is the product of its diagonal entries</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Determinant of a Product</div>
+          <div class="step-subtitle">Theorem 6.2.6</div>
+          <div class="step-body">
+<p>How are \(\det A\), \(\det B\) and \(\det(AB)\) related?</p>
+<div class="defbox"><div class="defbox-label">Theorem 6.2.6: Determinants of products and powers</div>
+<p>If \(A\) and \(B\) are \(n\times n\) matrices and \(m\) is a positive integer, then</p>
+<ol type="a">
+<li>\(\det(AB)=(\det A)(\det B)\), and</li>
+<li>\(\det(A^m)=(\det A)^m\).</li>
+</ol>
+</div>
+<det-product a="1,2;3,4" b="0,1;5,2" power="3" editable></det-product>
+<div class="defbox"><div class="defbox-label">Proof</div>
+<p>a. \(A\) invertible: \(\operatorname{rref}[A\mid AB]=[I_n\mid B]\) (Exercise 34). With the same \(s\) swaps and divisions on both halves (Algorithm 6.2.5):</p>
+$$\det A=(-1)^sk_1k_2\cdots k_r\quad\text{and}\quad\det(AB)=(-1)^sk_1k_2\cdots k_r(\det B)=(\det A)(\det B).$$
+<p>\(A\) not invertible: neither is \(AB\), so both sides are \(0\).</p>
+<p>b. Apply (a) \(m\) times: \(\det(A^m)=(\det A)^m\).</p>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Similar Matrices and Inverses</div>
+          <div class="step-subtitle">Example 5, Theorems 6.2.7 and 6.2.8</div>
+          <div class="step-body">
+<p><b>Example 5.</b> If matrix \(A\) is similar to \(B\), what is the relationship between \(\det A\) and \(\det B\)?</p>
+<table>
+  <tr><td>\(AS=SB\) with \(S\) invertible, so by Theorem 6.2.6</td><td><reveal>\((\det A)(\det S)=(\det S)(\det B)\). Divide by \(\det S\neq0\): \(\det A=\det B\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.2.7: Determinants of similar matrices</div>
+<p>If matrix \(A\) is similar to \(B\), then \(\det A=\det B\).</p>
+</div>
+<p>Is the converse true? (Exercise 59)</p>
+<p>\(A\) invertible: how are \(\det A\) and \(\det(A^{-1})\) related? Start from \(I_n=AA^{-1}\).</p>
+<table>
+  <tr><td>Take determinants: \(1=\det(I_n)=\det(AA^{-1})=\)</td><td><reveal>\(\det(A)\det(A^{-1})\), so \(\det(A^{-1})=\dfrac1{\det A}\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.2.8: Determinant of an inverse</div>
+<p>If \(A\) is an invertible matrix, then</p>
+$$\det(A^{-1})=\frac1{\det A}=(\det A)^{-1}.$$
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Minors and Laplace Expansion (Optional)</div>
+          <div class="step-subtitle">Definition 6.2.9</div>
+          <div class="step-body">
+<p>Regroup the \(3\times3\) formula by the first column:</p>
+$$\det A=a_{11}(a_{22}a_{33}-a_{32}a_{23})+a_{21}(a_{32}a_{13}-a_{12}a_{33})+a_{31}(a_{12}a_{23}-a_{22}a_{13}).$$
+<p>Only 9 multiplications, versus 12 for Sarrus.</p>
+<div class="defbox"><div class="defbox-label">Definition 6.2.9: Minors</div>
+<p>For an \(n\times n\) matrix \(A\), let \(A_{ij}\) be the matrix obtained by omitting the \(i\)th row and the \(j\)th column of \(A\). The determinant of the \((n-1)\times(n-1)\) matrix \(A_{ij}\) is called a <em>minor</em> of \(A\).</p>
+</div>
+<p>In short:</p>
+$$\det A=a_{11}\det(A_{11})-a_{21}\det(A_{21})+a_{31}\det(A_{31}).$$
+<p><em>Laplace expansion</em> (or <em>cofactor expansion</em>) down column 1. Any row or column works. The sign of \(a_{ij}\det(A_{ij})\) is \((-1)^{i+j}\): a checkerboard.</p>
+$$\begin{bmatrix}+&-&+\\-&+&-\\+&-&+\end{bmatrix}.$$
+<det-laplace matrix="1,2,3;4,5,6;7,8,10" along="col 1"></det-laplace>
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Laplace Expansion (Optional)</div>
+          <div class="step-subtitle">Theorem 6.2.10 and Example 6</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.2.10: Laplace expansion (or cofactor expansion)</div>
+<p>We can compute the determinant of an \(n\times n\) matrix \(A\) by Laplace expansion down any column or along any row.</p>
+<p>Expansion down the \(j\)th column: \(\displaystyle\det A=\sum_{i=1}^n(-1)^{i+j}a_{ij}\det(A_{ij})\).</p>
+<p>Expansion along the \(i\)th row: \(\displaystyle\det A=\sum_{j=1}^n(-1)^{i+j}a_{ij}\det(A_{ij})\).</p>
+<p>Again, the signs follow a checkerboard pattern: \(\begin{bmatrix}+&-&+&-&\cdots\\-&+&-&+&\cdots\\+&-&+&-&\cdots\\ \vdots&\vdots&\vdots&\vdots&\ddots\end{bmatrix}\).</p>
+</div>
+<p><b>Example 6.</b> Compute \(\det A\) for \(A=\begin{bmatrix}1&0&1&2\\9&1&3&0\\9&2&2&0\\5&0&0&3\end{bmatrix}\). Expand along the column with the most zeros: column 2.</p>
+<det-laplace matrix="1,0,1,2;9,1,3,0;9,2,2,0;5,0,0,3" along="col 2"></det-laplace>
+<table>
+  <tr><td>\(\det A=\)</td><td><reveal>\(1\det\begin{bmatrix}1&1&2\\9&2&0\\5&0&3\end{bmatrix}-2\det\begin{bmatrix}1&1&2\\9&3&0\\5&0&3\end{bmatrix}=-20-21-2(-30-18)=55\)</reveal></td></tr>
+</table>
+<p>Cheaper than patterns, much costlier than Gauss–Jordan.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">The Determinant of a Linear Transformation (Optional)</div>
+          <div class="step-subtitle">Definition 6.2.11 and Example 7</div>
+          <div class="step-body">
+<p>(Chapter 4.) For \(T(\vec x)=A\vec x\): \(\det T=\det A\). For \(T\) from \(V\) to \(V\): use its matrix in a basis.</p>
+<div class="defbox"><div class="defbox-label">Definition 6.2.11: The determinant of a linear transformation</div>
+<p>Consider a linear transformation \(T\) from \(V\) to \(V\), where \(V\) is a finite-dimensional linear space. If \(\mathfrak B\) is a basis of \(V\) and \(B\) is the \(\mathfrak B\)-matrix of \(T\), then we define \(\det T=\det B\). This determinant is independent of the basis \(\mathfrak B\) we choose.</p>
+</div>
+<table>
+  <tr><td>Why is it independent of the basis? Another basis \(\mathfrak A\) gives a matrix \(A\) of \(T\) that is</td><td><reveal>similar to \(B\) (Theorem 4.3.5), so \(\det A=\det B\) by Theorem 6.2.7</reveal></td></tr>
+  <tr><td><b>Example 7.</b> Let \(V\) be the space spanned by the functions \(\cos(2x)\) and \(\sin(2x)\). The determinant of \(D(f)=f'\) from \(V\) to \(V\). The matrix of \(D\) in the basis \(\cos(2x),\sin(2x)\) is</td><td><reveal>\(B=\begin{bmatrix}0&2\\-2&0\end{bmatrix}\), so \(\det D=\det B=4\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="12">
+          <div class="step-title">Exercises 6.2</div>
+          <div class="step-subtitle">Selected exercises</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>1, 2, 3, 4.</b> Use Gaussian elimination to find the determinant: \(\begin{bmatrix}1&1&1\\1&3&3\\2&2&5\end{bmatrix}\), \(\begin{bmatrix}1&2&3\\1&6&8\\-2&-4&0\end{bmatrix}\), \(\begin{bmatrix}1&3&2&4\\1&6&4&8\\1&3&0&0\\2&6&4&12\end{bmatrix}\), \(\begin{bmatrix}1&-1&2&-2\\-1&2&1&6\\2&1&14&10\\-2&6&10&33\end{bmatrix}\)</td><td><reveal>\(6\), \(24\), \(-24\), \(9\)</reveal></td></tr>
+  <tr><td><b>5.</b> \(\begin{bmatrix}0&2&3&4\\0&0&0&4\\1&2&3&4\\0&0&3&4\end{bmatrix}\)</td><td><reveal>\(-24\) (three swaps to reach an upper triangular matrix with diagonal \(1,2,3,4\))</reveal></td></tr>
+  <tr><td><b>11 to 16.</b> \(A\) is \(4\times4\) with rows \(\vec v_1,\vec v_2,\vec v_3,\vec v_4\) and \(\det A=8\). Find the determinants of the matrices with rows: (11) \(\vec v_1,\vec v_2,-9\vec v_3,\vec v_4\); (12) \(\vec v_4,\vec v_2,\vec v_3,\vec v_1\); (13) \(\vec v_2,\vec v_3,\vec v_1,\vec v_4\); (14) \(\vec v_1,\vec v_2+9\vec v_4,\vec v_3,\vec v_4\); (15) \(\vec v_1,\ \vec v_1+\vec v_2,\ \vec v_1+\vec v_2+\vec v_3,\ \vec v_1+\vec v_2+\vec v_3+\vec v_4\); (16) \(6\vec v_1+2\vec v_4,\ \vec v_2,\ \vec v_3,\ 3\vec v_1+\vec v_4\)</td><td><reveal>(11) \(-72\); (12) \(-8\) (one swap); (13) \(8\) (two swaps); (14) \(8\) (row addition); (15) \(8\) (row additions); (16) \(0\), since row 1 is \(2\times\) row 4</reveal></td></tr>
+  <tr><td><b>17, 18, 19, 21.</b> Determinants of the linear transformations: \(T(f)=2f+3f'\) from \(P_2\) to \(P_2\); \(T(f(t))=f(3t-2)\) from \(P_2\) to \(P_2\); \(T(f(t))=f(-t)\) from \(P_2\) to \(P_2\); \(T(f(t))=f(-t)\) from \(P_3\) to \(P_3\)</td><td><reveal>\(8\) (triangular matrix, diagonal \(2,2,2\)); \(27\) (diagonal \(1,3,9\)); \(-1\) (diagonal \(1,-1,1\)); \(1\) (diagonal \(1,-1,1,-1\))</reveal></td></tr>
+  <tr><td><b>24, 27.</b> \(T(z)=(2+3i)z\) from \(\mathbb C\) to \(\mathbb C\); \(T(f)=af'+bf''\) from the space spanned by \(\cos x\) and \(\sin x\) to itself</td><td><reveal>\(13\) (matrix \(\begin{bmatrix}2&-3\\3&2\end{bmatrix}\)); \(a^2+b^2\) (matrix \(\begin{bmatrix}-b&a\\-a&-b\end{bmatrix}\))</reveal></td></tr>
+  <tr><td><b>37, 38, 39, 40, 41.</b> (37) \(A\) and \(A^{-1}\) both have integer entries: possible values of \(\det A\)? (38) \(\det A=3\): \(\det(A^TA)\)? (39) \(A\) invertible: the sign of \(\det(A^TA)\)? (40) \(A\) orthogonal: possible values of \(\det A\)? (41) \(A\) skew-symmetric \(n\times n\) with \(n\) odd: show \(\det A=0\)</td><td><reveal>(37) \(\pm1\), since \(\det A\) and \(1/\det A\) are integers; (38) \(9\); (39) positive, \(\det(A^TA)=(\det A)^2>0\); (40) \(\pm1\); (41) \(\det A=\det A^T=\det(-A)=(-1)^n\det A=-\det A\), so \(\det A=0\)</reveal></td></tr>
+  <tr><td><b>46.</b> \(\det\begin{bmatrix}a&1&d\\b&1&e\\c&1&f\end{bmatrix}=7\) and \(\det\begin{bmatrix}a&1&d\\b&2&e\\c&3&f\end{bmatrix}=11\). Find \(\det\begin{bmatrix}a&3&d\\b&3&e\\c&3&f\end{bmatrix}\) and \(\det\begin{bmatrix}a&3&d\\b&5&e\\c&7&f\end{bmatrix}\)</td><td><reveal>\(3\cdot7=21\); the middle column is \(2\begin{bmatrix}1\\2\\3\end{bmatrix}+\begin{bmatrix}1\\1\\1\end{bmatrix}\), so \(2\cdot11+7=29\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
