@@ -974,3 +974,18 @@ attribution on the last slide. Whirlpool step reproduces the book's -pi and pi. 
 - `mode="sss"` (`a b c`): base b, a dashed circle of radius c about A and of radius a about C; B is where they meet, so the triangle inequality is seen as the circles failing to meet. Sliders for a, b, c; chips for the three inequalities, the angles from the law of cosines (sum 180) and Heron's area.
 
 Lesson: `trigonometry/2026/2026-11-04-lesson-21-law-of-cosines/index.html` (8 steps, hand-authored, no `content.json`, entry added to `lectures.json`; folder date is a guess). Workbook wording with reveal rows; answers checked numerically (15.64, 42.89, 74.61, 7, 93.82/29.93/56.25, 7.48, 11.5 acres). The annotated PDF's a^2 for Example 2 reads 244.60..., the exact value is 244.61.
+
+### `<jsx-vector-add>`, `<jsx-incline>` and Trigonometry Lesson 22 (added 2026-11-09)
+
+Both in `js/jsxgraph.js` (need the JSXGraph CDN tags; `.jsx-board--incline` in `css/steps.css`).
+
+- `<jsx-vector-add v="60" w="40" angle="55" sliders="v w angle" equilibrant hide="w" unit="...">`: parallelogram addition. `w` lies on the x-axis, `v` is rotated up by `angle` (the angle between them);
+  draws the dashed parallelogram, the resultant `v + w` (red), the angle at P and the supplementary angle at Q. Chips: `|v + w|` (law of cosines), angles of the resultant with `v` and `w`.
+  `sliders` lists which of v/w/angle are slidable (default all, `sliders=""` none; the view box fits the largest allowed picture). `equilibrant` adds a toggle drawing `-(v + w)` with its angle with `v`.
+  `hide="w"` leaves `|w|` (and the angle chip) out so a "find |w|" example does not give away its answer.
+- `<jsx-incline weight="3800" angle="18" limit="1300" unit="lb" show="components triangle equilibrant">`: vehicle on a ramp. `F_g` straight down, split into `F_b` (downhill, `F_g sin`) and `F_a`
+  (perpendicular, `F_g cos`); buttons for Components, Triangle ABC (A head of `F_g`, B its tail, C head of `F_a`) and Equilibrant (`-F_b`). `limit` adds a holds/fails chip against the rope's safe load and a
+  "Max safe angle" button (`asin(limit / weight)`). Slider 0 to 35 degrees.
+
+Lesson: `trigonometry/2026/2026-11-09-lesson-22-introduction-to-vectors/index.html` (7 steps, hand-authored, no `content.json`, entry added to `lectures.json`; folder date is today's, rename if needed). Workbook wording
+with reveal rows (terminology blanks, Examples 1 to 4). Answers match the annotated PDF (89,181 lb, 158.44 deg, 7.39 in, 1174.3 lb, 20.0 deg). Checked in headless Chromium, no console errors.

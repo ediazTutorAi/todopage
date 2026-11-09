@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Introduction to Vectors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (vector explorers use <jsx-vector-add> and <jsx-incline>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+<!-- Lesson 22 plan, 7 steps (instructor supplies the explanations; slides carry the workbook wording and live diagrams):
+   1. Important Terminology           4. Example 2 (equilibrant)         7. Example 4 (d), (e)
+   2. Parallelograms and Vectors      5. Example 3
+   3. Example 1 (tugboats)            6. Inclined Planes, Example 4 (a) to (c) -->
+
+  <header class="site-header">
+    <h1>Introduction to Vectors</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Introduction to Vectors</div>
+          <div class="step-subtitle">Important Terminology</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">DEFINITION: Scalar and Vector Quantities, Resultants, Equilibrants, and the Zero Vector</div>
+<p>Quantities that can be described by <b>magnitude</b> alone, for example, speed, mass, temperature, etc., are called <reveal>scalar</reveal> quantities.</p>
+<p>Quantities that have both <b>magnitude</b> and <b>direction</b>, such as velocity, acceleration, etc., are called <reveal>vector</reveal> quantities.</p>
+<div class="jsx-fubini-grid">
+<div>
+<p>Vector quantities are often represented by directed line segments called <reveal>vectors</reveal>. The length of this vector denotes the magnitude of the vector quantity, while the orientation indicates the direction of the vector quantity.</p>
+<p>A vector can be named by two points. The first point indicates the <reveal>initial</reveal> point or the <b>tail</b>, and the second point indicates the <reveal>terminal</reveal> point or the <b>head</b>.</p>
+</div>
+<div>
+<svg viewBox="0 0 260 150" style="width:100%;max-width:300px" role="img" aria-label="Vector from P to Q">
+  <defs><marker id="l22-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#151515"/></marker></defs>
+  <line x1="40" y1="120" x2="215" y2="35" stroke="#151515" stroke-width="3.5" marker-end="url(#l22-ah)"/>
+  <circle cx="40" cy="120" r="5" fill="#151515"/>
+  <text x="22" y="140" font-size="20" font-style="italic">P</text>
+  <text x="222" y="32" font-size="20" font-style="italic">Q</text>
+  <g font-size="22" fill="#0f6ab4" font-style="italic" font-weight="700" transform="translate(-45,-22)">
+    <text x="82" y="70">v</text>
+    <text x="104" y="70" font-style="normal">=</text>
+    <text x="128" y="70">PQ</text>
+    <g stroke="#0f6ab4" stroke-width="1.8" fill="none"><path d="M80 48 H94 M89 44 L94 48 L89 52"/><path d="M126 48 H157 M152 44 L157 48 L152 52"/></g>
+  </g>
+</svg>
+</div>
+</div>
+<p>The magnitude (or length) of any vector \(\mathbf{v}\) is denoted as <reveal>\(|\mathbf{v}|\)</reveal>.</p>
+<p>When two vectors have the same magnitude and direction, they are said to be <reveal>equal</reveal>.</p>
+<p>Vectors can be added together. The sum of any two vectors is called the <reveal>resultant</reveal>, which is also a vector.</p>
+<p>For any vector \(\mathbf{v}\), a vector with equal magnitude but in the opposing direction is called an <reveal>equilibrant</reveal> and is denoted as \(-\mathbf{v}\).</p>
+<p>The sum of any vector \(\mathbf{v}\), and its equilibrant \(-\mathbf{v}\), is called the <reveal>zero</reveal> vector, denoted <reveal>\(\mathbf{0}\)</reveal> (a vector quantity), and has a magnitude of <reveal>\(0\)</reveal> (a scalar quantity).</p></div>
+<p>One common vector topic is that of force. In general, whenever we engage in an action that has the potential to accelerate an object, for example, pushing or pulling, we experience force.</p>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">Parallelograms and Vectors</div>
+          <div class="step-subtitle">Parallelograms are often used to visualize and understand vector operations, such as addition and subtraction.</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">IMPORTANT INFO: Parallelograms and the Resultant</div>
+<p>Given two vectors, \(\mathbf{v}\) and \(\mathbf{w}\), we can construct a parallelogram by arranging these vectors as opposite sides.</p>
+<p>We visualize the resultant, \(\mathbf{v} + \mathbf{w}\), as the directed diagonal formed with the initial side at the common initial point, point \(P\), and terminal side at the common terminal point, point \(Q\).</p>
+<p><i>Note: In a parallelogram, opposite sides are parallel and opposite angles are congruent. Additionally, we can conclude that adjacent angles in a parallelogram are supplementary. (Hint: From our parallel lines and transversals discussion, these angles are same-side interior.)</i></p></div>
+<jsx-vector-add v="5" w="4" angle="50"></jsx-vector-add>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Two tugboats</div>
+          <div class="step-body">
+<p><b>Example 1.</b> A ship is guided through a narrow river by two tugboats. The tugboat at point \(P\) can pull with a force of 60 thousand pounds, and the tugboat at point \(Q\) can pull with a force of 40 thousand pounds. Working together at full capacity, what is the magnitude of the resultant force, rounded to the nearest pound?</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>Angle in the triangle</td><td><reveal>\(180^\circ - 55^\circ = 125^\circ\)</reveal></td></tr>
+  <tr><td>Law of Cosines</td><td><reveal>\(|\mathbf{v}+\mathbf{w}|^2 = 40^2 + 60^2 - 2(40)(60)\cos(125^\circ) \approx 7953.17\)</reveal></td></tr>
+  <tr><td>Resultant</td><td><reveal>\(|\mathbf{v}+\mathbf{w}| \approx 89.181\) thousand lb, about 89,181 lb</reveal></td></tr>
+</table>
+</div>
+<div><jsx-vector-add v="60" w="40" angle="55" sliders="" unit="thousand lb"></jsx-vector-add></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Example 2</div>
+          <div class="step-subtitle">The equilibrant</div>
+          <div class="step-body">
+<p><b>Example 2.</b> Suppose the ship captain from Example 1 spots a small fishing boat in her path. She engages her engines in reverse to stop the forward motion and avoid a collision. What force must her engines apply to counter the pull of the tugboats? What angle is formed between this equilibrant force and the 60-thousand-pound force?</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>Force needed</td><td><reveal>the equilibrant \(-(\mathbf{v}+\mathbf{w})\), with magnitude \(\approx 89{,}181\) lb</reveal></td></tr>
+  <tr><td>Law of Sines</td><td><reveal>\(\dfrac{\sin A}{40} = \dfrac{\sin 125^\circ}{89.181}\), \(\sin A \approx 0.3674\), \(A \approx 21.56^\circ\)</reveal></td></tr>
+  <tr><td>Angle \(\theta\)</td><td><reveal>\(\theta = 180^\circ - 21.56^\circ \approx 158.44^\circ\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-vector-add v="60" w="40" angle="55" sliders="" equilibrant unit="thousand lb"></jsx-vector-add></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Example 3</div>
+          <div class="step-subtitle">Find the magnitude of w</div>
+          <div class="step-body">
+<p><b>Example 3.</b> Consider two vectors, \(\mathbf{v}\) and \(\mathbf{w}\), which share a common initial point and form an angle of \(70^\circ\). If \(|\mathbf{v}| = 6\) in, and \(|\mathbf{v}+\mathbf{w}| = 11\) in, sketch \(\mathbf{v}\), \(\mathbf{w}\), the resultant \(\mathbf{v}+\mathbf{w}\) using a parallelogram, and find \(|\mathbf{w}|\).</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>We know</td><td><reveal>\(B = 110^\circ\), \(c = 6\), \(b = 11\)</reveal></td></tr>
+  <tr><td>We need</td><td><reveal>\(C\), \(A\), \(a\)</reveal></td></tr>
+  <tr><td>Find \(C\)</td><td><reveal>\(\sin C = \dfrac{c\sin B}{b}\), \(C = \sin^{-1}\left(\dfrac{6\sin(110^\circ)}{11}\right) \approx 30.83^\circ\)</reveal></td></tr>
+  <tr><td>Find \(A\)</td><td><reveal>\(A = 180^\circ - 110^\circ - 30.83^\circ \approx 39.17^\circ\)</reveal></td></tr>
+  <tr><td>Find \(a\)</td><td><reveal>\(a = \sin A\left(\dfrac{b}{\sin B}\right) \approx \sin(39.17^\circ)\left(\dfrac{11}{\sin(110^\circ)}\right) \approx 7.39\)</reveal></td></tr>
+  <tr><td>Answer</td><td><reveal>\(|\mathbf{w}| \approx 7.39\) in</reveal></td></tr>
+</table>
+</div>
+<div><jsx-vector-add v="6" w="7.39" angle="70" sliders="" hide="w" unit="in"></jsx-vector-add></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Inclined Planes and Right Triangles</div>
+          <div class="step-subtitle">Example 4 (a) to (c)</div>
+          <div class="step-body">
+<p>When an object is positioned on an inclined plane, the force of gravity acts downward, thus moving the object in the downhill direction. Therefore, to remain at rest, another force must be applied to counter the force of gravity (for this text, we will ignore any effects of friction).</p>
+<p><b>Example 4.</b> A 3800-lb vehicle is held steady on a ramp that makes an \(18^\circ\) angle with the horizontal by a rope tied to a secure block further uphill.</p>
+<p><b>(a)</b> Construct a parallelogram with \(\mathbf{F}_g\) (force due to gravity) as a diagonal by adding two vectors: \(\mathbf{F}_b\), parallel to the ramp surface oriented in the downhill direction, and \(\mathbf{F}_a\), perpendicular to the ramp surface in a general downward direction.</p>
+<p><b>(b)</b> Label the head and tail of \(\mathbf{F}_g\) as points \(A\) and \(B\), respectively, and the head of \(\mathbf{F}_a\) as point \(C\). Identify and justify each angle measure of triangle \(ABC\).</p>
+<p><b>(c)</b> We can see that \(\mathbf{F}_b\) is the force we must overcome to keep the vehicle at rest. That is, we must find the equilibrant, \(-\mathbf{F}_b\).</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>\(B\)</td><td><reveal>\(18^\circ\)</reveal></td></tr>
+  <tr><td>\(C\)</td><td><reveal>\(90^\circ\)</reveal></td></tr>
+  <tr><td>\(A\)</td><td><reveal>\(180^\circ - 90^\circ - 18^\circ = 72^\circ\)</reveal></td></tr>
+  <tr><td>Sides</td><td><reveal>\(c = |\mathbf{F}_g| = 3800\), \(b = |\mathbf{F}_b|\), \(a = |\mathbf{F}_a|\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-incline weight="3800" angle="18" unit="lb"></jsx-incline></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">(d) and (e): the rope</div>
+          <div class="step-body">
+<p><b>(d)</b> Assume the rope used has a maximum safe working load rating of 1300 lb. Using your results from Part (b), can this rope be trusted to hold the car at rest?</p>
+<p><b>(e)</b> What is the maximum ramp angle at which this rope can safely hold this vehicle in place?</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>(d) \(\sin(B) = \dfrac{b}{c}\)</td><td><reveal>\(b = c\sin(B) = 3800\sin(18^\circ) \approx 1174.3\)</reveal></td></tr>
+  <tr><td>Conclusion</td><td><reveal>Yes, \(|\mathbf{F}_b| \approx 1174.3\) lb \(< 1300\) lb (safe working load)</reveal></td></tr>
+  <tr><td>(e) \(\sin(B) = \dfrac{b}{c}\)</td><td><reveal>\(B = \sin^{-1}\left(\dfrac{b}{c}\right) = \sin^{-1}\left(\dfrac{1300}{3800}\right)\)</reveal></td></tr>
+  <tr><td>Maximum angle</td><td><reveal>\(B \approx 20.0^\circ\)</reveal></td></tr>
+</table>
+</div>
+<div><jsx-incline weight="3800" angle="18" limit="1300" unit="lb" show="components equilibrant"></jsx-incline></div>
+</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

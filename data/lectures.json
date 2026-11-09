@@ -2,6 +2,21 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-11-09",
+    "title": "Introduction to Vectors",
+    "subtitle": "Lesson 22",
+    "description": "Scalar and vector quantities, resultants and equilibrants, the parallelogram picture of vector addition, tugboat and ramp force problems solved with the Law of Cosines, the Law of Sines and right triangle trigonometry, with live vector explorers.",
+    "tags": [
+      "Vectors",
+      "Resultant",
+      "Equilibrant",
+      "Force"
+    ],
+    "url": "trigonometry/2026/2026-11-09-lesson-22-introduction-to-vectors/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-11-04",
     "title": "The Law of Cosines",
     "subtitle": "Lesson 21",

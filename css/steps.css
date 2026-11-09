@@ -676,3 +676,6 @@ input.det-cell-input.is-bad { outline: 2px solid var(--negative, #c0392b); }
 .det-kinput { width: 4.2rem; text-align: center; }
 .det-diagram .riemann-chip.is-undef { border-color: var(--negative, #c0392b); background: #fdecea; }
 .jsx-trace-readout .riemann-chip { margin: 0.15rem 0; }
+
+/* <jsx-incline> (js/jsxgraph.js, Trigonometry Lesson 22): vehicle on a ramp. */
+.jsx-board--incline { aspect-ratio: 1.2 / 1; }

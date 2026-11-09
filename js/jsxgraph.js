@@ -7101,7 +7101,308 @@ function renderJsxGreen(el) {
   refresh();
 }
 
+// <jsx-vector-add v="60" w="40" angle="55" sliders="v w angle" equilibrant hide="w" unit="thousand lb">
+//
+// Vector addition by the parallelogram (Trigonometry Lesson 22). v and w share the initial point P; `angle` is the
+// angle between them (w lies along the x-axis, v is rotated up by `angle`). Draws the parallelogram (dashed copies of
+// v and w), the resultant v + w as its diagonal (red), the angle at P and the supplementary angle at the far vertex Q.
+// Readout: |v + w| from the law of cosines in triangle P-w-Q (angle 180 - angle), and the angle between the resultant
+// and each of v, w. `sliders` lists which of v, w, angle get a slider (default all; "" none). `equilibrant` adds a
+// button that draws -(v + w) from P (green), its angle with v, and v + w + (-(v + w)) = 0. `hide="w"` (or "v")
+// leaves that magnitude out of the labels and chips so a "find |w|" example does not give away its answer.
+const VADD_ASPECT = 1.8;
+
+function renderJsxVectorAdd(el) {
+  const TAG = 'jsx-vector-add';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const rad = (d) => (d * Math.PI) / 180;
+  const deg = (r) => (r * 180) / Math.PI;
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const orange = '#c2740c';
+  const green = '#2e8b57';
+  const st = {
+    v: parseFloat(el.getAttribute('v') ?? 5), w: parseFloat(el.getAttribute('w') ?? 4),
+    angle: parseFloat(el.getAttribute('angle') ?? 50), eq: false,
+  };
+  const sliderKeys = (el.hasAttribute('sliders') ? el.getAttribute('sliders') : 'v w angle').split(/\s+/).filter(Boolean);
+  const hide = (el.getAttribute('hide') || '').split(/\s+/);
+  const hasEq = el.hasAttribute('equilibrant');
+  const unit = el.getAttribute('unit') || '';
+  const u = unit ? ` ${unit}` : '';
+  const f2 = (x) => fmtNum(Math.round(x * 100) / 100).replace('-', '−');
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  container.style.maxWidth = '640px';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--cosines';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const vVec = () => [st.v * Math.cos(rad(st.angle)), st.v * Math.sin(rad(st.angle))];
+  const wVec = () => [st.w, 0];
+  const rVec = () => [vVec()[0] + wVec()[0], vVec()[1] + wVec()[1]];
+  const rMag = () => Math.hypot(...rVec());
+  // angle between resultant and w (x-axis), and between resultant and v
+  const rAng = () => deg(Math.atan2(rVec()[1], rVec()[0]));
+
+  // View box fitted to the vectors as they are now (re-fitted on every refresh).
+  let S = 1;
+  function fitBox() {
+    const r = rVec(); const v = vVec(); const w = wVec();
+    const sg = st.eq ? -1 : 0;
+    const xs = [0, v[0], w[0], r[0], ...(st.eq ? [-r[0]] : [])];
+    const ys = [0, v[1], w[1], r[1], ...(st.eq ? [-r[1]] : [])];
+    const x0 = Math.min(...xs); const x1 = Math.max(...xs); const y0 = Math.min(...ys); const y1 = Math.max(...ys);
+    const span = Math.max(x1 - x0, (y1 - y0) * VADD_ASPECT);
+    const pad = 0.14 * span;
+    const needW = Math.max(x1 - x0 + 2 * pad, (y1 - y0 + 2 * pad) * VADD_ASPECT);
+    const cx = (x0 + x1) / 2; const cy = (y0 + y1) / 2;
+    // label/arc scale follows the parallelogram itself, not the (larger) view when the equilibrant is shown
+    const bx = [0, v[0], w[0], r[0]]; const by = [0, v[1], w[1], r[1]];
+    const bw = Math.max(Math.max(...bx) - Math.min(...bx), (Math.max(...by) - Math.min(...by)) * VADD_ASPECT) * 1.28;
+    S = bw / 1.6;
+    return [cx - needW / 2, cy + needW / VADD_ASPECT / 2, cx + needW / 2, cy - needW / VADD_ASPECT / 2];
+  }
+  const bd = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: fitBox(), axis: false, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  const pt = (fx, fy, o) => bd.create('point', [fx, fy], { name: '', fixed: true, highlight: false, size: POINT_SIZE, strokeColor: '#fff', strokeWidth: POINT_STROKE, fillColor: ink, ...o });
+  const lab = (fn, txt, color) => bd.create('text', [() => fn()[0], () => fn()[1], txt], {
+    fontSize: READOUT_VALUE_FONT, color, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:800',
+  });
+  const arrow = (fa, fb, color, width, o) => bd.create('arrow', [fa, fb], { strokeColor: color, strokeWidth: width, lastArrow: { type: 2, size: 7 }, fixed: true, highlight: false, ...o });
+  const P = pt(() => 0, () => 0);
+  const Vp = pt(() => vVec()[0], () => vVec()[1], { visible: false });
+  const Wp = pt(() => wVec()[0], () => wVec()[1], { visible: false });
+  const Qp = pt(() => rVec()[0], () => rVec()[1], { visible: false });
+  const dashed = { strokeColor: grey2(), strokeWidth: 2.5, dash: 2, fixed: true, highlight: false };
+  function grey2() { return '#7a7f85'; }
+  bd.create('polygon', [P, Wp, Qp, Vp], { fillColor: accent, fillOpacity: 0.07, vertices: { visible: false }, highlight: false, fixed: true, borders: { visible: false } });
+  bd.create('segment', [Vp, Qp], dashed);
+  bd.create('segment', [Wp, Qp], dashed);
+  arrow(P, Vp, accent, 5);
+  arrow(P, Wp, orange, 5);
+  arrow(P, Qp, negative, 6);
+  const eqTip = pt(() => -rVec()[0], () => -rVec()[1], { visible: false });
+  const eqArrow = arrow(P, eqTip, green, 6, { visible: false });
+  const eqLab = lab(() => { const r = rVec(); const m = Math.hypot(...r) || 1; return [-r[0] * 0.5 + 0.2 * S * r[1] / m, -r[1] * 0.5 - 0.2 * S * r[0] / m]; }, '−(v + w)', green);
+  eqLab.setAttribute({ visible: false });
+  pt(() => 0, () => 0);
+  lab(() => [-0.05 * S, -0.07 * S], 'P', ink);
+  lab(() => [rVec()[0] + 0.05 * S, rVec()[1] + 0.05 * S], 'Q', ink);
+  const nameEls = [
+    lab(() => [vVec()[0] * 0.5 - 0.06 * S, vVec()[1] * 0.5 + 0.06 * S], 'v', accent),
+    lab(() => [wVec()[0] * 0.5, -0.07 * S], 'w', orange),
+  ];
+  lab(() => { const r = rVec(); const m = Math.hypot(...r) || 1; const sg = st.eq ? -1 : 1; return [r[0] * 0.55 - sg * 0.17 * S * r[1] / m, r[1] * 0.55 + sg * 0.17 * S * r[0] / m]; }, 'v + w', negative);
+  const A0 = pt(() => 1, () => 0, { visible: false });
+  const rr = () => 0.14 * S;
+  const angleEls = [];
+  angleEls.push(bd.create('angle', [A0, P, Vp], { radius: () => rr(), strokeColor: accent, fillColor: accent, fillOpacity: 0.2, name: '', fixed: true, highlight: false }));
+  angleEls.push(lab(() => [(rr() + 0.07 * S) * Math.cos(rad(st.angle / 2)), (rr() + 0.07 * S) * Math.sin(rad(st.angle / 2))], () => `${f2(st.angle)}°`, accent));
+  // supplementary angle at the tip of w (inside triangle P, w-tip, Q), where the workbook marks it
+  angleEls.push(bd.create('angle', [Qp, Wp, P], { radius: () => rr(), strokeColor: ink, fillColor: ink, fillOpacity: 0.12, name: '', fixed: true, highlight: false }));
+  angleEls.push(lab(() => {
+    const a = rad(st.angle); const bx = -0.45 + Math.cos(a); const by = Math.sin(a); const m = Math.hypot(bx, by) || 1;
+    const d = rr() + 0.13 * S;
+    return [st.w + d * bx / m, d * by / m];
+  }, () => `${f2(180 - st.angle)}°`, ink));
+
+  function refresh() {
+    const m = rMag(); const b2 = rAng(); const toV = st.angle - b2;
+    const shownW = hide.includes('w') ? '?' : f2(st.w);
+    const shownV = hide.includes('v') ? '?' : f2(st.v);
+    const chips = [
+      `<span class="jsx-trace-chip">|v| = <b>${shownV}</b>${u}, |w| = <b>${shownW}</b>${u}</span>`,
+      `<span class="jsx-trace-chip jsx-trace-main">|v + w| = <b>${f2(m)}</b>${u}</span>`,
+    ];
+    if (!hide[0]) chips.splice(2, 0, `<span class="jsx-trace-chip">angle between v + w and v: <b>${f2(toV)}°</b>, and w: <b>${f2(b2)}°</b></span>`);
+    if (st.eq) {
+      chips.push(`<span class="jsx-trace-chip" style="color:${green}">|−(v + w)| = <b>${f2(m)}</b>${u}, angle with v: <b>${f2(180 - toV)}°</b></span>`);
+      chips.push(`<span class="jsx-trace-chip is-parallel">(v + w) + (−(v + w)) = 0, magnitude 0</span>`);
+    }
+    readout.innerHTML = chips.join('');
+    [eqArrow, eqLab].forEach((o) => o.setAttribute({ visible: st.eq }));
+    angleEls.forEach((o) => o.setAttribute({ visible: !st.eq }));
+    nameEls.forEach((o) => o.setAttribute({ visible: !st.eq }));
+    bd.setBoundingBox(fitBox(), true);
+    bd.update();
+  }
+
+  const defs = {
+    v: ['|v|', 0.3, 1.3, (x) => f2(x)], w: ['|w|', 0.3, 1.3, (x) => f2(x)],
+  };
+  sliderKeys.forEach((k) => {
+    if (k === 'angle') {
+      const s = lineSlider('angle', 5, 175, 0.5, st.angle, (x) => { st.angle = x; s.val.textContent = `${f2(x)}°`; refresh(); }, controls);
+      s.val.textContent = `${f2(st.angle)}°`;
+    } else if (defs[k]) {
+      const [name, lo, hi] = defs[k];
+      const v0 = st[k];
+      const step = v0 >= 20 ? 1 : 0.1;
+      const s = lineSlider(name, Math.round(lo * v0 / step) * step, Math.round(hi * v0 / step) * step, step, v0, (x) => { st[k] = x; s.val.textContent = f2(x); refresh(); }, controls);
+      s.val.textContent = f2(v0);
+    }
+  });
+  if (hasEq) lineMkBtn('Show equilibrant', (b) => { st.eq = !st.eq; b.classList.toggle('is-on', st.eq); refresh(); }, controls);
+  refresh();
+}
+
+// <jsx-incline weight="3800" angle="18" limit="1300" unit="lb" show="components triangle equilibrant">
+//
+// A vehicle on a ramp (Trigonometry Lesson 22, Example 4). The weight F_g points straight down; the parallelogram
+// (a rectangle here) splits it into F_b, parallel to the ramp and downhill, and F_a, perpendicular to the ramp.
+// F_b = F_g sin(theta), F_a = F_g cos(theta). Buttons: Components (F_b, F_a and the dashed parallelogram),
+// Triangle ABC (A = head of F_g, B = its tail, C = head of F_a, with the angles B = theta, A = 90 - theta, C = 90),
+// Equilibrant (-F_b, the rope's pull). `limit` is the rope's safe working load: the readout says whether
+// |F_b| stays under it, and "Max safe angle" sets theta = asin(limit / weight). The slider changes theta only.
+const INCLINE_ASPECT = 1.2;
+
+function renderJsxIncline(el) {
+  const TAG = 'jsx-incline';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  const rad = (d) => (d * Math.PI) / 180;
+  const deg = (r) => (r * 180) / Math.PI;
+  const ink = cssVar('--ink') || '#151515';
+  const accent = cssVar('--accent') || '#0f6ab4';
+  const negative = cssVar('--negative') || '#c0392b';
+  const orange = '#c2740c';
+  const green = '#2e8b57';
+  const W = parseFloat(el.getAttribute('weight') ?? 3800);
+  const limit = el.hasAttribute('limit') ? parseFloat(el.getAttribute('limit')) : null;
+  const unit = el.getAttribute('unit') || 'lb';
+  const showInit = (el.getAttribute('show') || '').split(/\s+/);
+  const st = {
+    th: parseFloat(el.getAttribute('angle') ?? 18),
+    comp: showInit.includes('components'), tri: showInit.includes('triangle'), eq: showInit.includes('equilibrant'),
+  };
+  const f1 = (x) => fmtNum(Math.round(x * 10) / 10).replace('-', '−');
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div');
+  readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div');
+  host.className = 'jsx-board jsx-board--incline';
+  host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div');
+  controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const L = 9; const K = 4.5 / W; // ramp length; arrow length per unit of force
+  const bd = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [-1, 5.4, 11, -4.6], axis: false, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  const pt = (fx, fy, o) => bd.create('point', [fx, fy], { name: '', fixed: true, highlight: false, size: POINT_SIZE, strokeColor: '#fff', strokeWidth: POINT_STROKE, fillColor: ink, visible: false, ...o });
+  const lab = (fn, txt, color, o) => bd.create('text', [() => fn()[0], () => fn()[1], txt], {
+    fontSize: READOUT_VALUE_FONT, color, fixed: true, anchorX: 'middle', anchorY: 'middle', cssStyle: 'font-weight:800', ...o,
+  });
+  const arrow = (fa, fb, color, width, o) => bd.create('arrow', [fa, fb], { strokeColor: color, strokeWidth: width, lastArrow: { type: 2, size: 7 }, fixed: true, highlight: false, ...o });
+  const th = () => rad(st.th);
+  const u = () => [Math.cos(th()), Math.sin(th())];
+  const n = () => [-Math.sin(th()), Math.cos(th())];
+  const fbLen = () => W * Math.sin(th());
+  const faLen = () => W * Math.cos(th());
+
+  // ground, ramp, vertical edge
+  const O = pt(() => 0, () => 0);
+  const T = pt(() => L * u()[0], () => L * u()[1]);
+  const Gd = pt(() => L * u()[0], () => 0);
+  bd.create('polygon', [O, Gd, T], { fillColor: '#9aa0a6', fillOpacity: 0.12, vertices: { visible: false }, highlight: false, fixed: true, borders: { strokeColor: ink, strokeWidth: 4, highlight: false } });
+  const R0 = pt(() => 1, () => 0);
+  bd.create('angle', [Gd, O, T], { radius: 1.6, strokeColor: accent, fillColor: accent, fillOpacity: 0.2, name: '', fixed: true, highlight: false });
+  lab(() => [2.35 * Math.cos(th() / 2), 2.35 * Math.sin(th() / 2)], () => `${f1(st.th)}°`, accent);
+
+  // vehicle: a box resting on the ramp, center G
+  const s0 = 0.5 * L; const bw = 2.0; const bh = 1.1;
+  const base = (s) => [s * u()[0], s * u()[1]];
+  const corner = (s, hgt) => [base(s)[0] + hgt * n()[0], base(s)[1] + hgt * n()[1]];
+  const car = [0, 1, 2, 3].map((i) => pt(
+    () => corner(s0 + [-bw / 2, bw / 2, bw / 2, -bw / 2][i], [0, 0, bh, bh][i])[0],
+    () => corner(s0 + [-bw / 2, bw / 2, bw / 2, -bw / 2][i], [0, 0, bh, bh][i])[1],
+  ));
+  bd.create('polygon', car, { fillColor: '#c9ced3', fillOpacity: 0.9, vertices: { visible: false }, highlight: false, fixed: true, borders: { strokeColor: ink, strokeWidth: 3, highlight: false } });
+  const G = () => corner(s0, bh / 2);
+  const Gp = pt(() => G()[0], () => G()[1]);
+  const FgTip = pt(() => G()[0], () => G()[1] - K * W);
+  const FbTip = pt(() => G()[0] - K * fbLen() * u()[0], () => G()[1] - K * fbLen() * u()[1]);
+  const FaTip = pt(() => G()[0] - K * faLen() * n()[0], () => G()[1] - K * faLen() * n()[1]);
+  const EqTip = pt(() => G()[0] + K * fbLen() * u()[0], () => G()[1] + K * fbLen() * u()[1]);
+
+  arrow(Gp, FgTip, ink, 6);
+  lab(() => [G()[0] + 0.55, G()[1] - K * W * 0.7], 'F<sub>g</sub>', ink);
+  const grp = [];
+  const dashed = { strokeColor: '#7a7f85', strokeWidth: 2.5, dash: 2, fixed: true, highlight: false };
+  grp.push(bd.create('segment', [FbTip, FgTip], dashed));
+  grp.push(bd.create('segment', [FaTip, FgTip], dashed));
+  grp.push(arrow(Gp, FbTip, accent, 5));
+  grp.push(arrow(Gp, FaTip, orange, 5));
+  grp.push(lab(() => [G()[0] - 0.5 * K * fbLen() * u()[0] + 0.75 * n()[0], G()[1] - 0.5 * K * fbLen() * u()[1] + 0.75 * n()[1]], 'F<sub>b</sub>', accent));
+  grp.push(lab(() => [G()[0] - 0.5 * K * faLen() * n()[0] + 0.75, G()[1] - 0.5 * K * faLen() * n()[1] - 0.1], 'F<sub>a</sub>', orange));
+  const eqArrow = arrow(Gp, EqTip, green, 6);
+  const eqLab = lab(() => [G()[0] + 0.5 * K * fbLen() * u()[0] + 0.85 * n()[0], G()[1] + 0.5 * K * fbLen() * u()[1] + 0.85 * n()[1]], '−F<sub>b</sub>', green);
+
+  // triangle ABC: B = tail of F_g, A = head of F_g, C = head of F_a
+  const tri = [];
+  tri.push(bd.create('polygon', [Gp, FgTip, FaTip], { fillColor: negative, fillOpacity: 0.12, vertices: { visible: false }, highlight: false, fixed: true, borders: { strokeColor: negative, strokeWidth: 3, highlight: false } }));
+  tri.push(lab(() => [G()[0] - 0.45, G()[1] - 0.45], 'B', ink));
+  tri.push(lab(() => [FgTip.X() + 0.1, FgTip.Y() - 0.4], 'A', ink));
+  tri.push(lab(() => [FaTip.X() + 0.45, FaTip.Y() - 0.3], 'C', ink));
+  tri.push(bd.create('angle', [FgTip, Gp, FaTip], { radius: 1.0, strokeColor: negative, fillColor: negative, fillOpacity: 0.25, name: '', fixed: true, highlight: false }));
+  tri.push(lab(() => [G()[0] + 1.6 * Math.cos(rad(-90 + st.th / 2)) + 0.85, G()[1] + 1.6 * Math.sin(rad(-90 + st.th / 2))], () => `${f1(st.th)}°`, negative));
+  tri.push(lab(() => [FgTip.X() - 0.75, FgTip.Y() + 0.9], () => `${f1(90 - st.th)}°`, negative));
+
+  function refresh() {
+    grp.forEach((o) => o.setAttribute({ visible: st.comp }));
+    tri.forEach((o) => o.setAttribute({ visible: st.tri }));
+    [eqArrow, eqLab].forEach((o) => o.setAttribute({ visible: st.eq }));
+    const fb = fbLen();
+    const chips = [
+      `<span class="jsx-trace-chip">|F<sub>g</sub>| = <b>${f1(W)}</b> ${unit}, angle = <b>${f1(st.th)}°</b></span>`,
+      `<span class="jsx-trace-chip jsx-trace-main">|F<sub>b</sub>| = |F<sub>g</sub>| sin(${f1(st.th)}°) = <b>${f1(fb)}</b> ${unit}</span>`,
+      `<span class="jsx-trace-chip">|F<sub>a</sub>| = |F<sub>g</sub>| cos(${f1(st.th)}°) = <b>${f1(faLen())}</b> ${unit}</span>`,
+    ];
+    if (limit !== null) {
+      const ok = fb <= limit + 1e-9;
+      chips.push(`<span class="jsx-trace-chip" style="color:${ok ? green : negative}">Rope limit ${f1(limit)} ${unit}: ${ok ? 'holds' : 'fails'} <b>${ok ? '✓' : '✗'}</b></span>`);
+    }
+    readout.innerHTML = chips.join('');
+    bd.update();
+  }
+
+  const s = lineSlider('ramp angle', 0, 35, 0.5, st.th, (x) => { st.th = x; s.val.textContent = `${f1(x)}°`; refresh(); }, controls);
+  s.val.textContent = `${f1(st.th)}°`;
+  const tog = (label, key) => {
+    const b = lineMkBtn(label, () => { st[key] = !st[key]; b.classList.toggle('is-on', st[key]); refresh(); }, controls);
+    b.classList.toggle('is-on', st[key]);
+  };
+  tog('Components', 'comp'); tog('Triangle ABC', 'tri'); tog('Equilibrant', 'eq');
+  if (limit !== null && limit < W) {
+    lineMkBtn('Max safe angle', () => { st.th = deg(Math.asin(limit / W)); s.input.value = String(st.th); s.val.textContent = `${f1(st.th)}°`; refresh(); }, controls);
+  }
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('jsx-vector-add').forEach(renderJsxVectorAdd);
+  document.querySelectorAll('jsx-incline').forEach(renderJsxIncline);
   document.querySelectorAll('jsx-graph').forEach(renderJsxGraph);
   document.querySelectorAll('jsx-radian-arc').forEach(renderJsxRadianArc);
   document.querySelectorAll('jsx-chain-demo').forEach(renderJsxChainDemo);
