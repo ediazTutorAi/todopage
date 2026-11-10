@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Cramer's Rule</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-cramer>, <jsx-expansion>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Geometric Interpretations of the Determinant; Cramer's Rule</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- Section 6.3 (Bretscher, PDF pages 306 to 320, book pages 294 to 308), 9 steps for a 40 minute class:
+             1 orthogonal matrices, Thm 6.3.1 (2) · 2 area and volume, Thm 6.3.3, 6.3.4 (4) · 3 expansion factor, Thm 6.3.7 (4) ·
+             4 Cramer's rule 2x2, Example 2 (6) · 5 parameters, Examples 3, 4 (4) · 6 Cramer's rule, Thm 6.3.8 and proof, Exercise 24 (5) ·
+             7 adjoint and inverse, Thm 6.3.9 (5) · 8 Example 5, Cramer's rule geometrically (4) · 9 Exercises (6).
+             Skipped as optional: Definition 6.3.5 and Theorem 6.3.6 (m-volume, sqrt(det(A^T A))), the calculus remark of Figure 8.
+             Tags: <jsx-cramer>, <jsx-expansion> (js/jsxgraph.js). -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Orthogonal Matrices and the Determinant</div>
+          <div class="step-subtitle">Example 1, Theorem 6.3.1</div>
+          <div class="step-body">
+<p><b>Example 1.</b> What are the possible values of the determinant of an orthogonal matrix \(A\)?</p>
+<table>
+  <tr><td>\(A^TA=\)</td><td><reveal>\(I_n\) (Theorem 5.3.7)</reveal></td></tr>
+  <tr><td>Take determinants of both sides (Theorems 6.2.1 and 6.2.6): \(\det(A^TA)=\)</td><td><reveal>\(\det(A^T)\det A=(\det A)^2=1\)</reveal></td></tr>
+  <tr><td>Therefore \(\det A\) is</td><td><reveal>either \(1\) or \(-1\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.3.1</div>
+<p>The determinant of an orthogonal matrix is either \(1\) or \(-1\).</p>
+</div>
+<table>
+  <tr><td>\(\det\begin{bmatrix}0.6&-0.8\\0.8&0.6\end{bmatrix}=\)</td><td><reveal>\(1\), representing a rotation</reveal></td></tr>
+  <tr><td>\(\det\begin{bmatrix}0.6&0.8\\0.8&-0.6\end{bmatrix}=\)</td><td><reveal>\(-1\), representing a reflection about a line</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Definition 6.3.2: Rotation matrices</div>
+<p>An orthogonal \(n\times n\) matrix \(A\) with \(\det A=1\) is called a <i>rotation matrix</i>, and the linear transformation \(T(\vec x)=A\vec x\) is called a <i>rotation</i>.</p>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">The Determinant as Area and Volume</div>
+          <div class="step-subtitle">Theorems 6.3.3 and 6.3.4</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Area of a parallelogram</div>
+<p>For a \(2\times2\) matrix \(A\) with columns \(\vec v_1,\vec v_2\), \(\det A=\det[\vec v_1\ \vec v_2]=\|\vec v_1\|\sin\theta\,\|\vec v_2\|\), where \(\theta\) is the oriented angle from \(\vec v_1\) to \(\vec v_2\). So \(|\det A|\) is the area of the parallelogram spanned by \(\vec v_1\) and \(\vec v_2\), and \(|\det A|=\|\vec v_1\|\,\|\vec v_2^{\perp}\|\).</p>
+</div>
+<jsx-cramer area w1="3,1" w2="1,3" xmin="-3" xmax="7" ymin="-2" ymax="6"></jsx-cramer>
+<div class="defbox"><div class="defbox-label">Theorem 6.3.3: The determinant in terms of the columns</div>
+<p>If \(A\) is an \(n\times n\) matrix with columns \(\vec v_1,\vec v_2,\dots,\vec v_n\), then</p>
+$$|\det A|=\|\vec v_1\|\,\|\vec v_2^{\perp}\|\cdots\|\vec v_n^{\perp}\|,$$
+<p>where \(\vec v_k^{\perp}\) is the component of \(\vec v_k\) perpendicular to \(\operatorname{span}(\vec v_1,\dots,\vec v_{k-1})\).</p>
+</div>
+<div class="defbox"><div class="defbox-label">Theorem 6.3.4: Volume of a parallelepiped in \(\mathbb R^3\)</div>
+<p>Consider a \(3\times3\) matrix \(A=[\vec v_1\ \vec v_2\ \vec v_3]\). Then the volume of the parallelepiped defined by \(\vec v_1,\vec v_2,\vec v_3\) is \(|\det A|\).</p>
+</div>
+<table>
+  <tr><td>Exercise 1. The area of the parallelogram defined by \(\begin{bmatrix}3\\7\end{bmatrix}\) and \(\begin{bmatrix}8\\2\end{bmatrix}\).</td><td><reveal>\(\left|\det\begin{bmatrix}3&8\\7&2\end{bmatrix}\right|=|6-56|=50\)</reveal></td></tr>
+  <tr><td>Exercise 2. The area of the triangle defined by the same two vectors.</td><td><reveal>half of the parallelogram: \(25\)</reveal></td></tr>
+  <tr><td>Exercise 4. The area of the triangle with vertices \(\begin{bmatrix}a_1\\a_2\end{bmatrix},\begin{bmatrix}b_1\\b_2\end{bmatrix},\begin{bmatrix}c_1\\c_2\end{bmatrix}\), in terms of a determinant.</td><td><reveal>\(A=\tfrac12\left|\det\begin{bmatrix}a_1&b_1&c_1\\a_2&b_2&c_2\\1&1&1\end{bmatrix}\right|\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">The Determinant as Expansion Factor</div>
+          <div class="step-subtitle">Theorem 6.3.7</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.3.7: Expansion factor</div>
+<p>Consider a linear transformation \(T(\vec x)=A\vec x\) from \(\mathbb R^2\) to \(\mathbb R^2\). Then \(|\det A|\) is the <i>expansion factor</i> \(\dfrac{\text{area of }T(\Omega)}{\text{area of }\Omega}\) of \(T\) on parallelograms \(\Omega\).</p><p>Likewise, for a linear transformation \(T(\vec x)=A\vec x\) from \(\mathbb R^n\) to \(\mathbb R^n\), \(|\det A|\) is the expansion factor of \(T\) on \(n\)-parallelepipeds: \(V(A\vec v_1,\dots,A\vec v_n)=|\det A|\,V(\vec v_1,\dots,\vec v_n)\), for all vectors \(\vec v_1,\dots,\vec v_n\) in \(\mathbb R^n\).</p>
+</div>
+<jsx-expansion a="2,1;1,3" presets="Stretch: 2,0;0,3 | Shear: 1,1;0,1 | Rotation: 0,-1;1,0 | Reflection: 1,0;0,-1 | Singular: 1,2;1,2" range="4" range2="9"></jsx-expansion>
+<table>
+  <tr><td>The expansion factor of \(A^{-1}\): \(|\det(A^{-1})|=\)</td><td><reveal>\(\dfrac1{|\det A|}\), the reciprocal of the expansion factor of \(A\)</reveal></td></tr>
+  <tr><td>The expansion factor of the composite \(\vec x\mapsto AB\vec x\): \(|\det(AB)|=\)</td><td><reveal>\(|\det A|\,|\det B|\), the product of the expansion factors</reveal></td></tr>
+  <tr><td>Exercise 11. \(T(\vec x)=A\vec x\) from \(\mathbb R^2\) to \(\mathbb R^2\), with \(T(\vec v_1)=3\vec v_1\) and \(T(\vec v_2)=4\vec v_2\). What can you say about \(\det A\)?</td><td><reveal>\(\Omega\) spanned by \(\vec v_1,\vec v_2\) is stretched to the parallelogram spanned by \(3\vec v_1,4\vec v_2\), with \(12\) times the area: \(|\det A|=12\). In fact \(\det A=12\), since \(A\) is similar to \(\operatorname{diag}(3,4)\).</reveal></td></tr>
+  <tr><td>Exercise 16. True or false: if \(\Omega\) is a parallelogram in \(\mathbb R^3\) and \(T(\vec x)=A\vec x\) is linear from \(\mathbb R^3\) to \(\mathbb R^3\), then area of \(T(\Omega)=|\det A|\,(\text{area of }\Omega)\).</td><td><reveal>False: \(|\det A|\) scales volumes, not areas. For \(A=\operatorname{diag}(2,1,1)\), \(|\det A|=2\), but a parallelogram in the \(yz\)-plane keeps its area.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Cramer's Rule for 2 × 2 Systems</div>
+          <div class="step-subtitle">The formula, Example 2, Exercises 22 and 23</div>
+          <div class="step-body">
+<p>If \(A=\begin{bmatrix}a_{11}&a_{12}\\a_{21}&a_{22}\end{bmatrix}\) is invertible, \(A^{-1}=\dfrac1{\det A}\begin{bmatrix}a_{22}&-a_{12}\\-a_{21}&a_{11}\end{bmatrix}\). For the system \(A\vec x=\vec b\):</p>
+$$\begin{bmatrix}x_1\\x_2\end{bmatrix}=A^{-1}\vec b=\frac1{\det A}\begin{bmatrix}a_{22}b_1-a_{12}b_2\\a_{11}b_2-a_{21}b_1\end{bmatrix}.$$
+<table>
+  <tr><td>\(a_{22}b_1-a_{12}b_2=\det\) of</td><td><reveal>\(\begin{bmatrix}b_1&a_{12}\\b_2&a_{22}\end{bmatrix}\): replace the first column of \(A\) by \(\vec b\)</reveal></td></tr>
+  <tr><td>\(a_{11}b_2-a_{21}b_1=\det\) of</td><td><reveal>\(\begin{bmatrix}a_{11}&b_1\\a_{21}&b_2\end{bmatrix}\): replace the second column of \(A\) by \(\vec b\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Cramer's rule for \(2\times2\)</div>
+<p>Let \(A_{\vec b,i}\) be the matrix obtained by replacing the \(i\)th column of \(A\) by \(\vec b\). The solution of \(A\vec x=\vec b\) is</p>
+$$x_1=\frac{\det(A_{\vec b,1})}{\det A},\qquad x_2=\frac{\det(A_{\vec b,2})}{\det A}.$$
+</div>
+<jsx-cramer w1="2,4" w2="3,5" b="7,13" xmin="-6" xmax="18" ymin="-1" ymax="15"></jsx-cramer>
+<table>
+  <tr><td><b>Example 2.</b> Use the formula to solve \(\begin{cases}2x_1+3x_2=7\\4x_1+5x_2=13\end{cases}\). First \(\det A\), \(\det A_{\vec b,1}\), \(\det A_{\vec b,2}\).</td><td><reveal>\(\det\begin{bmatrix}2&3\\4&5\end{bmatrix}=-2,\ \ \det\begin{bmatrix}7&3\\13&5\end{bmatrix}=-4,\ \ \det\begin{bmatrix}2&7\\4&13\end{bmatrix}=-2\)</reveal></td></tr>
+  <tr><td>The solution</td><td><reveal>\(x_1=\dfrac{-4}{-2}=2,\quad x_2=\dfrac{-2}{-2}=1\)</reveal></td></tr>
+  <tr><td><b>Exercise 22.</b> \(\begin{cases}3x+7y=1\\4x+11y=3\end{cases}\)</td><td><reveal>\(\det A=5\), \(x=\dfrac{\det\begin{bmatrix}1&7\\3&11\end{bmatrix}}5=\dfrac{-10}5=-2\), \(y=\dfrac{\det\begin{bmatrix}3&1\\4&3\end{bmatrix}}5=\dfrac55=1\)</reveal></td></tr>
+  <tr><td><b>Exercise 23.</b> \(\begin{cases}5x_1-3x_2=1\\-6x_1+7x_2=0\end{cases}\)</td><td><reveal>\(\det A=17\), \(x_1=\dfrac{\det\begin{bmatrix}1&-3\\0&7\end{bmatrix}}{17}=\dfrac7{17}\), \(x_2=\dfrac{\det\begin{bmatrix}5&1\\-6&0\end{bmatrix}}{17}=\dfrac6{17}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Cramer's Rule with Parameters</div>
+          <div class="step-subtitle">Examples 3 and 4, Exercise 27</div>
+          <div class="step-body">
+<p>Gauss-Jordan elimination is preferable for numerically given systems. When the coefficients contain parameters, the closed formula shows how the solution changes as the parameters change.</p>
+<table>
+  <tr><td><b>Example 3.</b> Solve \(\begin{cases}(b-1)x_1+\phantom{(b-1)}ax_2=0\\-ax_1+(b-1)x_2=C\end{cases}\), where \(a,b,C\) are arbitrary positive constants. First \(\det A\).</td><td><reveal>\(\det\begin{bmatrix}b-1&a\\-a&b-1\end{bmatrix}=(b-1)^2+a^2\)</reveal></td></tr>
+  <tr><td>\(x_1=\)</td><td><reveal>\(\dfrac{\det\begin{bmatrix}0&a\\C&b-1\end{bmatrix}}{(b-1)^2+a^2}=\dfrac{-aC}{(b-1)^2+a^2}\)</reveal></td></tr>
+  <tr><td>\(x_2=\)</td><td><reveal>\(\dfrac{\det\begin{bmatrix}b-1&0\\-a&C\end{bmatrix}}{(b-1)^2+a^2}=\dfrac{(b-1)C}{(b-1)^2+a^2}\)</reveal></td></tr>
+  <tr><td><b>Example 4.</b> \(\begin{cases}ax+by=1\\cx+dy=1\end{cases}\), where \(d>b>0\) and \(a>c>0\). Why is there always a unique solution?</td><td><reveal>\(\det A=ad-bc>0\), since \(ad>bc\)</reveal></td></tr>
+  <tr><td>\(x=\)</td><td><reveal>\(\dfrac{\det\begin{bmatrix}1&b\\1&d\end{bmatrix}}{\det\begin{bmatrix}a&b\\c&d\end{bmatrix}}=\dfrac{d-b}{ad-bc}>0\)</reveal></td></tr>
+  <tr><td>\(\dfrac{\partial x}{\partial a}=\)  and its sign</td><td><reveal>\(\dfrac{-d(d-b)}{(ad-bc)^2}<0\): as \(a\) increases, \(x\) decreases</reveal></td></tr>
+  <tr><td>\(\dfrac{\partial x}{\partial c}=\)  and its sign</td><td><reveal>\(\dfrac{b(d-b)}{(ad-bc)^2}>0\): as \(c\) increases, \(x\) increases</reveal></td></tr>
+  <tr><td><b>Exercise 27.</b> \(a,b>0\). Solve \(\begin{cases}ax-by=1\\bx+ay=0\end{cases}\). The signs of \(x\) and \(y\)? How does \(x\) change as \(b\) increases?</td><td><reveal>\(\det A=a^2+b^2\); \(x=\dfrac{\det\begin{bmatrix}1&-b\\0&a\end{bmatrix}}{a^2+b^2}=\dfrac a{a^2+b^2}>0\), \(y=\dfrac{\det\begin{bmatrix}a&1\\b&0\end{bmatrix}}{a^2+b^2}=\dfrac{-b}{a^2+b^2}<0\); \(\dfrac{\partial x}{\partial b}=\dfrac{-2ab}{(a^2+b^2)^2}<0\), so \(x\) decreases</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Cramer's Rule</div>
+          <div class="step-subtitle">Theorem 6.3.8 and its proof, Exercise 24</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.3.8: Cramer's rule</div>
+<p>Consider the linear system \(A\vec x=\vec b\), where \(A\) is an invertible \(n\times n\) matrix. The components \(x_i\) of the solution vector \(\vec x\) are</p>
+$$x_i=\frac{\det(A_{\vec b,i})}{\det A},$$
+<p>where \(A_{\vec b,i}\) is the matrix obtained by replacing the \(i\)th column of \(A\) by \(\vec b\).</p>
+</div>
+<p><b>Proof.</b> Write \(A=[\vec w_1\ \vec w_2\ \cdots\ \vec w_i\ \cdots\ \vec w_n]\). If \(\vec x\) is the solution of \(A\vec x=\vec b\), then</p>
+<table>
+  <tr><td>\(\det(A_{\vec b,i})=\det[\vec w_1\ \cdots\ \vec b\ \cdots\ \vec w_n]\). Replace \(\vec b\) by</td><td><reveal>\(A\vec x=x_1\vec w_1+x_2\vec w_2+\cdots+x_i\vec w_i+\cdots+x_n\vec w_n\), in the \(i\)th column</reveal></td></tr>
+  <tr><td>By linearity of the determinant in the \(i\)th column (Theorem 6.2.2), the terms \(x_j\vec w_j\) with \(j\ne i\) contribute</td><td><reveal>\(0\): that column repeats another column of the matrix</reveal></td></tr>
+  <tr><td>So \(\det(A_{\vec b,i})=\)</td><td><reveal>\(x_i\det[\vec w_1\ \cdots\ \vec w_i\ \cdots\ \vec w_n]=x_i\det A\), hence \(x_i=\dfrac{\det(A_{\vec b,i})}{\det A}\)</reveal></td></tr>
+</table>
+<table>
+  <tr><td><b>Exercise 24.</b> Use Cramer's rule to solve \(\begin{cases}2x+3y=8\\4y+5z=3\\6x+7z=-1\end{cases}\). The matrix and \(\det A\):</td><td><reveal>\(A=\begin{bmatrix}2&3&0\\0&4&5\\6&0&7\end{bmatrix}\), \(\det A=2(28)-3(-30)=146\)</reveal></td></tr>
+  <tr><td>\(\det A_{\vec b,1}\), \(\det A_{\vec b,2}\), \(\det A_{\vec b,3}\)</td><td><reveal>\(\det\begin{bmatrix}8&3&0\\3&4&5\\-1&0&7\end{bmatrix}=146,\ \ \det\begin{bmatrix}2&8&0\\0&3&5\\6&-1&7\end{bmatrix}=292,\ \ \det\begin{bmatrix}2&3&8\\0&4&3\\6&0&-1\end{bmatrix}=-146\)</reveal></td></tr>
+  <tr><td>The solution</td><td><reveal>\(x=1,\quad y=2,\quad z=-1\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">The Adjoint and the Inverse</div>
+          <div class="step-subtitle">Theorem 6.3.9, Exercises 25, 30, 33</div>
+          <div class="step-body">
+<p>Cramer's rule gives a closed formula for \(A^{-1}\). Pick out the \(j\)th column of \(A^{-1}\) in \(AA^{-1}=I_n\): \(A\begin{bmatrix}m_{1j}\\\vdots\\m_{nj}\end{bmatrix}=\vec e_j\).</p>
+<table>
+  <tr><td>By Cramer's rule, \(m_{ij}=\)</td><td><reveal>\(\dfrac{\det(A_{\vec e_j,i})}{\det A}\)</reveal></td></tr>
+  <tr><td>Expanding \(\det(A_{\vec e_j,i})\) down the \(i\)th column (Laplace), which has a single \(1\), in row \(j\):</td><td><reveal>\((-1)^{i+j}\det(A_{ji})\), so \(m_{ij}=(-1)^{i+j}\dfrac{\det(A_{ji})}{\det A}\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.3.9: Adjoint and inverse of a matrix</div>
+<p>Consider an invertible \(n\times n\) matrix \(A\). The <i>classical adjoint</i> \(\operatorname{adj}(A)\) is the \(n\times n\) matrix whose \(ij\)th entry is \((-1)^{i+j}\det(A_{ji})\). Then</p>
+$$A^{-1}=\frac1{\det A}\operatorname{adj}(A).$$
+</div>
+<p>For \(A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\): \(\operatorname{adj}(A)=\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\). For a \(3\times3\) matrix \(\begin{bmatrix}a&b&c\\d&e&f\\g&h&k\end{bmatrix}\):</p>
+$$A^{-1}=\frac1{\det A}\begin{bmatrix}ek-fh&ch-bk&bf-ce\\fg-dk&ak-cg&cd-af\\dh-eg&bg-ah&ae-bd\end{bmatrix}.$$
+<table>
+  <tr><td><b>Exercise 25.</b> The classical adjoint of \(A=\begin{bmatrix}1&0&1\\0&1&0\\2&0&1\end{bmatrix}\), and \(A^{-1}\).</td><td><reveal>\(\det A=-1\), \(\operatorname{adj}(A)=\begin{bmatrix}1&0&-1\\0&-1&0\\-2&0&1\end{bmatrix}\), \(A^{-1}=\begin{bmatrix}-1&0&1\\0&1&0\\2&0&-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>Exercise 30.</b> The classical adjoint of \(A=\begin{bmatrix}1&0&0\\2&3&0\\4&5&6\end{bmatrix}\).</td><td><reveal>\(\begin{bmatrix}18&0&0\\-12&6&0\\-2&-5&3\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>Exercise 33.</b> The classical adjoint of \(A=\operatorname{diag}(1,2,3,4)\).</td><td><reveal>\(\operatorname{diag}(24,12,8,6)\): each entry is the product of the other three diagonal entries</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Cramer's Rule, Geometrically</div>
+          <div class="step-subtitle">Example 5</div>
+          <div class="step-body">
+<p><b>Example 5.</b> For the vectors \(\vec w_1,\vec w_2\) and \(\vec b\) shown, consider the linear system \(A\vec x=\vec b\), where \(A=[\vec w_1\ \vec w_2]\). Using the notation of Cramer's rule, \(A_{\vec b,2}=[\vec w_1\ \vec b]\), and \(\det A\) and \(\det A_{\vec b,2}\) are both positive. Cramer's rule tells us that \(x_2=\dfrac{\det(A_{\vec b,2})}{\det A}\), or \(\det(A_{\vec b,2})=x_2\det A\). Explain this last equation geometrically, in terms of areas of parallelograms.</p>
+<jsx-cramer w1="2,0" w2="-1,2" b="2,4" xmin="-4" xmax="8" ymin="-1" ymax="6"></jsx-cramer>
+<table>
+  <tr><td>We can write \(A\vec x=\vec b\) as</td><td><reveal>\(x_1\vec w_1+x_2\vec w_2=\vec b\): go \(x_1\vec w_1\), then \(x_2\vec w_2\) to reach \(\vec b\)</reveal></td></tr>
+  <tr><td>\(\det(A_{\vec b,2})=\det[\vec w_1\ \vec b]=\)</td><td><reveal>the area of the parallelogram defined by \(\vec w_1\) and \(\vec b\)</reveal></td></tr>
+  <tr><td>This equals the area of the parallelogram defined by \(\vec w_1\) and</td><td><reveal>\(x_2\vec w_2\): the two parallelograms have the same base \(\vec w_1\) and the same height</reveal></td></tr>
+  <tr><td>\(=\)</td><td><reveal>\(x_2\,(\text{area of the parallelogram defined by }\vec w_1\text{ and }\vec w_2)=x_2\det A\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Exercises</div>
+          <div class="step-subtitle">Section 6.3</div>
+          <div class="step-body">
+<table>
+  <tr><td><b>26.</b> \(A\) is an \(n\times n\) matrix with integer entries and \(\det A=1\). Are the entries of \(A^{-1}\) necessarily integers?</td><td><reveal>Yes: \(A^{-1}=\dfrac1{1}\operatorname{adj}(A)\), and the entries of \(\operatorname{adj}(A)\) are \(\pm\) determinants of integer matrices</reveal></td></tr>
+  <tr><td><b>31.</b> The classical adjoint of \(A=\begin{bmatrix}1&1&1\\1&2&3\\1&6&6\end{bmatrix}\).</td><td><reveal>\(\det A=-5\); \(\operatorname{adj}(A)=\begin{bmatrix}-6&0&1\\-3&5&-2\\4&-5&1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>32.</b> The classical adjoint of \(A=\begin{bmatrix}0&0&0&1\\0&1&0&0\\0&0&1&0\\1&0&0&0\end{bmatrix}\).</td><td><reveal>\(\det A=-1\) and \(A^{-1}=A\), so \(\operatorname{adj}(A)=-A\)</reveal></td></tr>
+  <tr><td><b>34.</b> For an invertible \(n\times n\) matrix \(A\), the product \(A(\operatorname{adj}A)\). What about \((\operatorname{adj}A)A\)?</td><td><reveal>\(A\,\operatorname{adj}(A)=(\det A)\,I_n=(\operatorname{adj}A)\,A\)</reveal></td></tr>
+  <tr><td><b>35.</b> The relationship between \(\det(A)\) and \(\det(\operatorname{adj}A)\).</td><td><reveal>\(\det(\operatorname{adj}A)=\det(\det A\cdot A^{-1})=(\det A)^n\dfrac1{\det A}=(\det A)^{n-1}\)</reveal></td></tr>
+  <tr><td><b>36.</b> For an invertible \(n\times n\) matrix \(A\), what is \(\operatorname{adj}(\operatorname{adj}A)\)?</td><td><reveal>\(\operatorname{adj}(\operatorname{adj}A)=\det(\operatorname{adj}A)\,(\operatorname{adj}A)^{-1}=(\det A)^{n-1}\dfrac{A}{\det A}=(\det A)^{n-2}A\)</reveal></td></tr>
+  <tr><td><b>38.</b> For two invertible \(n\times n\) matrices \(A\) and \(B\), the relationship among \(\operatorname{adj}(A)\), \(\operatorname{adj}(B)\) and \(\operatorname{adj}(AB)\).</td><td><reveal>\(\operatorname{adj}(AB)=\det(AB)(AB)^{-1}=\det B\,B^{-1}\cdot\det A\,A^{-1}=\operatorname{adj}(B)\operatorname{adj}(A)\)</reveal></td></tr>
+  <tr><td><b>40.</b> For an invertible \(n\times n\) matrix \(A\), the standard matrix of \(T(\vec x)=\begin{bmatrix}\det(A_{\vec x,1})\\\vdots\\\det(A_{\vec x,n})\end{bmatrix}\).</td><td><reveal>By Cramer's rule for \(A\vec y=\vec x\), \(\det(A_{\vec x,i})=(\det A)\,y_i\) with \(\vec y=A^{-1}\vec x\), so \(T(\vec x)=(\det A)A^{-1}\vec x=\operatorname{adj}(A)\,\vec x\): the matrix is \(\operatorname{adj}(A)\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

@@ -286,7 +286,7 @@
     "course": "Calculus III",
     "semester": "Spring 2026",
     "date": "2026-03-25",
-    "title": "Green's Theorem",
+    "title": "Green's Theorem, Part 1",
     "subtitle": "",
     "description": "Green's theorem (OpenStax 6.4, a 50 minute class): cut a region into cells and watch the interior edges cancel, so the circulation around the boundary equals the double integral of Q_x - P_y. Circulation and flux forms, area from a boundary integral, source-free fields, and regions with holes, with many verified examples.",
     "tags": [
@@ -299,6 +299,24 @@
       "regions with holes"
     ],
     "url": "calculus3/fall2025/2025-11-07-greens-theorem/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
+    "date": "2026-03-26",
+    "title": "Green's Theorem, Part 2",
+    "subtitle": "Final-exam problems step by step",
+    "description": "Green's theorem: one explanation step (both forms and the ingredients checklist), then step by step final-exam problems: region between curves, ellipse with constant integrand, work around a triangle, disks in polar, spotting zeros, closing an open path, orientation and holes, flux, area, mixed practice.",
+    "tags": [
+      "Green's theorem",
+      "circulation form",
+      "flux form",
+      "line integrals",
+      "area from a line integral",
+      "stream function",
+      "regions with holes"
+    ],
+    "url": "calculus3/fall2025/2025-11-08-greens-theorem-part-2/index.html"
   },
   {
     "course": "Calculus III",
@@ -650,6 +668,23 @@
       "cofactor expansion"
     ],
     "url": "linear-algebra/fall2025/2025-11-06-properties-of-determinants/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
+    "date": "2026-04-06",
+    "title": "Geometric Interpretations of the Determinant; Cramer's Rule",
+    "subtitle": "Section 6.3",
+    "description": "Section 6.3 (a 40 minute class): the determinant as area, volume and expansion factor, with a draggable parallelogram and a transformation that scales areas by |det A|; Cramer's rule from 2 x 2 to n x n with its proof and a picture of it as areas of parallelograms; systems with parameters, and the classical adjoint formula for the inverse.",
+    "tags": [
+      "determinants",
+      "cramer's rule",
+      "adjoint",
+      "area and volume",
+      "expansion factor",
+      "orthogonal matrices"
+    ],
+    "url": "linear-algebra/fall2025/2025-11-07-cramers-rule/index.html"
   },
   {
     "course": "Linear Algebra",

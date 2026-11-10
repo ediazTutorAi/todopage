@@ -6755,7 +6755,7 @@ function renderJsxPathIndependence(el) {
 // Green's theorem (Calculus III 6.4): <jsx-green>.
 //
 // <jsx-green p="x^2*y" q="y-3" g1="1" g2="5" xmin="1" xmax="4" | polar="0,2" scale="1,1"
-//            mode="circ|flux" toggle cells="4" field no-reverse>
+//            mode="circ|flux" toggle cells="4" field no-reverse no-readout>
 //   with optional <jsx-case name p q g1 g2 xmin xmax polar scale> children (several regions behind buttons).
 //
 // A region D with boundary C and a field F = <P, Q>. Region description: Type I (`g1`, `g2` in x over
@@ -6837,6 +6837,9 @@ function renderJsxGreen(el) {
   const controls = document.createElement('div');
   controls.className = 'jsx-transform-controls';
   container.append(readout, host, controls);
+  // `no-readout`: hide the numeric comparison, so an exercise's answer is not given away (and a coarse
+  // quadrature value is not shown next to the exact one the instructor reveals).
+  if (el.hasAttribute('no-readout')) readout.style.display = 'none';
   el.replaceWith(container);
 
   const ink = cssVar('--ink') || '#151515';
@@ -7400,6 +7403,220 @@ function renderJsxIncline(el) {
   refresh();
 }
 
+// <jsx-cramer> and <jsx-expansion> (Linear Algebra 6.3): the determinant as area, and Cramer's rule.
+//
+// <jsx-cramer w1="3,1" w2="-1,2" b="3,4" [area] xmin xmax ymin ymax fixed>   (needs the JSXGraph CDN tags)
+//   Default: the geometric proof of Cramer's rule for A = [w1 w2] (Example 5, Figure 11). Draggable tips w1, w2
+//   and b (snapped to half-integers). Draws the parallelogram P(w1, w2) (grey), the path x1 w1 then x2 w2 to b,
+//   the parallelogram P(w1, b) (blue) and P(w1, x2 w2) (orange): same base w1 and same height, so the same
+//   area, which is Cramer's rule x2 det A = det A_{b,2}. The x1 / x2 buttons switch to the other column
+//   (P(b, w2) against P(x1 w1, w2)). Readout: det A, det A_{b,1}, det A_{b,2}, x1, x2.
+//   `area`: only w1 and w2; the parallelogram with the component w2-perp of w2 orthogonal to w1 drawn as its
+//   height, readout |det A|, ||w1||, ||w2-perp|| (Theorem 6.3.3 for n = 2).
+// <jsx-expansion a="2,1;1,3" presets="Name: a,b;c,d | ..." v1="1,0" v2="0,1" range range2>
+//   Theorem 6.3.7: two boards. Left: the parallelogram Omega spanned by draggable v1, v2 (default the unit
+//   square). Right: its image T(Omega), spanned by A v1 and A v2. The readout compares area(T(Omega)) /
+//   area(Omega) with |det A| for any Omega; presets switch A.
+function renderJsxCramer(el) {
+  const TAG = 'jsx-cramer';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  let W1; let W2; let B0;
+  try {
+    W1 = parseNumList(el.getAttribute('w1') || '3,1');
+    W2 = parseNumList(el.getAttribute('w2') || '-1,2');
+    B0 = parseNumList(el.getAttribute('b') || '3,4');
+  } catch (err) { console.error(`<${TAG}>: could not parse an attribute`, err); return; }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const areaMode = el.hasAttribute('area');
+  const fixedAll = el.hasAttribute('fixed');
+  const xmin = num('xmin', -6); const xmax = num('xmax', 10);
+  const ymid = (num('ymin', -4) + num('ymax', 8)) / 2;
+  const yhalf = (xmax - xmin) / BASIS_ASPECT / 2;
+  const st = { i: 2 };
+
+  const container = document.createElement('div');
+  container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div'); readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div'); host.className = 'jsx-board jsx-board--basis'; host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div'); controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515'; const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb'; const negative = cssVar('--negative') || '#c0392b';
+  const orange = '#c2740c'; const green = '#2e8b57';
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [xmin, ymid + yhalf, xmax, ymid - yhalf], axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 }); board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  const pt = (xy, color) => board.create('point', [...xy], {
+    name: '', size: POINT_SIZE + 2, fillColor: color, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false,
+    fixed: fixedAll, snapToGrid: true, snapSizeX: 0.5, snapSizeY: 0.5,
+  });
+  const p1 = pt(W1, accent); const p2 = pt(W2, green);
+  const pb = areaMode ? null : pt(B0, ink);
+  const O = board.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+  const v1 = () => [p1.X(), p1.Y()]; const v2 = () => [p2.X(), p2.Y()]; const vb = () => [pb.X(), pb.Y()];
+  const det2 = (a, b) => a[0] * b[1] - b[0] * a[1];
+  const detA = () => det2(v1(), v2());
+  const ok = () => Math.abs(detA()) > 1e-6;
+  const x1 = () => (ok() ? det2(vb(), v2()) / detA() : NaN);
+  const x2 = () => (ok() ? det2(v1(), vb()) / detA() : NaN);
+  const sc = (k, v) => [k * v[0], k * v[1]];
+
+  // parallelogram with corners 0, a, a + b, b (a, b are functions returning [x, y])
+  const parallelogram = (a, b, color, fillOp, w) => {
+    const cs = [[0, 0], () => a(), () => { const A = a(); const Bv = b(); return [A[0] + Bv[0], A[1] + Bv[1]]; }, () => b()];
+    const pts = cs.map((c) => board.create('point', [typeof c === 'function' ? () => c()[0] : c[0], typeof c === 'function' ? () => c()[1] : c[1]], { visible: false, fixed: true, name: '' }));
+    return board.create('polygon', pts, {
+      fillColor: color, fillOpacity: fillOp, vertices: { visible: false }, highlight: false, fixed: true,
+      borders: { strokeColor: color, strokeWidth: w, highlight: false, fixed: true },
+    });
+  };
+  const arrow = (a, b, color, w) => board.create('arrow', [a, b], { strokeColor: color, strokeWidth: w, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  const label = (fn, txt, color) => board.create('text', [() => fn()[0] + 0.25, () => fn()[1] + 0.35, txt], { fontSize: READOUT_VALUE_FONT, color, fixed: true, cssStyle: 'font-weight:800' });
+
+  const f2 = (v) => (Number.isFinite(v) ? fmtNum(v).replace('-', '−') : '?');
+  const chip = (html, main) => `<span class="jsx-trace-chip${main ? ' jsx-trace-main' : ''}">${html}</span>`;
+
+  if (areaMode) {
+    parallelogram(v1, v2, accent, 0.18, 3);
+    const foot = () => { const a = v1(); const b = v2(); const n = a[0] * a[0] + a[1] * a[1]; return n < 1e-9 ? [0, 0] : sc((a[0] * b[0] + a[1] * b[1]) / n, a); };
+    const perp = () => { const f = foot(); const b = v2(); return [b[0] - f[0], b[1] - f[1]]; };
+    const footPt = board.create('point', [() => foot()[0], () => foot()[1]], { visible: false, fixed: true, name: '' });
+    arrow(O, p1, accent, 5); arrow(O, p2, green, 5);
+    board.create('segment', [footPt, p2], { strokeColor: negative, strokeWidth: 4, dash: 2, highlight: false, fixed: true });
+    board.create('segment', [O, footPt], { strokeColor: ink, strokeWidth: 2.5, dash: 3, strokeOpacity: 0.6, highlight: false, fixed: true });
+    label(v1, 'v₁', accent); label(v2, 'v₂', green);
+    label(() => { const f = foot(); const b = v2(); return [(f[0] + b[0]) / 2 + 0.2, (f[1] + b[1]) / 2 - 0.2]; }, 'v₂⊥', negative);
+    var update = () => {
+      const a = v1(); const pr = perp();
+      const n1 = Math.hypot(a[0], a[1]); const n2 = Math.hypot(pr[0], pr[1]);
+      readout.innerHTML = chip(`|det A| = <b>${f2(Math.abs(detA()))}</b>`, true) + chip(`‖v₁‖ = <b>${f2(n1)}</b>`) + chip(`‖v₂⊥‖ = <b>${f2(n2)}</b>`) + chip(`‖v₁‖ ‖v₂⊥‖ = <b>${f2(n1 * n2)}</b>`);
+    };
+  } else {
+    // Cramer: column i of A is replaced by b.
+    const base = parallelogram(v1, v2, '#6b7280', 0.1, 2);
+    const first = () => (st.i === 2 ? v1() : vb());
+    const second = () => (st.i === 2 ? vb() : v2());
+    const first2 = () => (st.i === 2 ? v1() : sc(x1(), v1()));
+    const second2 = () => (st.i === 2 ? sc(x2(), v2()) : v2());
+    parallelogram(first, second, accent, 0.2, 3);
+    parallelogram(first2, second2, orange, 0.2, 3);
+    const m = board.create('point', [() => sc(x1(), v1())[0], () => sc(x1(), v1())[1]], { visible: false, fixed: true, name: '' });
+    board.create('segment', [O, m], { strokeColor: accent, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+    board.create('segment', [m, pb], { strokeColor: green, strokeWidth: 3, dash: 2, highlight: false, fixed: true });
+    arrow(O, p1, accent, 5); arrow(O, p2, green, 5); arrow(O, pb, ink, 5);
+    label(v1, 'w₁', accent); label(v2, 'w₂', green); label(vb, 'b', ink);
+    var update = () => {
+      if (!ok()) { readout.innerHTML = '<span class="jsx-trace-chip jsx-trace-main is-undef">det A = 0: w₁ and w₂ are parallel, Cramer\'s rule does not apply</span>'; return; }
+      const d = detA(); const d1 = det2(vb(), v2()); const d2 = det2(v1(), vb());
+      readout.innerHTML = chip(`det A = <b>${f2(d)}</b>`) + chip(`det A<sub>b,1</sub> = <b>${f2(d1)}</b>`) + chip(`det A<sub>b,2</sub> = <b>${f2(d2)}</b>`) +
+        chip(`x₁ = det A<sub>b,1</sub> / det A = <b>${f2(d1 / d)}</b>`, st.i === 1) + chip(`x₂ = det A<sub>b,2</sub> / det A = <b>${f2(d2 / d)}</b>`, st.i === 2);
+    };
+    const mk = (i) => lineMkBtn(`x${i === 1 ? '₁' : '₂'}`, () => { st.i = i; btns.forEach((b, k) => b.classList.toggle('is-on', k + 1 === i)); refresh(); }, controls);
+    var btns = [mk(1), mk(2)]; btns[1].classList.add('is-on');
+  }
+  function refresh() { update(); board.update(); }
+  [p1, p2, pb].forEach((p) => p && p.on('drag', refresh));
+  lineMkBtn('Reset', () => { p1.moveTo(W1); p2.moveTo(W2); if (pb) pb.moveTo(B0); refresh(); }, controls);
+  const hint = document.createElement('span'); hint.className = 'muted small';
+  hint.textContent = areaMode ? 'Drag the tips of v₁ and v₂.' : 'Drag the tips of w₁, w₂ and b.';
+  controls.appendChild(hint);
+  refresh();
+}
+
+function renderJsxExpansion(el) {
+  const TAG = 'jsx-expansion';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  let A; let V1; let V2; const presets = [];
+  try {
+    A = parseMatrix(el.getAttribute('a') || '2,1;1,3');
+    V1 = parseNumList(el.getAttribute('v1') || '1,0'); V2 = parseNumList(el.getAttribute('v2') || '0,1');
+    (el.getAttribute('presets') || '').split('|').map((s) => s.trim()).filter(Boolean).forEach((s) => {
+      const k = s.indexOf(':'); presets.push({ name: s.slice(0, k).trim(), m: parseMatrix(s.slice(k + 1)) });
+    });
+  } catch (err) { console.error(`<${TAG}>: could not parse an attribute`, err); return; }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const r1 = num('range', 4); const r2 = num('range2', 8);
+
+  const container = document.createElement('div'); container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div'); readout.className = 'jsx-trace-readout';
+  const grid = document.createElement('div'); grid.className = 'jsx-fubini-grid';
+  const mk = (cap) => {
+    const box = document.createElement('div'); const c = document.createElement('div'); c.className = 'muted small jsx-strip-cap'; c.textContent = cap;
+    const h = document.createElement('div'); h.className = 'jsx-board jsx-board--square'; h.id = `jsx-board-${++boardCounter}`;
+    box.append(c, h); grid.appendChild(box); return h;
+  };
+  const hostL = mk('Omega (drag the tips of v₁ and v₂)'); const hostR = mk('T(Omega): spanned by Av₁ and Av₂');
+  const controls = document.createElement('div'); controls.className = 'jsx-transform-controls';
+  container.append(readout, grid, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515'; const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb'; const green = '#2e8b57'; const purple = '#7d3c98';
+  const mkBoard = (h, r) => {
+    const b = JXG.JSXGraph.initBoard(h.id, {
+      boundingbox: [-r, r, r, -r], axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+      pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+    });
+    styleAxes(b, ink);
+    b.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 }); b.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+    b.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+    return b;
+  };
+  const bl = mkBoard(hostL, r1); const br = mkBoard(hostR, r2);
+  const mv = (M, v) => [M[0][0] * v[0] + M[0][1] * v[1], M[1][0] * v[0] + M[1][1] * v[1]];
+  const det2 = (a, b) => a[0] * b[1] - b[0] * a[1];
+  const hid = (b, f) => b.create('point', [() => f()[0], () => f()[1]], { visible: false, fixed: true, name: '' });
+  const poly = (b, ptsF, color, fillOp, w) => b.create('polygon', ptsF.map((f) => hid(b, f)), {
+    fillColor: color, fillOpacity: fillOp, vertices: { visible: false }, highlight: false, fixed: true,
+    borders: { strokeColor: color, strokeWidth: w, highlight: false, fixed: true },
+  });
+  const drag = (xy, color) => bl.create('point', [...xy], {
+    name: '', size: POINT_SIZE + 2, fillColor: color, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false, snapToGrid: true, snapSizeX: 0.5, snapSizeY: 0.5,
+  });
+  const q1 = drag(V1, accent); const q2 = drag(V2, green);
+  const u1 = () => [q1.X(), q1.Y()]; const u2 = () => [q2.X(), q2.Y()];
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
+  // faint unit square and its image (Figure 4), then Omega and T(Omega)
+  poly(bl, [() => [0, 0], () => [1, 0], () => [1, 1], () => [0, 1]], '#6b7280', 0.1, 2);
+  poly(br, [() => [0, 0], () => mv(A, [1, 0]), () => mv(A, [1, 1]), () => mv(A, [0, 1])], '#6b7280', 0.1, 2);
+  poly(bl, [() => [0, 0], u1, () => add(u1(), u2()), u2], accent, 0.22, 3);
+  poly(br, [() => [0, 0], () => mv(A, u1()), () => mv(A, add(u1(), u2())), () => mv(A, u2())], purple, 0.22, 3);
+  const O1 = bl.create('point', [0, 0], { visible: false, fixed: true, name: '' }); const O2 = br.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+  const ar = (b, o, f, color) => b.create('arrow', [o, hid(b, f)], { strokeColor: color, strokeWidth: 4, lastArrow: { size: 8 }, highlight: false, fixed: true });
+  ar(bl, O1, u1, accent); ar(bl, O1, u2, green); ar(br, O2, () => mv(A, u1()), accent); ar(br, O2, () => mv(A, u2()), green);
+  const lab = (b, f, t, c) => b.create('text', [() => f()[0] + 0.2, () => f()[1] + 0.3, t], { fontSize: READOUT_VALUE_FONT, color: c, fixed: true, cssStyle: 'font-weight:800' });
+  lab(bl, u1, 'v₁', accent); lab(bl, u2, 'v₂', green); lab(br, () => mv(A, u1()), 'Av₁', accent); lab(br, () => mv(A, u2()), 'Av₂', green);
+
+  const f2 = (v) => (Number.isFinite(v) ? fmtNum(v).replace('-', '−') : '?');
+  const chip = (html, main) => `<span class="jsx-trace-chip${main ? ' jsx-trace-main' : ''}">${html}</span>`;
+  const matHtml = (M) => `<span class="la-mat"><span>${f2(M[0][0])}</span><span>${f2(M[0][1])}</span><span>${f2(M[1][0])}</span><span>${f2(M[1][1])}</span></span>`;
+  function refresh() {
+    const a0 = Math.abs(det2(u1(), u2()));
+    const a1 = Math.abs(det2(mv(A, u1()), mv(A, u2())));
+    const dA = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+    readout.innerHTML = chip(`A = ${matHtml(A)}`) + chip(`area(Ω) = <b>${f2(a0)}</b>`) + chip(`area(T(Ω)) = <b>${f2(a1)}</b>`) +
+      chip(a0 > 1e-6 ? `area(T(Ω)) / area(Ω) = <b>${f2(a1 / a0)}</b>` : 'area(Ω) = 0', true) + chip(`|det A| = <b>${f2(Math.abs(dA))}</b>`);
+    bl.update(); br.update();
+  }
+  q1.on('drag', refresh); q2.on('drag', refresh);
+  presets.forEach((p) => lineMkBtn(p.name, () => { A = p.m; refresh(); }, controls));
+  lineMkBtn('Reset Ω', () => { q1.moveTo(V1); q2.moveTo(V2); refresh(); }, controls);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-vector-add').forEach(renderJsxVectorAdd);
   document.querySelectorAll('jsx-incline').forEach(renderJsxIncline);
@@ -7433,4 +7650,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-cosines').forEach(renderJsxCosines);
   document.querySelectorAll('jsx-path-independence').forEach(renderJsxPathIndependence);
   document.querySelectorAll('jsx-green').forEach(renderJsxGreen);
+  document.querySelectorAll('jsx-cramer').forEach(renderJsxCramer);
+  document.querySelectorAll('jsx-expansion').forEach(renderJsxExpansion);
 });

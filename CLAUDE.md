@@ -989,3 +989,17 @@ Both in `js/jsxgraph.js` (need the JSXGraph CDN tags; `.jsx-board--incline` in `
 
 Lesson: `trigonometry/2026/2026-11-09-lesson-22-introduction-to-vectors/index.html` (7 steps, hand-authored, no `content.json`, entry added to `lectures.json`; folder date is today's, rename if needed). Workbook wording
 with reveal rows (terminology blanks, Examples 1 to 4). Answers match the annotated PDF (89,181 lb, 158.44 deg, 7.39 in, 1174.3 lb, 20.0 deg). Checked in headless Chromium, no console errors.
+
+### Green's theorem lesson reworked around final-exam problems (added 2026-11-09)
+
+(Split 2026-11-10: the original 9-step lesson is restored at `2025-11-07-greens-theorem/` as **Green's Theorem, Part 1**, and the reworked lesson below lives in `calculus3/fall2025/2025-11-08-greens-theorem-part-2/` as **Part 2**, each with its own `lectures.json` entry.) The Part 2 lesson (hand-authored, no `content.json`) is 11 steps: step 1 is the only explanation (both forms, ingredients
+checklist, four moves, shortcuts), steps 2 to 7 are final-exam problems (Spring 2025 #6, Fall 2019 #15, Exam A/B #12, Spring 2017 #18 / makeup #8, Fall 2018 #14, Calculus III
+final #14) worked as reveal rows in the same order (ingredients, P and Q, integrand, region, integrate), step 7 closes an open path, then orientation/holes, flux, area, practice. Finals are in
+`../Calculus-3-repository-1/Finals/examples/` (PDF text extraction garbles the math: read the pages as images). Fall 2019 #15 reads "(2y - y)dy" in the scan; the lesson uses `2x - y`, which matches the key (42 pi).
+`<jsx-green no-readout>` (new) hides the line-integral vs double-integral readout so exercises do not show the answer (its quadrature is also coarse on large regions, e.g. 3549/2 for 5324/3).
+
+### `<jsx-cramer>`, `<jsx-expansion>` and the Linear Algebra 6.3 lesson (added 2026-11-10)
+
+Both in `js/jsxgraph.js` (need the JSXGraph CDN tags). `<jsx-cramer w1="3,1" w2="-1,2" b="3,4" xmin xmax ymin ymax fixed>`: draggable tips (snap 0.5) of `w1, w2, b`; draws P(w1,w2) (grey), the path `x1 w1` then `x2 w2`, P(w1,b) (blue) and P(w1, x2 w2) (orange), same base and height, so same area = the geometric proof of Cramer's rule (Example 5); x1/x2 buttons switch the column; readout `det A`, `det A_{b,1}`, `det A_{b,2}`, `x1`, `x2`. `area` (bare): only `w1, w2`, with `w2-perp` drawn as the height and `|det A| = ||w1|| ||w2-perp||` (Theorem 6.3.3, n = 2). `<jsx-expansion a="2,1;1,3" presets="Name: a,b;c,d | ..." v1 v2 range range2>`: two square boards, Omega spanned by draggable `v1, v2` (default the unit square) and its image under A; readout `area(T(Omega))/area(Omega)` against `|det A|`; presets switch A (shear, rotation, reflection, singular).
+
+Lesson: `linear-algebra/fall2025/2025-11-07-cramers-rule/index.html` (Bretscher 6.3, PDF pages 306 to 320, book p. 294 to 308; 9 steps timed for 40 minutes in an HTML comment; hand-authored, no `content.json`, entry added to `lectures.json`, folder and entry dates are guesses). Book wording in `.defbox`, Examples 1 to 5 and Exercises 1, 2, 4, 11, 16, 22 to 27, 30 to 36, 38, 40 as reveal rows; skipped as optional: Definition 6.3.5 / Theorem 6.3.6 and the calculus remark. Every printed answer was checked with sympy; widgets verified in headless Chromium (area 8, expansion factor 5, Example 2 gives -2/-4/-2, Example 5 gives 4/8/8).

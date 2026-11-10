@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Green's Theorem, Part 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-green>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Green's Theorem, Part 2</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- 11 steps. Step 1 is the only explanation; the rest are exercises worked in four moves. -->
+<!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Green's Theorem</div>
+          <div class="step-subtitle">Circulation and flux forms, and the ingredients</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Green's theorem</div>
+<p>Let \(D\) be a region whose boundary \(C\) is a piecewise smooth, simple closed curve oriented counterclockwise, and let \(\mathbf F=\langle P,Q\rangle\) have continuous partial derivatives on \(D\). Then a line integral around \(C\) becomes a double integral over \(D\):</p>
+$$\textbf{Circulation (work):}\quad\oint_C P\,dx+Q\,dy=\iint_D (Q_x-P_y)\,dA$$
+$$\textbf{Flux (outward):}\quad\oint_C\mathbf F\cdot\mathbf N\,ds=\iint_D (P_x+Q_y)\,dA$$
+</div>
+<jsx-green mode="circ" cells="4" field>
+  <jsx-case name="Disk, F = ⟨−y, x⟩" p="-y" q="x" polar="0,2"></jsx-case>
+  <jsx-case name="Between y = x² and y = √x, F = ⟨y², xy⟩" p="y*y" q="x*y" g1="x*x" g2="sqrt(x)" xmin="0" xmax="1"></jsx-case>
+  <jsx-case name="Rectangle, F = ⟨0, x²/2⟩" p="0" q="x*x/2" g1="0" g2="2" xmin="-1" xmax="2"></jsx-case>
+</jsx-green>
+<div class="defbox"><div class="defbox-label">Ingredients: check these before using the theorem</div>
+<ol>
+<li>Is \(C\) <b>closed</b>? If not, close it with an easy piece (Step 7).</li>
+<li>Is it <b>counterclockwise</b>, with \(D\) on your left? If clockwise, put a minus sign (Step 8).</li>
+<li>Are \(P,Q\) smooth on <b>all</b> of \(D\)? A hole or a point where they blow up breaks the theorem.</li>
+<li>Which <b>form</b>? Work, circulation, \(\int P\,dx+Q\,dy\): use \(Q_x-P_y\). Flux, outward, across: use \(P_x+Q_y\).</li>
+<li>Can you <b>describe \(D\)</b>? Between two curves (\(dy\,dx\) or \(dx\,dy\)), a disk or ellipse (polar), a triangle (three lines).</li>
+</ol>
+</div>
+<div class="defbox"><div class="defbox-label">The four moves, and the shortcuts to look for</div>
+<p><b>1.</b> Read off \(P\) and \(Q\). &nbsp; <b>2.</b> Compute the integrand. &nbsp; <b>3.</b> Describe \(D\) and set the limits. &nbsp; <b>4.</b> Integrate, then fix the sign.</p>
+<table>
+<tr><td>Integrand is a constant \(c\)</td><td>\(c\cdot\text{Area}(D)\): disk \(\pi r^2\), ellipse \(\pi ab\), triangle \(\tfrac12bh\)</td></tr>
+<tr><td>Integrand is \(0\) (\(P_y=Q_x\))</td><td>the answer is \(0\) for every closed curve</td></tr>
+<tr><td>Odd in \(x\) or \(y\) over a symmetric region</td><td>the answer is \(0\)</td></tr>
+<tr><td>\(x^2+y^2\) appears, \(D\) a disk</td><td>polar: \(r\,dr\,d\theta\)</td></tr>
+</table>
+</div>
+
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Region Between Two Curves</div>
+          <div class="step-subtitle">Four moves</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Problem</div>
+<p>Use Green's theorem to evaluate \(\displaystyle\oint_C 11xy\,dx+(x+y)\,dy\), where \(C\) is the boundary of the region between \(y=0\) and \(y=121-x^2\).</p></div>
+<jsx-green no-readout mode="circ" cells="4" view="region">
+  <jsx-case name="Region between two curves" p="11*x*y" q="x+y" g1="0" g2="121-x*x" xmin="-11" xmax="11"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Ingredients: closed? orientation? smooth?</td><td><reveal>\(C\) is a boundary, so closed. No direction is stated, so take counterclockwise. \(P,Q\) are polynomials, smooth everywhere.</reveal></td></tr>
+  <tr><td>Move 1. Read off \(P\) and \(Q\).</td><td><reveal>\(P=11xy,\ Q=x+y\)</reveal></td></tr>
+  <tr><td>Move 2. The integrand \(Q_x-P_y\).</td><td><reveal>\(Q_x=1,\ P_y=11x\), so \(Q_x-P_y=1-11x\)</reveal></td></tr>
+  <tr><td>Move 3. Describe \(D\). Where do the curves meet?</td><td><reveal>\(121-x^2=0\) at \(x=\pm11\). So \(-11\le x\le 11,\ 0\le y\le 121-x^2\)</reveal></td></tr>
+  <tr><td>Move 4. Set up and integrate.</td><td><reveal>\(\displaystyle\int_{-11}^{11}\!\!\int_0^{121-x^2}(1-11x)\,dy\,dx=\int_{-11}^{11}(1-11x)(121-x^2)\,dx\)</reveal></td></tr>
+  <tr><td>Simplify before expanding: which part vanishes?</td><td><reveal>\(11x(121-x^2)\) is odd, so it integrates to \(0\) on \([-11,11]\). What is left is the area: \(\displaystyle\int_{-11}^{11}(121-x^2)\,dx=2\Big(1331-\tfrac{1331}{3}\Big)=\tfrac{5324}{3}\)</reveal></td></tr>
+  <tr><td>Answer</td><td><reveal>\(\tfrac{5324}{3}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">A Constant Integrand</div>
+          <div class="step-subtitle">Four moves</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Problem</div>
+<p>Use Green's theorem to evaluate \(\displaystyle\oint_C (y-x)\,dx+(2x-y)\,dy\) for the path \(C\) defined by \(x=6\cos\theta,\ y=7\sin\theta\).</p></div>
+<jsx-green no-readout mode="circ" cells="4" view="region">
+  <jsx-case name="ellipse x = 6cos θ, y = 7sin θ" p="y-x" q="2*x-y" polar="0,1" scale="6,7"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Ingredients: closed? orientation?</td><td><reveal>\(\theta\) runs over \([0,2\pi]\), so the curve is closed, and \(\theta\) increasing means counterclockwise.</reveal></td></tr>
+  <tr><td>Move 1. \(P\) and \(Q\).</td><td><reveal>\(P=y-x,\ Q=2x-y\)</reveal></td></tr>
+  <tr><td>Move 2. The integrand.</td><td><reveal>\(Q_x=2,\ P_y=1\), so \(Q_x-P_y=1\), a <b>constant</b></reveal></td></tr>
+  <tr><td>Move 3. What is \(D\)? What are its semi-axes?</td><td><reveal>The ellipse \(\dfrac{x^2}{36}+\dfrac{y^2}{49}=1\), with \(a=6,\ b=7\)</reveal></td></tr>
+  <tr><td>Move 4. No integral to set up: constant times area.</td><td><reveal>\(\displaystyle\iint_D 1\,dA=\pi ab=\pi(6)(7)=42\pi\)</reveal></td></tr>
+  <tr><td>Answer</td><td><reveal>\(42\pi\)</reveal></td></tr>
+  <tr><td>Variation: the integrand were \(4\), same ellipse.</td><td><reveal>\(4\cdot42\pi=168\pi\)</reveal></td></tr>
+  <tr><td>Variation: the same \(C\) traversed clockwise.</td><td><reveal>\(-42\pi\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Work Done Around a Triangle</div>
+          <div class="step-subtitle">Four moves</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Problem</div>
+<p>Use an appropriate form of Green's theorem to calculate the work done by \(\mathbf F(x,y)=\langle 18x^2+y,\ 19xy^2\rangle\) on a particle moving counterclockwise around the closed path \(C\), the boundary of the region between \(y=x,\ y=0,\ x=9\). Round to two decimal places.</p></div>
+<jsx-green no-readout mode="circ" cells="4" view="region">
+  <jsx-case name="Triangle" p="18*x*x+y" q="19*x*y*y" g1="0" g2="x" xmin="0" xmax="9"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Which form? The words give it away.</td><td><reveal><b>Work</b> is \(\oint\mathbf F\cdot d\mathbf r\), the circulation form: integrand \(Q_x-P_y\).</reveal></td></tr>
+  <tr><td>Move 1. \(P\) and \(Q\).</td><td><reveal>\(P=18x^2+y,\ Q=19xy^2\)</reveal></td></tr>
+  <tr><td>Move 2. The integrand.</td><td><reveal>\(Q_x=19y^2,\ P_y=1\), so \(Q_x-P_y=19y^2-1\)</reveal></td></tr>
+  <tr><td>Move 3. Sketch: the three lines meet where? Which order is easier?</td><td><reveal>Vertices \((0,0),\ (9,0),\ (9,9)\). With \(dy\,dx\) there is one pair of limits: \(0\le x\le9,\ 0\le y\le x\).</reveal></td></tr>
+  <tr><td>Move 4a. Inner integral in \(y\).</td><td><reveal>\(\displaystyle\int_0^x(19y^2-1)\,dy=\tfrac{19}{3}x^3-x\)</reveal></td></tr>
+  <tr><td>Move 4b. Outer integral in \(x\).</td><td><reveal>\(\displaystyle\int_0^9\Big(\tfrac{19}{3}x^3-x\Big)dx=\tfrac{19}{12}(9^4)-\tfrac{81}{2}=\tfrac{41391}{4}\)</reveal></td></tr>
+  <tr><td>Answer, to two decimals</td><td><reveal>\(10347.75\)</reveal></td></tr>
+  <tr><td>Why not the line integral directly?</td><td><reveal>Three sides, three parametrizations, three integrals, versus one double integral.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">A Disk and Polar Coordinates</div>
+          <div class="step-subtitle">Four moves</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Problem</div>
+<p>Use Green's theorem to evaluate \(\displaystyle\oint_C x^2y\,dx-xy^2\,dy\), where \(C\) is the circle \(x^2+y^2=9\) with counterclockwise orientation.</p></div>
+<jsx-green no-readout mode="circ" cells="4" view="region">
+  <jsx-case name="Radius 3" p="x*x*y" q="-x*y*y" polar="0,3"></jsx-case>
+  <jsx-case name="Radius 2" p="x*x*y" q="-x*y*y" polar="0,2"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Move 1. \(P\) and \(Q\). Watch the minus sign in \(Q\).</td><td><reveal>\(P=x^2y,\ Q=-xy^2\)</reveal></td></tr>
+  <tr><td>Move 2. The integrand.</td><td><reveal>\(Q_x=-y^2,\ P_y=x^2\), so \(Q_x-P_y=-(x^2+y^2)\)</reveal></td></tr>
+  <tr><td>Move 3. A disk, with \(x^2+y^2\) in the integrand: which coordinates?</td><td><reveal>Polar: \(x^2+y^2=r^2\), \(dA=r\,dr\,d\theta\), \(0\le r\le 3,\ 0\le\theta\le2\pi\)</reveal></td></tr>
+  <tr><td>Move 4. Set up and integrate.</td><td><reveal>\(\displaystyle-\int_0^{2\pi}\!\!\int_0^3r^2\cdot r\,dr\,d\theta=-2\pi\cdot\tfrac{3^4}{4}=-\tfrac{81\pi}{2}\)</reveal></td></tr>
+  <tr><td>The same problem on a radius \(R\) circle.</td><td><reveal>\(-2\pi\cdot\tfrac{R^4}{4}=-\tfrac{\pi R^4}{2}\)</reveal></td></tr>
+  <tr><td>The same with \(R=2\).</td><td><reveal>\(-\tfrac{\pi\cdot16}{2}=-8\pi\)</reveal></td></tr>
+  <tr><td>Common slip: forgetting the factor \(r\) of \(dA\).</td><td><reveal>\(\int_0^3r^2\,dr\) instead of \(\int_0^3r^3\,dr\) gives a wrong power of \(R\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Spot the Zero</div>
+          <div class="step-subtitle">Four moves</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Problem A</div>
+<p>\(\displaystyle\oint_C (x^2-y^2)\,dx+10xy\,dy\), \(C:\ x^2+y^2=64\). </p></div>
+<jsx-green no-readout mode="circ" cells="4" view="region">
+  <jsx-case name="Radius 8" p="x*x-y*y" q="10*x*y" polar="0,8"></jsx-case>
+  <jsx-case name="Radius a = 2" p="exp(x)*cos(13*y)" q="-13*exp(x)*sin(13*y)" polar="0,2"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Move 2. The integrand.</td><td><reveal>\(Q_x=10y,\ P_y=-2y\), so \(Q_x-P_y=12y\)</reveal></td></tr>
+  <tr><td>The disk is symmetric about the \(x\)-axis and \(12y\) is odd in \(y\). What does that say?</td><td><reveal>The positive and negative halves cancel: the answer is \(0\) without integrating.</reveal></td></tr>
+  <tr><td>Check in polar.</td><td><reveal>\(\displaystyle12\int_0^{2\pi}\!\!\int_0^8r\sin\theta\cdot r\,dr\,d\theta\) and \(\int_0^{2\pi}\sin\theta\,d\theta=0\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Problem B</div>
+<p>\(\displaystyle\oint_C e^x\cos(13y)\,dx-13e^x\sin(13y)\,dy\), where \(C\) is \(x^2+y^2=a^2\).</p></div>
+<table>
+  <tr><td>Move 2. The integrand.</td><td><reveal>\(Q_x=-13e^x\sin(13y),\ P_y=-13e^x\sin(13y)\), so \(Q_x-P_y=0\)</reveal></td></tr>
+  <tr><td>What kind of field is this, and does the radius \(a\) matter?</td><td><reveal>\(P_y=Q_x\): \(\mathbf F\) is conservative, with potential \(f=e^x\cos 13y\). So the answer is \(0\) for every closed curve, whatever \(a\) is.</reveal></td></tr>
+  <tr><td>Answer</td><td><reveal>\(0\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Open Paths: Close Them</div>
+          <div class="step-subtitle">Four moves</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Problem</div>
+<p>Find \(\displaystyle\int_C y^2\,dx+(2xy+x)\,dy\), where \(C\) is the arc of \(y=4-x^2\) from \((2,0)\) to \((-2,0)\).</p></div>
+<jsx-green no-readout mode="circ" cells="3" view="region">
+  <jsx-case name="Region under y = 4 − x²" p="y*y" q="2*x*y+x" g1="0" g2="4-x*x" xmin="-2" xmax="2"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>Ingredient check: is \(C\) closed?</td><td><reveal>No. The theorem does not apply yet.</reveal></td></tr>
+  <tr><td>Close it. Which return path is cheapest?</td><td><reveal>\(C_2\): the segment from \((-2,0)\) to \((2,0)\) along the \(x\)-axis. There \(y=0\) and \(dy=0\). Then \(C+C_2\) is counterclockwise.</reveal></td></tr>
+  <tr><td>The integral along \(C_2\).</td><td><reveal>\(\displaystyle\int_{C_2}y^2\,dx+(2xy+x)\,dy=0\), since \(y=0\) and \(dy=0\)</reveal></td></tr>
+  <tr><td>Green on the closed curve \(C+C_2\): \(Q_x-P_y=\)</td><td><reveal>\((2y+1)-2y=1\), so \(\displaystyle\oint=\text{Area}(D)=\int_{-2}^2(4-x^2)\,dx=\tfrac{32}{3}\)</reveal></td></tr>
+  <tr><td>Subtract the piece you added.</td><td><reveal>\(\displaystyle\int_C=\oint-\int_{C_2}=\tfrac{32}{3}-0=\tfrac{32}{3}\)</reveal></td></tr>
+  <tr><td>Check: parametrize \(x=t,\ y=4-t^2\), \(t\) from \(2\) to \(-2\).</td><td><reveal>\(\displaystyle\int_2^{-2}\Big[(4-t^2)^2+\big(2t(4-t^2)+t\big)(-2t)\Big]dt=\tfrac{32}{3}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">Orientation and Regions With Holes</div>
+          <div class="step-subtitle">Examples</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Orientation of the boundary</div>
+<p>Let \(D\) be a region and let \(C\) be a component of the boundary of \(D\). We say that \(C\) is positively oriented if, as we walk along \(C\) in the direction of orientation, region \(D\) is always on our left. Curve \(C\) is negatively oriented if, as we walk along \(C\) in the direction of orientation, region \(D\) is always on our right.</p>
+<p>Let \(D\) be a region with finitely many holes and denote the boundary of \(D\) by \(\partial D\), with the inner holes given a negative orientation and the outer boundary a positive orientation. Then</p>
+$$\int_{\partial D}\mathbf F\cdot d\mathbf r=\iint_D (Q_x-P_y)\,dA\qquad\text{and}\qquad \int_{\partial D}\mathbf F\cdot\mathbf N\,ds=\iint_D (P_x+Q_y)\,dA.$$
+</div>
+<jsx-green no-readout mode="circ" cells="3" view="loops">
+  <jsx-case name="Annulus" p="sin(x)-y^3/3" q="x^3/3+sin(y)" polar="1,2"></jsx-case>
+  <jsx-case name="Whirlpool" p="y/(x*x+y*y)" q="-x/(x*x+y*y)" polar="1,2"></jsx-case>
+  <jsx-case name="Annulus 2 to 5" p="x^3" q="5*x+exp(y)*sin(y)" polar="2,5"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>\(\displaystyle\oint_{\partial D}\Big(\sin x-\frac{y^3}3\Big)dx+\Big(\frac{x^3}3+\sin y\Big)dy\), where \(D\) is the annulus \(1\le r\le2\), \(0\le\theta\le2\pi\).</td><td><reveal>\(Q_x-P_y=x^2+y^2\); \(\displaystyle\int_0^{2\pi}\!\!\int_1^2r^3\,dr\,d\theta=\tfrac{15\pi}2\)</reveal></td></tr>
+  <tr><td>\(\mathbf F=\Big\langle\dfrac{y}{x^2+y^2},\dfrac{-x}{x^2+y^2}\Big\rangle\) and \(C\) any simple closed curve oriented counterclockwise. What are the possible values of \(\displaystyle\int_C\mathbf F\cdot d\mathbf r\)?</td><td><reveal>\(0\) if \(C\) does not encompass the origin; \(-2\pi\) if it does (\(\displaystyle\int_C=-\int_{C_1}\), \(C_1\) a clockwise circle about the origin inside \(C\))</reveal></td></tr>
+  <tr><td>\(\displaystyle\int_{\partial D}\mathbf F\cdot d\mathbf r\), \(D\) the annulus \(2\le r\le5\), \(\mathbf F(x,y)=\langle x^3,\ 5x+e^y\sin y\rangle\).</td><td><reveal>\(Q_x-P_y=5\), area \(=21\pi\), so \(105\pi\)</reveal></td></tr>
+</table>
+<table>
+  <tr><td>Clockwise: \(\displaystyle\oint_C -y^3\,dx+x^3\,dy\), \(C:\ x^2+y^2=4\) <b>clockwise</b>. First the counterclockwise value.</td><td><reveal>\(Q_x-P_y=3x^2+3y^2=3r^2\); \(3\displaystyle\int_0^{2\pi}\!\!\int_0^2r^3\,dr\,d\theta=24\pi\). Clockwise reverses it: \(-24\pi\).</reveal></td></tr>
+</table>
+
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Which Form? Flux Across a Closed Curve</div>
+          <div class="step-subtitle">Examples</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Choosing the form from the wording</div>
+<table>
+<tr><td>work, circulation, \(\oint P\,dx+Q\,dy\), \(\oint\mathbf F\cdot d\mathbf r\)</td><td>\(\displaystyle\iint_D(Q_x-P_y)\,dA\)</td></tr>
+<tr><td>flux, outward, across \(C\), \(\oint\mathbf F\cdot\mathbf N\,ds\)</td><td>\(\displaystyle\iint_D(P_x+Q_y)\,dA\)</td></tr>
+</table></div>
+<jsx-green no-readout mode="flux" cells="4" view="loops" field>
+  <jsx-case name="Circle, F = ⟨x, y⟩" p="x" q="y" polar="0,2"></jsx-case>
+  <jsx-case name="Triangle" p="x*x+exp(y)" q="x+y" g1="0" g2="3-3*x" xmin="0" xmax="1"></jsx-case>
+  <jsx-case name="Rectangle" p="5*x+y" q="x+3*y" g1="-2" g2="3" xmin="-1" xmax="1"></jsx-case>
+  <jsx-case name="Triangle (0,0), (9,0), (9,9), F = ⟨x², y²⟩" p="x*x" q="y*y" g1="0" g2="x" xmin="0" xmax="9"></jsx-case>
+</jsx-green>
+<table>
+  <tr><td>The flux of \(\mathbf F(x,y)=\langle x,y\rangle\) across a circle of radius \(r\) centered at the origin.</td><td><reveal>\(P_x+Q_y=2\), so \(2\iint_D dA=2\pi r^2\)</reveal></td></tr>
+  <tr><td>The flux of \(\mathbf F=\langle x^2+e^y,\ x+y\rangle\) across the triangle with vertices \((0,0)\), \((1,0)\), \((0,3)\) oriented clockwise.</td><td><reveal>\(P_x+Q_y=2x+1\); clockwise gives a minus sign: \(-\displaystyle\int_0^1\!\!\int_0^{3-3x}(2x+1)\,dy\,dx=-\tfrac52\)</reveal></td></tr>
+  <tr><td>Water flows with velocity \(\mathbf v=\langle5x+y,\ x+3y\rangle\) m/sec. The amount flowing per second across the rectangle with vertices \((-1,-2)\), \((1,-2)\), \((1,3)\), \((-1,3)\), counterclockwise.</td><td><reveal>\(P_x+Q_y=8\), so \(8\cdot(\text{area }10)=80\) m<sup>2</sup>/sec</reveal></td></tr>
+  <tr><td>The outward flux of \(\mathbf F=\langle x^2,y^2\rangle\) across the triangle with vertices \((0,0),(9,0),(9,9)\).</td><td><reveal>\(P_x+Q_y=2x+2y\); \(\displaystyle\int_0^x(2x+2y)\,dy=3x^2\), so \(\int_0^9 3x^2\,dx=729\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Area From a Boundary</div>
+          <div class="step-subtitle">Examples</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Equation 6.14: area from the boundary</div>
+<p>With \(\mathbf F=\langle-\tfrac y2,\tfrac x2\rangle\) we get \(Q_x-P_y=1\), so for a counterclockwise simple closed curve \(C\):</p>
+$$\text{area of }D=\tfrac12\oint_C -y\,dx+x\,dy.$$
+</div>
+<table>
+  <tr><td>The area enclosed by the ellipse \(x=a\cos t,\ y=b\sin t\), \(0\le t\le2\pi\).</td><td><reveal>\(\tfrac12\displaystyle\int_0^{2\pi}\big(-b\sin t\cdot(-a\sin t)+a\cos t\cdot b\cos t\big)dt=\tfrac12\int_0^{2\pi}ab\,dt=\pi ab\)</reveal></td></tr>
+  <tr><td>The area enclosed by \(\mathbf r(t)=\langle\sin t\cos t,\ \sin t\rangle\), \(0\le t\le\pi\).</td><td><reveal>\(\tfrac12\displaystyle\int_0^\pi\sin^3t\,dt=\tfrac23\)</reveal></td></tr>
+  <tr><td>The area between the ellipse \(\dfrac{x^2}9+\dfrac{y^2}4=1\) and the circle \(x^2+y^2=25\).</td><td><reveal>\(25\pi-6\pi=19\pi\)</reveal></td></tr>
+  <tr><td>The area of the pentagon with vertices \((0,4)\), \((4,1)\), \((3,0)\), \((-1,-1)\), \((-2,2)\).</td><td><reveal>\(\tfrac12\oint -y\,dx+x\,dy\) over the five sides: \(17\) (this order of vertices is clockwise, so the sum is \(-17\))</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="11">
+          <div class="step-title">Practice</div>
+          <div class="step-subtitle">Do the four moves on each</div>
+          <div class="step-body">
+<table>
+  <tr><td>1. \(\displaystyle\oint_C 4xy\,dx+(2x^2+3x)\,dy\), \(C:\ x^2+y^2=25\) counterclockwise.</td><td><reveal>\(Q_x-P_y=3\), so \(3\cdot25\pi=75\pi\)</reveal></td></tr>
+  <tr><td>2. \(\displaystyle\oint_C (e^x-y)\,dx+(x+\sin y)\,dy\), \(C\) the triangle \((0,0),(4,0),(0,3)\) counterclockwise.</td><td><reveal>\(Q_x-P_y=2\), so \(2\cdot6=12\)</reveal></td></tr>
+  <tr><td>3. \(\displaystyle\oint_C \big(3y-e^{\sin x}\big)dx+\big(7x+\sqrt{y^4+1}\big)dy\), \(C:\ x^2+y^2=9\) counterclockwise.</td><td><reveal>\(Q_x-P_y=7-3=4\), so \(4\cdot9\pi=36\pi\)</reveal></td></tr>
+  <tr><td>4. \(\displaystyle\oint_C xy\,dx+x^2\,dy\), \(C\) the boundary of the region between \(y=x^2\) and \(y=x\), counterclockwise.</td><td><reveal>\(Q_x-P_y=2x-x=x\); \(\displaystyle\int_0^1\!\!\int_{x^2}^{x}x\,dy\,dx=\int_0^1(x^2-x^3)dx=\tfrac1{12}\)</reveal></td></tr>
+  <tr><td>5. The work of \(\mathbf F=\langle x,\ x^3+3xy^2\rangle\) on a particle going along the \(x\)-axis from \((-2,0)\) to \((2,0)\), then back along the upper semicircle .</td><td><reveal>\(Q_x-P_y=3(x^2+y^2)\); \(3\displaystyle\int_0^\pi\!\!\int_0^2r^3\,dr\,d\theta=12\pi\)</reveal></td></tr>
+  <tr><td>6. \(\displaystyle\oint_C2xy\,dx+(x+y)\,dy\), \(C\) the boundary of the region between \(y=0\) and \(y=4-x^2\).</td><td><reveal>\(\displaystyle\int_{-2}^{2}(1-2x)(4-x^2)\,dx=\tfrac{32}3\)</reveal></td></tr>
+  <tr><td>7. \(\displaystyle\oint_Cxy\,dx+(x+y)\,dy\), \(C\) the boundary of the region between \(x^2+y^2=1\) and \(x^2+y^2=9\).</td><td><reveal>\(Q_x-P_y=1-x\); \(8\pi-0=8\pi\)</reveal></td></tr>
+  <tr><td>8. \(\displaystyle\oint_C(y+x)\,dx+(x+\sin y)\,dy\), \(C\) any smooth simple closed curve.</td><td><reveal>\(Q_x-P_y=1-1=0\), so \(0\)</reveal></td></tr>
+  <tr><td>9. The outward flux of \(\mathbf F=-x\,\mathbf i+2y\,\mathbf j\) over the square with corners \((\pm1,\pm1)\).</td><td><reveal>\(P_x+Q_y=1\); area \(4\), so \(4\)</reveal></td></tr>
+  <tr><td>10. The outward flux of \(\mathbf F=\langle x^3,y^3\rangle\) across the boundary of \([0,2]\times[0,2]\).</td><td><reveal>\(P_x+Q_y=3x^2+3y^2\); \(\displaystyle\int_0^2\!\!\int_0^2(3x^2+3y^2)\,dx\,dy=32\)</reveal></td></tr>
+</table>
+<p class="muted small">OpenStax, <i>Calculus Volume 3</i>, Section 6.4 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3.</p>
+
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
