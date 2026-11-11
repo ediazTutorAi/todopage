@@ -2,6 +2,21 @@
   {
     "course": "Trigonometry",
     "semester": "Fall 2026",
+    "date": "2026-11-11",
+    "title": "Vector Operations",
+    "subtitle": "Lesson 23",
+    "description": "Position vectors, components, magnitude and direction angle, vector addition, subtraction and scalar multiplication in component form, unit and standard basis vectors, and the algebraic and geometric dot product.",
+    "tags": [
+      "Vectors",
+      "Components",
+      "Unit Vectors",
+      "Dot Product"
+    ],
+    "url": "trigonometry/2026/2026-11-11-lesson-23-vector-operations/index.html"
+  },
+  {
+    "course": "Trigonometry",
+    "semester": "Fall 2026",
     "date": "2026-11-09",
     "title": "Introduction to Vectors",
     "subtitle": "Lesson 22",

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Vector Operations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+<!-- Lesson 23 plan, 8 steps (instructor supplies the explanations; slides carry the workbook wording):
+   1. Components, Direction, Magnitude   4. Addition, Subtraction, Scalar Mult. (Ex 3)   7. Dot Product, algebraic (Ex 6)
+   2. Example 1                          5. Example 4                                      8. Dot Product, geometric (Ex 7)
+   3. Finding Components (Ex 2)          6. Standard Basis Vectors (Ex 5) -->
+
+  <header class="site-header">
+    <h1>Vector Operations</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Vector Operations</div>
+          <div class="step-subtitle">Vector Components, Direction, and Magnitude</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">DEFINITION: Position Vectors, Vector Components, Direction Angle and Magnitude</div>
+<div class="jsx-fubini-grid">
+<div>
+<p>A vector \(\mathbf{v}\) with initial point (tail) placed at the origin and terminal point (head) at the coordinate \((a, b)\) is called a <reveal>position</reveal> vector, and is denoted as <reveal>\(\langle a, b\rangle\)</reveal>.</p>
+<p>The real numbers \(a\) and \(b\) are the <reveal>horizontal</reveal> and <reveal>vertical</reveal> components, respectively, of the vector \(\mathbf{v}\).</p>
+<p>The positive angle formed with initial side along the positive \(x\)-axis and terminal side formed by the vector \(\mathbf{v}\) is called the <reveal>direction</reveal> angle. This angle satisfies the equation <reveal>\(\tan\theta = \dfrac{b}{a},\ a \neq 0\)</reveal>.</p>
+</div>
+<div><triangle type="right" angle="40" axes adjacent="a" opposite="b" hypotenuse="" label-a="θ" label-c="" point-label="\((a, b)\)"></triangle></div>
+</div>
+<p>The <reveal>magnitude</reveal> or length of the vector \(\mathbf{v} = \langle a, b\rangle\) is denoted as <reveal>\(|\mathbf{v}|\)</reveal> and can be calculated by the equation, <reveal>\(|\mathbf{v}| = \sqrt{a^2 + b^2}\)</reveal>.</p></div>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-title">Example 1</div>
+          <div class="step-subtitle">Magnitude and direction angle</div>
+          <div class="step-body">
+<p><b>Example 1.</b> Let \(\mathbf{v} = \langle -3, -5\rangle\). Graph \(\mathbf{v}\), evaluate \(|\mathbf{v}|\), and find the direction angle.</p>
+<div class="jsx-fubini-grid">
+<div>
+<table>
+  <tr><td>Magnitude</td><td><reveal>\(|\mathbf{v}| = \sqrt{(-3)^2 + (-5)^2} = \sqrt{34}\)</reveal></td></tr>
+  <tr><td>\(\tan\theta\)</td><td><reveal>\(\tan\theta = \dfrac{-5}{-3} = \dfrac{5}{3}\)</reveal></td></tr>
+  <tr><td>Reference angle</td><td><reveal>\(\theta' = \tan^{-1}\left(\dfrac{5}{3}\right) \approx 59.04^\circ\)</reveal></td></tr>
+  <tr><td>Direction angle</td><td><reveal>\(\theta = \tan^{-1}\left(\dfrac{5}{3}\right) + 180^\circ \approx 239.04^\circ\)</reveal></td></tr>
+</table>
+</div>
+<div><angle-plane angle="239.04" label-a="θ" point-label="\((-3, -5)\)" build></angle-plane></div>
+</div>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-title">Finding Vector Components</div>
+          <div class="step-subtitle">Example 2</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">IMPORTANT INFO: Finding Vector Components</div>
+<div class="jsx-fubini-grid">
+<div>
+<p>A vector \(\mathbf{v}\), with magnitude \(|\mathbf{v}|\) and direction angle \(\theta\), has horizontal and vertical components given by the following:</p>
+<p>\(\sin\theta = \dfrac{b}{|\mathbf{v}|} \ \to\ \) <reveal>\(b = |\mathbf{v}|\sin\theta\)</reveal> (vertical component)</p>
+<p>\(\cos\theta = \dfrac{a}{|\mathbf{v}|} \ \to\ \) <reveal>\(a = |\mathbf{v}|\cos\theta\)</reveal> (horizontal component)</p>
+<p>\(\mathbf{v} = \langle a, b\rangle = \) <reveal>\(\langle |\mathbf{v}|\cos\theta,\ |\mathbf{v}|\sin\theta\rangle\)</reveal></p>
+</div>
+<div><triangle type="right" angle="40" axes adjacent="a" opposite="b" hypotenuse="" label-a="θ" label-c="" point-label="\((a, b)\)"></triangle></div>
+</div></div>
+<p><b>Example 2.</b> For each description below, determine the components of the given vector and express as a position vector.</p>
+<table>
+  <tr><td>(a) Vector \(\mathbf{u}\) with magnitude 7 and direction angle of \(60^\circ\).</td><td><reveal>\(\mathbf{u} = \langle 7\cos(60^\circ), 7\sin(60^\circ)\rangle = \left\langle \dfrac{7}{2}, \dfrac{7\sqrt{3}}{2}\right\rangle\)</reveal></td></tr>
+  <tr><td>(b) Vector \(\mathbf{v}\) with magnitude 5 and direction angle of \(222^\circ\).</td><td><reveal>\(\mathbf{v} = \langle 5\cos(222^\circ), 5\sin(222^\circ)\rangle \approx \langle -3.72, -3.35\rangle\)</reveal></td></tr>
+  <tr><td>(c) Vector \(\mathbf{w}\) with magnitude \(2\pi\) and direction angle of \(180^\circ\).</td><td><reveal>\(\mathbf{w} = \langle 2\pi\cos(180^\circ), 2\pi\sin(180^\circ)\rangle = \langle -2\pi, 0\rangle\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-title">Vector Operations</div>
+          <div class="step-subtitle">Addition, subtraction, and scalar multiplication</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">DEFINITION: Vector Addition, Subtraction, and Scalar Multiplication</div>
+<p>Let \(\mathbf{v} = \langle a, b\rangle\) and \(\mathbf{w} = \langle c, d\rangle\); we define <b><i>vector addition</i></b> and <b><i>subtraction</i></b> as follows.</p>
+<p>\[\mathbf{v} \pm \mathbf{w} = \langle a, b\rangle \pm \langle c, d\rangle = \text{ }\]<reveal>\(\langle a \pm c,\ b \pm d\rangle\)</reveal></p>
+<p>Let \(k\) be a real value; we define <b><i>scalar multiplication</i></b> as follows.</p>
+<p>\[k\mathbf{v} = k\langle a, b\rangle = \text{ }\]<reveal>\(\langle ka,\ kb\rangle\)</reveal></p></div>
+<p><b>Example 3.</b> Let \(\mathbf{v} = \langle 1, -2\rangle\) and \(\mathbf{w} = \langle -2, 3\rangle\). For each expression, state whether the result will be a scalar or vector quantity and evaluate.</p>
+<table>
+  <tr><td>\(-2\mathbf{v}\)</td><td><reveal>\(-2\langle 1, -2\rangle = \langle -2, 4\rangle\), vector</reveal></td></tr>
+  <tr><td>\(-2\mathbf{v} - \mathbf{w}\)</td><td><reveal>\(\langle -2, 4\rangle - \langle -2, 3\rangle = \langle 0, 1\rangle\), vector</reveal></td></tr>
+  <tr><td>\(|-2\mathbf{v} - \mathbf{w}|\)</td><td><reveal>\(|\langle 0, 1\rangle| = \sqrt{0^2 + 1^2} = 1\), scalar</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-title">Example 4</div>
+          <div class="step-subtitle">A linear combination of unit vectors</div>
+          <div class="step-body">
+<p><b>Example 4.</b> Express the vector \(\left\langle \dfrac{3}{5}, \dfrac{4}{5}\right\rangle\) as a sum of vectors \(\mathbf{v} = \langle 1, 0\rangle\) and \(\mathbf{w} = \langle 0, 1\rangle\), then evaluate \(\left|\left\langle \dfrac{3}{5}, \dfrac{4}{5}\right\rangle\right|\).</p>
+<table>
+  <tr><td>Sum of vectors</td><td><reveal>\(\left\langle \dfrac{3}{5}, \dfrac{4}{5}\right\rangle = \left\langle \dfrac{3}{5}, 0\right\rangle + \left\langle 0, \dfrac{4}{5}\right\rangle\)</reveal></td></tr>
+  <tr><td>Factor out the scalars</td><td><reveal>\(= \dfrac{3}{5}\langle 1, 0\rangle + \dfrac{4}{5}\langle 0, 1\rangle = \dfrac{3}{5}\mathbf{v} + \dfrac{4}{5}\mathbf{w}\)</reveal></td></tr>
+  <tr><td>Name</td><td><reveal>a linear combination of unit vectors</reveal></td></tr>
+  <tr><td>Magnitude</td><td><reveal>\(\sqrt{\left(\dfrac{3}{5}\right)^2 + \left(\dfrac{4}{5}\right)^2} = \sqrt{\dfrac{9}{25} + \dfrac{16}{25}} = \sqrt{\dfrac{25}{25}} = 1\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="6">
+          <div class="step-title">Standard Basis Vectors</div>
+          <div class="step-subtitle">Example 5</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">DEFINITION: Unit Vector and Standard Basis Vectors</div>
+<p>A <reveal>unit</reveal> <reveal>vector</reveal> is any vector with magnitude 1. Unit vectors are often used to indicate direction.</p>
+<p>There are two convenient unit vectors, \(\hat{\imath} = \langle 1, 0\rangle\) and \(\hat{\jmath} = \langle 0, 1\rangle\), read aloud as \(i\)-hat and \(j\)-hat, and are sometimes referred to as the <reveal>standard basis vectors</reveal>.</p>
+<p>These unit vectors are perpendicular (or orthogonal) and form a <b><i>standard basis</i></b> for the \(xy\)-plane. That is, any vector in the plane can be expressed as a combination of these two perpendicular unit vectors, \(\hat{\imath}\) and \(\hat{\jmath}\).</p></div>
+<p><b>Example 5.</b> Let \(\mathbf{v} = \langle 1, -2\rangle\) and \(\mathbf{w} = \langle -2, 3\rangle\).</p>
+<p>(a) Express each vector \(\mathbf{v}\) and \(\mathbf{w}\) as a combination of the standard basis vectors, \(\hat{\imath}\) and \(\hat{\jmath}\). (b) Express each quantity below as a combination of standard basis vectors, \(\hat{\imath}\) and \(\hat{\jmath}\).</p>
+<table>
+  <tr><td>(a) \(\mathbf{v}\)</td><td><reveal>\(\langle 1, -2\rangle = 1\langle 1, 0\rangle - 2\langle 0, 1\rangle = \hat{\imath} - 2\hat{\jmath}\)</reveal></td></tr>
+  <tr><td>(a) \(\mathbf{w}\)</td><td><reveal>\(\langle -2, 3\rangle = -2\hat{\imath} + 3\hat{\jmath}\)</reveal></td></tr>
+  <tr><td>(b) \(-2\mathbf{v}\)</td><td><reveal>\(-2(\hat{\imath} - 2\hat{\jmath}) = -2\hat{\imath} + 4\hat{\jmath}\)</reveal></td></tr>
+  <tr><td>(b) \(-2\mathbf{v} - \mathbf{w}\)</td><td><reveal>\((-2\hat{\imath} + 4\hat{\jmath}) - (-2\hat{\imath} + 3\hat{\jmath}) = \hat{\jmath}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="7">
+          <div class="step-title">The Dot Product</div>
+          <div class="step-subtitle">Algebraic definition</div>
+          <div class="step-body">
+<p>Unlike scalar multiplication, <b>the dot product is applied to two vector quantities and produces a <u>scalar</u> quantity</b>.</p>
+<div class="defbox"><div class="defbox-label">DEFINITION: The Dot Product (Algebraic Definition)</div>
+<p>Given two nonzero vectors, \(\mathbf{v} = \langle a, b\rangle\) and \(\mathbf{w} = \langle c, d\rangle\), the dot product of \(\mathbf{v}\) and \(\mathbf{w}\) is defined as follows.</p>
+<p>\[\mathbf{v}\cdot\mathbf{w} = \langle a, b\rangle \cdot \langle c, d\rangle = \text{ }\]<reveal>\(ac + bd\)</reveal></p></div>
+<p><b>Example 6.</b></p>
+<table>
+  <tr><td>(a) Let \(\mathbf{v} = \langle 1, -2\rangle\) and \(\mathbf{w} = \langle -2, 3\rangle\), evaluate \(\mathbf{v}\cdot\mathbf{w}\).</td><td><reveal>\(1(-2) + (-2)(3) = -2 - 6 = -8\)</reveal></td></tr>
+  <tr><td>(b) Evaluate \(\hat{\imath}\cdot\hat{\jmath}\).</td><td><reveal>\(\langle 1, 0\rangle \cdot \langle 0, 1\rangle = 1(0) + 0(1) = 0\)</reveal></td></tr>
+  <tr><td>Important result</td><td><reveal>A zero dot product means the vectors are orthogonal.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+        <div class="step" data-step="8">
+          <div class="step-title">The Dot Product</div>
+          <div class="step-subtitle">Geometric definition</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">DEFINITION: The Dot Product (Geometric Definition)</div>
+<p>Given two nonzero vectors, \(\mathbf{v} = \langle a, b\rangle\) and \(\mathbf{w} = \langle c, d\rangle\), the dot product of \(\mathbf{v}\) and \(\mathbf{w}\) is defined as follows.</p>
+<p>\[\mathbf{v}\cdot\mathbf{w} = |\mathbf{v}||\mathbf{w}|\cos(\theta)\]</p>
+<p>Here, \(\theta\) is the angle formed between \(\mathbf{v}\) and \(\mathbf{w}\), with \(0^\circ \le \theta \le 180^\circ\).</p></div>
+<p><b>Example 7.</b></p>
+<table>
+  <tr><td>(a) Evaluate \(\hat{\imath}\cdot\hat{\jmath}\).</td><td><reveal>\(|\langle 1,0\rangle||\langle 0,1\rangle|\cos(90^\circ) = (1)(1)(0) = 0\), perpendicular (orthogonal) vectors</reveal></td></tr>
+  <tr><td>(b) Let \(\mathbf{v} = \langle 1, -2\rangle\) and \(\mathbf{w} = \langle -2, 3\rangle\). Magnitudes</td><td><reveal>\(|\mathbf{v}| = \sqrt{1^2 + (-2)^2} = \sqrt{5}\), \(|\mathbf{w}| = \sqrt{(-2)^2 + 3^2} = \sqrt{13}\)</reveal></td></tr>
+  <tr><td>Angle between \(\mathbf{v}\) and \(\mathbf{w}\)</td><td><reveal>\(\cos\theta = \dfrac{\mathbf{v}\cdot\mathbf{w}}{|\mathbf{v}||\mathbf{w}|} = \dfrac{-8}{\sqrt{5}\sqrt{13}}\), \(\theta = \cos^{-1}\left(\dfrac{-8}{\sqrt{65}}\right) \approx 172.87^\circ\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>
