@@ -336,6 +336,23 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-27",
+    "title": "Divergence and Curl",
+    "subtitle": "",
+    "description": "Divergence and curl (OpenStax 6.5, a 20 minute class): carry a small circle along a vector field to see divergence as growth and curl as turning, then compute both, test for source-free and conservative fields, check that div curl = 0, and meet Laplace's equation.",
+    "tags": [
+      "divergence",
+      "curl",
+      "source-free fields",
+      "conservative fields",
+      "Laplace's equation",
+      "harmonic functions"
+    ],
+    "url": "calculus3/fall2025/2025-11-10-divergence-and-curl/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",

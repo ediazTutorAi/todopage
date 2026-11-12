@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+  Divergence and Curl (OpenStax Calculus Volume 3, Section 6.5). 7 steps timed for 20 minutes:
+  1 divergence (3), 2 uses of divergence (3), 3 curl (3), 4 curl examples (2), 5 div of curl (2), 6 curl test + Laplace (3), 7 practice (4).
+  To shorten, drop step 7 (about 16 minutes).
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <title>Divergence and Curl</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-vector-field>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Divergence and Curl</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Divergence</div>
+          <div class="step-subtitle">Definition, Example 6.48 and Checkpoint 6.40</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition: divergence</div>
+<p>If \(\vec F=\langle P,Q,R\rangle\) is a vector field in \(\mathbb{R}^3\) and \(P_x\), \(Q_y\), and \(R_z\) all exist, then the divergence of \(\vec F\) is defined by
+$$\operatorname{div}\vec F=P_x+Q_y+R_z=\frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y}+\frac{\partial R}{\partial z}=\nabla\cdot\vec F.$$</p>
+<p>If \(\vec F=\langle P,Q\rangle\) is a vector field in \(\mathbb{R}^2\), then \(\operatorname{div}\vec F=P_x+Q_y=\nabla\cdot\vec F\).</p>
+<p>The divergence of a vector field is not a vector field, but a scalar function.</p>
+</div>
+<p>Drag the red point. The orange circle is carried by the flow for a time \(\tau\) (slider): the divergence says whether it grows or shrinks.</p>
+<jsx-vector-field divcurl fields="⟨1,2⟩: 1 ; 2 | ⟨−y,x⟩: -y ; x | R: -x ; -y | v: -x*y ; y" xmin="-6" xmax="6" step="1" probe="1,2" ring="0.6" tau-max="1"></jsx-vector-field>
+<table>
+  <tr><td>Divergence of \(\langle1,2\rangle\) and of \(\langle-y,x\rangle\) (Figure 6.50)</td><td><reveal>\(\dfrac{\partial}{\partial x}(1)+\dfrac{\partial}{\partial y}(2)=0\) and \(\dfrac{\partial}{\partial x}(-y)+\dfrac{\partial}{\partial y}(x)=0\)</reveal></td></tr>
+  <tr><td>Radial field \(\vec R(x,y)=\langle-x,-y\rangle\) (Figure 6.51)</td><td><reveal>\(\operatorname{div}\vec R=\dfrac{\partial}{\partial x}(-x)+\dfrac{\partial}{\partial y}(-y)=-2\). More flows in than out.</reveal></td></tr>
+  <tr><td>Example 6.48. Divergence of \(\vec F(x,y,z)=e^x\mathbf i+yz\,\mathbf j-yz^2\mathbf k\) at \((0,2,-1)\).</td><td><reveal>\(\operatorname{div}\vec F=\dfrac{\partial}{\partial x}(e^x)+\dfrac{\partial}{\partial y}(yz)-\dfrac{\partial}{\partial z}(yz^2)=e^x+z-2yz\). At \((0,2,-1)\): \(e^0-1+4=4\). More fluid is flowing out than in at \((0,2,-1)\).</reveal></td></tr>
+  <tr><td>Checkpoint 6.40. \(\operatorname{div}\vec F\) for \(\vec F(x,y,z)=\langle xy,\ 5-z^2y,\ x^2+y^2\rangle\).</td><td><reveal>\(y-z^2\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Using Divergence</div>
+          <div class="step-subtitle">Theorems 6.14, 6.15 and Examples 6.49 to 6.51, Checkpoints 6.41, 6.42</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.14: Divergence of a Source-Free Vector Field</div>
+<p>If \(\vec F=\langle P,Q\rangle\) is a source-free continuous vector field with differentiable component functions, then \(\operatorname{div}\vec F=0\).</p>
+</div>
+<div class="defbox"><div class="defbox-label">Theorem 6.15: Divergence Test for Source-Free Vector Fields</div>
+<p>Let \(\vec F=\langle P,Q\rangle\) be a continuous vector field with differentiable component functions with a domain that is simply connected. Then, \(\operatorname{div}\vec F=0\) if and only if \(\vec F\) is source free.</p>
+</div>
+<p>Flux form of Green's theorem, since \(P_x+Q_y=\operatorname{div}\vec F\):
+$$\int_C\vec F\cdot\vec N\,ds=\iint_D\operatorname{div}\vec F\,dA.$$</p>
+<table>
+  <tr><td>Example 6.49. Is it possible for \(\vec F(x,y)=\langle x^2y,\ y-xy^2\rangle\) to be a magnetic field? (Gauss's law for magnetism: \(\nabla\cdot\vec B=0\).)</td><td><reveal>\(\operatorname{div}\vec F=2xy+1-2xy=1\neq0\), so \(\vec F\) cannot model a magnetic field.</reveal></td></tr>
+  <tr><td>Example 6.50. Is \(\vec F(x,y)=\langle x^2y,\ 5-xy^2\rangle\) source free?</td><td><reveal>The domain \(\mathbb{R}^2\) is simply connected and \(\vec F\) is continuous with differentiable components. \(\operatorname{div}\vec F=2xy-2xy=0\), so \(\vec F\) is source free by Theorem 6.15.</reveal></td></tr>
+  <tr><td>Checkpoint 6.41. \(\vec F(x,y)=\langle-ay,bx\rangle\), \(a,b>0\), a rotational field. Is it source free?</td><td><reveal>\(\operatorname{div}\vec F=\dfrac{\partial}{\partial x}(-ay)+\dfrac{\partial}{\partial y}(bx)=0\). Yes.</reveal></td></tr>
+  <tr><td>Example 6.51. \(\vec v(x,y)=\langle-xy,\ y\rangle\), \(y>0\), models a fluid flow. Is more fluid flowing into \((1,4)\) than out?</td><td><reveal>\(\operatorname{div}\vec v=-y+1\). At \((1,4)\): \(-4+1=-3<0\), so more fluid is flowing in than out.</reveal></td></tr>
+  <tr><td>Checkpoint 6.42. For the same \(\vec v\), find all points \(P\) where the fluid flowing in equals the fluid flowing out.</td><td><reveal>\(\operatorname{div}\vec v=1-y=0\) exactly when \(y=1\): every point of the line \(y=1\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Curl</div>
+          <div class="step-subtitle">Definition, Examples 6.52, 6.53 and Checkpoint 6.43</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition: curl</div>
+<p>If \(\vec F=\langle P,Q,R\rangle\) is a vector field in \(\mathbb{R}^3\) and \(P_x,P_y,P_z,Q_x,Q_y,Q_z,R_x,R_y,R_z\) all exist, then the curl of \(\vec F\) is defined by
+$$\operatorname{curl}\vec F=(R_y-Q_z)\,\mathbf i+(P_z-R_x)\,\mathbf j+(Q_x-P_y)\,\mathbf k=\nabla\times\vec F=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\ \frac{\partial}{\partial x}&\frac{\partial}{\partial y}&\frac{\partial}{\partial z}\\ P&Q&R\end{vmatrix}.$$</p>
+<p>If \(\vec F=\langle P,Q\rangle\) is a vector field in \(\mathbb{R}^2\), then \(\operatorname{curl}\vec F=(Q_x-P_y)\,\mathbf k\).</p>
+<p>The curl of a vector field is a vector field, in contrast to divergence.</p>
+</div>
+<p>Circulation form of Green's theorem, since \(\operatorname{curl}\vec F\cdot\mathbf k=Q_x-P_y\):
+$$\int_C\vec F\cdot d\vec r=\iint_D\operatorname{curl}\vec F\cdot\mathbf k\,dA.$$</p>
+<p>The orange circle turns when the curl is not zero (the dot marks one point of it).</p>
+<jsx-vector-field divcurl fields="⟨y,0⟩: y ; 0 | ⟨−y,x⟩: -y ; x | ⟨1,2⟩: 1 ; 2 | W: -y/(x^2+y^2) ; x/(x^2+y^2)" xmin="-6" xmax="6" step="1" probe="1,2" ring="0.5" tau-max="1"></jsx-vector-field>
+<table>
+  <tr><td>Example 6.52. Curl of \(\vec F=\langle x^2z,\ e^y+xz,\ xyz\rangle\).</td><td><reveal>\(\operatorname{curl}\vec F=(R_y-Q_z)\mathbf i+(P_z-R_x)\mathbf j+(Q_x-P_y)\mathbf k=(xz-x)\,\mathbf i+(x^2-yz)\,\mathbf j+z\,\mathbf k\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.43. Curl of \(\vec F=\langle\sin x\cos z,\ \sin y\sin z,\ \cos x\cos y\rangle\) at \((0,\tfrac\pi2,\tfrac\pi2)\).</td><td><reveal>\(\operatorname{curl}\vec F=(-\cos x\sin y-\sin y\cos z)\,\mathbf i+(-\sin x\sin z+\sin x\cos y)\,\mathbf j\). At \((0,\tfrac\pi2,\tfrac\pi2)\): \(-\mathbf i\), that is \(\langle-1,0,0\rangle\).</reveal></td></tr>
+  <tr><td>Example 6.53. Curl of \(\vec F=\langle P,Q\rangle=\langle y,0\rangle\). (All vectors are parallel to the \(x\)-axis. Zero spin?)</td><td><reveal>\(\operatorname{curl}\vec F=(Q_x-P_y)\,\mathbf k=-\mathbf k\neq\vec 0\). A paddlewheel in the first quadrant turns clockwise (negative): the larger vectors at the top of the wheel make it rotate.</reveal></td></tr>
+  <tr><td>Curl of the rotational field \(\langle-y,x\rangle\) (Figure 6.50b)</td><td><reveal>\(2\,\mathbf k\): counterclockwise.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Fields With No Spin</div>
+          <div class="step-subtitle">Example 6.54 and Checkpoint 6.44</div>
+          <div class="step-body">
+<p>The gravitational force that object 1 (mass \(m_1\), at the origin) exerts on object 2 (mass \(m_2\)) is the field
+$$\vec F(x,y,z)=-Gm_1m_2\Big\langle\frac{x}{(x^2+y^2+z^2)^{3/2}},\ \frac{y}{(x^2+y^2+z^2)^{3/2}},\ \frac{z}{(x^2+y^2+z^2)^{3/2}}\Big\rangle.$$</p>
+<table>
+  <tr><td>Example 6.54. Show that a gravitational field has no spin.</td><td><reveal>Let \(P=\dfrac{x}{r^3}\), \(Q=\dfrac{y}{r^3}\), \(R=\dfrac{z}{r^3}\) with \(r^2=x^2+y^2+z^2\). Then \(R_y=-\dfrac{3yz}{r^5}=Q_z\), \(P_z=-\dfrac{3xz}{r^5}=R_x\), \(Q_x=-\dfrac{3xy}{r^5}=P_y\). So \(\operatorname{curl}\vec F=\vec 0\): the field has no spin.</reveal></td></tr>
+  <tr><td>Checkpoint 6.44. \(\vec v(x,y)=\Big\langle\dfrac{-y}{x^2+y^2},\ \dfrac{x}{x^2+y^2}\Big\rangle\) models a flow. Show that a leaf dropped into this fluid does not rotate.</td><td><reveal>\(Q_x=\dfrac{y^2-x^2}{(x^2+y^2)^2}\) and \(P_y=\dfrac{y^2-x^2}{(x^2+y^2)^2}\), so \(\operatorname{curl}\vec v=(Q_x-P_y)\mathbf k=\vec 0\). The leaf circles the origin but does not spin.</reveal></td></tr>
+</table>
+<jsx-vector-field divcurl fields="W: -y/(x^2+y^2) ; x/(x^2+y^2) | G: -x/(x^2+y^2)^1.5 ; -y/(x^2+y^2)^1.5" xmin="-6" xmax="6" step="1" probe="2,1" ring="0.4" tau-max="1.5"></jsx-vector-field>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Divergence of a Curl</div>
+          <div class="step-subtitle">Theorem 6.16, Example 6.55 and Checkpoint 6.45</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.16: Divergence of the Curl</div>
+<p>Let \(\vec F=\langle P,Q,R\rangle\) be a vector field in \(\mathbb{R}^3\) such that the component functions all have continuous second-order partial derivatives. Then,
+$$\operatorname{div}\operatorname{curl}(\vec F)=\nabla\cdot(\nabla\times\vec F)=0.$$</p>
+</div>
+<table>
+  <tr><td>Proof</td><td><reveal>By Clairaut's theorem, \(\operatorname{div}\operatorname{curl}\vec F=R_{yx}-Q_{zx}+P_{zy}-R_{xy}+Q_{xz}-P_{yz}=0\).</reveal></td></tr>
+  <tr><td>Example 6.55. Show that \(\vec F(x,y,z)=e^x\mathbf i+yz\,\mathbf j+xz^2\mathbf k\) is not the curl of another vector field.</td><td><reveal>The domain is \(\mathbb{R}^3\) and the second-order partials are continuous. \(\operatorname{div}\vec F=e^x+z+2xz\neq0\). If \(\vec F=\operatorname{curl}\vec G\), then \(\operatorname{div}\vec F=\operatorname{div}\operatorname{curl}\vec G=0\). So \(\vec F\) is not the curl of any vector field.</reveal></td></tr>
+  <tr><td>Checkpoint 6.45. Can \(\vec G(x,y,z)=\langle\sin x,\ \cos y,\ \sin(xyz)\rangle\) be the curl of a vector field?</td><td><reveal>\(\operatorname{div}\vec G=\cos x-\sin y+xy\cos(xyz)\neq0\) (at \((0,0,0)\) it equals \(1\)). So no.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Curl Test and Laplace's Equation</div>
+          <div class="step-subtitle">Theorems 6.17, 6.18 and Examples 6.56, 6.57, Checkpoint 6.46</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.17: Curl of a Conservative Vector Field</div>
+<p>If \(\vec F=\langle P,Q,R\rangle\) is conservative, then \(\operatorname{curl}\vec F=\vec 0\). (Equivalently, \(\nabla\times\nabla f=\vec 0\).)</p>
+</div>
+<div class="defbox"><div class="defbox-label">Theorem 6.18: Curl Test for a Conservative Field</div>
+<p>Let \(\vec F=\langle P,Q,R\rangle\) be a vector field in space on a simply connected domain. If \(\operatorname{curl}\vec F=\vec 0\), then \(\vec F\) is conservative.</p>
+</div>
+<div class="defbox"><div class="defbox-label">Laplace operator</div>
+<p>\(\operatorname{div}(\nabla f)=\nabla\cdot(\nabla f)=f_{xx}+f_{yy}+f_{zz}=\nabla^2 f\). Laplace's equation is \(\nabla^2 f=0\); a function satisfying it is <b>harmonic</b>. The potential function of an electrostatic field in a region with no static charge is harmonic.</p>
+</div>
+<table>
+  <tr><td>Example 6.56. Use the curl to decide whether \(\vec F(x,y,z)=\langle yz,\ xz,\ xy\rangle\) is conservative.</td><td><reveal>The domain \(\mathbb{R}^3\) is simply connected. \(\operatorname{curl}\vec F=(x-x)\mathbf i+(y-y)\mathbf j+(z-z)\mathbf k=\vec 0\). So \(\vec F\) is conservative.</reveal></td></tr>
+  <tr><td>Example 6.57. Can \(f(x,y)=x^2+x-y\) be the potential function of an electrostatic field in a region of \(\mathbb{R}^2\) free of static charge?</td><td><reveal>\(f_{xx}=2\) and \(f_{yy}=0\), so \(f_{xx}+f_{yy}\neq0\). \(f\) is not harmonic, so it cannot.</reveal></td></tr>
+  <tr><td>Checkpoint 6.46. Same question for \(f(x,y)=x^2-y^2+x\).</td><td><reveal>\(f_{xx}+f_{yy}=2-2=0\). Yes, it is harmonic, so it is possible.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Practice</div>
+          <div class="step-subtitle">Exercises 207, 209, 217, 219, 231, 236, 242, 255, 256</div>
+          <div class="step-body">
+<table>
+  <tr><td>207. True or false: \(\nabla\cdot(x\,\mathbf i+y\,\mathbf j+z\,\mathbf k)=1\).</td><td><reveal>False: it is \(1+1+1=3\).</reveal></td></tr>
+  <tr><td>209. True or false: if \(\operatorname{curl}\vec F=\vec 0\), then \(\vec F\) is conservative.</td><td><reveal>False as stated: Theorem 6.18 needs a simply connected domain (see 242 and 256).</reveal></td></tr>
+  <tr><td>217. Curl of \(\vec F=(x-y)\mathbf i+(y-z)\mathbf j+(z-x)\mathbf k\).</td><td><reveal>\(\mathbf i+\mathbf j+\mathbf k\)</reveal></td></tr>
+  <tr><td>219. Curl of \(\vec F=xy\,\mathbf i+yz\,\mathbf j+xz\,\mathbf k\).</td><td><reveal>\(-y\,\mathbf i-z\,\mathbf j-x\,\mathbf k\)</reveal></td></tr>
+  <tr><td>231. Divergence of \(\vec F=xy\,\mathbf i+yz\,\mathbf j+xz\,\mathbf k\).</td><td><reveal>\(x+y+z\)</reveal></td></tr>
+  <tr><td>236. \(\operatorname{div}\vec F\), given \(\vec F=\nabla f\), \(f(x,y,z)=xy^3z^2\).</td><td><reveal>\(\nabla^2f=f_{xx}+f_{yy}+f_{zz}=0+6xyz^2+2xy^3\)</reveal></td></tr>
+  <tr><td>242. \(\vec F(x,y)=\dfrac{-y\,\mathbf i+x\,\mathbf j}{x^2+y^2}\) on \(\{(x,y)\neq(0,0)\}\). Find \(\operatorname{curl}\vec F\).</td><td><reveal>\(\vec 0\) (Checkpoint 6.44).</reveal></td></tr>
+  <tr><td>255. \(\vec F=(3x^2y+az)\,\mathbf i+x^3\,\mathbf j+(3x+3z^2)\,\mathbf k\). For what \(a\) is \(\vec F\) conservative?</td><td><reveal>\(\operatorname{curl}\vec F=(a-3)\,\mathbf j\) (the other components are \(0\)). So \(a=3\).</reveal></td></tr>
+  <tr><td>256. Is \(\vec F(x,y)=\dfrac{1}{x^2+y^2}\langle-y,x\rangle\) conservative on \(\mathbb{R}^2\setminus\{(0,0)\}\)?</td><td><reveal>No. Its curl is \(0\), but the domain is not simply connected, and the circulation around the unit circle is \(\int_0^{2\pi}1\,dt=2\pi\neq0\).</reveal></td></tr>
+</table>
+<p class="muted small">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.5 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

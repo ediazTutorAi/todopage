@@ -4402,6 +4402,11 @@ function renderJsxJacobian(el) {
 //   flow         adds Release/Clear: a particle starts at the probe and moves with dr/dt = F(r), leaving
 //                its path (a flow line). `flow-speed` scales time (default 1).
 //   cross        adds the cross-partial test at the probe: dP/dy against dQ/dx.
+//   divcurl      (Calculus III 6.5) adds div F = P_x + Q_y and curl F . k = Q_x - P_y at the probe (central
+//                differences), plus the book's "elastic circle": a small circle (radius `ring`, default 0.45 *
+//                step) around the probe that is carried by the flow for a time tau (slider, `tau-max` default 1.2).
+//                Chips give the area of the carried circle against the original (compare 1 + tau div F for small tau)
+//                and a marked point on the circle shows the turning. Positive div: it grows. Curl: it turns.
 //   unit         start in unit-vector mode.     `probe="x,y"` start position.
 const FIELD_ASPECT = 1.6;
 
@@ -4560,6 +4565,43 @@ function renderJsxVectorField(el) {
   const pathCurve = makeDataCurve(board, () => ({ xs: st.path.map((q) => q[0]), ys: st.path.map((q) => q[1]) }), { strokeColor: green, strokeWidth: 4, highlight: false, fixed: true });
   const bug = board.create('point', [() => st.path[st.path.length - 1][0], () => st.path[st.path.length - 1][1]], { name: '', size: POINT_SIZE, fillColor: green, strokeColor: '#fff', strokeWidth: 2, highlight: false, fixed: true, visible: false });
 
+  // divergence/curl mode: an elastic circle around the probe carried by the flow for time tau (RK4)
+  const hasDC = el.hasAttribute('divcurl');
+  const ringR = num('ring', 0.45 * step);
+  const tauMax = num('tau-max', 1.2);
+  st.tau = 0;
+  const NR = 72;
+  const flowPt = (x, y, tau) => {
+    const n = Math.max(1, Math.ceil(tau / 0.02)); const dt = tau / n;
+    for (let i = 0; i < n; i++) {
+      const k1 = Fv(x, y); const k2 = Fv(x + (dt / 2) * k1[0], y + (dt / 2) * k1[1]);
+      const k3 = Fv(x + (dt / 2) * k2[0], y + (dt / 2) * k2[1]); const k4 = Fv(x + dt * k3[0], y + dt * k3[1]);
+      x += (dt / 6) * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]); y += (dt / 6) * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+    }
+    return [x, y];
+  };
+  const ringPts = () => {
+    const xs = []; const ys = [];
+    for (let i = 0; i <= NR; i++) {
+      const a = (2 * Math.PI * i) / NR;
+      const q = st.tau > 0 ? flowPt(st.x + ringR * Math.cos(a), st.y + ringR * Math.sin(a), st.tau) : [st.x + ringR * Math.cos(a), st.y + ringR * Math.sin(a)];
+      xs.push(q[0]); ys.push(q[1]);
+    }
+    return { xs, ys };
+  };
+  const ringArea = () => {
+    const d = ringPts(); let a = 0;
+    for (let i = 0; i < NR; i++) a += d.xs[i] * d.ys[i + 1] - d.xs[i + 1] * d.ys[i];
+    return Math.abs(a) / 2;
+  };
+  const orange = '#d9822b';
+  let ringMark = null;
+  if (hasDC) {
+    board.create('circle', [PR, ringR], { strokeColor: muted, strokeWidth: 2.5, dash: 2, fillColor: 'none', highlight: false, fixed: true, vertices: { visible: false } });
+    makeDataCurve(board, ringPts, { strokeColor: orange, strokeWidth: 5, highlight: false, fixed: true });
+    ringMark = board.create('point', [() => ringPts().xs[0], () => ringPts().ys[0]], { name: '', size: POINT_SIZE, fillColor: orange, strokeColor: '#fff', strokeWidth: 2, highlight: false, fixed: true });
+  }
+
   const f3 = (v) => (Number.isFinite(v) ? (Math.abs(v) < 5e-4 ? '0' : String(Math.round(v * 1000) / 1000)).replace('-', '−') : 'undefined');
   const vecHtml = (a, b) => `⟨<b>${f3(a)}</b>, <b>${f3(b)}</b>⟩`;
   const hasCross = el.hasAttribute('cross');
@@ -4585,6 +4627,19 @@ function renderJsxVectorField(el) {
       const same = Math.abs(Py - Qx) < 1e-3 + e;
       html += `<span class="jsx-trace-chip">∂P/∂y = <b>${f3(Py)}</b></span><span class="jsx-trace-chip">∂Q/∂x = <b>${f3(Qx)}</b></span>` +
         `<span class="jsx-trace-chip jsx-trace-main ${same ? 'is-parallel' : ''}">${same ? 'equal here (test passes)' : 'NOT equal: not conservative'}</span>`;
+    }
+    if (hasDC) {
+      const h2 = 1e-3;
+      const d = (f, ax) => (ax ? (f(st.x, st.y + h2) - f(st.x, st.y - h2)) : (f(st.x + h2, st.y) - f(st.x - h2, st.y))) / (2 * h2);
+      const Px = d(cur().P, 0); const Qy = d(cur().Q, 1); const Qx = d(cur().Q, 0); const Py = d(cur().P, 1);
+      const dv = Px + Qy; const cl = Qx - Py;
+      const sgn = (v) => (Math.abs(v) < 5e-4 ? 'zero' : v > 0 ? 'positive' : 'negative');
+      html += `<span class="jsx-trace-chip jsx-trace-main">div ${cur().name} = ∂P/∂x + ∂Q/∂y = ${f3(Px)} + ${f3(Qy)} = <b>${f3(dv)}</b></span>` +
+        `<span class="jsx-trace-chip jsx-trace-main">curl ${cur().name} · k = ∂Q/∂x − ∂P/∂y = ${f3(Qx)} − ${f3(Py)} = <b>${f3(cl)}</b></span>`;
+      if (st.tau > 0) {
+        const a0 = Math.PI * ringR * ringR; const a1 = ringArea();
+        html += `<span class="jsx-trace-chip">time τ = <b>${f3(st.tau)}</b>: area × <b>${f3(a1 / a0)}</b> (divergence ${sgn(dv)})</span>`;
+      }
     }
     readout.innerHTML = html;
     syncInputs();
@@ -4704,6 +4759,15 @@ function renderJsxVectorField(el) {
       st.run = true; flowBtn.textContent = 'Pause'; st.raf = requestAnimationFrame(tick);
     });
     mkBtn('Clear path', clearFlow);
+  }
+  if (hasDC) {
+    const row = document.createElement('label');
+    row.className = 'jsx-slider-row';
+    row.innerHTML = `<span class="jsx-slider-name">Carry the circle: time τ</span><input type="range" min="0" max="${tauMax}" step="0.02" value="0"><span class="jsx-slider-value">0</span>`;
+    const inp = row.querySelector('input'); const val = row.querySelector('.jsx-slider-value');
+    inp.addEventListener('input', () => { st.tau = parseFloat(inp.value); val.textContent = f3(st.tau); updateReadout(); board.update(); });
+    inp.addEventListener('pointerup', () => inp.blur());
+    controls.appendChild(row);
   }
   const hint = document.createElement('span');
   hint.className = 'muted small';
