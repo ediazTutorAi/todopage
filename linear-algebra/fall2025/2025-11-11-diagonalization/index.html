@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>diagonalization</title>
+  <title>Diagonalization</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
@@ -24,6 +24,10 @@
     });
   </script>
 
+  <!-- JSXGraph (for <jsx-eigen>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
   <link rel="stylesheet" href="/todopage/css/steps.css">
@@ -34,73 +38,253 @@
 <body>
 
   <header class="site-header">
-    <h1>diagonalization</h1>
-    <div class="meta"></div>
+    <h1>Diagonalization</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
   </header>
 
   <main class="container">
     <section class="single-col">
       <div class="card" id="left-card">
 
-        <!-- STEPS -->
+        <!-- Section 7.1 (Bretscher, PDF pages 322 to 336, book pages 310 to 324), 11 steps for a 40 minute class:
+             1 why diagonal matrices, Example 1 (3) · 2 Definition 7.1.1 (3) · 3 Definition 7.1.2, eigenvectors (4) ·
+             4 Theorem 7.1.3 and proof (3) · 5 Examples 2, 3, 4 (4) · 6 Example 5, Theorem 7.1.4, Example 6, Summary 7.1.5 (3) ·
+             7 eigenvector facts, Exercises 1 to 10 (3) · 8 diagonalize Exercise 12 step by step, A^5 (6) · 9 Exercises 13 and 37 from scratch (4) ·
+             10 building A from an eigenbasis, Exercises 34 to 39 (4) · 11 geometric Exercises 15 to 22 (3).
+             The optional dynamical systems part (Example 7, Theorems 7.1.6, Definition 7.1.7) is left out on purpose.
+             Tags: <jsx-eigen> (js/jsxgraph.js). The book's footnote marks Example 5 and Theorem 7.1.4 as for readers who have seen Chapter 5. -->
         <div class="step is-visible" data-step="1">
-          <div class="step-title">Definition 7.1.1</div>
-          <div class="step-subtitle">Diagonalizable matrices</div>
+          <div class="step-title">Why We Like Diagonal Matrices</div>
+          <div class="step-subtitle">Example 1</div>
           <div class="step-body">
-            Consider a linear transformation $T(\vec{x})=A\vec{x}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$. Then A (or T) is said to be diagonalizable if the matrix B of T with respect to some basis is diagonal<br>
-           By Theorem 3.4.4 and Definition 3.4.5, matrix A is diagonalizable if and only if A is similar to some diagonal matrix B, meaning that there exists an invertible matrix S such that $S^{-1}AS=B$ is diagonal<br>
-           To diagonalize a square matrix A means to find an invertible matrix S and a diagonal matrix B such that $S^{-1}AS=B$.
+<p><b>Example 1.</b> Consider the matrices</p>
+$$A=\begin{bmatrix}-1&0&0&0\\0&0&0&0\\0&0&1&0\\0&0&0&2\end{bmatrix}\quad\text{and}\quad B=\begin{bmatrix}1&2&3&4\\5&6&7&8\\9&8&7&6\\5&4&3&2\end{bmatrix}.$$
+<p>Find \(A^5\), \(B^5\), \(\operatorname{rank}A\), \(\operatorname{rank}B\), \(\det A\), and \(\det B\). Find bases of \(\ker A\) and \(\ker B\).</p>
+<table>
+  <tr><td>\(A^5=\)</td><td><reveal>\(\operatorname{diag}\big((-1)^5,0^5,1^5,2^5\big)=\operatorname{diag}(-1,0,1,32)\)</reveal></td></tr>
+  <tr><td>\(\operatorname{rank}A=\)</td><td><reveal>\(3\), the number of nonzero entries on the diagonal</reveal></td></tr>
+  <tr><td>\(\det A=\)</td><td><reveal>\(0\), the product of the diagonal entries</reveal></td></tr>
+  <tr><td>A basis of \(\ker A\)</td><td><reveal>\(\vec e_2\), since the second column of \(A\) is zero</reveal></td></tr>
+  <tr><td>The same for \(B\)</td><td><reveal>Much more tedious: rref \(B\) for the rank, determinant and kernel, and \(B^5\) is a long product</reveal></td></tr>
+</table>
+<p>Consider the linear transformations \(\vec y=\begin{bmatrix}1&2&3\\4&5&6\\7&8&9\end{bmatrix}\vec x\) and \(\vec y=\begin{bmatrix}1&0&0\\0&2&0\\0&0&3\end{bmatrix}\vec x\), that is,</p>
+$$\begin{aligned}y_1&=x_1+2x_2+3x_3\\y_2&=4x_1+5x_2+6x_3\\y_3&=7x_1+8x_2+9x_3\end{aligned}\qquad\text{and}\qquad\begin{aligned}y_1&=x_1\\y_2&=2x_2\\y_3&=3x_3.\end{aligned}$$
+<table>
+  <tr><td>In the diagonal case the three equations are</td><td><reveal><i>uncoupled</i>: \(y_1=x_1\), \(y_2=2x_2\), \(y_3=3x_3\) can be handled separately</reveal></td></tr>
+  <tr><td>The idea behind diagonalization</td><td><reveal>untangle the web of functional dependencies by choosing a better basis</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="2">
-          <div class="step-title">Definition 7.2.2</div>
-          <div class="step-subtitle">Eigenvectors, eigenvalues, and eigenbases</div>
+        <div class="step" data-step="2">
+          <div class="step-title">Diagonalizable Matrices</div>
+          <div class="step-subtitle">Definition 7.1.1</div>
           <div class="step-body">
-            Consider a linear  transformation $T(\vec{x})=A \vec{x}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$<br>
-           A nonzero vector $\vec{v}$ in $\mathbb{R}^{n}$ is called an eigenvector of A (or T) if 
-           $$A \vec{v}=\lambda \vec{v}$$
-           for some scalar $\lambda$. This $\lambda$ is called the eigenvalue associated with eigenvector $\vec{v}$.<br>
-           A basis $\vec{v_1},\cdots,\vec{v_n}$ of $\mathbb{R}^{n}$ is called an eigenbasis for A (or T) if the vectors $\vec{v_1},\cdots,\vec{v_n}$ are eigenvectors of A.
+<div class="defbox"><div class="defbox-label">Definition 7.1.1: Diagonalizable matrices</div>
+<p>Consider a linear transformation \(T(\vec x)=A\vec x\) from \(\mathbb R^n\) to \(\mathbb R^n\). Then \(A\) (or \(T\)) is said to be <i>diagonalizable</i> if the matrix \(B\) of \(T\) with respect to some basis is diagonal.</p>
+<p>By Theorem 3.4.4 and Definition 3.4.5, matrix \(A\) is diagonalizable if (and only if) \(A\) is similar to some diagonal matrix \(B\), meaning that there exists an invertible matrix \(S\) such that \(S^{-1}AS=B\) is diagonal.</p>
+<p>To <i>diagonalize</i> a square matrix \(A\) means to find an invertible matrix \(S\) and a diagonal matrix \(B\) such that \(S^{-1}AS=B\).</p>
+</div>
+<p>Consider a basis \(\mathfrak B=(\vec v_1,\dots,\vec v_n)\) of \(\mathbb R^n\). The \(\mathfrak B\)-matrix \(B\) of \(T\) is diagonal if (and only if) \(A\vec v_1=\lambda_1\vec v_1,\dots,A\vec v_n=\lambda_n\vec v_n\) for some scalars \(\lambda_1,\dots,\lambda_n\).</p>
+$$B=\begin{bmatrix}\lambda_1&0&\cdots&0\\0&\lambda_2&\cdots&0\\\vdots&\vdots&\ddots&\vdots\\0&0&\cdots&\lambda_n\end{bmatrix}\quad\text{with columns }\ [A\vec v_1]_{\mathfrak B},\ [A\vec v_2]_{\mathfrak B},\dots$$
+<table>
+  <tr><td>The first column of \(B\) is \([A\vec v_1]_{\mathfrak B}=\)</td><td><reveal>\([\lambda_1\vec v_1]_{\mathfrak B}=\begin{bmatrix}\lambda_1\\0\\\vdots\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>We can conclude that an \(n\times n\) matrix \(A\) is diagonalizable if (and only if)</td><td><reveal>there exists a basis \(\vec v_1,\dots,\vec v_n\) of \(\mathbb R^n\) such that \(A\vec v_1=\lambda_1\vec v_1,\dots,A\vec v_n=\lambda_n\vec v_n\) for some scalars \(\lambda_1,\dots,\lambda_n\)</reveal></td></tr>
+  <tr><td>Examples 9 and 10 of Section 3.4: the reflection about a line in \(\mathbb R^2\) is</td><td><reveal>diagonalizable</reveal></td></tr>
+  <tr><td>and the rotation \(T(\vec x)=\begin{bmatrix}0&-1\\1&0\end{bmatrix}\vec x\) is</td><td><reveal>not diagonalizable</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="3">
-          <div class="step-title">Theorem 7.1.3</div>
-          <div class="step-subtitle">Eigenbases and diagonalization</div>
+        <div class="step" data-step="3">
+          <div class="step-title">Eigenvectors, Eigenvalues, and Eigenbases</div>
+          <div class="step-subtitle">Definition 7.1.2</div>
           <div class="step-body">
-            The matrix A is diagonalizable if and only if there exists an eigenbasis for A. If $\vec{v_1},\cdots,\vec{v_n}$ is an eigenbasis of A, with $A \vec{v_1}=\lambda_1 \vec{v_1},\cdots,A \vec{v_n}=\lambda_n \vec{v_n}$, then the matrices
-           $$S=[v_1\dots v_n]$$ and 
-           $$B=diag(\lambda_1\dots\lambda_n)$$ will diagonalize A, meaning that 
-           $$S^{-1}AS=B$$
-           Conversely, if the matrices S and B diagonalize A, then the column vectors of S will form an eigenbasis for A, and the diagonal entries of B will be the associated eigenvalues.
+<div class="defbox"><div class="defbox-label">Definition 7.1.2: Eigenvectors, eigenvalues, and eigenbases</div>
+<p>Consider a linear transformation \(T(\vec x)=A\vec x\) from \(\mathbb R^n\) to \(\mathbb R^n\).</p>
+<p>A nonzero vector \(\vec v\) in \(\mathbb R^n\) is called an <i>eigenvector</i> of \(A\) (or \(T\)) if</p>
+$$A\vec v=\lambda\vec v$$
+<p>for some scalar \(\lambda\). This \(\lambda\) is called the <i>eigenvalue</i> associated with eigenvector \(\vec v\).</p>
+<p>A basis \(\vec v_1,\dots,\vec v_n\) of \(\mathbb R^n\) is called an <i>eigenbasis</i> for \(A\) (or \(T\)) if the vectors \(\vec v_1,\dots,\vec v_n\) are eigenvectors of \(A\), meaning that \(A\vec v_1=\lambda_1\vec v_1,\dots,A\vec v_n=\lambda_n\vec v_n\) for some scalars \(\lambda_1,\dots,\lambda_n\).</p>
+</div>
+<p>A nonzero vector \(\vec v\) in \(\mathbb R^n\) is an eigenvector of \(A\) if \(A\vec v\) is <i>parallel</i> to \(\vec v\). Drag \(\vec v\) and watch \(A\vec v\).</p>
+<jsx-eigen a="0.64,0.48;0.48,0.36" v="3,1" range="5" presets="Stretch: 2,0;0,3 | Projection: 0.64,0.48;0.48,0.36 | Reflection: 0.6,0.8;0.8,-0.6 | Rotation 90°: 0,-1;1,0 | Shear: 1,1;0,1"></jsx-eigen>
+<table>
+  <tr><td>If \(\vec v\) is an eigenvector of \(A\) with eigenvalue \(\lambda\), then \(A^2\vec v=\)</td><td><reveal>\(A(\lambda\vec v)=\lambda(A\vec v)=\lambda^2\vec v\)</reveal></td></tr>
+  <tr><td>and in general, for all positive integers \(m\), \(A^m\vec v=\)</td><td><reveal>\(\lambda^m\vec v\). So \(\vec v\) is an eigenvector of \(A^2,A^3,\dots\) as well.</reveal></td></tr>
+  <tr><td>Proof by induction: \(A^{m+1}\vec v=A(A^m\vec v)=\)</td><td><reveal>\(A(\lambda^m\vec v)=\lambda^m(A\vec v)=\lambda^{m+1}\vec v\)</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="4">
-          <div class="step-title">Theorem 7.1.4</div>
-          <div class="step-subtitle"></div>
+        <div class="step" data-step="4">
+          <div class="step-title">Eigenbases and Diagonalization</div>
+          <div class="step-subtitle">Theorem 7.1.3</div>
           <div class="step-body">
-            The possible real eingenvalues of an orthogonal matrix are 1 and -1.
+<div class="defbox"><div class="defbox-label">Theorem 7.1.3: Eigenbases and diagonalization</div>
+<p>The matrix \(A\) is diagonalizable if (and only if) there exists an eigenbasis for \(A\).</p>
+<p>If \(\vec v_1,\dots,\vec v_n\) is an eigenbasis for \(A\), with \(A\vec v_1=\lambda_1\vec v_1,\dots,A\vec v_n=\lambda_n\vec v_n\), then the matrices</p>
+$$S=\begin{bmatrix}|&|&&|\\\vec v_1&\vec v_2&\cdots&\vec v_n\\|&|&&|\end{bmatrix}\quad\text{and}\quad B=\begin{bmatrix}\lambda_1&0&\cdots&0\\0&\lambda_2&\cdots&0\\\vdots&\vdots&\ddots&\vdots\\0&0&\cdots&\lambda_n\end{bmatrix}$$
+<p>will diagonalize \(A\), meaning that \(S^{-1}AS=B\).</p>
+<p>Conversely, if the matrices \(S\) and \(B\) diagonalize \(A\), then the column vectors of \(S\) will form an eigenbasis for \(A\), and the diagonal entries of \(B\) will be the associated eigenvalues.</p>
+</div>
+<p><b>Proof</b> of one implication, by matrix products. Suppose there exists an eigenbasis \(\vec v_1,\dots,\vec v_n\) for \(A\), and define \(S\) and \(B\) as in the theorem.</p>
+<table>
+  <tr><td>\(AS=A[\vec v_1\ \vec v_2\ \cdots\ \vec v_n]=\)</td><td><reveal>\([A\vec v_1\ A\vec v_2\ \cdots\ A\vec v_n]=[\lambda_1\vec v_1\ \lambda_2\vec v_2\ \cdots\ \lambda_n\vec v_n]\)</reveal></td></tr>
+  <tr><td>and this equals</td><td><reveal>\([\vec v_1\ \vec v_2\ \cdots\ \vec v_n]\operatorname{diag}(\lambda_1,\dots,\lambda_n)=SB\)</reveal></td></tr>
+  <tr><td>Therefore</td><td><reveal>\(AS=SB\), so \(S^{-1}AS=B\), as claimed. (The converse is Exercise 23.)</reveal></td></tr>
+</table>
           </div>
         </div>
 
-        <div class="step is-visible" data-step="5">
-          <div class="step-title">Summary 7.1.5</div>
-          <div class="step-subtitle">Characterizations of invertible matrices</div>
+        <div class="step" data-step="5">
+          <div class="step-title">Examples: Identity, Projection, Rotation</div>
+          <div class="step-subtitle">Examples 2, 3 and 4</div>
           <div class="step-body">
-            For an nxn matrix A, the following statements are equivalent:<br>
-           i. A is invetible<br>
-           ii. The linear system $A \vec{x}=\vec{b}$ has a unique solution $\vec{x}$, for all $\vec{b}$ in $\mathbb{R}^{n}$.<br>
-           iii. $rref(A)=I_n$<br>
-           iv. rank(A)=n<br>
-           v. im(A)=$\mathbb{R}^{n}$<br>
-           vi. ker(A)=${\vec{0}}$<br>
-           vii. The column vectors of A form a basis of $\mathbb{R}^{n}$<br>
-           viii. The column vectors of A span $\mathbb{R}^{n}$<br>
-           ix. The column vectors of A are linearly independent.<br>
-           x. det(A)$\neq 0$<br>
-           xi. 0 fails to be an eigenvalue of A.
+<p><b>Example 2.</b> Find all eigenvectors and eigenvalues of the identity matrix \(I_n\). Is there an eigenbasis for \(I_n\)? Is \(I_n\) diagonalizable?</p>
+<table>
+  <tr><td>\(I_n\vec v=\vec v=1\vec v\) for all \(\vec v\) in \(\mathbb R^n\), so</td><td><reveal>all nonzero vectors in \(\mathbb R^n\) are eigenvectors of \(I_n\), with eigenvalue \(1\); all bases of \(\mathbb R^n\) are eigenbases</reveal></td></tr>
+  <tr><td>Is \(I_n\) diagonalizable?</td><td><reveal>Yes, it is diagonal already. If \(S\) is any invertible matrix, then \(S^{-1}I_nS=I_n\) is diagonal.</reveal></td></tr>
+</table>
+<p><b>Example 3.</b> Consider the linear transformation \(T(\vec x)=A\vec x\) with \(A=\begin{bmatrix}0.64&0.48\\0.48&0.36\end{bmatrix}\). We are told that \(T(\vec x)\) represents the orthogonal projection onto the line \(L=\operatorname{span}\begin{bmatrix}4\\3\end{bmatrix}\). Describe the eigenvectors of \(A\) geometrically, and find all eigenvalues of \(A\). Is there an eigenbasis for \(A\)? Diagonalize \(A\) if you can.</p>
+<table>
+  <tr><td>Nonzero vectors parallel to \(L\)</td><td><reveal>\(A\vec v=\vec v=1\vec v\): eigenvalue \(1\)</reveal></td></tr>
+  <tr><td>Nonzero vectors perpendicular to \(L\)</td><td><reveal>\(A\vec w=\vec 0=0\vec w\): eigenvalue \(0\), the nonzero vectors in the kernel of \(A\)</reveal></td></tr>
+  <tr><td>For example, \(\vec v=\begin{bmatrix}4\\3\end{bmatrix}\) has eigenvalue \(1\), and \(\vec w=\)</td><td><reveal>\(\begin{bmatrix}-3\\4\end{bmatrix}\), eigenvalue \(0\). Then \(\mathfrak B=(\vec v,\vec w)\) is an eigenbasis for \(A\).</reveal></td></tr>
+  <tr><td>\(S=\) and \(B=\)</td><td><reveal>\(S=\begin{bmatrix}4&-3\\3&4\end{bmatrix}\), \(B=\begin{bmatrix}1&0\\0&0\end{bmatrix}\); \(S^{-1}AS=B\) (check \(AS=SB\))</reveal></td></tr>
+</table>
+<p><b>Example 4.</b> Let \(T(\vec x)=A\vec x=\begin{bmatrix}0&-1\\1&0\end{bmatrix}\vec x\) be the rotation through an angle of \(90^\circ\) in the counterclockwise direction. Find all eigenvectors and eigenvalues of \(A\). Is there an eigenbasis for \(A\)? Is \(A\) diagonalizable?</p>
+<table>
+  <tr><td>If \(\vec v\) is any nonzero vector in \(\mathbb R^2\), then \(T(\vec v)=A\vec v\) is</td><td><reveal>perpendicular to \(\vec v\), so it fails to be parallel to \(\vec v\): there are no real eigenvectors and eigenvalues, no eigenbasis, and \(A\) fails to be diagonalizable</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Eigenvalues of Orthogonal Matrices; Invertibility</div>
+          <div class="step-subtitle">Example 5, Theorem 7.1.4, Example 6, Summary 7.1.5</div>
+          <div class="step-body">
+<p><b>Example 5.</b> What are the possible real eigenvalues of an orthogonal \(n\times n\) matrix \(A\)?</p>
+<table>
+  <tr><td>\(T(\vec x)=A\vec x\) preserves length: \(\|T(\vec x)\|=\|A\vec x\|=\)</td><td><reveal>\(\|\vec x\|\) for all \(\vec x\) in \(\mathbb R^n\) (Definition 5.3.1)</reveal></td></tr>
+  <tr><td>For an eigenvector \(\vec v\) with \(A\vec v=\lambda\vec v\): \(\|\vec v\|=\|A\vec v\|=\|\lambda\vec v\|=\)</td><td><reveal>\(|\lambda|\,\|\vec v\|\), so \(|\lambda|=1\) and \(\lambda=1\) or \(\lambda=-1\)</reveal></td></tr>
+  <tr><td>For example, the reflection \(A=\begin{bmatrix}1&0\\0&-1\end{bmatrix}\) has</td><td><reveal>\(A\vec e_1=1\vec e_1\) and \(A\vec e_2=-\vec e_2=(-1)\vec e_2\), so \(1\) and \(-1\) are the eigenvalues of \(A\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 7.1.4</div>
+<p>The possible real eigenvalues of an orthogonal matrix are \(1\) and \(-1\).</p>
+</div>
+<p><b>Example 6.</b> For which \(n\times n\) matrices \(A\) is \(0\) an eigenvalue? Give your answer in terms of the kernel of \(A\) and also in terms of the invertibility of \(A\).</p>
+<table>
+  <tr><td>\(0\) is an eigenvalue of \(A\) if there exists a nonzero \(\vec v\) with \(A\vec v=0\vec v=\vec 0\), that is,</td><td><reveal>a nonzero vector in the kernel of \(A\). Thus \(0\) is an eigenvalue of \(A\) if (and only if) \(\ker A\ne\{\vec 0\}\), meaning that \(A\) fails to be invertible.</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Summary 7.1.5: Various characterizations of invertible matrices</div>
+<p>For an \(n\times n\) matrix \(A\), the following statements are equivalent:</p>
+<p>i. \(A\) is invertible. &nbsp; ii. The linear system \(A\vec x=\vec b\) has a unique solution \(\vec x\), for all \(\vec b\) in \(\mathbb R^n\). &nbsp; iii. \(\operatorname{rref}A=I_n\). &nbsp; iv. \(\operatorname{rank}A=n\). &nbsp; v. \(\operatorname{im}A=\mathbb R^n\). &nbsp; vi. \(\ker A=\{\vec 0\}\). &nbsp; vii. The column vectors of \(A\) form a basis of \(\mathbb R^n\). &nbsp; viii. The column vectors of \(A\) span \(\mathbb R^n\). &nbsp; ix. The column vectors of \(A\) are linearly independent. &nbsp; x. \(\det A\ne0\). &nbsp; xi. <b>\(0\) fails to be an eigenvalue of \(A\).</b></p>
+</div>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Eigenvector Facts</div>
+          <div class="step-subtitle">Exercises 1 to 4, 7, 8, 10</div>
+          <div class="step-body">
+<p><i>Let \(A\) be an invertible \(n\times n\) matrix and \(\vec v\) an eigenvector of \(A\) with associated eigenvalue \(\lambda\).</i></p>
+<table>
+  <tr><td><b>1.</b> Is \(\vec v\) an eigenvector of \(A^3\)? If so, what is the eigenvalue?</td><td><reveal>Yes, \(A^3\vec v=\lambda^3\vec v\): eigenvalue \(\lambda^3\)</reveal></td></tr>
+  <tr><td><b>2.</b> Is \(\vec v\) an eigenvector of \(A^{-1}\)? If so, what is the eigenvalue?</td><td><reveal>Yes: \(A\vec v=\lambda\vec v\Rightarrow\vec v=\lambda A^{-1}\vec v\), and \(\lambda\ne0\), so \(A^{-1}\vec v=\dfrac1\lambda\vec v\)</reveal></td></tr>
+  <tr><td><b>3.</b> Is \(\vec v\) an eigenvector of \(A+2I_n\)? If so, what is the eigenvalue?</td><td><reveal>Yes: \((A+2I_n)\vec v=\lambda\vec v+2\vec v=(\lambda+2)\vec v\)</reveal></td></tr>
+  <tr><td><b>4.</b> Is \(\vec v\) an eigenvector of \(7A\)? If so, what is the eigenvalue?</td><td><reveal>Yes: eigenvalue \(7\lambda\)</reveal></td></tr>
+  <tr><td><b>7.</b> What can you say about \(\ker(A-\lambda I_n)\)? Is \(A-\lambda I_n\) invertible?</td><td><reveal>\((A-\lambda I_n)\vec v=\vec 0\) with \(\vec v\ne\vec 0\), so \(\ker(A-\lambda I_n)\ne\{\vec 0\}\) and \(A-\lambda I_n\) is not invertible</reveal></td></tr>
+</table>
+<p><i>Matrices with a prescribed eigenvector, step by step.</i></p>
+<table>
+  <tr><td><b>8.</b> All \(2\times2\) matrices \(A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\) for which \(\vec e_1\) is an eigenvector with eigenvalue \(5\). First, \(A\vec e_1=\)</td><td><reveal>\(\begin{bmatrix}a\\c\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>This must equal</td><td><reveal>\(5\vec e_1=\begin{bmatrix}5\\0\end{bmatrix}\), so \(a=5\), \(c=0\)</reveal></td></tr>
+  <tr><td>The matrices</td><td><reveal>\(A=\begin{bmatrix}5&b\\0&d\end{bmatrix}\), with \(b,d\) arbitrary</reveal></td></tr>
+  <tr><td><b>10.</b> The same for \(\begin{bmatrix}1\\2\end{bmatrix}\) with eigenvalue \(5\). \(A\begin{bmatrix}1\\2\end{bmatrix}=\)</td><td><reveal>\(\begin{bmatrix}a+2b\\c+2d\end{bmatrix}=\begin{bmatrix}5\\10\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Solve for \(a\) and \(c\)</td><td><reveal>\(a=5-2b\), \(c=10-2d\)</reveal></td></tr>
+  <tr><td>The matrices</td><td><reveal>\(A=\begin{bmatrix}5-2b&b\\10-2d&d\end{bmatrix}\), with \(b,d\) arbitrary</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-title">Diagonalizing a Matrix, Step by Step</div>
+          <div class="step-subtitle">Exercise 12, then powers of \(A\)</div>
+          <div class="step-body">
+<p><b>Exercise 12.</b> Show that \(2\) and \(4\) are eigenvalues of \(A=\begin{bmatrix}2&0\\3&4\end{bmatrix}\). Find an eigenbasis for \(A\) and thus diagonalize \(A\).</p>
+<jsx-eigen a="2,0;3,4" v="1,1" range="5"></jsx-eigen>
+<table>
+  <tr><td>1. For \(\lambda=4\): \(A-4I_2=\)</td><td><reveal>\(\begin{bmatrix}-2&0\\3&0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Its kernel: \(-2x=0\) and \(3x=0\), so \(x=0\) and \(y\) is free. An eigenvector:</td><td><reveal>\(\vec v_1=\begin{bmatrix}0\\1\end{bmatrix}\); check \(A\vec v_1=\begin{bmatrix}0\\4\end{bmatrix}=4\vec v_1\)</reveal></td></tr>
+  <tr><td>2. For \(\lambda=2\): \(A-2I_2=\)</td><td><reveal>\(\begin{bmatrix}0&0\\3&2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Its kernel: \(3x+2y=0\). An eigenvector:</td><td><reveal>\(\vec v_2=\begin{bmatrix}2\\-3\end{bmatrix}\); check \(A\vec v_2=\begin{bmatrix}4\\-6\end{bmatrix}=2\vec v_2\)</reveal></td></tr>
+  <tr><td>3. Are \(\vec v_1,\vec v_2\) a basis of \(\mathbb R^2\)?</td><td><reveal>Yes, they are not parallel: an eigenbasis for \(A\)</reveal></td></tr>
+  <tr><td>4. \(S=[\vec v_1\ \vec v_2]\) and \(B=\operatorname{diag}(\lambda_1,\lambda_2)\), in the same order</td><td><reveal>\(S=\begin{bmatrix}0&2\\1&-3\end{bmatrix}\), \(B=\begin{bmatrix}4&0\\0&2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>5. Check \(AS=SB\)</td><td><reveal>\(AS=\begin{bmatrix}0&4\\4&-6\end{bmatrix}=SB\), so \(S^{-1}AS=B\)</reveal></td></tr>
+  <tr><td><b>Use it.</b> \(A=SBS^{-1}\), so \(A^5=\)</td><td><reveal>\(SB^5S^{-1}\), with \(B^5=\operatorname{diag}(1024,32)\) and \(S^{-1}=\begin{bmatrix}3/2&1\\1/2&0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Multiply</td><td><reveal>\(A^5=\begin{bmatrix}32&0\\1488&1024\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-title">Finding the Eigenbasis from Scratch</div>
+          <div class="step-subtitle">Exercises 13 and 37</div>
+          <div class="step-body">
+<p><b>Exercise 13.</b> Show that \(4\) is an eigenvalue of \(A=\begin{bmatrix}-6&6\\-15&13\end{bmatrix}\) and find all corresponding eigenvectors.</p>
+<table>
+  <tr><td>\(A-4I_2=\)</td><td><reveal>\(\begin{bmatrix}-10&6\\-15&9\end{bmatrix}\); the second row is \(\tfrac32\) times the first, so the kernel is not \(\{\vec 0\}\) and \(4\) is an eigenvalue</reveal></td></tr>
+  <tr><td>Solve \(-10x+6y=0\)</td><td><reveal>\(5x=3y\): all multiples \(t\begin{bmatrix}3\\5\end{bmatrix}\), \(t\ne0\)</reveal></td></tr>
+  <tr><td>Is \(\begin{bmatrix}2\\3\end{bmatrix}\) an eigenvector too? \(A\begin{bmatrix}2\\3\end{bmatrix}=\)</td><td><reveal>\(\begin{bmatrix}6\\9\end{bmatrix}=3\begin{bmatrix}2\\3\end{bmatrix}\): yes, eigenvalue \(3\). So \(\begin{bmatrix}3\\5\end{bmatrix},\begin{bmatrix}2\\3\end{bmatrix}\) is an eigenbasis, \(S=\begin{bmatrix}3&2\\5&3\end{bmatrix}\), \(S^{-1}AS=\begin{bmatrix}4&0\\0&3\end{bmatrix}\)</reveal></td></tr>
+</table>
+<p><b>Exercise 37.</b> \(A=\begin{bmatrix}3&4\\4&-3\end{bmatrix}\). (a) Use the geometric interpretation as a reflection combined with a scaling to find the eigenvalues. (b) Find an eigenbasis. (c) Diagonalize \(A\).</p>
+<table>
+  <tr><td>(a) Factor out the scaling: \(A=\)</td><td><reveal>\(5\begin{bmatrix}0.6&0.8\\0.8&-0.6\end{bmatrix}\), a reflection about a line followed by a scaling by \(5\)</reveal></td></tr>
+  <tr><td>A reflection has eigenvalues \(1\) and \(-1\), so \(A\) has</td><td><reveal>\(5\) and \(-5\)</reveal></td></tr>
+  <tr><td>(b) For \(5\): \(A-5I_2=\begin{bmatrix}-2&4\\4&-8\end{bmatrix}\), kernel \(x=2y\)</td><td><reveal>\(\vec v_1=\begin{bmatrix}2\\1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>For \(-5\): \(A+5I_2=\begin{bmatrix}8&4\\4&2\end{bmatrix}\), kernel \(2x+y=0\)</td><td><reveal>\(\vec v_2=\begin{bmatrix}1\\-2\end{bmatrix}\) (perpendicular to \(\vec v_1\), as for a reflection)</reveal></td></tr>
+  <tr><td>(c) \(S\) and \(B\)</td><td><reveal>\(S=\begin{bmatrix}2&1\\1&-2\end{bmatrix}\), \(S^{-1}AS=B=\begin{bmatrix}5&0\\0&-5\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Use it: \(A^2=SB^2S^{-1}=\)</td><td><reveal>\(S(25I_2)S^{-1}=25I_2\), and so \(A^3=25A=\begin{bmatrix}75&100\\100&-75\end{bmatrix}\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="10">
+          <div class="step-title">Building a Matrix from Its Eigenbasis</div>
+          <div class="step-subtitle">Exercises 34, 35, 36, 38, 39</div>
+          <div class="step-body">
+<p><b>Exercise 36.</b> Find a \(2\times2\) matrix \(A\) such that \(\begin{bmatrix}3\\1\end{bmatrix}\) and \(\begin{bmatrix}1\\2\end{bmatrix}\) are eigenvectors of \(A\), with eigenvalues \(5\) and \(10\), respectively.</p>
+<table>
+  <tr><td>\(S\) and \(B\)</td><td><reveal>\(S=\begin{bmatrix}3&1\\1&2\end{bmatrix}\), \(B=\begin{bmatrix}5&0\\0&10\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(S^{-1}AS=B\) gives \(A=SBS^{-1}\). First \(S^{-1}=\)</td><td><reveal>\(\dfrac15\begin{bmatrix}2&-1\\-1&3\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(SB=\) and then \(A=SBS^{-1}=\)</td><td><reveal>\(SB=\begin{bmatrix}15&10\\5&20\end{bmatrix}\), \(\ A=\begin{bmatrix}4&3\\-2&11\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Check</td><td><reveal>\(A\begin{bmatrix}3\\1\end{bmatrix}=\begin{bmatrix}15\\5\end{bmatrix}=5\begin{bmatrix}3\\1\end{bmatrix}\), \(\ A\begin{bmatrix}1\\2\end{bmatrix}=\begin{bmatrix}10\\20\end{bmatrix}=10\begin{bmatrix}1\\2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td><b>38.</b> \(\begin{bmatrix}1\\-1\\-1\end{bmatrix}\) is an eigenvector of \(\begin{bmatrix}4&1&1\\-5&0&-3\\-1&-1&2\end{bmatrix}\). Compute the product</td><td><reveal>\(\begin{bmatrix}2\\-2\\-2\end{bmatrix}=2\begin{bmatrix}1\\-1\\-1\end{bmatrix}\): eigenvalue \(2\)</reveal></td></tr>
+  <tr><td><b>34.</b> \(A\vec v=4\vec v\). Then \(A^2\vec v=\)</td><td><reveal>\(16\vec v\), and \(2A\vec v=8\vec v\)</reveal></td></tr>
+  <tr><td>So \((A^2+2A+3I_n)\vec v=\)</td><td><reveal>\((16+8+3)\vec v=27\vec v\): eigenvalue \(27\)</reveal></td></tr>
+  <tr><td><b>35.</b> Similar matrices have the same eigenvalues. If \(S^{-1}AS\vec v=\lambda\vec v\), multiply by \(S\):</td><td><reveal>\(AS\vec v=\lambda S\vec v\), and \(S\vec v\ne\vec 0\), so \(S\vec v\) is an eigenvector of \(A\) with the same \(\lambda\)</reveal></td></tr>
+  <tr><td><b>39.</b> All \(2\times2\) matrices for which \(\begin{bmatrix}0\\1\end{bmatrix}\) is an eigenvector. \(A\vec e_2=\)</td><td><reveal>\(\begin{bmatrix}b\\d\end{bmatrix}\), parallel to \(\vec e_2\) iff \(b=0\): \(A=\begin{bmatrix}a&0\\c&d\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>A basis of this space \(V\) and \(\dim V\)</td><td><reveal>\(\begin{bmatrix}1&0\\0&0\end{bmatrix},\begin{bmatrix}0&0\\1&0\end{bmatrix},\begin{bmatrix}0&0\\0&1\end{bmatrix}\); \(\dim V=3\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">Geometric Eigenvectors</div>
+          <div class="step-subtitle">Exercises 15 to 22</div>
+          <div class="step-body">
+<p><i>Argue geometrically: find all eigenvalues and eigenvectors, and decide whether the transformation is diagonalizable.</i></p>
+<jsx-eigen a="0.6,0.8;0.8,-0.6" v="1,2" range="4" presets="Reflection (15): 0.6,0.8;0.8,-0.6 | Rotation 180° (16): -1,0;0,-1 | Rotation 45° and scaling by 2 (17): 1.4142,-1.4142;1.4142,1.4142 | Shear (22): 1,1;0,1"></jsx-eigen>
+<table>
+  <tr><td><b>15.</b> Reflection about a line \(L\) in \(\mathbb R^2\)</td><td><reveal>\(1\) (vectors along \(L\)) and \(-1\) (vectors perpendicular to \(L\)): an eigenbasis exists, diagonalizable</reveal></td></tr>
+  <tr><td><b>16.</b> Rotation through \(180^\circ\) in \(\mathbb R^2\)</td><td><reveal>\(A=-I_2\): every nonzero vector is an eigenvector with eigenvalue \(-1\); diagonalizable</reveal></td></tr>
+  <tr><td><b>17.</b> Counterclockwise rotation through \(45^\circ\) followed by a scaling by \(2\) in \(\mathbb R^2\)</td><td><reveal>\(T(\vec v)\) is never parallel to \(\vec v\): no real eigenvectors, not diagonalizable</reveal></td></tr>
+  <tr><td><b>19.</b> Orthogonal projection onto a line \(L\) in \(\mathbb R^3\)</td><td><reveal>\(1\) (along \(L\)) and \(0\) (the plane perpendicular to \(L\)): eigenbasis \((\vec v,\vec w_1,\vec w_2)\), diagonalizable</reveal></td></tr>
+  <tr><td><b>20.</b> Rotation through \(90^\circ\) about the \(\vec e_3\)-axis in \(\mathbb R^3\)</td><td><reveal>Only the \(\vec e_3\) direction, eigenvalue \(1\); no eigenbasis, not diagonalizable</reveal></td></tr>
+  <tr><td><b>22.</b> \(T(\vec v)=\vec v\) and \(T(\vec w)=\vec v+\vec w\)</td><td><reveal>A shear: only eigenvalue \(1\), eigenvectors are the multiples of \(\vec v\); no eigenbasis, not diagonalizable</reveal></td></tr>
+</table>
+<p class="muted small">Source: Otto Bretscher, <i>Linear Algebra with Applications</i>, Section 7.1.</p>
           </div>
         </div>
 

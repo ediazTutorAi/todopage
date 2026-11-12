@@ -1009,3 +1009,29 @@ Lesson: `linear-algebra/fall2025/2025-11-07-cramers-rule/index.html` (Bretscher 
 New `divcurl` attribute on `<jsx-vector-field>` (`js/jsxgraph.js`; optional `ring` radius, `tau-max`): readout chips for `div F = P_x + Q_y` and `curl F . k = Q_x - P_y` at the probe (central differences), plus the book's "elastic circle": a small circle around the probe carried by the flow (RK4) for a time tau set by a slider, with a marked point to show turning, and a chip giving the area ratio (area x e^(-2 tau) for `<-x,-y>`, checked). Works with `fields=` buttons.
 
 Lesson: `calculus3/fall2025/2025-11-10-divergence-and-curl/index.html` (OpenStax 6.5, 7 steps timed for 20 minutes in an HTML comment; hand-authored, no `content.json`, entry added to `lectures.json`, dated 2026-03-27; folder date is a guess). Book wording in `.defbox`, Examples 6.48 to 6.57, Checkpoints 6.40 to 6.46 and exercises 207, 209, 217, 219, 231, 236, 242, 255, 256 as reveal rows. All answers checked with sympy. No earlier lesson covered the topic, so none was changed.
+
+### `<surface-param>` and the Surface Integrals lesson (added 2026-11-12)
+
+`<surface-param x y z umin umax vmin vmax f field sum flip piece-size az el>` (`js/surface.js`, imported by `boot.js`, no CDN tags; reuses the `.riemann-*` CSS): a canvas 3D parametric surface
+`r(u,v)`, drag to rotate. Expressions in `u`,`v` (write `u*u`, not `u^2`); `vmin`/`vmax` may depend on `u` (triangular domain: `vmax="u"`). Shows grid curves (u const blue, v const orange), a probe with
+`t_u`, `t_v`, the tangent parallelogram `du t_u x dv t_v` and the normal `t_u x t_v`, with a readout of the vectors and `||t_u x t_v||`. `f="..."` (in x,y,z) adds `f ||t_u x t_v||`; `field="P;Q;R"`
+draws F (orange) and the unit normal (green) at a grid of points, adds `F . (t_u x t_v)` and a "Flip orientation" button; `sum` replaces the probe with an `m x m` slider (one parallelogram per
+piece) and compares the midpoint Riemann sum (area, `f`, or flux) with a fine-grid value. Sphere pictures use `u = phi`, `v = theta` so `t_u x t_v` is the outward normal, as in the book.
+**HTML gotcha**: `\(-\infty<u<\infty\)` inside a lesson parses `<u<...` as a tag and swallows text; write `&lt;` for any `<` directly followed by a letter inside math.
+
+Lesson: `calculus3/fall2025/2025-11-11-surface-integrals/index.html` (OpenStax 6.6, 11 steps timed for 40 minutes in an HTML comment; hand-authored, no `content.json`, entry added to `lectures.json`, dated 2026-03-28;
+folder date is a guess). Book wording in `.defbox`, Examples 6.58 to 6.72 (6.61 skipped), Checkpoints 6.47 to 6.59 and exercises 269 to 318 as reveal rows. All answers checked with sympy and the widgets in Chrome
+(areas 22.654, integrals 28.79, 696.74, flux 340 and 90pi). Book typos avoided: Example 6.64 integrates theta from 0 to pi (should be 2pi), Example 6.72's bottom `t_v` is mistyped, and Example 6.71 cites "Example 6.64".
+No earlier lesson covered the topic, so none was changed.
+
+### `<jsx-eigen>` and the Linear Algebra 7.1 lesson (added 2026-11-12)
+
+`<jsx-eigen a="a,b;c,d" v="1,2" presets="Name: a,b;c,d | ..." dynamics x0="1,1" tmax="10" range="4">` (`renderJsxEigen` in `js/jsxgraph.js`, needs the JSXGraph CDN tags; 2 x 2 only).
+Default mode: a draggable `v` with `Av`; the readout says whether `Av` is parallel to `v` (then "eigenvector, lambda = ..."), the real eigenlines are dashed, "Snap to eigenvector",
+`presets` swap the matrix (a rotation reports no real eigenvalues). `dynamics`: the drag point is `x0`, an integer slider sets t, the board shows the trajectory `A^t x0`, t = 0..tmax, and x(t)
+split as `c1 lambda1^t v1 + c2 lambda2^t v2` along the eigenlines (Theorem 7.1.6). Eigenvectors are scaled so the smallest nonzero entry is 1 (Example 7 gives v1 = (1,3), v2 = (2,1), c = 200, 400
+for x0 = (1000,1000)).
+
+Lesson: `linear-algebra/fall2025/2025-11-11-diagonalization/index.html` (Bretscher 7.1, PDF pages 322 to 336, 11 steps timed for 40 minutes in an HTML comment; the optional dynamical-systems part (Example 7, Thm 7.1.6, Def 7.1.7) was dropped at the instructor's request and replaced by step-by-step diagonalization exercises, so the lesson no longer uses `dynamics`; replaced a 5-step stub, kept folder and
+`lectures.json` entry; its `content.json` was deleted so the editor-app does not overwrite the hand-authored page). Book wording in `.defbox`, Examples 1 to 6, Theorems 7.1.3 / 7.1.4, Summary 7.1.5
+(the scan misprints x as det A = 0; the page says not equal), and Exercises 1 to 4, 7, 8, 10, 12, 13, 15 to 17, 19, 20, 22, 34 to 39 as step-by-step reveal rows. Answers checked with sympy.

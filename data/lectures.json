@@ -353,6 +353,23 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-28",
+    "title": "Surface Integrals",
+    "subtitle": "",
+    "description": "Surface integrals (OpenStax 6.6, a 40 minute class): parameterize cylinders, cones, spheres and graphs, see surface area as a sum of tangent parallelograms, then integrate a scalar function (mass of a sheet) and a vector field (flux) over a surface, with orientation, piecewise smooth surfaces, fluid and heat flow.",
+    "tags": [
+      "surface integrals",
+      "parametric surfaces",
+      "surface area",
+      "orientation",
+      "flux",
+      "mass of a sheet"
+    ],
+    "url": "calculus3/fall2025/2025-11-11-surface-integrals/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",
@@ -661,11 +678,13 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-04-09",
-    "title": "diagonalization",
+    "title": "Diagonalization",
     "subtitle": "",
-    "description": "",
+    "description": "Eigenvectors, eigenvalues and eigenbases, why an eigenbasis diagonalizes a matrix (S^-1 A S = B), and step-by-step diagonalization exercises, with a draggable eigenvector diagram.",
     "tags": [
-      "diagonalization"
+      "diagonalization",
+      "eigenvectors",
+      "eigenvalues"
     ],
     "url": "linear-algebra/fall2025/2025-11-11-diagonalization/index.html"
   },

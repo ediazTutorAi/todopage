@@ -7681,6 +7681,195 @@ function renderJsxExpansion(el) {
   refresh();
 }
 
+
+// <jsx-eigen a="0.86,0.08;-0.12,1.14" v="1,2" presets="Name: a,b;c,d | ..." dynamics x0="1000,1000" tmax="10" range="4">
+//
+// Eigenvectors and diagonalization (Bretscher 7.1), 2 x 2 matrices. A draggable vector v is drawn with its image Av.
+// The readout says whether Av is parallel to v (then v is an eigenvector and lambda is shown), and the real
+// eigenlines of A are drawn dashed, with a "Snap to eigenvector" button. `presets` puts matrices behind buttons
+// (reflection, rotation, projection ...); a rotation has no real eigenlines.
+// `dynamics`: the dragged point is the initial state x0 (default `x0`), a slider sets t, and the board shows the
+// discrete trajectory x(t) = A^t x0 for t = 0..tmax, with x(t) split along the eigenlines as c1 lambda1^t v1 +
+// c2 lambda2^t v2 (the closed formula of Theorem 7.1.6) when A has two real eigenvalues. `range` = half-width of the board.
+function renderJsxEigen(el) {
+  const TAG = 'jsx-eigen';
+  if (typeof JXG === 'undefined') {
+    console.error(`<${TAG}>: JXG is not defined. Add the JSXGraph <link>/<script> tags to this lesson's <head>.`);
+    return;
+  }
+  let A; let V0; let X0; const presets = [];
+  try {
+    A = parseMatrix(el.getAttribute('a') || '2,0;0,3');
+    V0 = parseNumList(el.getAttribute('v') || '1,2');
+    X0 = parseNumList(el.getAttribute('x0') || '1,1');
+    (el.getAttribute('presets') || '').split('|').map((x) => x.trim()).filter(Boolean).forEach((x) => {
+      const k = x.indexOf(':'); presets.push({ name: x.slice(0, k).trim(), m: parseMatrix(x.slice(k + 1)) });
+    });
+  } catch (err) { console.error(`<${TAG}>: could not parse an attribute`, err); return; }
+  const num = (n, d) => evalNumAttr(el, n, d, TAG);
+  const dyn = el.hasAttribute('dynamics');
+  const R = num('range', 4);
+  const TMAX = Math.max(1, Math.round(num('tmax', 10)));
+  const A0 = A.map((r) => r.slice());
+
+  const container = document.createElement('div'); container.className = 'jsx-diagram jsx-diagram--transform';
+  const readout = document.createElement('div'); readout.className = 'jsx-trace-readout';
+  const host = document.createElement('div'); host.className = 'jsx-board jsx-board--square'; host.id = `jsx-board-${++boardCounter}`;
+  const controls = document.createElement('div'); controls.className = 'jsx-transform-controls';
+  container.append(readout, host, controls);
+  el.replaceWith(container);
+
+  const ink = cssVar('--ink') || '#151515'; const accent = cssVar('--accent') || '#0f6ab4';
+  const line = cssVar('--line') || '#e5e7eb'; const green = '#2e8b57'; const orange = '#c2740c'; const red = cssVar('--negative') || '#c0392b';
+  const board = JXG.JSXGraph.initBoard(host.id, {
+    boundingbox: [-R, R, R, -R], axis: true, showNavigation: false, showCopyright: false, keepaspectratio: true,
+    pan: { enabled: false }, zoom: { enabled: false }, resize: { enabled: true, throttle: 100 },
+  });
+  styleAxes(board, ink);
+  board.defaultAxes.x.setAttribute({ strokeOpacity: 0.45 }); board.defaultAxes.y.setAttribute({ strokeOpacity: 0.45 });
+  board.create('grid', [], { strokeColor: line, strokeWidth: GRID_STROKE });
+
+  const mv = (M, v) => [M[0][0] * v[0] + M[0][1] * v[1], M[1][0] * v[0] + M[1][1] * v[1]];
+  const pw = (M, v, t) => { let w = v; for (let i = 0; i < t; i++) w = mv(M, w); return w; };
+  const hid = (f) => board.create('point', [() => f()[0], () => f()[1]], { visible: false, fixed: true, name: '' });
+  const O = board.create('point', [0, 0], { visible: false, fixed: true, name: '' });
+
+  // real eigenpairs of the current A: [{lam, v}] (v not normalized)
+  function eigen() {
+    const [[a, b], [c, d]] = A;
+    const tr = a + d; const det = a * d - b * c; const disc = tr * tr / 4 - det;
+    if (disc < -1e-9) return [];
+    const sq = Math.sqrt(Math.max(disc, 0));
+    const lams = sq < 1e-9 ? [tr / 2] : [tr / 2 + sq, tr / 2 - sq];
+    const out = [];
+    lams.forEach((lam) => {
+      let v;
+      if (Math.abs(b) > 1e-9) v = [b, lam - a];
+      else if (Math.abs(c) > 1e-9) v = [lam - d, c];
+      else v = Math.abs(lam - a) < 1e-9 ? [1, 0] : [0, 1];
+      const m = Math.min(...v.map(Math.abs).filter((z) => z > 1e-9));
+      out.push({ lam, v: Number.isFinite(m) ? v.map((z) => z / m) : v });
+    });
+    if (sq < 1e-9 && Math.abs(b) < 1e-9 && Math.abs(c) < 1e-9) out.push({ lam: tr / 2, v: [0, 1] });
+    return out;
+  }
+  let E = eigen();
+
+  // eigenlines (dashed), repositioned on refresh
+  const lineEnds = [0, 1].map(() => board.create('point', [1, 0], { visible: false, fixed: true, name: '' }));
+  const eigLines = lineEnds.map((pt, i) => board.create('line', [O, pt], {
+    strokeColor: i === 0 ? accent : green, strokeOpacity: 0.7, strokeWidth: 3, dash: 2, highlight: false, fixed: true,
+    straightFirst: true, straightLast: true, visible: false,
+  }));
+
+  const dpt = (xy, color) => board.create('point', [...xy], {
+    name: '', size: POINT_SIZE + 2, fillColor: color, strokeColor: '#fff', strokeWidth: POINT_STROKE, highlight: false,
+  });
+  const P = dyn ? dpt(X0, ink) : dpt(V0, ink);
+  const pv = () => [P.X(), P.Y()];
+  const ar = (from, f, color, w, dash) => board.create('arrow', [from, hid(f)], { strokeColor: color, strokeWidth: w, dash: dash || 0, lastArrow: { size: 9 }, highlight: false, fixed: true });
+  const lab = (f, t, c) => board.create('text', [() => f()[0] + 0.03 * R, () => f()[1] + 0.06 * R, t], { fontSize: READOUT_VALUE_FONT, color: c, fixed: true, cssStyle: 'font-weight:800' });
+
+  let tSlider = null; let tVal = 0; let updateVis = () => {};
+  const f2 = (v) => (Number.isFinite(v) ? fmtNum(v).replace('-', '−') : '?');
+  const f1 = (v) => { const r = Math.round(v * 10) / 10; return String(Object.is(r, -0) ? 0 : r).replace('-', '−'); };
+  const chip = (html, main) => `<span class="jsx-trace-chip${main ? ' jsx-trace-main' : ''}">${html}</span>`;
+  const matHtml = (M) => `<span class="la-mat"><span>${f2(M[0][0])}</span><span>${f2(M[0][1])}</span><span>${f2(M[1][0])}</span><span>${f2(M[1][1])}</span></span>`;
+  const vecHtml = (v, fx) => `<span class="la-mat la-vec"><span>${fx(v[0])}</span><span>${fx(v[1])}</span></span>`;
+
+  if (!dyn) {
+    ar(O, pv, ink, 5); ar(O, () => mv(A, pv()), orange, 5);
+    lab(pv, 'v', ink); lab(() => mv(A, pv()), 'Av', orange);
+  } else {
+    // trajectory x(0..TMAX)
+    const dots = []; const segs = [];
+    for (let i = 0; i <= TMAX; i++) {
+      const d = board.create('point', [() => pw(A, pv(), i)[0], () => pw(A, pv(), i)[1]], {
+        name: '', size: i === 0 ? POINT_SIZE + 2 : POINT_SIZE - 2, fillColor: i === 0 ? ink : '#6b7280', strokeColor: '#fff', strokeWidth: 2, fixed: true, highlight: false,
+      });
+      dots.push(d);
+      if (i > 0) segs.push(board.create('segment', [dots[i - 1], d], { strokeColor: '#6b7280', strokeOpacity: 0.55, strokeWidth: 2, highlight: false, fixed: true }));
+    }
+    // x(t) marker and its split along the eigenlines
+    const split = () => {
+      if (E.length < 2 || Math.abs(E[0].lam - E[1].lam) < 1e-9) return null;
+      const [p, q] = [E[0].v, E[1].v]; const det = p[0] * q[1] - q[0] * p[1];
+      if (Math.abs(det) < 1e-12) return null;
+      const x = pv();
+      const c1 = (x[0] * q[1] - q[0] * x[1]) / det; const c2 = (p[0] * x[1] - x[0] * p[1]) / det;
+      return { c1, c2, p, q, a: c1 * Math.pow(E[0].lam, tVal), b: c2 * Math.pow(E[1].lam, tVal) };
+    };
+    const comp1 = () => { const s = split(); return s ? [s.a * s.p[0], s.a * s.p[1]] : [NaN, NaN]; };
+    const comp2 = () => { const s = split(); return s ? [s.b * s.q[0], s.b * s.q[1]] : [NaN, NaN]; };
+    const xt = () => pw(A, pv(), tVal);
+    const ok = () => split() !== null;
+    const a1 = ar(O, comp1, accent, 5); const a2 = ar(O, comp2, green, 5);
+    const g1 = board.create('segment', [hid(comp1), hid(xt)], { strokeColor: green, strokeOpacity: 0.7, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true });
+    const g2 = board.create('segment', [hid(comp2), hid(xt)], { strokeColor: accent, strokeOpacity: 0.7, strokeWidth: 2.5, dash: 2, highlight: false, fixed: true });
+    const mk = board.create('point', [() => xt()[0], () => xt()[1]], { name: '', size: POINT_SIZE + 3, fillColor: red, strokeColor: '#fff', strokeWidth: POINT_STROKE, fixed: true, highlight: false });
+    lab(xt, 'x(t)', red);
+    const row = document.createElement('div'); row.className = 'jsx-slider-row';
+    const nm = document.createElement('span'); nm.className = 'jsx-slider-name'; nm.textContent = 't (years)';
+    tSlider = document.createElement('input'); tSlider.type = 'range'; tSlider.min = '0'; tSlider.max = String(TMAX); tSlider.step = '1'; tSlider.value = '0';
+    const val = document.createElement('span'); val.className = 'jsx-slider-val'; val.textContent = '0';
+    row.append(nm, tSlider, val); controls.appendChild(row);
+    tSlider.addEventListener('input', () => { tVal = Number(tSlider.value); val.textContent = String(tVal); refresh(); });
+    updateVis = () => { [a1, a2, g1, g2].forEach((o) => o.setAttribute({ visible: ok() })); };
+    void mk;
+  }
+
+  function refresh() {
+    E = eigen();
+    eigLines.forEach((l, i) => {
+      const e = E[i];
+      if (e) { const n = Math.hypot(e.v[0], e.v[1]) || 1; lineEnds[i].moveTo([e.v[0] / n, e.v[1] / n]); }
+      l.setAttribute({ visible: !!e });
+    });
+    updateVis();
+    const x = pv();
+    let html = chip(`A = ${matHtml(A)}`);
+    const tr = A[0][0] + A[1][1]; const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+    if (E.length === 0) html += chip('no real eigenvalues (complex pair)', true);
+    else html += chip(`eigenvalues: <b>${E.map((e) => f2(e.lam)).join(', ')}</b>`, false);
+    if (!dyn) {
+      const Av = mv(A, x); const cr = x[0] * Av[1] - x[1] * Av[0];
+      const nx = Math.hypot(x[0], x[1]); const na = Math.hypot(Av[0], Av[1]);
+      html += chip(`v = ${vecHtml(x, f2)}`) + chip(`Av = ${vecHtml(Av, f2)}`);
+      if (nx < 1e-9) html += chip('v = 0 is never an eigenvector');
+      else if (na < 1e-6 * nx || Math.abs(cr) < 0.02 * nx * na) {
+        const lam = (x[0] * Av[0] + x[1] * Av[1]) / (nx * nx);
+        html += chip(`Av ∥ v: eigenvector, <b>λ = ${f2(lam)}</b>`, true);
+      } else html += chip('Av is not parallel to v: not an eigenvector');
+    } else {
+      const xt = pw(A, x, tVal);
+      html += chip(`x₀ = ${vecHtml(x, f1)}`) + chip(`x(${tVal}) = Aᵗx₀ = ${vecHtml(xt, f1)}`, true);
+      if (E.length === 2 && Math.abs(E[0].lam - E[1].lam) > 1e-9) {
+        const [p, q] = [E[0].v, E[1].v]; const dd = p[0] * q[1] - q[0] * p[1];
+        const c1 = (x[0] * q[1] - q[0] * x[1]) / dd; const c2 = (p[0] * x[1] - x[0] * p[1]) / dd;
+        html += chip(`<span style="color:${accent}">${f2(c1)}·${f2(E[0].lam)}ᵗ v₁</span> + <span style="color:${green}">${f2(c2)}·${f2(E[1].lam)}ᵗ v₂</span>`);
+      }
+    }
+    void tr; void det;
+    readout.innerHTML = html; board.update();
+  }
+  P.on('drag', refresh);
+
+  presets.forEach((p) => lineMkBtn(p.name, () => { A = p.m.map((r) => r.slice()); refresh(); }, controls));
+  if (!dyn) {
+    lineMkBtn('Snap to eigenvector', () => {
+      if (!E.length) return;
+      const x = pv(); let best = null; let bd = -1;
+      E.forEach((e) => {
+        const n = Math.hypot(e.v[0], e.v[1]); const u = [e.v[0] / n, e.v[1] / n];
+        const dot = x[0] * u[0] + x[1] * u[1]; if (Math.abs(dot) > bd) { bd = Math.abs(dot); best = [u[0] * dot, u[1] * dot]; }
+      });
+      if (best) P.moveTo(best); refresh();
+    }, controls);
+  }
+  lineMkBtn('Reset', () => { A = A0.map((r) => r.slice()); P.moveTo(dyn ? X0 : V0); if (tSlider) { tSlider.value = '0'; tVal = 0; tSlider.nextSibling.textContent = '0'; } refresh(); }, controls);
+  refresh();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-vector-add').forEach(renderJsxVectorAdd);
   document.querySelectorAll('jsx-incline').forEach(renderJsxIncline);
@@ -7716,4 +7905,5 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('jsx-green').forEach(renderJsxGreen);
   document.querySelectorAll('jsx-cramer').forEach(renderJsxCramer);
   document.querySelectorAll('jsx-expansion').forEach(renderJsxExpansion);
+  document.querySelectorAll('jsx-eigen').forEach(renderJsxEigen);
 });

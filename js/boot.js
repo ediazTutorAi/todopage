@@ -7,6 +7,7 @@ import './jsxgraph.js';
 import './riemann.js';
 import './solid.js';
 import './coord3d.js';
+import './surface.js';
 import './gramschmidt.js';
 import './determinant.js';
 import './staged-svg.js';
