@@ -33,88 +33,128 @@
   <section class="single-col">
     <div class="card" id="left-card">
 
+      <!-- Section 7.2 (Bretscher, PDF pages 339 to 350, book pages 327 to 338). Boxes only, one per step, in the book's wording
+           (plus only the statements of Examples 1 to 7, no solutions, proofs or exercises): Definition 7.1.2 (recalled from Section 7.1, since Theorem 7.2.1 uses it), Theorems 7.2.1 and 7.2.2,
+           Definition 7.2.3, Theorems 7.2.4 and 7.2.5, Definition 7.2.6, Theorems 7.2.7 and 7.2.8 (9 steps).
+           The scan of Definition 7.2.6 prints "g(lambda_0) = 0" with the slash lost; the correct condition is g(lambda_0) not equal to 0. -->
+
       <!-- STEPS -->
-       <div class="step" data-step="1">
-         <div class="step-title">Theorem 7.2.1</div>
-         <div class="step-subtitle">Eigenvalues and determinants; characteristic equation</div>
-         <div class="step-body">
-           Consider an $n\times n$ matrix A and a scalar $\lambda$. Then $\lambda$ is an eigenvalue of A if and only if:
-           $$det(A-\lambda I_n)=0$$
-           This is called the characteristic equation (or the secular equation) of matrix A.
-          </div>
-       </div>
-       <div class="step" data-step="2">
-         <div class="step-title">Definition 7.2.2</div>
-         <div class="step-subtitle">Eigenvectors, eigenvalues, and eigenbases</div>
-         <div class="step-body">
-           Consider a linear  transformation $T(\vec{x})=A \vec{x}$ from $\mathbb{R}^{n}$ to $\mathbb{R}^{n}$<br>
-           A nonzero vector $\vec{v}$ in $\mathbb{R}^{n}$ is called an eigenvector of A (or T) if 
-           $$A \vec{v}=\lambda \vec{v}$$
-           for some scalar $\lambda$. This $\lambda$ is called the eigenvalue associated with eigenvector $\vec{v}$.<br>
-           A basis $\vec{v_1},\cdots,\vec{v_n}$ of $\mathbb{R}^{n}$ is called an eigenbasis for A (or T) if the vectors $\vec{v_1},\cdots,\\vec{v_n}$ are eigenvectors of A.
-         </div>
-       </div>
-       <div class="step" data-step="2">
-         <div class="step-title">Theorem 7.2.2</div>
-         <div class="step-subtitle">Eigenvalues of a triangular matrix</div>
-         <div class="step-body">
-           The eigenvalues of a triangular matrix are its diagonal entries.
-         </div>
-       </div>
-       <div class="step" data-step="3">
-         <div class="step-title">Definition 7.2.3</div>
-         <div class="step-subtitle">Trace</div>
-         <div class="step-body">
-           The sum of the diagonal entires of a square matrix A is called the trace of A, denoted by tr(A).
-         </div>
-       </div>
-       <div class="step" data-step="4">
-         <div class="step-title">Theorem 7.2.4</div>
-         <div class="step-subtitle">Characteristic equation of a $2 \times 2$ matrix A</div>
-         <div class="step-body">
-           $$det(A-\lambda I_2)=\lambda^2-(trA)\lambda+detA=0$$
-         </div>
-       </div>
-       <div class="step" data-step="5">
-         <div class="step-title">Theorem 7.2.5</div>
-         <div class="step-subtitle">Characteristic Polynomial</div>
-         <div class="step-body">
-           If A is an $n\times n$ matrix, then $det(A-\lambda I_n)$ is a polynomial of degree n, of the form:
-           $$(-\lambda)^n+(trA)(-\lambda)^{n-1}+\cdots+det A$$
-           $$=(-1)^n\lambda^n+(-1)^{n-1}(trA)\lambda^{n-1}+\cdots+detA$$
-           This is called the characteristic polynomial of A, denoted by $f_A(\lambda)$
-         </div>
-       </div>
-       <div class="step" data-step="6">
-         <div class="step-title">Definition 7.2.6</div>
-         <div class="step-subtitle">Algebraic multiplicity of an eigenvalue</div>
-         <div class="step-body">
-           We say that an eigenvalue $\lambda_0$ of a square matrix A has algebraic multiplicity k if $\lambda_0$ is a root of multiplicity k of the characteristic polynomial $f_A(\lambda)$ meaning that we can write
-           $$f_A(\lambda)=(\lambda_0-\lambda)^k g(\lambda)$$
-           for some polynomial $g(\lambda)$ with $g(\lambda_0)\neq 0$. We write $almu(\lambda_0)=k$
-         </div>
-       </div>
-       <div class="step" data-step="7">
-         <div class="step-title">Theorem 7.2.7</div>
-         <div class="step-subtitle">Number of eigenvalues</div>
-         <div class="step-body">
-           An $n\times n$ matrix has at most n real eigenvalues, even if they are counted with their algebraic multiplicities.<br>
-           If n is odd, then an $n\times n$ matrix has at least one real eigenvalue
-         </div>
-       </div>
-       <div class="step" data-step="8">
-         <div class="step-title">Theorem 7.2.8</div>
-         <div class="step-subtitle">Eigenvalues, determinant, and trace</div>
-         <div class="step-body">
-           If an $n\times n$ matrix A has the eigenvalues $\lambda_1,\lambda_2,\cdots,\lambda_n$ listed with their algebraic multiplicities, then:
-           $$det A = \lambda_1\lambda_2\cdots\lambda_n$$
-           the product of the eigenvalues, and<br>
-           $$tr A=\lambda_1+\lambda_2+\cdots\lambda_n$$,
-           the sum of the eigenvalues.
-         </div>
-       </div>
+      <div class="step is-visible" data-step="1">
+        <div class="step-title">Eigenvectors, Eigenvalues, and Eigenbases</div>
+        <div class="step-subtitle">Definition 7.1.2 (recalled from Section 7.1)</div>
+        <div class="step-body">
+<div class="defbox"><div class="defbox-label">Definition 7.1.2: Eigenvectors, eigenvalues, and eigenbases</div>
+<p>Consider a linear transformation \(T(\vec x)=A\vec x\) from \(\mathbb R^n\) to \(\mathbb R^n\).</p>
+<p>A nonzero vector \(\vec v\) in \(\mathbb R^n\) is called an <i>eigenvector</i> of \(A\) (or \(T\)) if</p>
+$$A\vec v=\lambda\vec v$$
+<p>for some scalar \(\lambda\). This \(\lambda\) is called the <i>eigenvalue</i> associated with eigenvector \(\vec v\).</p>
+<p>A basis \(\vec v_1,\dots,\vec v_n\) of \(\mathbb R^n\) is called an <i>eigenbasis</i> for \(A\) (or \(T\)) if the vectors \(\vec v_1,\dots,\vec v_n\) are eigenvectors of \(A\), meaning that \(A\vec v_1=\lambda_1\vec v_1,\dots,A\vec v_n=\lambda_n\vec v_n\) for some scalars \(\lambda_1,\dots,\lambda_n\).</p>
+</div>
+        </div>
+      </div>
 
+      <div class="step is-visible" data-step="2">
+        <div class="step-title">Eigenvalues and Determinants</div>
+        <div class="step-subtitle">Example 1 and Theorem 7.2.1</div>
+        <div class="step-body">
+<p><b>Example 1.</b> Find the eigenvalues of the matrix</p>
+$$A=\begin{bmatrix}1&2\\4&3\end{bmatrix}.$$
+<div class="defbox"><div class="defbox-label">Theorem 7.2.1: Eigenvalues and determinants; characteristic equation</div>
+<p>Consider an \(n\times n\) matrix \(A\) and a scalar \(\lambda\). Then \(\lambda\) is an eigenvalue of \(A\) if (and only if)</p>
+$$\det(A-\lambda I_n)=0.$$
+<p>This is called the <i>characteristic equation</i> (or the <i>secular equation</i>) of matrix \(A\).</p>
+</div>
+        </div>
+      </div>
 
+      <div class="step is-visible" data-step="3">
+        <div class="step-title">Eigenvalues of a Triangular Matrix</div>
+        <div class="step-subtitle">Example 2 and Theorem 7.2.2</div>
+        <div class="step-body">
+<p><b>Example 2.</b> Find the eigenvalues of</p>
+$$A=\begin{bmatrix}2&3&4\\0&3&4\\0&0&4\end{bmatrix}.$$
+<div class="defbox"><div class="defbox-label">Theorem 7.2.2: Eigenvalues of a triangular matrix</div>
+<p>The eigenvalues of a triangular matrix are its diagonal entries.</p>
+</div>
+        </div>
+      </div>
+
+      <div class="step is-visible" data-step="4">
+        <div class="step-title">Trace</div>
+        <div class="step-subtitle">Example 3 and Definition 7.2.3</div>
+        <div class="step-body">
+<p><b>Example 3.</b> Find the characteristic equation for an arbitrary \(2\times2\) matrix \(A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\).</p>
+<div class="defbox"><div class="defbox-label">Definition 7.2.3: Trace</div>
+<p>The sum of the diagonal entries of a square matrix \(A\) is called the <i>trace</i> of \(A\), denoted by \(\operatorname{tr}A\).</p>
+</div>
+        </div>
+      </div>
+
+      <div class="step is-visible" data-step="5">
+        <div class="step-title">Characteristic Equation of a 2 × 2 Matrix</div>
+        <div class="step-subtitle">Theorem 7.2.4</div>
+        <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 7.2.4: Characteristic equation of a \(2\times2\) matrix \(A\)</div>
+$$\det(A-\lambda I_2)=\lambda^2-(\operatorname{tr}A)\lambda+\det A=0$$
+</div>
+        </div>
+      </div>
+
+      <div class="step is-visible" data-step="6">
+        <div class="step-title">Characteristic Polynomial</div>
+        <div class="step-subtitle">Theorem 7.2.5</div>
+        <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 7.2.5: Characteristic polynomial</div>
+<p>If \(A\) is an \(n\times n\) matrix, then \(\det(A-\lambda I_n)\) is a polynomial of degree \(n\), of the form</p>
+$$(-\lambda)^n+(\operatorname{tr}A)(-\lambda)^{n-1}+\cdots+\det A$$
+$$=(-1)^n\lambda^n+(-1)^{n-1}(\operatorname{tr}A)\lambda^{n-1}+\cdots+\det A.$$
+<p>This is called the <i>characteristic polynomial</i> of \(A\), denoted by \(f_A(\lambda)\).</p>
+</div>
+        </div>
+      </div>
+
+      <div class="step is-visible" data-step="7">
+        <div class="step-title">Algebraic Multiplicity of an Eigenvalue</div>
+        <div class="step-subtitle">Examples 4, 5 and Definition 7.2.6</div>
+        <div class="step-body">
+<p><b>Example 4.</b> Find all eigenvalues of</p>
+$$A=\begin{bmatrix}5&4&3&2&1\\0&4&3&2&1\\0&0&5&4&3\\0&0&0&4&3\\0&0&0&0&5\end{bmatrix}.$$
+<div class="defbox"><div class="defbox-label">Definition 7.2.6: Algebraic multiplicity of an eigenvalue</div>
+<p>We say that an eigenvalue \(\lambda_0\) of a square matrix \(A\) has <i>algebraic multiplicity</i> \(k\) if \(\lambda_0\) is a root of multiplicity \(k\) of the characteristic polynomial \(f_A(\lambda)\), meaning that we can write</p>
+$$f_A(\lambda)=(\lambda_0-\lambda)^k\,g(\lambda)$$
+<p>for some polynomial \(g(\lambda)\) with \(g(\lambda_0)\neq0\). We write \(\operatorname{almu}(\lambda_0)=k\).</p>
+</div>
+<p><b>Example 5.</b> Find the eigenvalues of</p>
+$$A=\begin{bmatrix}1&1&1\\1&1&1\\1&1&1\end{bmatrix},$$
+<p>with their algebraic multiplicities.</p>
+        </div>
+      </div>
+
+      <div class="step is-visible" data-step="8">
+        <div class="step-title">Number of Eigenvalues</div>
+        <div class="step-subtitle">Theorem 7.2.7 and Example 6</div>
+        <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 7.2.7: Number of eigenvalues</div>
+<p>An \(n\times n\) matrix has <i>at most</i> \(n\) real eigenvalues, even if they are counted with their algebraic multiplicities.</p>
+<p>If \(n\) is odd, then an \(n\times n\) matrix has <i>at least</i> one real eigenvalue.</p>
+</div>
+<p><b>Example 6.</b> Describe all possible cases for the number of real eigenvalues (with their algebraic multiplicities) of a \(3\times3\) matrix \(A\).</p>
+        </div>
+      </div>
+
+      <div class="step is-visible" data-step="9">
+        <div class="step-title">Eigenvalues, Determinant, and Trace</div>
+        <div class="step-subtitle">Example 7 and Theorem 7.2.8</div>
+        <div class="step-body">
+<p><b>Example 7.</b> Suppose \(A\) is a \(2\times2\) matrix with eigenvalues \(\lambda_1\) and \(\lambda_2\) (we allow \(\lambda_1=\lambda_2\) if \(\lambda_1\) has algebraic multiplicity 2). Explore the relationship among the sum \(\lambda_1+\lambda_2\), the product \(\lambda_1\lambda_2\), the determinant \(\det A\), and the trace \(\operatorname{tr}A\). You may want to consider a numerical example first, such as \(A=\begin{bmatrix}1&2\\4&3\end{bmatrix}\), with eigenvalues \(\lambda_1=5\) and \(\lambda_2=-1\). See Example 1.</p>
+<div class="defbox"><div class="defbox-label">Theorem 7.2.8: Eigenvalues, determinant, and trace</div>
+<p>If an \(n\times n\) matrix \(A\) has the eigenvalues \(\lambda_1,\lambda_2,\dots,\lambda_n\), listed with their algebraic multiplicities, then</p>
+$$\det A=\lambda_1\lambda_2\cdots\lambda_n,\quad\text{the product of the eigenvalues,}$$
+<p>and</p>
+$$\operatorname{tr}A=\lambda_1+\lambda_2+\cdots+\lambda_n,\quad\text{the sum of the eigenvalues.}$$
+</div>
+        </div>
+      </div>
 
       <!-- Controls -->
       <div class="reveal-controls" role="group" aria-label="Slide controls">
