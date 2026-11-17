@@ -356,16 +356,34 @@
     "date": "2026-03-28",
     "title": "Surface Integrals",
     "subtitle": "",
-    "description": "Surface integrals (OpenStax 6.6, a 40 minute class): parameterize cylinders, cones, spheres and graphs, see surface area as a sum of tangent parallelograms, then integrate a scalar function (mass of a sheet) and a vector field (flux) over a surface, with orientation, piecewise smooth surfaces, fluid and heat flow.",
+    "description": "Surface integrals (OpenStax 6.6, a 40 minute class): parameterize cylinders, cones, spheres and graphs, see surface area as a sum of tangent parallelograms, then integrate a scalar function and a vector field (flux) over a surface, with orientation, flux through a graph z = s(x,y), and fluid and heat flow.",
     "tags": [
       "surface integrals",
       "parametric surfaces",
       "surface area",
       "orientation",
       "flux",
-      "mass of a sheet"
+      "flux through a graph"
     ],
     "url": "calculus3/fall2025/2025-11-11-surface-integrals/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
+    "date": "2026-03-29",
+    "title": "Stokes' Theorem",
+    "subtitle": "",
+    "description": "Stokes' theorem (OpenStax 6.7, a 40 minute class): the positive orientation of the boundary, why the circulation around the edge equals the flux of the curl (small loops that cancel on shared edges), verifying the theorem, trading a surface integral for a line integral and back, surface independence, what curl measures, and Faraday's law.",
+    "tags": [
+      "stokes theorem",
+      "curl",
+      "circulation",
+      "line integrals",
+      "surface integrals",
+      "orientation",
+      "faraday's law"
+    ],
+    "url": "calculus3/fall2025/2025-11-12-stokes-theorem/index.html"
   },
   {
     "course": "Calculus III",

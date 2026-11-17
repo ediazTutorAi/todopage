@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+  Stokes' Theorem (OpenStax Calculus Volume 3, Section 6.7). 10 steps, each a question; about 40 minutes without the optional step 9 (Faraday):
+  1 can Green leave the plane (theorem family, dome), 2 positive orientation of C, 3 the theorem (Green as a special case), 4 why it is true
+  (cells that cancel), 5 verifying (Example 6.73, a "show both sides" button), 6 surface to line integral (Example 6.74, surface independence),
+  7 line to surface integral (Example 6.75), 8 what curl measures, 9 OPTIONAL Faraday's law, 10 summary and practice.
+  Through-line: circulation around the edge = flux of the curl through the surface.
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <title>Stokes' Theorem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Stokes' Theorem</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Can Green’s theorem leave the plane?</div>
+          <div class="step-subtitle">Introduction to Stokes’ theorem</div>
+          <div class="step-body">
+<p>Stokes’ theorem is a higher-dimensional generalization of Green’s theorem. It relates a vector surface integral over a surface \(S\) in space to a line integral around the boundary of \(S\). Just like the theorems before it, it reduces an integral over a geometric object to an integral over its boundary.</p>
+<table>
+  <tr><td><b>Fundamental Theorem of Calculus</b></td><td>\(\displaystyle\int_a^bf'(x)\,dx=\) <reveal>\(f(b)-f(a)\)</reveal></td></tr>
+  <tr><td><b>Fundamental Theorem for Line Integrals</b></td><td>\(\displaystyle\int_C\nabla f\cdot d\vec r=\) <reveal>\(f(\text{end})-f(\text{start})\)</reveal></td></tr>
+  <tr><td><b>Green’s theorem</b> (circulation form)</td><td>\(\displaystyle\oint_C\vec F\cdot d\vec r=\) <reveal>\(\displaystyle\iint_D\Big(\dfrac{\partial Q}{\partial x}-\dfrac{\partial P}{\partial y}\Big)\,dA\)</reveal></td></tr>
+  <tr><td><b>Stokes’ theorem</b></td><td>\(\displaystyle\oint_C\vec F\cdot d\vec r=\) <reveal>\(\displaystyle\iint_S\operatorname{curl}\vec F\cdot d\vec S\)</reveal></td></tr>
+</table>
+<p>Green’s theorem needs a <i>flat</i> region \(D\) in the \(xy\)-plane. What if the region is a curved surface, such as this dome? Its boundary \(C\) is the circle at the bottom.</p>
+<surface-param normals boundary x="2*sin(u)*cos(v)" y="2*sin(u)*sin(v)" z="2*cos(u)" umin="0" umax="pi/2" vmin="0" vmax="2*pi" az="35" el="22"></surface-param>
+<table>
+  <tr><td>Which integral could replace \(\iint_D\) over a flat region?</td><td><reveal>A surface integral over \(S\): the flux of \(\operatorname{curl}\vec F\) through \(S\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Which way around the boundary?</div>
+          <div class="step-subtitle">The positive orientation of \(C\)</div>
+          <div class="step-body">
+<p>Let \(S\) be an oriented smooth surface with unit normal vector \(\vec N\). Suppose the boundary of \(S\) is a simple closed curve \(C\). The orientation of \(S\) induces the <b>positive orientation</b> of \(C\) if, as you walk in the positive direction around \(C\) with your head pointing in the direction of \(\vec N\), the surface is always on your left.</p>
+<div class="jsx-fubini-grid">
+<div><surface-param normals boundary x="u" y="v" z="4-u*u-v*v" umin="-2" umax="2" vmin="-sqrt(4-u*u)" vmax="sqrt(4-u*u)" az="-40" el="28"></surface-param><p class="muted small">Upward \(\vec N\): \(C\) runs counterclockwise seen from above. Press Flip.</p></div>
+<div><surface-param normals boundary x="2*sin(u)*cos(v)" y="2*sin(u)*sin(v)" z="2*cos(u)" umin="0" umax="pi/2" vmin="0" vmax="2*pi" az="35" el="22"></surface-param><p class="muted small">Outward \(\vec N\) on the dome.</p></div>
+</div>
+<table>
+  <tr><td>Curl the fingers of your right hand along \(C\). Where does your thumb point?</td><td><reveal>Along \(\vec N\). This is the right-hand rule.</reveal></td></tr>
+  <tr><td>\(S\) is the unit disk in the \(xy\)-plane with \(\vec N=-\mathbf k\). Which way is \(C\) oriented?</td><td><reveal>Clockwise seen from above (thumb pointing down).</reveal></td></tr>
+  <tr><td>Can Stokes’ theorem be used on a Möbius strip?</td><td><reveal>No: it has no continuous unit normal, so it cannot be oriented, and then \(C\) has no positive orientation.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">What does Stokes’ theorem say?</div>
+          <div class="step-subtitle">Theorem 6.19, Green’s theorem as a special case</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.19: Stokes’ theorem</div>
+<p>Let \(S\) be a piecewise smooth oriented surface with a boundary that is a simple closed curve \(C\) with positive orientation. If \(\vec F\) is a vector field with component functions that have continuous partial derivatives on an open region containing \(S\), then
+$$\oint_C\vec F\cdot d\vec r=\iint_S\operatorname{curl}\vec F\cdot d\vec S.$$</p>
+</div>
+<table>
+  <tr><td>What does the left side measure?</td><td><reveal>The circulation of \(\vec F\) around \(C\).</reveal></td></tr>
+  <tr><td>What does the right side measure?</td><td><reveal>The flux of \(\operatorname{curl}\vec F\) through \(S\). Only the values of \(\vec F\) on the boundary matter.</reveal></td></tr>
+  <tr><td>Suppose \(S\) is a flat region in the \(xy\)-plane with upward orientation. Then \(\vec N=\mathbf k\) and \(d\vec S=\mathbf k\,dA\). What does the theorem say?</td><td><reveal>\(\displaystyle\oint_C\vec F\cdot d\vec r=\iint_S\operatorname{curl}\vec F\cdot\mathbf k\,dA\): the circulation form of Green’s theorem. Green’s theorem is a special case of Stokes’ theorem.</reveal></td></tr>
+  <tr><td>If \(\vec F\) is conservative, what do both sides equal?</td><td><reveal>\(0\): \(\operatorname{curl}\vec F=\vec 0\), and \(C\) is a closed curve.</reveal></td></tr>
+</table>
+<div class="jsx-fubini-grid">
+<div><surface-param normals boundary x="u*cos(v)" y="u*sin(v)" z="0" umin="0" umax="2" vmin="0" vmax="2*pi" az="35" el="30"></surface-param><p class="muted small">Flat \(S\) in the \(xy\)-plane: Green’s theorem.</p></div>
+<div><surface-param normals boundary x="2*sin(u)*cos(v)" y="2*sin(u)*sin(v)" z="2*cos(u)" umin="0" umax="pi/2" vmin="0" vmax="2*pi" az="35" el="22"></surface-param><p class="muted small">Curved \(S\) in space: Stokes’ theorem.</p></div>
+</div>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Why is it true?</div>
+          <div class="step-subtitle">The informal proof: chop \(S\) into small patches</div>
+          <div class="step-body">
+<p>Chop \(S\) into small pieces, each approximated by a square \(E\) with the orientation inherited from \(S\). Press the button to follow the argument.</p>
+<surface-param cells x="u" y="v" z="0.9*(1-u*u)*(1-v*v)" umin="-1" umax="1" vmin="-1" vmax="1" az="-35" el="32"></surface-param>
+<table>
+  <tr><td>Around one small square \(E\), Green’s theorem gives the circulation around its boundary. What is it, approximately?</td><td><reveal>\(\displaystyle\oint_{\partial E}\vec F\cdot d\vec r=\iint_E\operatorname{curl}\vec F\cdot\vec N\,dS\), the flux of the curl through that patch.</reveal></td></tr>
+  <tr><td>Two neighboring squares share an edge. How is that edge traversed by each of them?</td><td><reveal>In opposite directions: \(E_l=-F_r\). So the two line integrals along it cancel.</reveal></td></tr>
+  <tr><td>Add the circulations of all the small squares. What survives?</td><td><reveal>Only the sides that approximate the boundary of \(S\): the sum is approximately \(\oint_C\vec F\cdot d\vec r\). The sum of the fluxes is approximately \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</reveal></td></tr>
+  <tr><td>What happens as the squares shrink to zero?</td><td><reveal>The approximations become exact: \(\oint_C\vec F\cdot d\vec r=\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Does it work? Verifying Stokes’ theorem</div>
+          <div class="step-subtitle">Example 6.73 and Checkpoint 6.61</div>
+          <div class="step-body">
+<p>Example 6.73: verify Stokes’ theorem for \(\vec F(x,y,z)=\langle y,\,2z,\,x^2\rangle\) and \(S\) the paraboloid \(z=4-x^2-y^2\), \(z\ge0\), outward oriented. Compute both sides, then press the button. Green arrows are \(\vec N\), orange arrows are \(\vec F\), the black curve is \(C\).</p>
+<surface-param normals boundary values field="y;2*z;x*x" x="u" y="v" z="4-u*u-v*v" umin="-2" umax="2" vmin="-sqrt(4-u*u)" vmax="sqrt(4-u*u)" az="-40" el="28"></surface-param>
+<table>
+  <tr><td>Surface side. \(\operatorname{curl}\vec F\)</td><td><reveal>\(\operatorname{curl}\vec F=\langle R_y-Q_z,\ P_z-R_x,\ Q_x-P_y\rangle=\langle-2,\,-2x,\,-1\rangle\)</reveal></td></tr>
+  <tr><td>The normal: \(\vec r(x,y)=\langle x,y,4-x^2-y^2\rangle\), so \(\vec t_x\times\vec t_y\)</td><td><reveal>\(\langle-g_x,-g_y,1\rangle=\langle2x,2y,1\rangle\) (upward, which is the outward orientation here)</reveal></td></tr>
+  <tr><td>The surface integral over \(D:\ x^2+y^2\le4\)</td><td><reveal>\(\displaystyle\iint_D\langle-2,-2x,-1\rangle\cdot\langle2x,2y,1\rangle\,dA=\iint_D(-4x-4xy-1)\,dA=-\text{area}(D)=-4\pi\) (the odd terms integrate to \(0\))</reveal></td></tr>
+  <tr><td>Line side. Parameterize \(C\) with the positive orientation (counterclockwise seen from above).</td><td><reveal>\(\vec r(t)=\langle2\cos t,\,2\sin t,\,0\rangle\), \(0\le t\le2\pi\)</reveal></td></tr>
+  <tr><td>\(\vec F(\vec r(t))\cdot\vec r'(t)\)</td><td><reveal>\(\langle2\sin t,\,0,\,4\cos^2t\rangle\cdot\langle-2\sin t,\,2\cos t,\,0\rangle=-4\sin^2t\)</reveal></td></tr>
+  <tr><td>The line integral</td><td><reveal>\(\displaystyle\int_0^{2\pi}-4\sin^2t\,dt=-4\pi\). Both sides equal \(-4\pi\): Stokes’ theorem is verified.</reveal></td></tr>
+  <tr><td>Checkpoint 6.61. Verify Stokes’ theorem for \(\vec F=\langle y,x,-z\rangle\) and \(S\) the upwardly oriented portion of the graph of \(f(x,y)=x^2y\) over the triangle with vertices \((0,0)\), \((2,0)\), \((0,2)\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle0,0,1-1\rangle=\vec 0\), so the surface side is \(0\). \(\vec F=\nabla(xy-z^2/2)\) is conservative, so the line integral around the closed curve \(C\) is \(0\) too.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Surface integral to line integral</div>
+          <div class="step-subtitle">Example 6.74, surface independence and Checkpoint 6.62</div>
+          <div class="step-body">
+<p>Example 6.74: calculate \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\), where \(S\) is the surface on the left (a tube closed by a rounded end, open at the top) oriented outward, and \(\vec F=\langle z,\,2xy,\,x+y\rangle\).</p>
+<div class="jsx-fubini-grid">
+<div><surface-param plain boundary flip x="sqrt(u)*(1+0.35*sin(4*pi*u))*cos(v)+0.35*sin(2*pi*u)" y="sqrt(u)*(1+0.35*sin(4*pi*u))*sin(v)" z="u" umin="0" umax="1" vmin="0" vmax="2*pi" az="30" el="18"></surface-param><p class="muted small">\(S\): too complicated to parameterize.</p></div>
+<div><surface-param plain boundary flip x="u*cos(v)" y="u*sin(v)" z="1" umin="0" umax="1" vmin="0" vmax="2*pi" az="30" el="18"></surface-param><p class="muted small">\(S'\): the flat disk with the same boundary \(C\).</p></div>
+</div>
+<table>
+  <tr><td>Can we use \(\iint_S\operatorname{curl}\vec F\cdot(\vec t_u\times\vec t_v)\,dA\) directly?</td><td><reveal>It needs a parameterization of \(S\), which is extremely difficult here. The boundary \(C\), however, is just a circle of radius 1.</reveal></td></tr>
+  <tr><td>By Stokes’ theorem, the integral equals \(\oint_C\vec F\cdot d\vec r\). Parameterize \(C\) and compute \(\vec F\cdot\vec r'\).</td><td><reveal>\(C:\ \vec r(t)=\langle\cos t,\sin t,1\rangle\). \(\vec F(\vec r(t))=\langle1,\,2\sin t\cos t,\,\cos t+\sin t\rangle\), so \(\vec F\cdot\vec r'=-\sin t+2\sin t\cos^2t\).</reveal></td></tr>
+  <tr><td>The value</td><td><reveal>\(\displaystyle\int_0^{2\pi}(-\sin t+2\sin t\cos^2t)\,dt=0\). (Reversing the orientation of \(C\) only changes the sign of \(0\).)</reveal></td></tr>
+  <tr><td>The flat disk \(S'\) has the same boundary and the same orientation. What is \(\iint_{S'}\operatorname{curl}\vec F\cdot d\vec S\)?</td><td><reveal>Also \(0\): by Stokes’ theorem it equals the same line integral \(\oint_C\vec F\cdot d\vec r\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Surface independence (Equation 6.23)</div>
+<p>Let \(S_1\) and \(S_2\) be smooth surfaces with the same boundary \(C\) and the same orientation. Then
+$$\iint_{S_1}\operatorname{curl}\vec F\cdot d\vec S=\oint_C\vec F\cdot d\vec r=\iint_{S_2}\operatorname{curl}\vec F\cdot d\vec S.$$
+Flux integrals of curl fields are surface independent in the same way that line integrals of gradient fields are path independent.</p>
+</div>
+<table>
+  <tr><td>If \(\vec G=\operatorname{curl}\vec F\), on what does \(\iint_S\vec G\cdot d\vec S\) depend?</td><td><reveal>Only on the boundary of \(S\), not on the surface itself.</reveal></td></tr>
+  <tr><td>\(S\) is a closed surface (an ellipsoid, say) and \(\vec F\) has continuous partial derivatives. What is \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\)?</td><td><reveal>\(0\): a closed surface has no boundary curve. (Cut it along a curve into two pieces with opposite induced orientations on \(C\): the two line integrals cancel.)</reveal></td></tr>
+  <tr><td>Checkpoint 6.62. \(\vec F=\langle z,x,y\rangle\). \(S\) is a vase lying on its side, whose open circular end is the unit circle in the \(xz\)-plane centered at the origin. \(C\) is oriented clockwise when looking along the positive \(y\)-axis. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,1,1\rangle\). Replace \(S\) by the flat disk \(x^2+z^2\le1\), \(y=0\). Clockwise looking along \(+y\) means \(\vec N=\mathbf j\). So the integral is \(\langle1,1,1\rangle\cdot\mathbf j\cdot\pi=\pi\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Line integral to surface integral</div>
+          <div class="step-subtitle">Example 6.75 and Checkpoint 6.63</div>
+          <div class="step-body">
+<p>Example 6.75: calculate \(\oint_C\vec F\cdot d\vec r\), where \(\vec F=\langle xy,\ x^2+y^2+z^2,\ yz\rangle\) and \(C\) is the boundary of the parallelogram with vertices \((0,0,1)\), \((0,1,0)\), \((2,1,-2)\), \((2,0,-1)\), taken counterclockwise seen from above (upward \(\vec N\)).</p>
+<surface-param normals boundary values field="x*y;x*x+y*y+z*z;y*z" x="u" y="v" z="1-u-v" umin="0" umax="2" vmin="0" vmax="1" az="-40" el="28"></surface-param>
+<table>
+  <tr><td>Directly, how many line integrals would we compute?</td><td><reveal>Four, one for each side, each with its own parameterization. Not complicated, but time-consuming.</reveal></td></tr>
+  <tr><td>Use Stokes’ theorem instead. Which surface \(S\) has \(C\) as its boundary?</td><td><reveal>The parallelogram itself: the portion of \(z=1-x-y\) over \(0\le x\le2\), \(0\le y\le1\). Parameterization \(\langle x,y,1-x-y\rangle\).</reveal></td></tr>
+  <tr><td>\(\operatorname{curl}\vec F\)</td><td><reveal>\(\langle R_y-Q_z,\ P_z-R_x,\ Q_x-P_y\rangle=\langle-z,\,0,\,x\rangle\)</reveal></td></tr>
+  <tr><td>\(\vec t_x\times\vec t_y\), and the integrand \(\operatorname{curl}\vec F\cdot(\vec t_x\times\vec t_y)\)</td><td><reveal>\(\langle1,1,1\rangle\), and \(\langle-(1-x-y),0,x\rangle\cdot\langle1,1,1\rangle=2x+y-1\).</reveal></td></tr>
+  <tr><td>The line integral</td><td><reveal>\(\displaystyle\oint_C\vec F\cdot d\vec r=\int_0^2\!\!\int_0^1(2x+y-1)\,dy\,dx=3\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.63. \(\vec F=\langle z,x,y\rangle\), \(C\) oriented clockwise, the boundary of the triangle with vertices \((0,0,1)\), \((3,0,-2)\), \((0,1,2)\). Find \(\oint_C\vec F\cdot d\vec r\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,1,1\rangle\). The triangle is \(z=1-x+y\) over the triangle \((0,0)\), \((3,0)\), \((0,1)\); upward \(\vec t_x\times\vec t_y=\langle1,-1,1\rangle\), so the integrand is \(1\) and the area is \(3/2\). Counterclockwise would give \(3/2\); clockwise gives \(-3/2\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="8">
+          <div class="step-title">What does curl measure?</div>
+          <div class="step-subtitle">Stokes’ theorem and circulation per unit area</div>
+          <div class="step-body">
+<staged-svg data-next="Next ▶" data-intro="A small disk D_r around the point P₀. Click the diagram or press Next.">
+<svg viewBox="0 0 640 350" role="img" aria-label="A small disk with its boundary circle, normal N and curl F at its center">
+  <g>
+    <ellipse cx="310" cy="215" rx="135" ry="46" style="fill:var(--accent);fill-opacity:0.12;stroke:var(--ink);stroke-width:3.5"/>
+    <line x1="270.0" y1="261.0" x2="326.8" y2="261.0" style="stroke:var(--ink);stroke-width:4"/><polygon points="338.0,261.0 325.1,266.5 325.1,255.5" style="fill:var(--ink)"/>
+    <text x="458" y="223" style="font:700 22px system-ui,sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:6px;stroke-linejoin:round;fill:var(--ink)">C<tspan dy="6" style="font-size:16px">r</tspan></text>
+    <text x="192" y="245" style="font:700 22px system-ui,sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:6px;stroke-linejoin:round;fill:var(--accent)">D<tspan dy="6" style="font-size:16px">r</tspan></text>
+    <circle cx="310" cy="215" r="6" style="fill:var(--ink)"/>
+    <text x="320" y="245" style="font:700 22px system-ui,sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:6px;stroke-linejoin:round;fill:var(--ink)">P<tspan dy="6" style="font-size:16px">0</tspan></text>
+    <line x1="310.0" y1="215.0" x2="310.0" y2="91.2" style="stroke:#2e8b57;stroke-width:5"/><polygon points="310.0,80.0 315.5,92.9 304.5,92.9" style="fill:#2e8b57"/>
+    <text x="276" y="95" style="font:700 22px system-ui,sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:6px;stroke-linejoin:round;fill:#2e8b57">N</text>
+  </g>
+  <g data-stage="1" data-caption="The curl at P₀ is some vector. The angle between curl F(P₀) and N is θ.">
+    <line x1="310.0" y1="215.0" x2="391.6" y2="102.7" style="stroke:#7b3fa0;stroke-width:5"/><polygon points="398.2,93.6 395.0,107.3 386.2,100.9" style="fill:#7b3fa0"/>
+    <text x="408" y="98" style="font:700 22px system-ui,sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:6px;stroke-linejoin:round;fill:#7b3fa0">curl F(P₀)</text>
+    <path d="M310 145 A70 70 0 0 1 351.1 158.4" style="fill:none;stroke:var(--muted);stroke-width:3"/>
+    <text x="332" y="133" style="font:700 22px system-ui,sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:6px;stroke-linejoin:round;fill:var(--ink)">θ</text>
+  </g>
+  <g data-stage="2" data-caption="Stokes’ theorem on the disk: the circulation around C_r is the flux of curl F through D_r. Since curl F is nearly constant on a small disk, this is about πr² (curl F · N)(P₀).">
+    <text x="20" y="318" style="font:700 24px system-ui,sans-serif;fill:var(--ink)">∮ F · dr ≈ πr² (curl F · N)(P₀) = πr² |curl F| cos θ</text>
+  </g>
+  <g data-stage="3" data-caption="So the circulation per unit area around the axis N is largest when N points along curl F: this is the axis of the fastest paddlewheel.">
+    <text x="20" y="344" style="font:700 22px system-ui,sans-serif;fill:#7b3fa0">largest when θ = 0, that is, N ∥ curl F</text>
+  </g>
+</svg>
+</staged-svg>
+<table>
+  <tr><td>Let \(D_r\) be a small disk of radius \(r\) with center \(P_0\), and \(C_r\) its boundary circle. By Stokes’ theorem, \(\oint_{C_r}\vec F\cdot d\vec r=\) ?</td><td><reveal>\(\displaystyle\iint_{D_r}\operatorname{curl}\vec F\cdot\vec N\,dS\approx\iint_{D_r}(\operatorname{curl}\vec F)(P_0)\cdot\vec N(P_0)\,dS\), because the curl is continuous.</reveal></td></tr>
+  <tr><td>The quantity \((\operatorname{curl}\vec F)(P_0)\cdot\vec N(P_0)\) is constant on \(D_r\). So \(\oint_{C_r}\vec F\cdot d\vec r\approx\) ?</td><td><reveal>\(\pi r^2\,[(\operatorname{curl}\vec F)(P_0)\cdot\vec N(P_0)]\), and the approximation gets arbitrarily close as \(r\to0\).</reveal></td></tr>
+  <tr><td>Solve for the curl component and let \(r\to0^+\).</td><td><reveal>\(\displaystyle(\operatorname{curl}\vec F)(P_0)\cdot\vec N(P_0)=\lim_{r\to0^+}\frac{1}{\pi r^2}\oint_{C_r}\vec F\cdot d\vec r\): the curl is the circulation per unit area.</reveal></td></tr>
+  <tr><td>If \(\vec F\) is the velocity field of a fluid, about which axis \(\vec N\) is the rotation largest?</td><td><reveal>The axis along \(\operatorname{curl}\vec F\): a tiny paddlewheel at \(P_0\) turns fastest when its axis points in the direction of \(\operatorname{curl}\vec F\). Stokes’ theorem justifies this interpretation of the curl.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="9">
+          <div class="step-title">Optional: Faraday’s law</div>
+          <div class="step-subtitle">Example 6.76 and Checkpoint 6.64</div>
+          <div class="step-body">
+<p>Let \(C(t)\) be a closed curve that models a thin wire, \(D(t)\) a surface with boundary \(C(t)\) (positive orientation), and \(\vec B(t)\) a magnetic field. The flux \(\phi(t)=\iint_{D(t)}\vec B(t)\cdot d\vec S\) creates an electric field \(\vec E(t)\) that does work.</p>
+<div class="defbox"><div class="defbox-label">Faraday’s law</div>
+<p>Integral form: \(\displaystyle\text{Work}=\oint_{C(t)}\vec E(t)\cdot d\vec r=-\frac{\partial\phi}{\partial t}\).</p>
+<p>Differential form: \(\displaystyle\operatorname{curl}\vec E=-\frac{\partial\vec B}{\partial t}\).</p>
+</div>
+<table>
+  <tr><td>Apply Stokes’ theorem to the integral form.</td><td><reveal>\(\displaystyle-\frac{\partial\phi}{\partial t}=\oint_{C(t)}\vec E\cdot d\vec r=\iint_{D(t)}\operatorname{curl}\vec E\cdot d\vec S\)</reveal></td></tr>
+  <tr><td>Since \(\phi(t)=\iint_{D(t)}\vec B(t)\cdot d\vec S\), and the surface does not vary with time, what is \(-\partial\phi/\partial t\)?</td><td><reveal>\(\displaystyle\iint_{D(t)}-\frac{\partial\vec B}{\partial t}\cdot d\vec S\). So \(\displaystyle\iint_{D(t)}-\frac{\partial\vec B}{\partial t}\cdot d\vec S=\iint_{D(t)}\operatorname{curl}\vec E\cdot d\vec S\).</reveal></td></tr>
+  <tr><td>Do equal integrals force equal integrands? Compare \(\int_0^1x\,dx\) and \(\int_0^1f\,dx\) with \(f=1\) on \([0,\tfrac12]\), \(f=0\) on \((\tfrac12,1]\).</td><td><reveal>Both equal \(\tfrac12\), but \(x\ne f(x)\). Here, however, the equality holds for <i>every</i> surface, however small. Shrinking \(D(t)\) to a point gives \(\operatorname{curl}\vec E=-\partial\vec B/\partial t\).</reveal></td></tr>
+  <tr><td>Example 6.76. The magnetic field is constant, \(\vec B(t)=\langle1,-4,2\rangle\). Find \(\operatorname{curl}\vec E\).</td><td><reveal>\(\partial\vec B/\partial t=\vec 0\), so \(\operatorname{curl}\vec E=\vec 0\): the curl of the electric field of a constant magnetic field is always zero.</reveal></td></tr>
+  <tr><td>Checkpoint 6.64. \(\vec B(t)=\langle tx,\,ty,\,-2tz\rangle\). Find \(\operatorname{curl}\vec E\).</td><td><reveal>\(\operatorname{curl}\vec E=-\partial\vec B/\partial t=\langle-x,\,-y,\,2z\rangle\). It does not change over time, although \(\vec B\) does.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="10">
+          <div class="step-title">Summary and practice</div>
+          <div class="step-subtitle">Exercises 335, 343, 344, 347 and two common mistakes</div>
+          <div class="step-body">
+<p>Stokes’ theorem: the circulation of \(\vec F\) around the edge of \(S\) equals the total curl of \(\vec F\) passing through \(S\).</p>
+<table>
+  <tr><td>Want \(\displaystyle\iint_S\operatorname{curl}\vec F\cdot d\vec S\)</td><td>Parameterize \(S\) directly, <b>or</b> compute \(\displaystyle\oint_C\vec F\cdot d\vec r\) on the boundary, <b>or</b> switch to an easier surface with the same boundary and orientation.</td></tr>
+  <tr><td>Want \(\displaystyle\oint_C\vec F\cdot d\vec r\) for a closed curve \(C\)</td><td>Pick a surface \(S\) with boundary \(C\) (a flat one if possible) and compute \(\displaystyle\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td></tr>
+  <tr><td>Checklist</td><td>(1) Is \(C\) closed and the boundary of \(S\)? (2) Orientation: right-hand rule. (3) \(\operatorname{curl}\vec F\). (4) \(\vec t_u\times\vec t_v\) (or \(\langle-s_x,-s_y,1\rangle\) for a graph) and the integrand. (5) Check the sign against the orientation.</td></tr>
+</table>
+<table>
+  <tr><td>335. \(\displaystyle\oint_C\big[2xy^2z\,dx+2x^2yz\,dy+(x^2y^2-2z)\,dz\big]\), \(C:\ x=\cos t,\ y=\sin t,\ z=\sin t\), \(0\le t\le2\pi\).</td><td><reveal>\(\vec F=\nabla(x^2y^2z-z^2)\) is conservative, so \(\operatorname{curl}\vec F=\vec 0\) and the integral is \(0\).</reveal></td></tr>
+  <tr><td>343. \(\iint_S\operatorname{curl}\vec F\cdot\vec N\,dS\), \(\vec F=\langle z^2,y^2,x\rangle\), \(S\) the triangle with vertices \((1,0,0)\), \((0,1,0)\), \((0,0,1)\), upward.</td><td><reveal>\(\operatorname{curl}\vec F=\langle0,2z-1,0\rangle\). With \(z=1-x-y\), \(\vec t_x\times\vec t_y=\langle1,1,1\rangle\): \(\displaystyle\int_0^1\!\!\int_0^{1-x}(1-2x-2y)\,dy\,dx=-\dfrac16\).</reveal></td></tr>
+  <tr><td>344. \(\displaystyle\oint_C(z\,dx+x\,dy+y\,dz)\), \(C\) the triangle with vertices \((3,0,0)\), \((0,0,2)\), \((0,6,0)\) traversed in that order.</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,1,1\rangle\). The order of the vertices gives the normal \(\langle-12,-6,-18\rangle\) (pointing away from the first octant). The flux is \(\tfrac12\langle1,1,1\rangle\cdot\langle-12,-6,-18\rangle=-18\).</reveal></td></tr>
+  <tr><td>347. \(\iint_S\operatorname{curl}\vec F\cdot\vec N\,dS\), \(\vec F=\langle z,3x,2z\rangle\), \(S:\ z=1-x^2-y^2\), \(z\ge0\), upward.</td><td><reveal>Use the boundary: \(C\) is \(x^2+y^2=1\), \(z=0\), counterclockwise. \(\vec F\cdot d\vec r=3x\,dy=3\cos^2t\,dt\), so \(\displaystyle\int_0^{2\pi}3\cos^2t\,dt=3\pi\).</reveal></td></tr>
+  <tr><td>Spot the mistake. A student computes \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\) for the upward-oriented dome \(S\) by taking the boundary circle \(C\) <i>clockwise</i> seen from above.</td><td><reveal>With upward \(\vec N\), the positive direction of \(C\) is counterclockwise seen from above. Clockwise gives the opposite sign.</reveal></td></tr>
+  <tr><td>Spot the mistake. A student computes \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\) over the whole unit sphere by using the equator as \(C\).</td><td><reveal>The sphere is closed: it has no boundary. The equator is the boundary of a hemisphere. Over the whole (closed) sphere the integral is \(0\).</reveal></td></tr>
+</table>
+<p class="muted small">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.7 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3. The orientation slide, the cancellation picture, the surface-independence questions, the summary and the mistakes are additions. Example 6.73’s printed limits and Example 6.74’s printed parameterization are corrected here.</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

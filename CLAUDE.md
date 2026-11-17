@@ -1024,6 +1024,36 @@ folder date is a guess). Book wording in `.defbox`, Examples 6.58 to 6.72 (6.61 
 (areas 22.654, integrals 28.79, 696.74, flux 340 and 90pi). Book typos avoided: Example 6.64 integrates theta from 0 to pi (should be 2pi), Example 6.72's bottom `t_v` is mistyped, and Example 6.71 cites "Example 6.64".
 No earlier lesson covered the topic, so none was changed.
 
+**Reworked 2026-11-16** (after a pedagogy review; the section above describes the first version). `<surface-param>` no longer shows any numeric readout (user request:
+the instructor computes, the slide shows pictures). New attributes: `uv` (second canvas beside the surface: the parameter domain with the probe's du x dv rectangle, its image
+as a curved patch on the surface plus the tangent parallelogram, piece kept inside the domain), `plain` (static picture, grid curves only, no probe/sliders), `normals`
+(static, unit normals N in green plus a Flip button; with `field` also F in orange; on the Moebius strip the normals visibly reverse at the seam) and `heat` (with `f`, colors the
+surface by f). The lesson is now 10 steps, each titled as a question: 1 describe a surface (old steps 1 to 3 merged), 2 tangent vectors and the area element (uv picture, line-vs-surface
+table, regular parameterization moved here), 3 surface area, 4 optional surfaces of revolution (a `<staged-svg>` profile figure with ds and the band), 5 scalar integral (heat picture),
+6 orientation (+ swap u and v question), 7 flux (a `<staged-svg>` fluid-through-a-patch figure, `N dS = (t_u x t_v) dA`), 8 **flux through a graph z = s(x,y)** (new: integrand
+`-P s_x - Q s_y + R`, upward; example F = <x,y,z> on z = 4 - x^2 - y^2 gives 24 pi, Exercise 284 gives -6, both checked with sympy), 9 optional mass flux/heat (K for conductivity, not k),
+10 summary table + practice (one per skill plus two "spot the mistake" rows). The old "Piecewise Smooth Surfaces and Mass of a Sheet" step (Examples 6.67, 6.68) was deleted at the
+user's request; only `m = integral of rho dS` survives, as one line in step 5. Notation is t_u, t_v throughout (the book's r_u, r_v noted once); sphere radius is r (not rho, which is density).
+Not yet verified in a browser (the local server was not available when this was written): check that the `uv`, `plain`, `normals` and `heat` pictures render and the two staged figures advance.
+
+### Stokes' Theorem lesson and `<surface-param>` boundary/cells/curl/values (added 2026-11-16)
+
+Lesson: `calculus3/fall2025/2025-11-12-stokes-theorem/index.html` (OpenStax 6.7, 10 steps timed for about 40 minutes without the optional Faraday step, entry added to `lectures.json`, dated 2026-03-29;
+folder date is a guess; hand-authored, no `content.json`). Each step is a question; the through-line is "circulation around the edge = flux of the curl through the surface". Book wording in `.defbox`
+(Theorem 6.19, Equation 6.23), Examples 6.73 to 6.76, Checkpoints 6.61 to 6.64 and Exercises 335, 343, 344, 347 as reveal rows, plus additions (theorem-family table, orientation questions,
+cancellation picture, surface-independence questions, summary, two "spot the mistake" rows; flagged in the source line). Book problems fixed: Example 6.73's printed integration limits are wrong
+(`sqrt(4-x^2)` to `sqrt(4-x^2)`; the disk needs `-sqrt` to `sqrt`) and Example 6.74's printed parameterization `<sin t, 0, 1-cos t>` does not match its own figure (a horizontal rim circle), so the lesson uses
+`<cos t, sin t, 1>` (the answer 0 is the same). Example 6.75's vertices run clockwise from above, so the lesson states C counterclockwise from above (answer 3). Checkpoint answers are not printed
+by OpenStax; they were derived and checked with sympy: 6.61 is 0 and 0, 6.62 is pi (S replaced by the unit disk in the xz-plane, N = j), 6.63 is -3/2, 6.64 is <-x,-y,2z>; Exercises 335, 343, 344, 347
+give 0, -1/6, -18, 3 pi.
+
+New `<surface-param>` attributes (`js/surface.js`, documented in its header): `boundary` (the boundary curve C of the parameter domain, thick, with arrows in the positive direction = counterclockwise in the
+uv-plane for N = t_u x t_v; degenerate edges and coinciding seams are skipped, so a closed surface draws none; `flip` reverses N and C together), `cells` (Stokes' informal proof: m x m small loops, button cycles
+loops, grown loops with opposite shared edges, shared edges cancelled leaving the outer boundary), `curl` (with `field`: purple curl F arrows instead of F) and `values` (with `field`: a "Show both sides" button that
+reveals the line integral of F around C and the surface integral of curl F over S; shown as multiples of pi when close). `values` is the one numeric readout kept on purpose, behind a click (the instructor
+predicts, then reveals); drop the attribute to hide it. Checked with a Node harness that stubs the DOM: Example 6.73 gives -4 pi on both sides, Example 6.75 gives 3 on both sides, Checkpoint 6.63's
+triangle gives 1.5 (counterclockwise), -1.5 with `flip`. Not yet seen in a browser: check the dome/cap boundaries and arrows, the cells stages, the cup and disk pair, and the curl-meaning staged figure.
+
 ### `<jsx-eigen>` and the Linear Algebra 7.1 lesson (added 2026-11-12)
 
 `<jsx-eigen a="a,b;c,d" v="1,2" presets="Name: a,b;c,d | ..." dynamics x0="1,1" tmax="10" range="4">` (`renderJsxEigen` in `js/jsxgraph.js`, needs the JSXGraph CDN tags; 2 x 2 only).
