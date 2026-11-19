@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+  Stokes' Theorem: Examples (OpenStax Calculus Volume 3, Section 6.7). 7 steps: the theorem stated in one slide (Theorem 6.19, positive orientation,
+  surface independence), then examples at once: 1 theorem, 2 verifying (Ex 6.73, Checkpoint 6.61), 3 surface to line (Ex 6.74, Checkpoint 6.62),
+  4 line to surface (Ex 6.75, Checkpoint 6.63), 5 both sides (Ex 331, 332), 6 pick the easier side (Ex 334, 339, 346, 347), 7 practice (Ex 335, 343, 344).
+  The longer lesson with motivation, the cancellation picture and Faraday's law is ../2025-11-12-stokes-theorem/.
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <title>Stokes' Theorem: Examples</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Stokes' Theorem: Examples</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Stokes’ theorem</div>
+          <div class="step-subtitle">Theorem 6.19</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.19: Stokes’ theorem</div>
+<p>Let \(S\) be a piecewise smooth oriented surface with a boundary that is a simple closed curve \(C\) with positive orientation. If \(\vec F\) is a vector field with component functions that have continuous partial derivatives on an open region containing \(S\), then
+$$\oint_C\vec F\cdot d\vec r=\iint_S\operatorname{curl}\vec F\cdot d\vec S.$$</p>
+</div>
+<div class="defbox"><div class="defbox-label">Positive orientation of C</div>
+<p>Let \(S\) have unit normal vector \(\vec N\). The orientation of \(S\) induces the positive orientation of \(C\) if, as you walk in the positive direction around \(C\) with your head pointing in the direction of \(\vec N\), the surface is always on your left.</p>
+</div>
+<div class="defbox"><div class="defbox-label">Surface independence (Equation 6.23)</div>
+<p>If \(S_1\) and \(S_2\) are smooth surfaces with the same boundary \(C\) and the same orientation, then
+$$\iint_{S_1}\operatorname{curl}\vec F\cdot d\vec S=\oint_C\vec F\cdot d\vec r=\iint_{S_2}\operatorname{curl}\vec F\cdot d\vec S.$$</p>
+</div>
+<surface-param normals boundary x="2*sin(u)*cos(v)" y="2*sin(u)*sin(v)" z="2*cos(u)" umin="0" umax="pi/2" vmin="0" vmax="2*pi" az="35" el="22"></surface-param>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Does it work? Verifying Stokes’ theorem</div>
+          <div class="step-subtitle">Example 6.73 and Checkpoint 6.61</div>
+          <div class="step-body">
+<p>Example 6.73: verify Stokes’ theorem for \(\vec F(x,y,z)=\langle y,\,2z,\,x^2\rangle\) and \(S\) the paraboloid \(z=4-x^2-y^2\), \(z\ge0\), outward oriented. Compute both sides, then press the button. Green arrows are \(\vec N\), orange arrows are \(\vec F\), the black curve is \(C\).</p>
+<surface-param normals boundary values field="y;2*z;x*x" x="u" y="v" z="4-u*u-v*v" umin="-2" umax="2" vmin="-sqrt(4-u*u)" vmax="sqrt(4-u*u)" az="-40" el="28"></surface-param>
+<table>
+  <tr><td>Surface side. \(\operatorname{curl}\vec F\)</td><td><reveal>\(\operatorname{curl}\vec F=\langle R_y-Q_z,\ P_z-R_x,\ Q_x-P_y\rangle=\langle-2,\,-2x,\,-1\rangle\)</reveal></td></tr>
+  <tr><td>The normal: \(\vec r(x,y)=\langle x,y,4-x^2-y^2\rangle\), so \(\vec t_x\times\vec t_y\)</td><td><reveal>\(\langle-g_x,-g_y,1\rangle=\langle2x,2y,1\rangle\) (upward, which is the outward orientation here)</reveal></td></tr>
+  <tr><td>The surface integral over \(D:\ x^2+y^2\le4\)</td><td><reveal>\(\displaystyle\iint_D\langle-2,-2x,-1\rangle\cdot\langle2x,2y,1\rangle\,dA=\iint_D(-4x-4xy-1)\,dA=-\text{area}(D)=-4\pi\) (the odd terms integrate to \(0\))</reveal></td></tr>
+  <tr><td>Line side. Parameterize \(C\) with the positive orientation (counterclockwise seen from above).</td><td><reveal>\(\vec r(t)=\langle2\cos t,\,2\sin t,\,0\rangle\), \(0\le t\le2\pi\)</reveal></td></tr>
+  <tr><td>\(\vec F(\vec r(t))\cdot\vec r'(t)\)</td><td><reveal>\(\langle2\sin t,\,0,\,4\cos^2t\rangle\cdot\langle-2\sin t,\,2\cos t,\,0\rangle=-4\sin^2t\)</reveal></td></tr>
+  <tr><td>The line integral</td><td><reveal>\(\displaystyle\int_0^{2\pi}-4\sin^2t\,dt=-4\pi\). Both sides equal \(-4\pi\): Stokes’ theorem is verified.</reveal></td></tr>
+  <tr><td>Checkpoint 6.61. Verify Stokes’ theorem for \(\vec F=\langle y,x,-z\rangle\) and \(S\) the upwardly oriented portion of the graph of \(f(x,y)=x^2y\) over the triangle with vertices \((0,0)\), \((2,0)\), \((0,2)\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle0,0,1-1\rangle=\vec 0\), so the surface side is \(0\). \(\vec F=\nabla(xy-z^2/2)\) is conservative, so the line integral around the closed curve \(C\) is \(0\) too.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Surface integral to line integral</div>
+          <div class="step-subtitle">Example 6.74, surface independence and Checkpoint 6.62</div>
+          <div class="step-body">
+<p>Example 6.74: calculate \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\), where \(S\) is the surface on the left (a tube closed by a rounded end, open at the top) oriented outward, and \(\vec F=\langle z,\,2xy,\,x+y\rangle\).</p>
+<div class="jsx-fubini-grid">
+<div><surface-param plain boundary flip x="sqrt(u)*(1+0.35*sin(4*pi*u))*cos(v)+0.35*sin(2*pi*u)" y="sqrt(u)*(1+0.35*sin(4*pi*u))*sin(v)" z="u" umin="0" umax="1" vmin="0" vmax="2*pi" az="30" el="18"></surface-param><p class="muted small">\(S\): too complicated to parameterize.</p></div>
+<div><surface-param plain boundary flip x="u*cos(v)" y="u*sin(v)" z="1" umin="0" umax="1" vmin="0" vmax="2*pi" az="30" el="18"></surface-param><p class="muted small">\(S'\): the flat disk with the same boundary \(C\).</p></div>
+</div>
+<table>
+  <tr><td>Can we use \(\iint_S\operatorname{curl}\vec F\cdot(\vec t_u\times\vec t_v)\,dA\) directly?</td><td><reveal>It needs a parameterization of \(S\), which is extremely difficult here. The boundary \(C\), however, is just a circle of radius 1.</reveal></td></tr>
+  <tr><td>By Stokes’ theorem, the integral equals \(\oint_C\vec F\cdot d\vec r\). Parameterize \(C\) and compute \(\vec F\cdot\vec r'\).</td><td><reveal>\(C:\ \vec r(t)=\langle\cos t,\sin t,1\rangle\). \(\vec F(\vec r(t))=\langle1,\,2\sin t\cos t,\,\cos t+\sin t\rangle\), so \(\vec F\cdot\vec r'=-\sin t+2\sin t\cos^2t\).</reveal></td></tr>
+  <tr><td>The value</td><td><reveal>\(\displaystyle\int_0^{2\pi}(-\sin t+2\sin t\cos^2t)\,dt=0\). (Reversing the orientation of \(C\) only changes the sign of \(0\).)</reveal></td></tr>
+  <tr><td>The flat disk \(S'\) has the same boundary and the same orientation. What is \(\iint_{S'}\operatorname{curl}\vec F\cdot d\vec S\)?</td><td><reveal>Also \(0\): by Stokes’ theorem it equals the same line integral \(\oint_C\vec F\cdot d\vec r\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Surface independence (Equation 6.23)</div>
+<p>Let \(S_1\) and \(S_2\) be smooth surfaces with the same boundary \(C\) and the same orientation. Then
+$$\iint_{S_1}\operatorname{curl}\vec F\cdot d\vec S=\oint_C\vec F\cdot d\vec r=\iint_{S_2}\operatorname{curl}\vec F\cdot d\vec S.$$
+Flux integrals of curl fields are surface independent in the same way that line integrals of gradient fields are path independent.</p>
+</div>
+<table>
+  <tr><td>If \(\vec G=\operatorname{curl}\vec F\), on what does \(\iint_S\vec G\cdot d\vec S\) depend?</td><td><reveal>Only on the boundary of \(S\), not on the surface itself.</reveal></td></tr>
+  <tr><td>\(S\) is a closed surface (an ellipsoid, say) and \(\vec F\) has continuous partial derivatives. What is \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\)?</td><td><reveal>\(0\): a closed surface has no boundary curve. (Cut it along a curve into two pieces with opposite induced orientations on \(C\): the two line integrals cancel.)</reveal></td></tr>
+  <tr><td>Checkpoint 6.62. \(\vec F=\langle z,x,y\rangle\). \(S\) is a vase lying on its side, whose open circular end is the unit circle in the \(xz\)-plane centered at the origin. \(C\) is oriented clockwise when looking along the positive \(y\)-axis. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,1,1\rangle\). Replace \(S\) by the flat disk \(x^2+z^2\le1\), \(y=0\). Clockwise looking along \(+y\) means \(\vec N=\mathbf j\). So the integral is \(\langle1,1,1\rangle\cdot\mathbf j\cdot\pi=\pi\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Line integral to surface integral</div>
+          <div class="step-subtitle">Example 6.75 and Checkpoint 6.63</div>
+          <div class="step-body">
+<p>Example 6.75: calculate \(\oint_C\vec F\cdot d\vec r\), where \(\vec F=\langle xy,\ x^2+y^2+z^2,\ yz\rangle\) and \(C\) is the boundary of the parallelogram with vertices \((0,0,1)\), \((0,1,0)\), \((2,1,-2)\), \((2,0,-1)\), taken counterclockwise seen from above (upward \(\vec N\)).</p>
+<surface-param normals boundary values field="x*y;x*x+y*y+z*z;y*z" x="u" y="v" z="1-u-v" umin="0" umax="2" vmin="0" vmax="1" az="-40" el="28"></surface-param>
+<table>
+  <tr><td>Directly, how many line integrals would we compute?</td><td><reveal>Four, one for each side, each with its own parameterization. Not complicated, but time-consuming.</reveal></td></tr>
+  <tr><td>Use Stokes’ theorem instead. Which surface \(S\) has \(C\) as its boundary?</td><td><reveal>The parallelogram itself: the portion of \(z=1-x-y\) over \(0\le x\le2\), \(0\le y\le1\). Parameterization \(\langle x,y,1-x-y\rangle\).</reveal></td></tr>
+  <tr><td>\(\operatorname{curl}\vec F\)</td><td><reveal>\(\langle R_y-Q_z,\ P_z-R_x,\ Q_x-P_y\rangle=\langle-z,\,0,\,x\rangle\)</reveal></td></tr>
+  <tr><td>\(\vec t_x\times\vec t_y\), and the integrand \(\operatorname{curl}\vec F\cdot(\vec t_x\times\vec t_y)\)</td><td><reveal>\(\langle1,1,1\rangle\), and \(\langle-(1-x-y),0,x\rangle\cdot\langle1,1,1\rangle=2x+y-1\).</reveal></td></tr>
+  <tr><td>The line integral</td><td><reveal>\(\displaystyle\oint_C\vec F\cdot d\vec r=\int_0^2\!\!\int_0^1(2x+y-1)\,dy\,dx=3\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.63. \(\vec F=\langle z,x,y\rangle\), \(C\) oriented clockwise, the boundary of the triangle with vertices \((0,0,1)\), \((3,0,-2)\), \((0,1,2)\). Find \(\oint_C\vec F\cdot d\vec r\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,1,1\rangle\). The triangle is \(z=1-x+y\) over the triangle \((0,0)\), \((3,0)\), \((0,1)\); upward \(\vec t_x\times\vec t_y=\langle1,-1,1\rangle\), so the integrand is \(1\) and the area is \(3/2\). Counterclockwise would give \(3/2\); clockwise gives \(-3/2\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Both sides of the theorem</div>
+          <div class="step-subtitle">Exercises 331 and 332</div>
+          <div class="step-body">
+<p>Exercise 331: \(\vec F=\langle2y,\,-6z,\,3x\rangle\), \(S\) the part of the paraboloid \(z=4-x^2-y^2\) above the \(xy\)-plane, upward. Compute the flux of the curl and the circulation around \(C\).</p>
+<surface-param normals boundary values field="2*y;-6*z;3*x" x="u" y="v" z="4-u*u-v*v" umin="-2" umax="2" vmin="-sqrt(4-u*u)" vmax="sqrt(4-u*u)" az="-40" el="28"></surface-param>
+<table>
+  <tr><td>\(\operatorname{curl}\vec F\) for \(\vec F=\langle2y,\,-6z,\,3x\rangle\)</td><td><reveal>\(\langle R_y-Q_z,\ P_z-R_x,\ Q_x-P_y\rangle=\langle6,\,-3,\,-2\rangle\)</reveal></td></tr>
+  <tr><td>Surface side. The integrand for the upward graph \(z=s(x,y)\): \(\operatorname{curl}\vec F\cdot\langle-s_x,-s_y,1\rangle\)</td><td><reveal>\(\langle6,-3,-2\rangle\cdot\langle2x,2y,1\rangle=12x-6y-2\)</reveal></td></tr>
+  <tr><td>The surface integral over \(D:\ x^2+y^2\le4\)</td><td><reveal>\(\displaystyle\iint_D(12x-6y-2)\,dA=-2\cdot4\pi=-8\pi\) (the odd terms integrate to \(0\))</reveal></td></tr>
+  <tr><td>Line side. \(C:\ \vec r(t)=\langle2\cos t,2\sin t,0\rangle\). Compute \(\vec F\cdot\vec r\,{}'\)</td><td><reveal>\(\langle4\sin t,\,0,\,6\cos t\rangle\cdot\langle-2\sin t,\,2\cos t,\,0\rangle=-8\sin^2t\), and \(\displaystyle\int_0^{2\pi}-8\sin^2t\,dt=-8\pi\). Both sides agree.</reveal></td></tr>
+  <tr><td>332. \(\vec F=\langle xy,\,-z,\,0\rangle\), \(S\) the cube \(0\le x,y,z\le1\) without the face \(z=0\), outward. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\). What is the boundary \(C\)?</td><td><reveal>The edge of the missing face: the unit square in the plane \(z=0\). The top has \(\vec N=\mathbf k\), so \(C\) is counterclockwise seen from above.</reveal></td></tr>
+  <tr><td>The line integral around \(C\)</td><td><reveal>On \(z=0\): \(\vec F\cdot d\vec r=xy\,dx\). Only the side from \((1,1)\) to \((0,1)\) contributes: \(\displaystyle\int_1^0x\,dx=-\tfrac12\). So \(\iint_S\operatorname{curl}\vec F\cdot d\vec S=-\tfrac12\).</reveal></td></tr>
+  <tr><td>Check with surface independence: replace \(S\) by the bottom face \(z=0\) with \(\vec N=\mathbf k\).</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,0,-x\rangle\), so \(\displaystyle\iint_0^1\!\!\int_0^1(-x)\,dx\,dy=-\tfrac12\). Same value.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Pick the easier side</div>
+          <div class="step-subtitle">Exercises 334, 339, 346, 347</div>
+          <div class="step-body">
+<table>
+  <tr><td>334. \(\vec F=\langle4y,\,z,\,2y\rangle\), \(S\) the part of \(x^2+y^2+z^2=4\) above \(z=0\), outward. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td><td><reveal>\(C\): \(\vec r=\langle2\cos t,2\sin t,0\rangle\), counterclockwise. On \(z=0\): \(\vec F\cdot d\vec r=4y\,dx=-16\sin^2t\,dt\), so the integral is \(-16\pi\). (Check: \(\operatorname{curl}\vec F=\langle1,0,-4\rangle\), flat disk upward: \(-4\cdot4\pi\).)</reveal></td></tr>
+  <tr><td>339. \(\vec F=\langle e^{xy}\cos z,\,x^2z,\,xy\rangle\), \(S\) the half sphere \(x=\sqrt{1-y^2-z^2}\), oriented toward the positive \(x\)-axis. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td><td><reveal>\(C\) is the circle \(y^2+z^2=1\) in the plane \(x=0\). There \(\vec F=\langle\cos z,0,0\rangle\) and \(d\vec r\) has no \(x\)-component, so \(\vec F\cdot d\vec r=0\). The integral is \(0\).</reveal></td></tr>
+  <tr><td>346. \(\vec F=\langle x,\,y^2,\,ze^{xy}\rangle\), \(S\) the part of \(z=1-x^2-2y^2\) with \(z\ge0\), upward. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td><td><reveal>\(C\) is the ellipse \(x^2+2y^2=1\) in the plane \(z=0\), where \(\vec F=\langle x,y^2,0\rangle=\nabla\big(\tfrac{x^2}{2}+\tfrac{y^3}{3}\big)\). A conservative field around a closed curve: \(0\).</reveal></td></tr>
+  <tr><td>347. \(\vec F=\langle z,3x,2z\rangle\), \(S:\ z=1-x^2-y^2\), \(z\ge0\), upward. Find \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\).</td><td><reveal>\(C\) is \(x^2+y^2=1\), \(z=0\), counterclockwise. \(\vec F\cdot d\vec r=3x\,dy=3\cos^2t\,dt\), so \(\displaystyle\int_0^{2\pi}3\cos^2t\,dt=3\pi\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Practice</div>
+          <div class="step-subtitle">Exercises 335, 343, 344 and two common mistakes</div>
+          <div class="step-body">
+<table>
+  <tr><td>335. \(\displaystyle\oint_C\big[2xy^2z\,dx+2x^2yz\,dy+(x^2y^2-2z)\,dz\big]\), \(C:\ x=\cos t,\ y=\sin t,\ z=\sin t\), \(0\le t\le2\pi\).</td><td><reveal>\(\vec F=\nabla(x^2y^2z-z^2)\) is conservative, so \(\operatorname{curl}\vec F=\vec 0\) and the integral is \(0\).</reveal></td></tr>
+  <tr><td>343. \(\iint_S\operatorname{curl}\vec F\cdot\vec N\,dS\), \(\vec F=\langle z^2,y^2,x\rangle\), \(S\) the triangle with vertices \((1,0,0)\), \((0,1,0)\), \((0,0,1)\), upward.</td><td><reveal>\(\operatorname{curl}\vec F=\langle0,2z-1,0\rangle\). With \(z=1-x-y\), \(\vec t_x\times\vec t_y=\langle1,1,1\rangle\): \(\displaystyle\int_0^1\!\!\int_0^{1-x}(1-2x-2y)\,dy\,dx=-\dfrac16\).</reveal></td></tr>
+  <tr><td>344. \(\displaystyle\oint_C(z\,dx+x\,dy+y\,dz)\), \(C\) the triangle with vertices \((3,0,0)\), \((0,0,2)\), \((0,6,0)\) traversed in that order.</td><td><reveal>\(\operatorname{curl}\vec F=\langle1,1,1\rangle\). The order of the vertices gives the normal \(\langle-12,-6,-18\rangle\) (pointing away from the first octant). The flux is \(\tfrac12\langle1,1,1\rangle\cdot\langle-12,-6,-18\rangle=-18\).</reveal></td></tr>
+  <tr><td>Spot the mistake. A student computes \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\) for the upward-oriented dome \(S\) by taking the boundary circle \(C\) <i>clockwise</i> seen from above.</td><td><reveal>With upward \(\vec N\), the positive direction of \(C\) is counterclockwise seen from above. Clockwise gives the opposite sign.</reveal></td></tr>
+  <tr><td>Spot the mistake. A student computes \(\iint_S\operatorname{curl}\vec F\cdot d\vec S\) over the whole unit sphere by using the equator as \(C\).</td><td><reveal>The sphere is closed: it has no boundary. The equator is the boundary of a hemisphere. Over the whole sphere the integral is \(0\).</reveal></td></tr>
+</table>
+<p class="muted small">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.7 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3. Example 6.73’s printed limits and Example 6.74’s printed parameterization are corrected here; Exercise 332 is solved through its boundary.</p>
+          </div>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

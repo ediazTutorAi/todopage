@@ -3,18 +3,26 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>MATH 3330 — Introduction to Linear Algebra</title>
+  <title>Finding the Eigenvectors of a Matrix</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[
-            {left:'$$', right:'$$', display:true},
-            {left:'\\[', right:'\\]', display:true},
-            {left:'\\(', right:'\\)', display:false},
-            {left:'$',  right:'$',  display:false}
-          ],throwOnError:false});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 
   <!-- CSS (split) -->
   <link rel="stylesheet" href="/todopage/css/base.css">
@@ -34,109 +42,227 @@
     <section class="single-col">
       <div class="card" id="left-card">
 
-        <!-- STEPS -->
-        <div class="step" data-step="1">
-          <div class="step-title">Definition 7.3.1</div>
-          <div class="step-subtitle">Eigenspaces</div>
+        <!-- Section 7.3 (Bretscher, PDF pages 351 to 358, book pages 339 to 346), 11 steps for a 45 minute class:
+             1 Definition 7.3.1, Example 1 (3) · 2 Example 2 (5) · 3 Example 3 (4) · 4 Definition 7.3.2, geometric multiplicity (2) ·
+             5 Theorems 7.3.3 and 7.3.4, Example 4 (3) · 6 Theorem 7.3.5, Example 5, Exercises 35 and 36 (3) · 7 Theorems 7.3.6 and 7.3.7 (3) ·
+             8 Exercises 1, 3, 4, 5 (6) · 9 Exercises 9 to 12 (7) · 10 Exercises 21 to 24, 27, 28 (5) · 11 Exercises 40, 41, 43, 44, 46, 47 (4).
+             Proofs of 7.3.3, 7.3.5, 7.3.6 are left out for time (the instructor can reveal them from the book). Replaced a theorem-list stub.
+             No diagrams (the <jsx-eigen> graphs were removed at the instructor's request). Exercise answers checked with sympy. -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Eigenspaces</div>
+          <div class="step-subtitle">Definition 7.3.1 and Example 1</div>
           <div class="step-body">
-            Consider an eigenvalue $\lambda$ of an $n\times n$ matrix A. Then the kernel of the matrix $A-\lambda I_n$
-            is called the eigenspace associated with $\lambda$, denoted by $E_{\lambda}$:
-            $$E_{\lambda}=ker(A-\lambda I_n)=\{\vec{v}\in\mathbb{R}^n:A\vec{v}=\lambda \vec{v}\}$$
+<p>Having found an eigenvalue \(\lambda\) of an \(n\times n\) matrix \(A\), we now turn to the corresponding eigenvectors: the vectors \(\vec v\) in \(\mathbb R^n\) such that \(A\vec v=\lambda\vec v\), or \((A-\lambda I_n)\vec v=\vec 0\).</p>
+<table>
+  <tr><td>In other words, we have to find the</td><td><reveal>kernel of the matrix \(A-\lambda I_n\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Definition 7.3.1: Eigenspaces</div>
+<p>Consider an eigenvalue \(\lambda\) of an \(n\times n\) matrix \(A\). Then the kernel of the matrix \(A-\lambda I_n\) is called the <i>eigenspace</i> associated with \(\lambda\), denoted by \(E_\lambda\):</p>
+$$E_\lambda=\ker(A-\lambda I_n)=\{\vec v\text{ in }\mathbb R^n:\ A\vec v=\lambda\vec v\}.$$
+</div>
+<table>
+  <tr><td>The eigenvectors with eigenvalue \(\lambda\) are</td><td><reveal>the nonzero vectors in the eigenspace \(E_\lambda\)</reveal></td></tr>
+</table>
+<p><b>Example 1.</b> Let \(T(\vec x)=A\vec x\) be the orthogonal projection onto a plane \(V\) in \(\mathbb R^3\). Describe the eigenspaces \(E_1\) and \(E_0\) geometrically. Is matrix \(A\) diagonalizable?</p>
+<table>
+  <tr><td>\(E_1\) consists of the solutions of \(A\vec v=1\vec v=\vec v\). These are</td><td><reveal>the vectors on the plane \(V\). So \(E_1=V\).</reveal></td></tr>
+  <tr><td>\(E_0=\ker A\) consists of the solutions of \(A\vec v=0\vec v=\vec 0\). These are</td><td><reveal>the vectors on the line \(V^\perp\) perpendicular to the plane \(V\). So \(E_0=V^\perp\).</reveal></td></tr>
+  <tr><td>An eigenbasis \(\vec v_1,\vec v_2,\vec v_3\) for \(A\)</td><td><reveal>Choose two linearly independent vectors \(\vec v_1,\vec v_2\) in \(E_1=V\) and a nonzero vector \(\vec v_3\) in \(E_0=V^\perp\)</reveal></td></tr>
+  <tr><td>Is \(A\) diagonalizable? To what matrix \(B\) is it similar?</td><td><reveal>Yes: \(A\) is similar to \(B=\begin{bmatrix}1&0&0\\0&1&0\\0&0&0\end{bmatrix}\)</reveal></td></tr>
+</table>
           </div>
         </div>
+
         <div class="step" data-step="2">
-          <div class="step-title">Definition 7.3.2</div>
-          <div class="step-subtitle">Geometric multiplicity</div>
+          <div class="step-title">Finding the Eigenspaces of a 2 × 2 Matrix</div>
+          <div class="step-subtitle">Example 2</div>
           <div class="step-body">
-            Consider an eigenvalue $\lambda$ of an $n\times n$ matrix A. The dimension of eigenspace
-            $E_{\lambda}=ker(A-\lambda I_n)$ is called the geometric multiplicity of eigenvalue $\lambda$, denoted
-            $\text{gemu}(\lambda)$. Thus,
-            $$\text{gemu}(\lambda)=nullity(A-\lambda I_n)=n-rank(A-\lambda I_n)$$
+<p>To find the eigenvectors associated with a known eigenvalue \(\lambda\) algebraically, we seek a basis of the eigenspace \(E_\lambda=\ker(A-\lambda I_n)\), a problem we can handle (Section 3.3).</p>
+<p><b>Example 2.</b> Find the eigenspaces of the matrix \(A=\begin{bmatrix}1&2\\4&3\end{bmatrix}\). Diagonalize matrix \(A\) if you can.</p>
+<table>
+  <tr><td>In Example 1 of Section 7.2 we saw that the eigenvalues are</td><td><reveal>\(5\) and \(-1\)</reveal></td></tr>
+  <tr><td>\(E_5=\ker(A-5I_2)=\ker\begin{bmatrix}-4&2\\4&-2\end{bmatrix}\). Finding the kernel amounts to finding the relations between the columns; for a \(2\times2\) matrix this can be done by inspection (the Kyle numbers). \(E_5=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}1\\2\end{bmatrix}\), since \(1\cdot\begin{bmatrix}-4\\4\end{bmatrix}+2\cdot\begin{bmatrix}2\\-2\end{bmatrix}=\vec 0\)</reveal></td></tr>
+  <tr><td>\(E_{-1}=\ker(A+I_2)=\ker\begin{bmatrix}2&2\\4&4\end{bmatrix}=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}1\\-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Check that these are eigenvectors: \(A\begin{bmatrix}1\\2\end{bmatrix}\) and \(A\begin{bmatrix}1\\-1\end{bmatrix}\)</td><td><reveal>\(\begin{bmatrix}5\\10\end{bmatrix}=5\begin{bmatrix}1\\2\end{bmatrix}\) and \(\begin{bmatrix}-1\\1\end{bmatrix}=(-1)\begin{bmatrix}1\\-1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Both eigenspaces are lines. Is there an eigenbasis? Find \(S\) and \(B\).</td><td><reveal>Yes: \(\begin{bmatrix}1\\2\end{bmatrix},\begin{bmatrix}1\\-1\end{bmatrix}\). So \(A\) is diagonalizable with \(S=\begin{bmatrix}1&1\\2&-1\end{bmatrix}\) and \(B=\begin{bmatrix}5&0\\0&-1\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>For peace of mind, check \(AS=SB\)</td><td><reveal>\(AS=\begin{bmatrix}5&-1\\10&1\end{bmatrix}=SB\)</reveal></td></tr>
+  <tr><td>Geometrically, \(A\) represents</td><td><reveal>a scaling by a factor of \(5\) along the line spanned by \(\begin{bmatrix}1\\2\end{bmatrix}\), while the line spanned by \(\begin{bmatrix}1\\-1\end{bmatrix}\) is flipped over the origin</reveal></td></tr>
+</table>
           </div>
         </div>
-        <div class="step" data-step="2">
-          <div class="step-title">Theorem 7.3.3</div>
-          <div class="step-subtitle">Eigenbases and geometric multiplicities</div>
-          <div class="step-body">
-            a. Consider an $n\times n$ matrix A. If we find a basis of each eigenspace of A and concatenate all these
-            bases, then the resulting eigenvetors $\vec{v}_1,\cdots,\vec{v}_s$ will be linearly independent. Note that
-            $s$ is the sum of the geometric multiplicities of the eigenvalues of A. This result implies $s\leq n$
-            <br><br>
-            b. Matrix A is diagonalizable if and only if the geometric multiplicities of the eigenvalues add up to n.
-            Meaning that $s=n$ in part a.
-          </div>
-        </div>
+
         <div class="step" data-step="3">
-          <div class="step-title">Theorem 7.3.4</div>
-          <div class="step-subtitle">An $n\times n$ matrix with n distinc eigenvalues</div>
+          <div class="step-title">A Matrix That Fails to Be Diagonalizable</div>
+          <div class="step-subtitle">Example 3</div>
           <div class="step-body">
-            If an $n\times n$ matrix A has n distinct eigenvalues, then A is diagonalizable. We can construct an
-            eigenbasis by finding an eigenvector for each eigenvalue.
+<p><b>Example 3.</b> Find the eigenspaces of</p>
+$$A=\begin{bmatrix}1&1&1\\0&0&1\\0&0&1\end{bmatrix}.$$
+<p>Diagonalize matrix \(A\) if you can.</p>
+<table>
+  <tr><td>The eigenvalues of the upper triangular matrix \(A\) are the diagonal entries</td><td><reveal>\(1\) and \(0\), with algebraic multiplicities \(2\) and \(1\), respectively</reveal></td></tr>
+  <tr><td>\(E_1=\ker(A-I_3)=\ker\begin{bmatrix}0&1&1\\0&-1&1\\0&0&0\end{bmatrix}=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}1\\0\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(E_0=\ker A=\ker\begin{bmatrix}1&1&1\\0&0&1\\0&0&1\end{bmatrix}=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}-1\\1\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Both eigenspaces are lines in the \(x_1\)-\(x_2\)-plane. How many linearly independent eigenvectors can we find?</td><td><reveal>Only two, one in each of \(E_0\) and \(E_1\). We are unable to construct an eigenbasis for \(A\). Thus, \(A\) fails to be diagonalizable.</reveal></td></tr>
+  <tr><td>Compare with Example 1 (the projection onto a plane): there too we had eigenvalues \(1\) and \(0\). What is different?</td><td><reveal>In Example 1 the eigenspace \(E_1\) was a plane, while both eigenspaces here turn out to be lines</reveal></td></tr>
+</table>
           </div>
         </div>
+
         <div class="step" data-step="4">
-          <div class="step-title">Theorem 7.3.5</div>
-          <div class="step-subtitle">The eigenvalues of similar matrices</div>
+          <div class="step-title">Geometric Multiplicity</div>
+          <div class="step-subtitle">Definition 7.3.2</div>
           <div class="step-body">
-            Suppose a matrix A is similar to B. Then <br>
-            a. Matrices A and B have the same characteristic polynomial; that is, $f_A({\lambda})=f_B(\lambda)$.<br><br>
-            b. $rank(A)=rank(B)$ and nullity A = nullity B.<br><br>
-            c. Matrices A and B have the same eigenvalues, with the same algebraic and geometric multiplicities.
-            However, the eigenvectors need not be the same.<br><br>
-            d. Matrices A and B have the same determinant and the same trace:<br>
-            detA=detB and tr(A)=tr(B).
+<div class="defbox"><div class="defbox-label">Definition 7.3.2: Geometric multiplicity</div>
+<p>Consider an eigenvalue \(\lambda\) of an \(n\times n\) matrix \(A\). The dimension of the eigenspace \(E_\lambda=\ker(A-\lambda I_n)\) is called the <i>geometric multiplicity</i> of eigenvalue \(\lambda\), denoted by \(\operatorname{gemu}(\lambda)\). Thus,</p>
+$$\operatorname{gemu}(\lambda)=\operatorname{nullity}(A-\lambda I_n)=n-\operatorname{rank}(A-\lambda I_n).$$
+</div>
+<table>
+  <tr><td>Example 3: \(\operatorname{almu}(1)=\)</td><td><reveal>\(2\)</reveal></td></tr>
+  <tr><td>but \(\operatorname{gemu}(1)=\dim E_1=\)</td><td><reveal>\(1\). The geometric multiplicity of an eigenvalue may be different from its algebraic multiplicity.</reveal></td></tr>
+  <tr><td>Example 1 (projection): \(\operatorname{gemu}(1)\) and \(\operatorname{gemu}(0)\)</td><td><reveal>\(2\) and \(1\), adding up to \(n=3\)</reveal></td></tr>
+  <tr><td>Example 2: \(\operatorname{gemu}(5)\) and \(\operatorname{gemu}(-1)\)</td><td><reveal>\(1\) and \(1\), adding up to \(n=2\)</reveal></td></tr>
+  <tr><td>Example 3: \(\operatorname{gemu}(1)\) and \(\operatorname{gemu}(0)\)</td><td><reveal>\(1\) and \(1\), adding up to \(2&lt;n=3\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">The main questions of the chapter</div>
+<p>a. Which square matrices \(A\) are diagonalizable; that is, when does there exist an eigenbasis for \(A\)?</p>
+<p>b. If eigenbases exist, how can we find one?</p>
+</div>
           </div>
         </div>
+
         <div class="step" data-step="5">
-          <div class="step-title">Theorem 7.3.6</div>
-          <div class="step-subtitle">Algebraic versus geometric multiplicity</div>
+          <div class="step-title">Eigenbases and Geometric Multiplicities</div>
+          <div class="step-subtitle">Theorems 7.3.3 and 7.3.4, Example 4</div>
           <div class="step-body">
-            If $\lambda$ is an eigenvalue of a square matrix A, then
-            $$\text{gemu}(\lambda)=\text{almu}(\lambda)$$
+<div class="defbox"><div class="defbox-label">Theorem 7.3.3: Eigenbases and geometric multiplicities</div>
+<p>a. Consider an \(n\times n\) matrix \(A\). If we find a basis of each eigenspace of \(A\) and concatenate all these bases, then the resulting eigenvectors \(\vec v_1,\dots,\vec v_s\) will be linearly independent. (Note that \(s\) is the sum of the geometric multiplicities of \(A\).) This result implies that \(s\le n\).</p>
+<p>b. Matrix \(A\) is diagonalizable if (and only if) the geometric multiplicities of the eigenvalues add up to \(n\) (meaning that \(s=n\) in part a).</p>
+</div>
+<div class="defbox"><div class="defbox-label">Theorem 7.3.4: An \(n\times n\) matrix with \(n\) distinct eigenvalues</div>
+<p>If an \(n\times n\) matrix \(A\) has \(n\) distinct eigenvalues, then \(A\) is diagonalizable. We can construct an eigenbasis by finding an eigenvector for each eigenvalue.</p>
+</div>
+<p><b>Example 4.</b> Is the following matrix \(A\) diagonalizable?</p>
+$$A=\begin{bmatrix}1&2&3&4&5&6\\0&2&3&4&5&6\\0&0&3&4&5&6\\0&0&0&4&5&6\\0&0&0&0&5&6\\0&0&0&0&0&6\end{bmatrix}$$
+<table>
+  <tr><td>Diagonalizable?</td><td><reveal>Yes, since the \(6\times6\) matrix \(A\) has six distinct eigenvalues, namely, the diagonal entries \(1,2,3,4,5,6\)</reveal></td></tr>
+  <tr><td>If an \(n\times n\) matrix has fewer than \(n\) distinct eigenvalues, must it fail to be diagonalizable?</td><td><reveal>No. The projection in Example 1 has only the eigenvalues \(1\) and \(0\) and \(n=3\), and it is diagonalizable. Theorem 7.3.4 is a sufficient condition, not a necessary one.</reveal></td></tr>
+</table>
           </div>
         </div>
+
         <div class="step" data-step="6">
-          <div class="step-title">Definition 7.3.7</div>
-          <div class="step-subtitle">Strategy for Diagonalization</div>
+          <div class="step-title">Eigenvalues and Similarity</div>
+          <div class="step-subtitle">Theorem 7.3.5, Example 5, Exercises 35 and 36</div>
           <div class="step-body">
-            Suppose we are asked to determine whether a given $n\times n$ matrix A is diagonalizable. If so, we wish to
-            find an invertible matrix S such that $S^{-1}AS=B$ is diagonal.<br>
-            We can proceed as follows:<br>
-            a. Find the eigenvalues of A by solving the characteristic equation
-            $$f_A(\lambda)=det(A-\lambda I_n)=0$$
-            b. For each eigenvalue $\lambda$, find a basis of the eigenspace
-            $$E_{\lambda}=ker(A-\lambda I_n)$$
-            c. Matrix A is diagonalizable if and only if the dimensions of the eigenspace add up to n. In this case, we
-            find an eigenbasis $\vec{v}_1,\cdots,\vec{v}_n$ for A by concatenating the bases of the eigenspaces we found
-            in part b. Let
-            $$S=\begin{pmatrix}|&|&\cdots&|\\\vec{v}_1&\vec{v}_2&\cdots&\vec{v}_n\\|&|&\cdots&|\end{pmatrix}$$
-            Then $S^{-1}AS=B=diag(\lambda_1,\lambda_2,\cdots,\lambda_n)$
-            where $\lambda_j$ is the eigenvalue associated with $\vec{v}_j$
+<p>If matrix \(A\) is similar to \(B\), what is the relationship between the eigenvalues of \(A\) and \(B\)?</p>
+<div class="defbox"><div class="defbox-label">Theorem 7.3.5: The eigenvalues of similar matrices</div>
+<p>Suppose matrix \(A\) is similar to \(B\). Then</p>
+<p>a. Matrices \(A\) and \(B\) have the same characteristic polynomial; that is, \(f_A(\lambda)=f_B(\lambda)\).</p>
+<p>b. \(\operatorname{rank}A=\operatorname{rank}B\) and \(\operatorname{nullity}A=\operatorname{nullity}B\).</p>
+<p>c. Matrices \(A\) and \(B\) have the same eigenvalues, with the same algebraic and geometric multiplicities. (However, the eigenvectors need not be the same.)</p>
+<p>d. Matrices \(A\) and \(B\) have the same determinant and the same trace: \(\det A=\det B\) and \(\operatorname{tr}A=\operatorname{tr}B\).</p>
+</div>
+<table>
+  <tr><td>Proof of a. If \(B=S^{-1}AS\), then \(f_B(\lambda)=\det(B-\lambda I_n)=\)</td><td><reveal>\(\det(S^{-1}AS-\lambda I_n)=\det\big(S^{-1}(A-\lambda I_n)S\big)=(\det S)^{-1}\det(A-\lambda I_n)\det(S)=\det(A-\lambda I_n)=f_A(\lambda)\)</reveal></td></tr>
+</table>
+<p><b>Example 5.</b> Is the matrix \(A=\begin{bmatrix}2&3\\5&7\end{bmatrix}\) similar to \(B=\begin{bmatrix}3&2\\8&5\end{bmatrix}\)?</p>
+<table>
+  <tr><td>Similar?</td><td><reveal>No, since \(\operatorname{tr}A=9\) and \(\operatorname{tr}B=8\). See Theorem 7.3.5d.</reveal></td></tr>
+  <tr><td>Exercise 35. Is \(\begin{bmatrix}1&2\\0&3\end{bmatrix}\) similar to \(\begin{bmatrix}3&0\\1&2\end{bmatrix}\)?</td><td><reveal>No: the traces are \(4\) and \(5\)</reveal></td></tr>
+  <tr><td>Exercise 36. Is \(\begin{bmatrix}0&1\\5&3\end{bmatrix}\) similar to \(\begin{bmatrix}1&2\\4&3\end{bmatrix}\)?</td><td><reveal>No: the traces are \(3\) and \(4\)</reveal></td></tr>
+</table>
           </div>
         </div>
+
         <div class="step" data-step="7">
-          <div class="step-title">Theorem 7.2.7</div>
-          <div class="step-subtitle">Number of eigenvalues</div>
+          <div class="step-title">Algebraic versus Geometric Multiplicity; the Strategy</div>
+          <div class="step-subtitle">Theorems 7.3.6 and 7.3.7</div>
           <div class="step-body">
-            An $n\times n$ matrix has at most n real eigenvalues, even if they are counted with their algebraic
-            multiplicities.<br>
-            If n is odd, then an $n\times n$ matrix has at least one real eigenvalue
+<div class="defbox"><div class="defbox-label">Theorem 7.3.6: Algebraic versus geometric multiplicity</div>
+<p>If \(\lambda\) is an eigenvalue of a square matrix \(A\), then</p>
+$$\operatorname{gemu}(\lambda)\le\operatorname{almu}(\lambda).$$
+</div>
+<table>
+  <tr><td>If \(\operatorname{almu}(\lambda)=1\), what is \(\operatorname{gemu}(\lambda)\)? (\(\lambda\) is an eigenvalue, so \(E_\lambda\ne\{\vec 0\}\).)</td><td><reveal>\(1\): we have \(1\le\operatorname{gemu}(\lambda)\le\operatorname{almu}(\lambda)=1\)</reveal></td></tr>
+  <tr><td>Example 3: \(\operatorname{almu}(1)=2\), \(\operatorname{gemu}(1)=1\). Could \(\operatorname{gemu}(1)\) have been \(3\)?</td><td><reveal>No, by Theorem 7.3.6. A \(3\times3\) matrix with the eigenvalue \(1\) of almu \(2\) has \(\operatorname{gemu}(1)\le2\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 7.3.7: Strategy for diagonalization</div>
+<p>Suppose we are asked to determine whether a given \(n\times n\) matrix \(A\) is diagonalizable. If so, we wish to find an invertible matrix \(S\) such that \(S^{-1}AS=B\) is diagonal. We can proceed as follows.</p>
+<p>a. Find the eigenvalues of \(A\) by solving the characteristic equation \(f_A(\lambda)=\det(A-\lambda I_n)=0\).</p>
+<p>b. For each eigenvalue \(\lambda\), find a basis of the eigenspace \(E_\lambda=\ker(A-\lambda I_n)\).</p>
+<p>c. Matrix \(A\) is diagonalizable if (and only if) the dimensions of the eigenspaces add up to \(n\). In this case, we find an eigenbasis \(\vec v_1,\dots,\vec v_n\) for \(A\) by concatenating the bases of the eigenspaces we found in part b. Let</p>
+$$S=\begin{bmatrix}|&|&&|\\\vec v_1&\vec v_2&\cdots&\vec v_n\\|&|&&|\end{bmatrix}.\quad\text{Then}\quad S^{-1}AS=B=\begin{bmatrix}\lambda_1&0&\cdots&0\\0&\lambda_2&\cdots&0\\\vdots&\vdots&\ddots&\vdots\\0&0&\cdots&\lambda_n\end{bmatrix},$$
+<p>where \(\lambda_j\) is the eigenvalue associated with \(\vec v_j\).</p>
+</div>
           </div>
         </div>
+
         <div class="step" data-step="8">
-          <div class="step-title">Theorem 7.2.8</div>
-          <div class="step-subtitle">Eigenvalues, determinant, and trace</div>
+          <div class="step-title">Diagonalizing 2 × 2 Matrices</div>
+          <div class="step-subtitle">Exercises 1, 3, 4, 5</div>
           <div class="step-body">
-            If an $n\times n$ matrix A has the eigenvalues $\lambda_1,\lambda_2,\cdots,\lambda_n$ listed with their
-            algebraic multiplicities, then:
-            $$det A = \lambda_1\lambda_2\cdots\lambda_n$$
-            the product of the eigenvalues, and<br>
-            $$tr A=\lambda_1+\lambda_2+\cdots\lambda_n$$,
-            the sum of the eigenvalues.
+<p>For each of the matrices \(A\), find all (real) eigenvalues. Then find a basis of each eigenspace, and diagonalize \(A\), if you can. Do not use technology.</p>
+<table>
+  <tr><td>1. \(A=\begin{bmatrix}7&8\\0&9\end{bmatrix}\). Eigenvalues</td><td><reveal>\(7\) and \(9\) (triangular), distinct, so \(A\) is diagonalizable (Theorem 7.3.4)</reveal></td></tr>
+  <tr><td>\(E_7=\ker\begin{bmatrix}0&8\\0&2\end{bmatrix}\) and \(E_9=\ker\begin{bmatrix}-2&8\\0&0\end{bmatrix}\)</td><td><reveal>\(E_7=\operatorname{span}\begin{bmatrix}1\\0\end{bmatrix}\), \(E_9=\operatorname{span}\begin{bmatrix}4\\1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(S\) and \(B\)</td><td><reveal>\(S=\begin{bmatrix}1&4\\0&1\end{bmatrix}\), \(B=\begin{bmatrix}7&0\\0&9\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>3. \(A=\begin{bmatrix}6&3\\2&7\end{bmatrix}\). The characteristic polynomial</td><td><reveal>\(f_A(\lambda)=\lambda^2-13\lambda+36=(\lambda-4)(\lambda-9)\), so \(\lambda=4,9\)</reveal></td></tr>
+  <tr><td>\(E_4=\ker\begin{bmatrix}2&3\\2&3\end{bmatrix}\) and \(E_9=\ker\begin{bmatrix}-3&3\\2&-2\end{bmatrix}\)</td><td><reveal>\(E_4=\operatorname{span}\begin{bmatrix}3\\-2\end{bmatrix}\), \(E_9=\operatorname{span}\begin{bmatrix}1\\1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(S\) and \(B\)</td><td><reveal>\(S=\begin{bmatrix}3&1\\-2&1\end{bmatrix}\), \(B=\begin{bmatrix}4&0\\0&9\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>4. \(A=\begin{bmatrix}0&-1\\1&2\end{bmatrix}\). The eigenvalues</td><td><reveal>\(f_A(\lambda)=\lambda^2-2\lambda+1=(\lambda-1)^2\), so \(\lambda=1\) with \(\operatorname{almu}(1)=2\)</reveal></td></tr>
+  <tr><td>\(E_1=\ker(A-I_2)=\ker\begin{bmatrix}-1&-1\\1&1\end{bmatrix}\). Diagonalizable?</td><td><reveal>\(E_1=\operatorname{span}\begin{bmatrix}1\\-1\end{bmatrix}\), so \(\operatorname{gemu}(1)=1<2\). Not diagonalizable.</reveal></td></tr>
+  <tr><td>5. \(A=\begin{bmatrix}4&5\\-2&-2\end{bmatrix}\). The eigenvalues</td><td><reveal>\(f_A(\lambda)=\lambda^2-2\lambda+2\) has discriminant \(4-8<0\): no real eigenvalues, no real eigenvectors. Not diagonalizable over \(\mathbb R\).</reveal></td></tr>
+</table>
           </div>
         </div>
 
+        <div class="step" data-step="9">
+          <div class="step-title">Diagonalizing 3 × 3 Matrices</div>
+          <div class="step-subtitle">Exercises 9, 10, 11, 12</div>
+          <div class="step-body">
+<table>
+  <tr><td>9. \(A=\begin{bmatrix}1&0&1\\0&1&1\\0&0&0\end{bmatrix}\). The eigenvalues</td><td><reveal>\(1\) with \(\operatorname{almu}=2\), and \(0\) with \(\operatorname{almu}=1\) (triangular)</reveal></td></tr>
+  <tr><td>\(E_1=\ker(A-I_3)=\ker\begin{bmatrix}0&0&1\\0&0&1\\0&0&-1\end{bmatrix}\)</td><td><reveal>\(\operatorname{span}\Big(\begin{bmatrix}1\\0\\0\end{bmatrix},\begin{bmatrix}0\\1\\0\end{bmatrix}\Big)\), so \(\operatorname{gemu}(1)=2\)</reveal></td></tr>
+  <tr><td>\(E_0=\ker A\) (solve \(x_1+x_3=0\), \(x_2+x_3=0\)). Diagonalizable?</td><td><reveal>\(E_0=\operatorname{span}\begin{bmatrix}-1\\-1\\1\end{bmatrix}\). \(2+1=3\): yes, with \(S=\begin{bmatrix}1&0&-1\\0&1&-1\\0&0&1\end{bmatrix}\) and \(B=\begin{bmatrix}1&0&0\\0&1&0\\0&0&0\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>10. \(A=\begin{bmatrix}1&1&0\\0&1&1\\0&0&0\end{bmatrix}\). Eigenvalues and \(E_1=\ker\begin{bmatrix}0&1&0\\0&0&1\\0&0&-1\end{bmatrix}\)</td><td><reveal>Eigenvalues \(1\) (almu \(2\)) and \(0\). \(E_1=\operatorname{span}\begin{bmatrix}1\\0\\0\end{bmatrix}\), so \(\operatorname{gemu}(1)=1<2\).</reveal></td></tr>
+  <tr><td>Diagonalizable?</td><td><reveal>No: \(\operatorname{gemu}(1)+\operatorname{gemu}(0)=1+1=2<3\). (\(E_0=\operatorname{span}\begin{bmatrix}1\\-1\\1\end{bmatrix}\).)</reveal></td></tr>
+  <tr><td>11. \(A=\begin{bmatrix}1&1&1\\1&1&1\\1&1&1\end{bmatrix}\). \(\operatorname{rank}A=1\). What is \(\operatorname{gemu}(0)\)? What does the trace say about the other eigenvalue?</td><td><reveal>\(\operatorname{gemu}(0)=\operatorname{nullity}A=3-1=2\). The trace is \(3\), so the third eigenvalue is \(3\). Eigenvalues \(3,0,0\).</reveal></td></tr>
+  <tr><td>\(E_0\), \(E_3\), and diagonalizable?</td><td><reveal>\(E_0\): \(x_1+x_2+x_3=0\), basis \(\begin{bmatrix}-1\\1\\0\end{bmatrix},\begin{bmatrix}-1\\0\\1\end{bmatrix}\). \(E_3=\operatorname{span}\begin{bmatrix}1\\1\\1\end{bmatrix}\). Yes: \(2+1=3\), \(B=\operatorname{diag}(3,0,0)\).</reveal></td></tr>
+  <tr><td>12. \(A=\begin{bmatrix}1&1&0\\0&1&1\\0&0&1\end{bmatrix}\). Eigenvalues, and \(A-I_3\)</td><td><reveal>\(1\) with \(\operatorname{almu}=3\). \(A-I_3=\begin{bmatrix}0&1&0\\0&0&1\\0&0&0\end{bmatrix}\) has rank \(2\).</reveal></td></tr>
+  <tr><td>\(\operatorname{gemu}(1)\), and diagonalizable?</td><td><reveal>\(\operatorname{gemu}(1)=3-2=1<3\) (\(E_1=\operatorname{span}\,\vec e_1\)). Not diagonalizable.</reveal></td></tr>
+</table>
+          </div>
+        </div>
 
+        <div class="step" data-step="10">
+          <div class="step-title">Building Matrices from Eigenspaces</div>
+          <div class="step-subtitle">Exercises 21, 22, 23, 24, 27, 28</div>
+          <div class="step-body">
+<table>
+  <tr><td>21. Find a \(2\times2\) matrix \(A\) for which \(E_1=\operatorname{span}\begin{bmatrix}1\\2\end{bmatrix}\) and \(E_2=\operatorname{span}\begin{bmatrix}2\\3\end{bmatrix}\). How many such matrices are there?</td><td><reveal>\(A=SBS^{-1}\) with \(S=\begin{bmatrix}1&2\\2&3\end{bmatrix}\), \(B=\begin{bmatrix}1&0\\0&2\end{bmatrix}\): \(A=\begin{bmatrix}5&-2\\6&-2\end{bmatrix}\). Exactly one: the eigenbasis and its eigenvalues determine \(A\).</reveal></td></tr>
+  <tr><td>22. Find all \(2\times2\) matrices \(A\) for which \(E_7=\mathbb R^2\).</td><td><reveal>\(A\vec v=7\vec v\) for all \(\vec v\): only \(A=\begin{bmatrix}7&0\\0&7\end{bmatrix}=7I_2\)</reveal></td></tr>
+  <tr><td>23. Find all eigenvalues and eigenvectors of \(A=\begin{bmatrix}1&1\\0&1\end{bmatrix}\). Is there an eigenbasis? Interpret geometrically.</td><td><reveal>\(\lambda=1\) only. \(A-I_2=\begin{bmatrix}0&1\\0&0\end{bmatrix}\), so \(E_1=\operatorname{span}\,\vec e_1\): the eigenvectors are the nonzero multiples of \(\vec e_1\). No eigenbasis. \(A\) is a shear: it fixes the \(x_1\)-axis and moves every other line.</reveal></td></tr>
+  <tr><td>24. Find a \(2\times2\) matrix for which \(E_1=\operatorname{span}\begin{bmatrix}2\\1\end{bmatrix}\) is the only eigenspace.</td><td><reveal>A shear along that line, for example \(A=\begin{bmatrix}3&-4\\1&-1\end{bmatrix}\): \(A-I_2=\begin{bmatrix}2&-4\\1&-2\end{bmatrix}\) has kernel \(\operatorname{span}\begin{bmatrix}2\\1\end{bmatrix}\), and \(\operatorname{tr}A=2\), \(\det A=1\) give \(\lambda=1\) only. There are many such matrices.</reveal></td></tr>
+  <tr><td>27. A \(2\times2\) matrix \(A\) has \(\operatorname{tr}A=5\) and \(\det A=6\). Find the eigenvalues of \(A\).</td><td><reveal>\(f_A(\lambda)=\lambda^2-5\lambda+6=(\lambda-2)(\lambda-3)\): \(\lambda=2,3\)</reveal></td></tr>
+  <tr><td>28. \(J_n(k)\) has \(k\) on the diagonal and \(1\)s directly above it (all other entries \(0\)). Find its eigenvalue(s), the algebraic and geometric multiplicities.</td><td><reveal>Triangular: \(\lambda=k\) only, with \(\operatorname{almu}(k)=n\). \(J_n(k)-kI_n\) has rank \(n-1\), so \(\operatorname{gemu}(k)=1\). For \(n\ge2\) it is not diagonalizable.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="11">
+          <div class="step-title">For Which Constants Is the Matrix Diagonalizable?</div>
+          <div class="step-subtitle">Exercises 40, 41, 43, 44, 46, 47</div>
+          <div class="step-body">
+<table>
+  <tr><td>40. \(\begin{bmatrix}1&a\\0&1\end{bmatrix}\)</td><td><reveal>\(\lambda=1\) (almu \(2\)). \(A-I_2=\begin{bmatrix}0&a\\0&0\end{bmatrix}\) has gemu \(2\) only if \(a=0\). Diagonalizable if and only if \(a=0\).</reveal></td></tr>
+  <tr><td>41. \(\begin{bmatrix}1&a\\0&2\end{bmatrix}\)</td><td><reveal>Distinct eigenvalues \(1,2\): diagonalizable for all \(a\)</reveal></td></tr>
+  <tr><td>43. \(\begin{bmatrix}1&1\\a&1\end{bmatrix}\)</td><td><reveal>\(f_A(\lambda)=\lambda^2-2\lambda+(1-a)\), eigenvalues \(1\pm\sqrt a\). If \(a>0\): two distinct real eigenvalues, diagonalizable. If \(a=0\): \(\begin{bmatrix}1&1\\0&1\end{bmatrix}\), not. If \(a<0\): no real eigenvalues, not. So \(a>0\).</reveal></td></tr>
+  <tr><td>44. \(\begin{bmatrix}a&b\\b&c\end{bmatrix}\)</td><td><reveal>The discriminant of \(f_A\) is \((a-c)^2+4b^2\ge0\), and it is \(0\) only if \(a=c\) and \(b=0\), when \(A=aI_2\) is already diagonal. Diagonalizable for all \(a,b,c\).</reveal></td></tr>
+  <tr><td>46. \(\begin{bmatrix}1&a&b\\0&2&c\\0&0&1\end{bmatrix}\)</td><td><reveal>Eigenvalues \(1\) (almu \(2\)) and \(2\). We need \(\operatorname{gemu}(1)=2\), so \(A-I_3=\begin{bmatrix}0&a&b\\0&1&c\\0&0&0\end{bmatrix}\) must have rank \(1\): its first row must be \(a\) times its second row, that is, \(b=ac\). Diagonalizable if and only if \(b=ac\).</reveal></td></tr>
+  <tr><td>47. \(\begin{bmatrix}1&a&b\\0&1&c\\0&0&1\end{bmatrix}\)</td><td><reveal>\(\lambda=1\) (almu \(3\)). We need \(\operatorname{gemu}(1)=3\), so \(A-I_3=\begin{bmatrix}0&a&b\\0&0&c\\0&0&0\end{bmatrix}\) must be \(0\): \(a=b=c=0\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
 
         <!-- Controls -->
         <div class="reveal-controls" role="group" aria-label="Slide controls">
@@ -163,9 +289,9 @@
   </div>
   <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
 
-
   <!-- JS entry (ES modules) -->
   <script type="module" src="/todopage/js/boot.js"></script>
+
 </body>
 
 </html>

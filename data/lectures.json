@@ -388,6 +388,23 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-30",
+    "title": "Stokes' Theorem: Examples",
+    "subtitle": "",
+    "description": "Stokes' theorem (OpenStax 6.7), stated on one slide and then straight to examples: verifying both sides, trading a surface integral for a line integral and back, closed surfaces with a missing face, picking the easier side, and practice.",
+    "tags": [
+      "stokes theorem",
+      "curl",
+      "circulation",
+      "line integrals",
+      "surface integrals",
+      "orientation"
+    ],
+    "url": "calculus3/fall2025/2025-11-13-stokes-theorem-examples/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",
@@ -672,11 +689,14 @@
     "course": "Linear Algebra",
     "semester": "Spring 2026",
     "date": "2026-04-16",
-    "title": "finding eigenvectors",
+    "title": "Finding the Eigenvectors of a Matrix",
     "subtitle": "",
-    "description": "",
+    "description": "Eigenspaces and geometric multiplicity (Bretscher 7.3, a 45 minute class): find a basis of each eigenspace, decide when an eigenbasis exists, compare algebraic and geometric multiplicity, use similarity (trace, determinant), and diagonalize 2 x 2 and 3 x 3 matrices step by step.",
     "tags": [
-      "eigenvectors"
+      "eigenvectors",
+      "eigenspaces",
+      "geometric multiplicity",
+      "diagonalization"
     ],
     "url": "linear-algebra/fall2025/2025-11-16-finding-the-eigenvectors/index.html"
   },
