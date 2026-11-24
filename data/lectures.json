@@ -405,6 +405,23 @@
   {
     "course": "Calculus III",
     "semester": "Spring 2026",
+    "date": "2026-03-31",
+    "title": "The Divergence Theorem",
+    "subtitle": "",
+    "description": "The divergence theorem (OpenStax 6.8, a 40 minute class): the theorem and its place among the fundamental theorems, divergence as outflow per unit volume, verifying both sides, turning a flux integral into a triple integral, fields with zero divergence, Gauss' law for a point charge, and practice.",
+    "tags": [
+      "divergence theorem",
+      "divergence",
+      "flux",
+      "triple integrals",
+      "gauss's law",
+      "closed surfaces"
+    ],
+    "url": "calculus3/fall2025/2025-11-14-divergence-theorem/index.html"
+  },
+  {
+    "course": "Calculus III",
+    "semester": "Spring 2026",
     "date": "2026-03-23",
     "title": "Line Integrals",
     "subtitle": "",
@@ -699,6 +716,23 @@
       "diagonalization"
     ],
     "url": "linear-algebra/fall2025/2025-11-16-finding-the-eigenvectors/index.html"
+  },
+  {
+    "course": "Linear Algebra",
+    "semester": "Spring 2026",
+    "date": "2026-04-17",
+    "title": "Complex Eigenvalues",
+    "subtitle": "",
+    "description": "Complex eigenvalues and eigenvectors (Bretscher 7.5, a 35 minute class): the glucose-insulin spiral, a short review of complex numbers and de Moivre, diagonalizing a rotation-scaling matrix over C, why every real 2 x 2 matrix with eigenvalues a ± ib is similar to one, and trace and determinant as sums and products of complex eigenvalues.",
+    "tags": [
+      "complex eigenvalues",
+      "complex numbers",
+      "rotation-scaling",
+      "de Moivre",
+      "eigenvectors",
+      "trace and determinant"
+    ],
+    "url": "linear-algebra/fall2025/2025-11-19-complex-eigenvalues/index.html"
   },
   {
     "course": "Linear Algebra",

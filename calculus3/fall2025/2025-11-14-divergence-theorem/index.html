@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+  The Divergence Theorem (OpenStax Calculus Volume 3, Section 6.8). 7 steps timed for about 40 minutes:
+  1 the theorem (Theorem 6.20) and the family of theorems, 2 divergence as outflow per unit volume (informal proof),
+  3 Example 6.77 + Checkpoint 6.65 (verifying), 4 Example 6.78 + Checkpoint 6.66 (flux as a triple integral),
+  5 Example 6.79 + Checkpoint 6.67 (fields with div F = 0), 6 Gauss' law (Examples 6.80, 6.81, Theorem 6.21, Checkpoint 6.68),
+  7 practice (Exercises 376, 380, 381, 394, 396, 402, 406, 407, 412, 413, 400, 425 + two "spot the mistake" rows).
+  Hand-authored, no content.json. Every answer checked with sympy.
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <title>The Divergence Theorem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-vector-field>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>The Divergence Theorem</h1>
+    <div class="meta"></div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- STEPS -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">The divergence theorem</div>
+          <div class="step-subtitle">Theorem 6.20</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 6.20: The divergence theorem</div>
+<p>Let \(S\) be a piecewise smooth closed surface that encloses solid \(E\) in space. Assume that \(S\) is oriented outward, and let \(\vec F\) be a vector field with continuous partial derivatives on an open region containing \(E\). Then
+$$\iiint_E\operatorname{div}\vec F\,dV=\iint_S\vec F\cdot d\vec S.\qquad(6.24)$$</p>
+</div>
+<surface-param normals field="x;y;z" x="2*sin(u)*cos(v)" y="2*sin(u)*sin(v)" z="2*cos(u)" umin="0" umax="pi" vmin="0" vmax="2*pi" az="35" el="22"></surface-param>
+<div class="defbox"><div class="defbox-label">Overview of theorems</div>
+<table>
+  <tr><td>Fundamental Theorem of Calculus</td><td>\(\displaystyle\int_a^bf'(x)\,dx=f(b)-f(a)\)</td></tr>
+  <tr><td>Fundamental Theorem for Line Integrals</td><td>\(\displaystyle\int_C\nabla f\cdot d\vec r=f(P_1)-f(P_0)\)</td></tr>
+  <tr><td>Green’s theorem, circulation form</td><td>\(\displaystyle\iint_D(Q_x-P_y)\,dA=\oint_C\vec F\cdot d\vec r\)</td></tr>
+  <tr><td>Green’s theorem, flux form</td><td>\(\displaystyle\iint_D(P_x+Q_y)\,dA=\oint_C\vec F\cdot\vec N\,ds\)</td></tr>
+  <tr><td>Stokes’ theorem</td><td>\(\displaystyle\iint_S\operatorname{curl}\vec F\cdot d\vec S=\oint_C\vec F\cdot d\vec r\)</td></tr>
+  <tr><td>Divergence theorem</td><td>\(\displaystyle\iiint_E\operatorname{div}\vec F\,dV=\iint_S\vec F\cdot d\vec S\)</td></tr>
+</table>
+</div>
+<table>
+  <tr><td>The divergence theorem is the flux form of Green’s theorem one dimension higher. What replaces the region \(D\), its boundary curve \(C\), and \(dA\)?</td><td><reveal>The solid \(E\), its boundary surface \(S\), and \(dV\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="2">
+          <div class="step-title">Why it is true: divergence is outflow per unit volume</div>
+          <div class="step-subtitle">Informal proof and the meaning of divergence</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Informal proof</div>
+<p>Let \(B\) be a small box inside \(E\) with sides parallel to the coordinate planes, center \((x,y,z)\) and edge lengths \(\Delta x,\Delta y,\Delta z\). The flux out of the top is approximated by \(R(x,y,z+\tfrac{\Delta z}{2})\,\Delta x\,\Delta y\) and out of the bottom by \(-R(x,y,z-\tfrac{\Delta z}{2})\,\Delta x\,\Delta y\), so the net flux in the vertical direction is approximately \(\dfrac{\partial R}{\partial z}\Delta V\). Adding the three directions,
+$$\text{Total flux}\approx\Big(\frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y}+\frac{\partial R}{\partial z}\Big)\Delta V=\operatorname{div}\vec F\,\Delta V.$$
+Add over all the boxes filling \(E\): the flux through a shared face is the negative of the flux through the adjacent box’s face, so these cancel, and only the faces approximating the boundary \(S\) survive.</p>
+</div>
+<figure class="proof-fig" style="margin:0.6em auto;max-width:860px;">
+<svg viewBox="0 0 800 330" role="img" aria-label="Figure 6.88: a small box B inside the solid E, the box with edges delta x, delta y, delta z and normals k and minus k, and its side view with the points (x,y,z+delta z/2), (x,y,z), (x,y,z-delta z/2)" style="width:100%;height:auto;" font-family="serif" font-size="17" fill="currentColor">
+  <defs>
+    <marker id="pf-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
+    <marker id="pf-dim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+  </defs>
+  <g fill="none" stroke="currentColor" stroke-width="1.6">
+    <!-- (a) solid E with axes and small box B -->
+    <ellipse cx="135" cy="150" rx="108" ry="76" transform="rotate(14 135 150)" fill="#8fb2e0" stroke="none"/>
+    <line x1="135" y1="25" x2="135" y2="275"/>
+    <line x1="10" y1="100" x2="250" y2="195"/>
+    <line x1="50" y1="235" x2="215" y2="55" stroke-dasharray="6 4"/>
+    <rect x="100" y="82" width="28" height="28" fill="#8fb2e0"/>
+    <path d="M100,82 l10,-9 h28 l-10,9 M138,73 v28 l-10,9"/>
+    <!-- (b) the box -->
+    <rect x="360" y="120" width="130" height="120"/>
+    <path d="M360,120 l45,-40 h130 l-45,40 M535,80 v120 l-45,40"/>
+    <path d="M405,80 v120 h130 M405,200 l-45,40" stroke-dasharray="5 4" stroke-width="1.2"/>
+    <line x1="448" y1="108" x2="448" y2="52" stroke="#c0392b" stroke-width="3" marker-end="url(#pf-red)"/>
+    <line x1="425" y1="246" x2="425" y2="284" stroke="#c0392b" stroke-width="3" marker-end="url(#pf-red)"/>
+    <line x1="340" y1="120" x2="340" y2="240" stroke-width="1.2" marker-start="url(#pf-dim)" marker-end="url(#pf-dim)"/>
+    <line x1="360" y1="306" x2="490" y2="306" stroke-width="1.2" marker-start="url(#pf-dim)" marker-end="url(#pf-dim)"/>
+    <line x1="496" y1="252" x2="541" y2="212" stroke-width="1.2" marker-start="url(#pf-dim)" marker-end="url(#pf-dim)"/>
+    <!-- (c) side view -->
+    <rect x="650" y="100" width="130" height="140"/>
+    <line x1="625" y1="100" x2="625" y2="240" stroke-width="1.2" marker-start="url(#pf-dim)" marker-end="url(#pf-dim)"/>
+  </g>
+  <g fill="currentColor" stroke="none">
+    <circle cx="715" cy="100" r="4.5"/><circle cx="715" cy="170" r="4.5"/><circle cx="715" cy="240" r="4.5"/>
+    <text x="80" y="105" font-style="italic" font-size="20">B</text>
+    <text x="165" y="238" font-style="italic" font-size="20">E</text>
+    <text x="462" y="62" font-weight="bold" font-size="20">k</text>
+    <text x="437" y="272" font-weight="bold" font-size="20">−k</text>
+    <text x="312" y="186">Δz</text>
+    <text x="496" y="311">Δx</text>
+    <text x="536" y="248">Δy</text>
+    <text x="598" y="176">Δz</text>
+    <text x="715" y="84" text-anchor="middle">(x, y, z + Δz/2)</text>
+    <text x="715" y="196" text-anchor="middle">(x, y, z)</text>
+    <text x="715" y="268" text-anchor="middle">(x, y, z − Δz/2)</text>
+    <text x="135" y="322" text-anchor="middle" font-size="18">(a)</text>
+    <text x="450" y="329" text-anchor="middle" font-size="18">(b)</text>
+    <text x="715" y="322" text-anchor="middle" font-size="18">(c)</text>
+  </g>
+</svg>
+<figcaption class="muted small">Figure 6.88. (a) A small box \(B\) inside \(E\) has sides parallel to the coordinate planes. (b) \(B\) has side lengths \(\Delta x,\Delta y,\Delta z\). (c) Side view: the top is \(\Delta z/2\) above the center \((x,y,z)\), the bottom \(\Delta z/2\) below.</figcaption>
+</figure>
+<div class="defbox"><div class="defbox-label">Divergence as net outward flux per unit volume</div>
+<p>Let \(B_r\) be a ball of small radius \(r\) centered at \(P\), with boundary sphere \(S_r\). Then
+$$\operatorname{div}\vec F(P)=\lim_{r\to0}\frac{1}{V(B_r)}\iint_{S_r}\vec F\cdot d\vec S.$$</p>
+</div>
+<jsx-vector-field divcurl fields="Source: x ; y | Sink: -x ; -y | Shear: y ; 0 | Whirl: -y ; x" xmin="-6" xmax="6" step="1" probe="2,1" ring="0.6" tau-max="1"></jsx-vector-field>
+<table>
+  <tr><td>\(\vec F\) is the velocity field of a fluid and \(\operatorname{div}\vec F(P)&gt;0\). What is happening near \(P\)?</td><td><reveal>More fluid flows out of a small ball around \(P\) than into it: \(P\) is a source.</reveal></td></tr>
+  <tr><td>What if \(\operatorname{div}\vec F(P)&lt;0\), or \(\operatorname{div}\vec F=0\)?</td><td><reveal>\(&lt;0\): a sink. \(=0\): the flow in equals the flow out.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="3">
+          <div class="step-title">Verifying the divergence theorem</div>
+          <div class="step-subtitle">Example 6.77 and Checkpoint 6.65</div>
+          <div class="step-body">
+<p>Example 6.77: verify the divergence theorem for vector field \(\vec F=\langle x-y,\ x+z,\ z-y\rangle\) and surface \(S\) that consists of the cone \(x^2+y^2=z^2\), \(0\le z\le1\), and the circular top of the cone. Assume this surface is oriented outward.</p>
+<solid-3d axes="xyz" xmin="-1" xmax="1" g1="-sqrt(1-x*x)" g2="sqrt(1-x*x)" u1="sqrt(x*x+y*y)" u2="1" az="30" el="18"></solid-3d>
+<table>
+  <tr><td>Triple integral side. \(\operatorname{div}\vec F\)</td><td><reveal>\(P_x+Q_y+R_z=1+0+1=2\)</reveal></td></tr>
+  <tr><td>\(\displaystyle\iiint_E\operatorname{div}\vec F\,dV\). The volume of a right circular cone is \(\pi r^2\,\dfrac h3\), here \(h=r=1\).</td><td><reveal>\(2(\text{volume of }E)=\dfrac{2\pi}{3}\)</reveal></td></tr>
+  <tr><td>Flux side. \(S\) is piecewise smooth: split it into the top \(S_1\) and the cone \(S_2\). Parameterization of \(S_1\), its normal, and the flux</td><td><reveal>\(\vec r(u,v)=\langle u\cos v,\,u\sin v,\,1\rangle\), \(0\le u\le1\), \(0\le v\le2\pi\); \(\vec t_u\times\vec t_v=\langle0,0,u\rangle\). The flux is \(\displaystyle\int_0^1\!\!\int_0^{2\pi}(u-u^2\sin v)\,dv\,du=\pi\).</reveal></td></tr>
+  <tr><td>\(S_2\): \(\vec r(u,v)=\langle u\cos v,\,u\sin v,\,u\rangle\). Which cross product gives the outward normal?</td><td><reveal>\(\vec t_u\times\vec t_v=\langle-u\cos v,-u\sin v,u\rangle\) points inward, so use \(\vec t_v\times\vec t_u=\langle u\cos v,\,u\sin v,\,-u\rangle\).</reveal></td></tr>
+  <tr><td>The flux across \(S_2\)</td><td><reveal>\(\displaystyle\int_0^1\!\!\int_0^{2\pi}(u^2\cos^2v+2u^2\sin v-u^2)\,dv\,du=-\dfrac\pi3\)</reveal></td></tr>
+  <tr><td>The total flux across \(S\)</td><td><reveal>\(\pi-\dfrac\pi3=\dfrac{2\pi}{3}\), equal to the triple integral: the divergence theorem is verified.</reveal></td></tr>
+  <tr><td>Checkpoint 6.65. Verify the divergence theorem for vector field \(\vec F(x,y,z)=\langle x+y+z,\ y,\ 2x-y\rangle\) and surface \(S\) given by the cylinder \(x^2+y^2=1\), \(0\le z\le3\), plus the circular top and bottom of the cylinder. Assume that \(S\) is oriented outward.</td><td><reveal>\(\operatorname{div}\vec F=2\), so the triple integral is \(2\cdot(3\pi)=6\pi\). Flux: top (\(\vec N=\mathbf k\)) gives \(\iint(2x-y)\,dA=0\); bottom (\(\vec N=-\mathbf k\)) gives \(0\); side (\(\vec N=\langle x,y,0\rangle\)) gives \(\int_0^3\!\!\int_0^{2\pi}(1+\cos\theta\sin\theta+z\cos\theta)\,d\theta\,dz=6\pi\). Both sides are \(6\pi\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="4">
+          <div class="step-title">Flux as a triple integral</div>
+          <div class="step-subtitle">Example 6.78 and Checkpoint 6.66</div>
+          <div class="step-body">
+<p>Example 6.78: calculate the surface integral \(\displaystyle\iint_S\vec F\cdot d\vec S\), where \(S\) is the cylinder \(x^2+y^2=1\), \(0\le z\le2\), including the circular top and bottom, and \(\vec F=\Big\langle\dfrac{x^3}{3}+yz,\ \dfrac{y^3}{3}-\sin(xz),\ z-x-y\Big\rangle\).</p>
+<solid-3d axes="xyz" xmin="-1" xmax="1" g1="-sqrt(1-x*x)" g2="sqrt(1-x*x)" u1="0" u2="2" f="x*x+y*y+1" az="30" el="18"></solid-3d>
+<table>
+  <tr><td>Directly, how many flux integrals are there, and what does each need?</td><td><reveal>Three (top, bottom, side), each with its own parameterization, tangent vectors and cross product.</reveal></td></tr>
+  <tr><td>\(\operatorname{div}\vec F\)</td><td><reveal>\(x^2+y^2+1\)</reveal></td></tr>
+  <tr><td>Use the divergence theorem in cylindrical coordinates</td><td><reveal>\(\displaystyle\iint_S\vec F\cdot d\vec S=\iiint_E(x^2+y^2+1)\,dV=\int_0^{2\pi}\!\!\int_0^1\!\!\int_0^2(r^2+1)\,r\,dz\,dr\,d\theta=3\pi\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.66. Use the divergence theorem to calculate flux integral \(\displaystyle\iint_S\vec F\cdot d\vec S\), where \(S\) is the boundary of the box given by \(0\le x\le2\), \(1\le y\le4\), \(0\le z\le1\), and \(\vec F=\langle x^2+yz,\ y-z,\ 2x+2y+2z\rangle\).</td><td><reveal>\(\operatorname{div}\vec F=2x+1+2=2x+3\), so the flux is \(\displaystyle\int_0^1\!\!\int_1^4\!\!\int_0^2(2x+3)\,dx\,dy\,dz=30\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="5">
+          <div class="step-title">Fields with zero divergence</div>
+          <div class="step-subtitle">Example 6.79 and Checkpoint 6.67</div>
+          <div class="step-body">
+<p>Example 6.79: let \(\vec v=\Big\langle-\dfrac yz,\ \dfrac xz,\ 0\Big\rangle\) be the velocity field of a fluid. Let \(C\) be the solid cube given by \(1\le x\le4\), \(2\le y\le5\), \(1\le z\le4\), and let \(S\) be the boundary of this cube. Find the flow rate of the fluid across \(S\).</p>
+<solid-3d axes="xyz" xmin="1" xmax="4" g1="2" g2="5" u1="1" u2="4" az="30" el="18"></solid-3d>
+<table>
+  <tr><td>Directly, how many flux integrals would we need?</td><td><reveal>Six, one for each face.</reveal></td></tr>
+  <tr><td>\(\operatorname{div}\vec v\)</td><td><reveal>\(\dfrac{\partial}{\partial x}\Big(-\dfrac yz\Big)+\dfrac{\partial}{\partial y}\Big(\dfrac xz\Big)+0=0\)</reveal></td></tr>
+  <tr><td>The flow rate across \(S\)</td><td><reveal>\(\displaystyle\iint_S\vec v\cdot d\vec S=\iiint_C\operatorname{div}\vec v\,dV=\iiint_C0\,dV=0\)</reveal></td></tr>
+  <tr><td>Checkpoint 6.67. Let \(\vec v=\Big\langle\dfrac xz,\ \dfrac yz,\ 0\Big\rangle\) be the velocity field of a fluid. Let \(C\) be the solid cube given by \(1\le x\le4\), \(2\le y\le5\), \(1\le z\le4\), and let \(S\) be the boundary of this cube. Find the flow rate of the fluid across \(S\).</td><td><reveal>\(\operatorname{div}\vec v=\dfrac1z+\dfrac1z=\dfrac2z\), so the flow rate is \(\displaystyle\int_1^4\!\!\int_2^5\!\!\int_1^4\frac2z\,dz\,dy\,dx=18\ln4\approx24.95\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">A consequence</div>
+<p>If \(S\) is a piecewise smooth closed surface and \(\vec F=\langle f(y,z),\ g(x,z),\ h(x,y)\rangle\), then \(\operatorname{div}\vec F=0\), so by the divergence theorem the flux of \(\vec F\) across \(S\) is zero.</p>
+</div>
+<table>
+  <tr><td>Calculate \(\displaystyle\iint_S\vec F\cdot d\vec S\), where \(S\) is a cube (closed, outward) and \(\vec F=\langle\sin(y)\,e^{yz},\ x^2z^2,\ \cos(xy)\,e^{\sin x}\rangle\).</td><td><reveal>\(\vec F\) has the form \(\langle f(y,z),g(x,z),h(x,y)\rangle\), so \(\operatorname{div}\vec F=0\) and the flux is \(0\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="6">
+          <div class="step-title">Application: Gauss’ law</div>
+          <div class="step-subtitle">Examples 6.80 and 6.81, Theorem 6.21 and Checkpoint 6.68</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">The field of a point charge</div>
+<p>Let \(r=\sqrt{x^2+y^2+z^2}\) and let \(\vec F_r\) denote the radial vector field
+$$\vec F_r=\frac{1}{r^2}\Big\langle\frac xr,\frac yr,\frac zr\Big\rangle.$$
+A stationary charge of \(q\) Coulombs at the origin, in a vacuum, generates the electrostatic field
+$$\vec E=\frac{q}{4\pi\varepsilon_0}\,\vec F_r,$$
+where \(\varepsilon_0\approx8.854\times10^{-12}\) farad/m is an electric constant. \(\vec E\) obeys an inverse-square law.</p>
+</div>
+<jsx-vector-field fields="G: -x/(x^2+y^2)^1.5 ; -y/(x^2+y^2)^1.5 | E: x/(x^2+y^2)^1.5 ; y/(x^2+y^2)^1.5" xmin="-6" xmax="6" step="1" probe="2,1"></jsx-vector-field>
+<table>
+  <tr><td>Example 6.80. Verify that the divergence of \(\vec F_r\) is zero where \(\vec F_r\) is defined (away from the origin).</td><td><reveal>\(\dfrac{\partial}{\partial x}\Big(\dfrac{x}{r^3}\Big)=\dfrac{r^2-3x^2}{r^5}\), and similarly for \(y\) and \(z\). So \(\operatorname{div}\vec F_r=\dfrac{3r^2-3(x^2+y^2+z^2)}{r^5}=\dfrac{3r^2-3r^2}{r^5}=0\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 6.21: Flux across a smooth surface</div>
+<p>Let \(S\) be a connected, piecewise smooth closed surface and let \(\vec F_r=\dfrac{1}{r^2}\Big\langle\dfrac xr,\dfrac yr,\dfrac zr\Big\rangle\). Then
+$$\iint_S\vec F_r\cdot d\vec S=\begin{cases}0&\text{if }S\text{ does not encompass the origin}\\[2pt]4\pi&\text{if }S\text{ encompasses the origin.}\end{cases}$$</p>
+</div>
+<table>
+  <tr><td>Why \(0\) when \(S\) does not encompass the origin?</td><td><reveal>The solid enclosed by \(S\) lies in the domain of \(\vec F_r\), and \(\operatorname{div}\vec F_r=0\), so the divergence theorem gives \(0\).</reveal></td></tr>
+  <tr><td>\(S_a\) is the sphere of radius \(a\) centered at the origin, outward. Find \(\iint_{S_a}\vec F_r\cdot d\vec S\).</td><td><reveal>On \(S_a\), \(\vec F_r\cdot\vec N=\dfrac1{a^2}\) and the area is \(4\pi a^2\), so the flux is \(4\pi\).</reveal></td></tr>
+  <tr><td>If \(S\) encloses the origin and \(S_a\) lies inside \(S\), why is the flux through \(S\) also \(4\pi\)?</td><td><reveal>Let \(E\) be the solid between \(S_a\) and \(S\). Its boundary is \(S\) (outward) and \(S_a\) (inward), and \(\operatorname{div}\vec F_r=0\) on \(E\), so \(\iint_S\vec F_r\cdot d\vec S-\iint_{S_a}\vec F_r\cdot d\vec S=0\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Gauss’ law</div>
+<p>If \(S\) is a piecewise smooth closed surface and \(Q\) is the total amount of charge inside of \(S\), then the flux of \(\vec E\) across \(S\) is \(Q/\varepsilon_0\). (For one charge \(q\) at the origin: \(\iint_S\vec E\cdot d\vec S=\dfrac{q}{4\pi\varepsilon_0}\cdot4\pi=\dfrac q{\varepsilon_0}\) if \(S\) encloses the origin, and \(0\) if not.)</p>
+</div>
+<table>
+  <tr><td>Example 6.81. Suppose we have four stationary point charges in space, all with a charge of \(0.002\) Coulombs (C), located at \((0,1,1)\), \((1,1,4)\), \((-1,0,0)\) and \((-2,-2,2)\). Let \(\vec E\) denote the electrostatic field generated by these point charges. If \(S\) is the sphere of radius \(2\) oriented outward and centered at the origin, find \(\iint_S\vec E\cdot d\vec S\).</td><td><reveal>Distances from the origin: \(\sqrt2\), \(\sqrt{18}\), \(1\), \(\sqrt{12}\). Only \((0,1,1)\) and \((-1,0,0)\) are inside \(S\), so \(Q=0.004\) and \(\displaystyle\iint_S\vec E\cdot d\vec S=\frac{0.004}{8.854\times10^{-12}}\approx4.518\times10^{8}\text{ V·m}\).</reveal></td></tr>
+  <tr><td>Checkpoint 6.68. Work the previous example for surface \(S\) that is a sphere of radius \(4\) centered at the origin, oriented outward.</td><td><reveal>Now \((0,1,1)\), \((-1,0,0)\) and \((-2,-2,2)\) are inside (\(\sqrt{12}\approx3.46&lt;4\)), but \((1,1,4)\) is not (\(\sqrt{18}\approx4.24\)). \(Q=0.006\), so the flux is \(\dfrac{0.006}{8.854\times10^{-12}}\approx6.777\times10^{8}\text{ V·m}\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step is-visible" data-step="7">
+          <div class="step-title">Practice</div>
+          <div class="step-subtitle">Exercises from Section 6.8</div>
+          <div class="step-body">
+<p>Use the divergence theorem. For each closed surface, \(\vec N\) is the outward unit normal vector.</p>
+<table>
+  <tr><td>376. \(\vec F(x,y,z)=x\,\mathbf i+y\,\mathbf j+z\,\mathbf k\); \(S\) is the surface of the cube \(0\le x\le1\), \(0\le y\le1\), \(0\le z\le1\). Find \(\iint_S\vec F\cdot\vec N\,dS\).</td><td><reveal>\(\operatorname{div}\vec F=3\), volume \(1\): \(3\).</reveal></td></tr>
+  <tr><td>380. \(\vec F(x,y,z)=x^2\,\mathbf i+y^2\,\mathbf j+z^2\,\mathbf k\); \(S\) is the surface of the sphere \(x^2+y^2+z^2=4\). Find \(\iint_S\vec F\cdot\vec N\,dS\).</td><td><reveal>\(\operatorname{div}\vec F=2(x+y+z)\) is odd in each variable and the ball is symmetric: \(0\).</reveal></td></tr>
+  <tr><td>381. \(\vec F(x,y,z)=x\,\mathbf i+y\,\mathbf j+(z^2-1)\,\mathbf k\); \(S\) is the surface of the solid bounded by the cylinder \(x^2+y^2=4\) and the planes \(z=0\) and \(z=1\). Find \(\iint_S\vec F\cdot\vec N\,dS\).</td><td><reveal>\(\operatorname{div}\vec F=2+2z\): \(\displaystyle\int_0^{2\pi}\!\!\int_0^2\!\!\int_0^1(2+2z)\,r\,dz\,dr\,d\theta=12\pi\).</reveal></td></tr>
+  <tr><td>394. Consider \(\vec F(x,y,z)=x^2\,\mathbf i+xy\,\mathbf j+(z+1)\,\mathbf k\). Let \(E\) be the solid enclosed by the paraboloid \(z=4-x^2-y^2\) and the plane \(z=0\), with normal vectors pointing outside \(E\). Compute the flux of \(\vec F\) across the boundary of \(E\).</td><td><reveal>\(\operatorname{div}\vec F=3x+1\): \(\displaystyle\int_0^{2\pi}\!\!\int_0^2\!\!\int_0^{4-r^2}(3r\cos\theta+1)\,r\,dz\,dr\,d\theta=8\pi\).</reveal></td></tr>
+  <tr><td>396. \(\vec F=\langle x,2y,z\rangle\); \(S\) is the boundary of the tetrahedron in the first octant formed by the plane \(x+y+z=1\). Find the net outward flux.</td><td><reveal>\(\operatorname{div}\vec F=4\), volume \(\tfrac16\): \(\tfrac23\).</reveal></td></tr>
+  <tr><td>400. \(\vec F=\dfrac{\vec r}{\|\vec r\|}=\dfrac{\langle x,y,z\rangle}{\sqrt{x^2+y^2+z^2}}\); \(D\) is the region between spheres of radius \(1\) and \(2\) centered at the origin. Find the net outward flux across the boundary of \(D\).</td><td><reveal>\(\operatorname{div}\vec F=\dfrac2\rho\): \(\displaystyle\int_0^{2\pi}\!\!\int_0^\pi\!\!\int_1^2\frac2\rho\,\rho^2\sin\phi\,d\rho\,d\phi\,d\theta=12\pi\).</reveal></td></tr>
+  <tr><td>402. Let \(\vec F(x,y,z)=2x\,\mathbf i-3xy\,\mathbf j+xz^2\,\mathbf k\). Use the divergence theorem to calculate \(\iint_S\vec F\cdot d\vec S\), where \(S\) is the surface of the unit cube with corners at \((0,0,0)\), \((1,0,0)\), \((0,1,0)\), \((1,1,0)\), \((0,0,1)\), \((1,0,1)\), \((0,1,1)\), \((1,1,1)\), oriented outward.</td><td><reveal>\(\operatorname{div}\vec F=2-3x+2xz\): \(\displaystyle\int_0^1\!\!\int_0^1\!\!\int_0^1(2-3x+2xz)\,dx\,dy\,dz=2-\tfrac32+\tfrac12=1\).</reveal></td></tr>
+  <tr><td>406. Find the net outward flux of the field \(\vec F=\langle bz-cy,\ cx-az,\ ay-bx\rangle\) across any smooth closed surface in \(\mathbb R^3\), where \(a\), \(b\) and \(c\) are constants.</td><td><reveal>\(\operatorname{div}\vec F=0+0+0=0\), so the flux is \(0\).</reveal></td></tr>
+  <tr><td>407. Use the divergence theorem to evaluate \(\iint_S\|\vec R\|\,\vec R\cdot\vec n\,dS\), where \(\vec R(x,y,z)=x\,\mathbf i+y\,\mathbf j+z\,\mathbf k\) and \(S\) is the sphere \(x^2+y^2+z^2=a^2\), with constant \(a&gt;0\).</td><td><reveal>\(\operatorname{div}(\|\vec R\|\vec R)=4\rho\): \(\displaystyle\int_0^{2\pi}\!\!\int_0^\pi\!\!\int_0^a4\rho\cdot\rho^2\sin\phi\,d\rho\,d\phi\,d\theta=4\pi a^4\).</reveal></td></tr>
+  <tr><td>412. Use the divergence theorem to calculate the flux of \(\vec F(x,y,z)=x^3\,\mathbf i+y^3\,\mathbf j+z^3\,\mathbf k\) through the sphere \(x^2+y^2+z^2=1\).</td><td><reveal>\(\operatorname{div}\vec F=3\rho^2\): \(\displaystyle\int_0^{2\pi}\!\!\int_0^\pi\!\!\int_0^13\rho^2\cdot\rho^2\sin\phi\,d\rho\,d\phi\,d\theta=\dfrac{12\pi}5\).</reveal></td></tr>
+  <tr><td>413. Find \(\iint_S\vec F\cdot d\vec S\), where \(\vec F(x,y,z)=x\,\mathbf i+y\,\mathbf j+z\,\mathbf k\) and \(S\) is the outwardly oriented surface obtained by removing the cube \([1,2]\times[1,2]\times[1,2]\) from the cube \([0,2]\times[0,2]\times[0,2]\).</td><td><reveal>\(S\) bounds the solid left over, of volume \(8-1=7\), and \(\operatorname{div}\vec F=3\): \(21\).</reveal></td></tr>
+  <tr><td>425. Fourier’s law: the heat flow vector is \(\vec F=-k\nabla T\), where \(T\) is the temperature and \(k&gt;0\) the conductivity. Let \(T(x,y,z)=100+e^{-z}\) and \(D=\{(x,y,z):0\le x\le1,\ 0\le y\le1,\ 0\le z\le1\}\), with \(k=1\). Find the net outward heat flux \(\iint_S\vec F\cdot\vec N\,dS=-k\iint_S\nabla T\cdot\vec N\,dS\) across the boundary \(S\) of \(D\).</td><td><reveal>\(\operatorname{div}\vec F=-\nabla^2T=-e^{-z}\): \(\displaystyle-\int_0^1e^{-z}\,dz=e^{-1}-1\approx-0.632\).</reveal></td></tr>
+  <tr><td>Spot the mistake. A student verifies the divergence theorem for the cone \(x^2+y^2=z^2\), \(0\le z\le1\), by computing only the flux across the cone itself.</td><td><reveal>The theorem needs a <i>closed</i> surface: the circular top must be included. The cone alone gives \(-\dfrac\pi3\), not \(\dfrac{2\pi}3\).</reveal></td></tr>
+  <tr><td>Spot the mistake. A student says: \(\operatorname{div}\vec F_r=0\), so \(\iint_{S_a}\vec F_r\cdot d\vec S=0\) for the sphere \(S_a\) about the origin.</td><td><reveal>\(\vec F_r\) is not defined at the origin, which lies inside \(S_a\), so the divergence theorem does not apply. The flux is \(4\pi\).</reveal></td></tr>
+</table>
+<p class="muted small">Source: OpenStax, <i>Calculus Volume 3</i>, Section 6.8 (Strang, Herman), licensed CC BY-NC-SA 4.0. Access for free at openstax.org/books/calculus-volume-3. Exercises 376 and 381 are quoted with all inequalities written as \(\le\); Exercise 425 adds the statement of Fourier’s law from the exercise group’s heading.</p>
+          </div>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

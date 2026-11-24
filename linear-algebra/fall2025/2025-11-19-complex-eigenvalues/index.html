@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Complex Eigenvalues</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('load', function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- JSXGraph (for <jsx-eigen>) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraph.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/jsxgraph@1.13.3/distrib/jsxgraphcore.min.js"></script>
+
+  <!-- CSS (split) -->
+  <link rel="stylesheet" href="/todopage/css/base.css">
+  <link rel="stylesheet" href="/todopage/css/steps.css">
+  <link rel="stylesheet" href="/todopage/css/ggb-float.css">
+
+</head>
+
+<body>
+
+  <header class="site-header">
+    <h1>Complex Eigenvalues</h1>
+    <div class="meta">MATH 3330 · Dr. Esteban Diaz</div>
+  </header>
+
+  <main class="container">
+    <section class="single-col">
+      <div class="card" id="left-card">
+
+        <!-- Section 7.5 (Bretscher, PDF pages 372 to 385, book pages 360 to 373), 7 steps for a 35 minute class, centered on the subsection
+             "Complex Eigenvalues and Eigenvectors" (steps 4 to 7); the review of complex numbers is kept to two steps:
+             1 glucose-insulin model (3) · 2 complex numbers, polar form, Examples 1, 2, 4 (4) · 3 De Moivre, Example 5, fundamental theorem of algebra (3) ·
+             4 linear algebra over C, Example 6 (6) · 5 Example 7, Theorem 7.5.3, Example 8 (6) · 6 practice: Exercises 13 to 17, 20 to 23 (7) ·
+             7 Theorems 7.5.4 and 7.5.5, Example 9, Exercises 27, 28, 30 (5).
+             Tags: <jsx-eigen> (js/jsxgraph.js): dynamics for the spirals, rotscale for Theorem 7.5.3. Every answer checked with sympy. -->
+        <div class="step is-visible" data-step="1">
+          <div class="step-title">Why Complex Numbers? Glucose and Insulin</div>
+          <div class="step-subtitle">The model that opens Section 7.5</div>
+          <div class="step-body">
+<p>Let \(g(t)\) be the excess glucose concentration in your blood and \(h(t)\) the excess insulin concentration, \(t\) in hours, measured between meals. One (linearized) model is
+$$g(t+1)=0.9\,g(t)-0.4\,h(t),\qquad h(t+1)=0.1\,g(t)+0.9\,h(t),$$
+with initial values \(g(0)=100\) and \(h(0)=0\) after a heavy meal.</p>
+<table>
+  <tr><td>With \(\vec x(t)=\begin{bmatrix}g(t)\\h(t)\end{bmatrix}\), write \(\vec x(t+1)\) in terms of \(\vec x(t)\), and give a formula for \(\vec x(t)\).</td><td><reveal>\(\vec x(t+1)=A\vec x(t)\) with \(A=\begin{bmatrix}0.9&-0.4\\0.1&0.9\end{bmatrix}\), so \(\vec x(t)=A^t\vec x(0)=A^t\begin{bmatrix}100\\0\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(g(1)\) and \(h(1)\)</td><td><reveal>\(g(1)=90\), \(h(1)=10\)</reveal></td></tr>
+  <tr><td>The characteristic polynomial \(f_A(\lambda)\)</td><td><reveal>\(\lambda^2-1.8\lambda+0.85\)</reveal></td></tr>
+  <tr><td>The eigenvalues</td><td><reveal>\(\lambda_{1,2}=\dfrac{1.8\pm\sqrt{3.24-3.4}}{2}=\dfrac{1.8\pm\sqrt{-0.16}}{2}=0.9\pm0.2i\). The square of a real number cannot be negative: there are no <i>real</i> eigenvalues. If we allow complex solutions, there are.</reveal></td></tr>
+</table>
+<jsx-eigen dynamics a="0.9,-0.4;0.1,0.9" x0="100,0" tmax="29" range="125" t-label="t (hours)"></jsx-eigen>
+<p>The trajectory spirals toward the origin: the glucose and insulin levels swing back and forth around the fasting level. This <i>oscillatory behavior</i> is what complex eigenvalues look like.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-title">Complex Numbers: A Brief Review</div>
+          <div class="step-subtitle">Examples 1, 2 and 4</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Complex numbers</div>
+<p>A complex number can be expressed as \(z=a+ib\), where \(a\) and \(b\) are real numbers and \(i\cdot i=-1\). Then
+$$(a+ib)+(c+id)=(a+c)+i(b+d),\qquad(a+ib)(c+id)=(ac-bd)+i(ad+bc).$$
+We call \(a\) the <i>real part</i>, \(\operatorname{Re}z\), and \(b\) the <i>imaginary part</i>, \(\operatorname{Im}z\). The complex number \(a+ib\) is represented by the vector \(\begin{bmatrix}a\\b\end{bmatrix}\) in the complex plane.</p>
+</div>
+<table>
+  <tr><td>Example 1. Consider a nonzero complex number \(z\). What is the geometric relationship between \(z\) and \(iz\) in the complex plane?</td><td><reveal>If \(z=a+ib\), then \(iz=-b+ia\). The vector \(\begin{bmatrix}-b\\a\end{bmatrix}\) is obtained by rotating \(\begin{bmatrix}a\\b\end{bmatrix}\) through \(90^\circ\) counterclockwise.</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Conjugate, modulus, argument, polar form</div>
+<p>The <i>conjugate</i> of \(z=a+ib\) is \(\bar z=a-ib\) (the reflection of \(z\) about the real axis). The length \(r=\sqrt{a^2+b^2}\) of the vector is the <i>modulus</i> \(|z|\), and the polar angle \(\theta\) is an <i>argument</i> of \(z\), \(\arg z\) (determined only up to a multiple of \(2\pi\)). Then
+$$z=r(\cos\theta+i\sin\theta)\qquad\text{(polar form)}.$$</p>
+</div>
+<div class="defbox"><div class="defbox-label">Products in polar form</div>
+<p>When we multiply two complex numbers, we multiply the moduli and add the arguments:
+$$|zw|=|z||w|,\qquad\arg(zw)=\arg z+\arg w\ \ (\text{modulo }2\pi).$$</p>
+</div>
+<table>
+  <tr><td>Example 2. Find the modulus and an argument of \(z=-2+2i\).</td><td><reveal>\(|z|=\sqrt{2^2+2^2}=\sqrt8\), and \(\tfrac34\pi\) is an argument of \(z\)</reveal></td></tr>
+  <tr><td>Exercise 1. Write the complex number \(z=3-3i\) in polar form.</td><td><reveal>\(|z|=3\sqrt2\), \(\arg z=-\tfrac\pi4\): \(z=3\sqrt2\big(\cos(-\tfrac\pi4)+i\sin(-\tfrac\pi4)\big)\)</reveal></td></tr>
+  <tr><td>Example 4. Describe the transformation \(T(z)=(3+4i)z\) from \(\mathbb C\) to \(\mathbb C\) geometrically.</td><td><reveal>\(|T(z)|=|3+4i||z|=5|z|\) and \(\arg T(z)=\arctan\tfrac43+\arg z\approx53^\circ+\arg z\). \(T\) is a rotation through about \(53^\circ\) combined with a scaling by a factor of \(5\). Its matrix with respect to the basis \(1,i\) is \(\begin{bmatrix}3&-4\\4&3\end{bmatrix}\).</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-title">Powers of Complex Numbers, and the Fundamental Theorem of Algebra</div>
+          <div class="step-subtitle">Theorems 7.5.1 and 7.5.2, Example 5</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 7.5.1: De Moivre’s formula</div>
+<p>$$(\cos\theta+i\sin\theta)^n=\cos(n\theta)+i\sin(n\theta).$$
+So if \(z=r(\cos\theta+i\sin\theta)\), then \(z^n=r^n\big(\cos(n\theta)+i\sin(n\theta)\big)\): each multiplication by \(z\) multiplies the modulus by \(r\) and increases the argument by \(\theta\).</p>
+</div>
+<table>
+  <tr><td>Example 5. Consider the complex number \(z=0.5+0.8i\). Represent the powers \(z^2,z^3,\dots\) in the complex plane. What is \(\displaystyle\lim_{n\to\infty}z^n\)?</td><td><reveal>\(r=\sqrt{0.5^2+0.8^2}\approx0.943\), \(\theta=\arctan\frac{0.8}{0.5}\approx58^\circ\). Each \(z^{n+1}\) is about \(5.7\%\) shorter than \(z^n\) and makes an angle of \(58^\circ\) with it: the tips spiral in toward the origin, and \(\lim z^n=0\) since \(r=|z|&lt;1\).</reveal></td></tr>
+</table>
+<jsx-eigen dynamics a="0.5,-0.8;0.8,0.5" x0="1,0" tmax="12" range="1.2" t-label="n"></jsx-eigen>
+<p class="muted small">Multiplication by \(z=0.5+0.8i\) has matrix \(\begin{bmatrix}0.5&-0.8\\0.8&0.5\end{bmatrix}\) with respect to the basis \(1,i\), and \(z^n\) is \(A^n\) applied to \(1=\begin{bmatrix}1\\0\end{bmatrix}\).</p>
+<table>
+  <tr><td>Exercise 9. Consider the complex number \(z=0.8-0.7i\). Represent the powers \(z^2,z^3,\dots\) in the complex plane and explain their long-term behavior.</td><td><reveal>\(r=\sqrt{0.8^2+0.7^2}\approx1.063&gt;1\), \(\theta\approx-41^\circ\). The tips spiral outward, clockwise, and \(|z^n|\to\infty\).</reveal></td></tr>
+  <tr><td>Exercise 8. Use de Moivre’s formula to express \(\cos(3\theta)\) and \(\sin(3\theta)\) in terms of \(\cos\theta\) and \(\sin\theta\).</td><td><reveal>Expand \((\cos\theta+i\sin\theta)^3\) and compare real and imaginary parts: \(\cos3\theta=\cos^3\theta-3\cos\theta\sin^2\theta\), \(\sin3\theta=3\cos^2\theta\sin\theta-\sin^3\theta\).</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 7.5.2: Fundamental theorem of algebra</div>
+<p>Any polynomial \(p(\lambda)\) with complex coefficients splits; that is, it can be written as a product of linear factors
+$$p(\lambda)=k(\lambda-\lambda_1)(\lambda-\lambda_2)\cdots(\lambda-\lambda_n),$$
+for some complex numbers \(\lambda_1,\lambda_2,\dots,\lambda_n\) and \(k\). (The \(\lambda_i\) need not be distinct.) Therefore, a polynomial \(p(\lambda)\) of degree \(n\) has precisely \(n\) complex roots if they are properly counted with their multiplicities.</p>
+</div>
+<table>
+  <tr><td>Split \(p(\lambda)=\lambda^2+1\), which has no real zeros.</td><td><reveal>\(p(\lambda)=(\lambda+i)(\lambda-i)\)</reveal></td></tr>
+  <tr><td>For \(q(\lambda)=\lambda^2+b\lambda+c\) with \(b,c\) real, the complex roots are</td><td><reveal>\(\lambda_{1,2}=\dfrac{-b\pm\sqrt{b^2-4c}}{2}\), and \(q(\lambda)=(\lambda-\lambda_1)(\lambda-\lambda_2)\)</reveal></td></tr>
+  <tr><td>Exercise 11. Express the polynomial \(f(\lambda)=\lambda^3-3\lambda^2+7\lambda-5\) as a product of linear factors.</td><td><reveal>\(f(1)=0\), and \(f(\lambda)=(\lambda-1)(\lambda^2-2\lambda+5)=(\lambda-1)(\lambda-1-2i)(\lambda-1+2i)\)</reveal></td></tr>
+  <tr><td>Exercise 12. Consider a polynomial \(f(\lambda)\) with real coefficients. Show that if a complex number \(\lambda_0\) is a root of \(f(\lambda)\), then so is its complex conjugate \(\bar\lambda_0\).</td><td><reveal>Conjugation respects sums and products and fixes real numbers, so \(f(\bar\lambda_0)=\overline{f(\lambda_0)}=\bar0=0\). Complex roots of a real polynomial come in conjugate pairs.</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-title">Complex Eigenvalues and Eigenvectors</div>
+          <div class="step-subtitle">Linear algebra over \(\mathbb C\) and Example 6</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Linear algebra over \(\mathbb C\)</div>
+<p>Everything works the same with complex scalars, vectors with complex components and matrices with complex entries, except for the geometrical concepts defined in terms of the dot product (length, angles, orthogonality). Echelon form, linear transformation, kernel, image, linear independence, basis, dimension, coordinates, linear spaces, determinant, eigenvalues, eigenvectors, and diagonalization can all be generalized without difficulty.</p>
+</div>
+<p><b>Example 6.</b> Diagonalize the rotation-scaling matrix \(A=\begin{bmatrix}a&-b\\b&a\end{bmatrix}\) “over \(\mathbb C\).” Here, \(a\) and \(b\) are real numbers, and \(b\) is nonzero.</p>
+<table>
+  <tr><td>The characteristic polynomial \(f_A(\lambda)\)</td><td><reveal>\(\det\begin{bmatrix}a-\lambda&-b\\b&a-\lambda\end{bmatrix}=(a-\lambda)^2+b^2\)</reveal></td></tr>
+  <tr><td>The eigenvalues: \((a-\lambda)^2=-b^2\), so</td><td><reveal>\(a-\lambda=\pm ib\), that is, \(\lambda=a\pm ib\)</reveal></td></tr>
+  <tr><td>\(E_{a+ib}=\ker\begin{bmatrix}-ib&-b\\b&-ib\end{bmatrix}=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}i\\1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(E_{a-ib}=\ker\begin{bmatrix}ib&-b\\b&ib\end{bmatrix}=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}-i\\1\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Therefore, with \(R=\begin{bmatrix}i&-i\\1&1\end{bmatrix}\),</td><td><reveal>\(R^{-1}\begin{bmatrix}a&-b\\b&a\end{bmatrix}R=\begin{bmatrix}a+ib&0\\0&a-ib\end{bmatrix}\)</reveal></td></tr>
+</table>
+<p>Drag \(\vec v\) and watch \(A\vec v\) for the rotation-scaling matrices \(\begin{bmatrix}a&-b\\b&a\end{bmatrix}\): \(A\vec v\) is never parallel to \(\vec v\) (no real eigenvector), yet the readout finds \(a\pm ib\).</p>
+<jsx-eigen a="1,-1;1,1" v="2,1" range="5" presets="a=1, b=1: 1,-1;1,1 | a=0, b=2: 0,-2;2,0 | a=2, b=1: 2,-1;1,2 | a=0.5, b=0.5: 0.5,-0.5;0.5,0.5"></jsx-eigen>
+<table>
+  <tr><td>In the readout, how do \(a\) and \(b\) give the rotation angle and the scaling factor of \(A\)?</td><td><reveal>The scaling factor is \(|a+ib|=\sqrt{a^2+b^2}\), and the rotation angle is \(\arg(a+ib)\)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-title">Every Real \(2\times2\) Matrix with Complex Eigenvalues Is a Rotation-Scaling</div>
+          <div class="step-subtitle">Example 7, Theorem 7.5.3 and Example 8</div>
+          <div class="step-body">
+<p><b>Example 7.</b> Let \(A\) be a real \(2\times2\) matrix with eigenvalues \(a\pm ib\) (where \(b\neq0\)). Show that \(A\) is similar (over \(\mathbb R\)) to the matrix \(\begin{bmatrix}a&-b\\b&a\end{bmatrix}\), representing a rotation combined with a scaling.</p>
+<div class="defbox"><div class="defbox-label">Theorem 7.5.3: Complex eigenvalues and rotation-scaling matrices</div>
+<p>If \(A\) is a real \(2\times2\) matrix with eigenvalues \(a\pm ib\) (where \(b\neq0\)), and if \(\vec v+i\vec w\) is an eigenvector of \(A\) with eigenvalue \(a+ib\), then
+$$S^{-1}AS=\begin{bmatrix}a&-b\\b&a\end{bmatrix},\qquad\text{where }S=\begin{bmatrix}\vec w&\vec v\end{bmatrix}.$$</p>
+</div>
+<table>
+  <tr><td>Let \(\vec v\pm i\vec w\) be eigenvectors with eigenvalues \(a\pm ib\). Then \(P^{-1}AP=\)</td><td><reveal>\(\begin{bmatrix}a+ib&0\\0&a-ib\end{bmatrix}\), where \(P=\begin{bmatrix}\vec v+i\vec w&\vec v-i\vec w\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>By Example 6 the rotation-scaling matrix is similar to the same diagonal matrix, via \(R\). Then \(\begin{bmatrix}a&-b\\b&a\end{bmatrix}=S^{-1}AS\) with \(S=PR^{-1}\). Compute \(S\).</td><td><reveal>\(S=PR^{-1}=\dfrac1{2i}\begin{bmatrix}\vec v+i\vec w&\vec v-i\vec w\end{bmatrix}\begin{bmatrix}1&i\\-1&i\end{bmatrix}=\begin{bmatrix}\vec w&\vec v\end{bmatrix}\), which has real entries, as claimed</reveal></td></tr>
+</table>
+<p><b>Example 8.</b> For \(A=\begin{bmatrix}3&-5\\1&-1\end{bmatrix}\), find an invertible \(2\times2\) matrix \(S\) such that \(S^{-1}AS\) is a rotation-scaling matrix.</p>
+<table>
+  <tr><td>\(f_A(\lambda)\) and the eigenvalues</td><td><reveal>\(f_A(\lambda)=\lambda^2-2\lambda+2\), so \(\lambda_{1,2}=\dfrac{2\pm\sqrt{4-8}}2=1\pm i\)</reveal></td></tr>
+  <tr><td>\(E_{1+i}=\ker\begin{bmatrix}2-i&-5\\1&-2-i\end{bmatrix}=\)</td><td><reveal>\(\operatorname{span}\begin{bmatrix}-5\\-2+i\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>Write the eigenvector as \(\vec v+i\vec w\)</td><td><reveal>\(\begin{bmatrix}-5\\-2+i\end{bmatrix}=\begin{bmatrix}-5\\-2\end{bmatrix}+i\begin{bmatrix}0\\1\end{bmatrix}\), so \(\vec w=\begin{bmatrix}0\\1\end{bmatrix}\), \(\vec v=\begin{bmatrix}-5\\-2\end{bmatrix}\)</reveal></td></tr>
+  <tr><td>\(S\) and \(S^{-1}AS\)</td><td><reveal>\(S^{-1}AS=\begin{bmatrix}1&-1\\1&1\end{bmatrix}\), where \(S=\begin{bmatrix}0&-5\\1&-2\end{bmatrix}\)</reveal></td></tr>
+</table>
+<p>In the picture, the green \(\vec w\) and blue \(\vec v\) are the columns of \(S\). The green parallelogram spanned by \(\vec w,\vec v\) is sent to the orange one: in the basis \((\vec w,\vec v)\), \(A\) is a rotation-scaling by \(|1+i|=\sqrt2\) and \(45^\circ\). (The dragged vector is called \(\vec x\) here.)</p>
+<jsx-eigen rotscale a="3,-5;1,-1" v="1,1" range="11" presets="Example 8: 3,-5;1,-1 | Exercise 14: 1,-2;1,-1 | Exercise 15: 0,1;-5,4 | Exercise 16: 3,1;-2,5"></jsx-eigen>
+<table>
+  <tr><td>For the glucose matrix \(A=\begin{bmatrix}0.9&-0.4\\0.1&0.9\end{bmatrix}\) (\(\lambda=0.9\pm0.2i\)): what rotation-scaling is \(A\) similar to?</td><td><reveal>\(\begin{bmatrix}0.9&-0.2\\0.2&0.9\end{bmatrix}\): a scaling by \(|0.9+0.2i|\approx0.92\) (shrinking) and a rotation by \(\arctan\frac{0.2}{0.9}\approx12.5^\circ\) per hour, hence the spiral</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-title">Practice: Finding \(S\), and Complex Eigenvalues</div>
+          <div class="step-subtitle">Exercises 13 to 17 and 20 to 23</div>
+          <div class="step-body">
+<p>For the matrices \(A\) in Exercises 13 through 17, find an invertible matrix \(S\) such that \(S^{-1}AS=\begin{bmatrix}a&-b\\b&a\end{bmatrix}\), where \(a\) and \(b\) are real numbers.</p>
+<table>
+  <tr><td>13. \(A=\begin{bmatrix}0&-4\\1&0\end{bmatrix}\)</td><td><reveal>\(f_A=\lambda^2+4\), \(\lambda=\pm2i\). \(E_{2i}=\operatorname{span}\begin{bmatrix}2i\\1\end{bmatrix}\), \(\vec v=\begin{bmatrix}0\\1\end{bmatrix}\), \(\vec w=\begin{bmatrix}2\\0\end{bmatrix}\). \(S=\begin{bmatrix}2&0\\0&1\end{bmatrix}\), \(S^{-1}AS=\begin{bmatrix}0&-2\\2&0\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>14. \(A=\begin{bmatrix}1&-2\\1&-1\end{bmatrix}\)</td><td><reveal>\(f_A=\lambda^2+1\), \(\lambda=\pm i\). \(E_i=\operatorname{span}\begin{bmatrix}1+i\\1\end{bmatrix}\), \(\vec v=\begin{bmatrix}1\\1\end{bmatrix}\), \(\vec w=\begin{bmatrix}1\\0\end{bmatrix}\). \(S=\begin{bmatrix}1&1\\0&1\end{bmatrix}\), \(S^{-1}AS=\begin{bmatrix}0&-1\\1&0\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>15. \(A=\begin{bmatrix}0&1\\-5&4\end{bmatrix}\)</td><td><reveal>\(f_A=\lambda^2-4\lambda+5\), \(\lambda=2\pm i\). \(E_{2+i}=\operatorname{span}\begin{bmatrix}1\\2+i\end{bmatrix}\), \(\vec v=\begin{bmatrix}1\\2\end{bmatrix}\), \(\vec w=\begin{bmatrix}0\\1\end{bmatrix}\). \(S=\begin{bmatrix}0&1\\1&2\end{bmatrix}\), \(S^{-1}AS=\begin{bmatrix}2&-1\\1&2\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>16. \(A=\begin{bmatrix}3&1\\-2&5\end{bmatrix}\)</td><td><reveal>\(f_A=\lambda^2-8\lambda+17\), \(\lambda=4\pm i\). \(E_{4+i}=\operatorname{span}\begin{bmatrix}1\\1+i\end{bmatrix}\), \(\vec v=\begin{bmatrix}1\\1\end{bmatrix}\), \(\vec w=\begin{bmatrix}0\\1\end{bmatrix}\). \(S=\begin{bmatrix}0&1\\1&1\end{bmatrix}\), \(S^{-1}AS=\begin{bmatrix}4&-1\\1&4\end{bmatrix}\).</reveal></td></tr>
+  <tr><td>17. \(A=\begin{bmatrix}5&4\\-5&1\end{bmatrix}\)</td><td><reveal>\(f_A=\lambda^2-6\lambda+25\), \(\lambda=3\pm4i\). \(E_{3+4i}=\operatorname{span}\begin{bmatrix}2\\-1+2i\end{bmatrix}\), \(\vec v=\begin{bmatrix}2\\-1\end{bmatrix}\), \(\vec w=\begin{bmatrix}0\\2\end{bmatrix}\). \(S=\begin{bmatrix}0&2\\2&-1\end{bmatrix}\), \(S^{-1}AS=\begin{bmatrix}3&-4\\4&3\end{bmatrix}\).</reveal></td></tr>
+</table>
+<p>Find all complex eigenvalues of the matrices in Exercises 20 through 23 (including real ones, of course). Do not use technology. Show all your work.</p>
+<table>
+  <tr><td>20. \(\begin{bmatrix}3&-5\\2&-3\end{bmatrix}\)</td><td><reveal>\(\operatorname{tr}=0\), \(\det=-9+10=1\): \(f_A=\lambda^2+1\), \(\lambda=\pm i\)</reveal></td></tr>
+  <tr><td>21. \(\begin{bmatrix}11&-15\\6&-7\end{bmatrix}\)</td><td><reveal>\(\operatorname{tr}=4\), \(\det=-77+90=13\): \(f_A=\lambda^2-4\lambda+13\), \(\lambda=2\pm3i\)</reveal></td></tr>
+  <tr><td>22. \(\begin{bmatrix}1&3\\-4&10\end{bmatrix}\)</td><td><reveal>\(\operatorname{tr}=11\), \(\det=22\): \(f_A=\lambda^2-11\lambda+22\), discriminant \(121-88=33&gt;0\): the eigenvalues \(\dfrac{11\pm\sqrt{33}}2\) are real</reveal></td></tr>
+  <tr><td>23. \(\begin{bmatrix}0&0&1\\1&0&0\\0&1&0\end{bmatrix}\)</td><td><reveal>\(f_A(\lambda)=-(\lambda^3-1)=-(\lambda-1)(\lambda^2+\lambda+1)\): \(\lambda=1\) and \(\lambda=\dfrac{-1\pm i\sqrt3}2\) (the cube roots of unity)</reveal></td></tr>
+</table>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-title">Counting Eigenvalues, Trace and Determinant</div>
+          <div class="step-subtitle">Theorems 7.5.4 and 7.5.5, Example 9</div>
+          <div class="step-body">
+<div class="defbox"><div class="defbox-label">Theorem 7.5.4</div>
+<p>A complex \(n\times n\) matrix has \(n\) complex eigenvalues if they are counted with their algebraic multiplicities.</p>
+</div>
+<p>By the fundamental theorem of algebra, the characteristic polynomial always splits: \(f_A(\lambda)=(\lambda_1-\lambda)(\lambda_2-\lambda)\cdots(\lambda_n-\lambda)\).</p>
+<table>
+  <tr><td>Example 9. Consider an \(n\times n\) matrix \(A\) with complex eigenvalues \(\lambda_1,\lambda_2,\dots,\lambda_n\), listed with their algebraic multiplicities. What is the relationship between the \(\lambda_i\) and the determinant of \(A\)? Compare with Theorem 7.2.8.</td><td><reveal>\(f_A(0)=\det A=\lambda_1\lambda_2\cdots\lambda_n\), so \(\det A=\lambda_1\lambda_2\cdots\lambda_n\)</reveal></td></tr>
+</table>
+<div class="defbox"><div class="defbox-label">Theorem 7.5.5: Trace, determinant, and eigenvalues</div>
+<p>Consider an \(n\times n\) matrix \(A\) with complex eigenvalues \(\lambda_1,\lambda_2,\dots,\lambda_n\), listed with their algebraic multiplicities. Then
+$$\operatorname{tr}A=\lambda_1+\lambda_2+\cdots+\lambda_n\qquad\text{and}\qquad\det A=\lambda_1\lambda_2\cdots\lambda_n.$$</p>
+</div>
+<table>
+  <tr><td>Check Theorem 7.5.5 on the glucose matrix \(\begin{bmatrix}0.9&-0.4\\0.1&0.9\end{bmatrix}\), \(\lambda=0.9\pm0.2i\).</td><td><reveal>\(\operatorname{tr}A=1.8=(0.9+0.2i)+(0.9-0.2i)\), \(\det A=0.81+0.04=0.85=(0.9+0.2i)(0.9-0.2i)\)</reveal></td></tr>
+  <tr><td>27. Suppose a real \(3\times3\) matrix \(A\) has only two distinct eigenvalues. Suppose that \(\operatorname{tr}A=1\) and \(\det A=3\). Find the eigenvalues of \(A\) with their algebraic multiplicities.</td><td><reveal>Complex eigenvalues come in conjugate pairs, so with only two distinct eigenvalues both are real: \(a,a,b\). Then \(2a+b=1\) and \(a^2b=3\), so \(2a^3-a^2+3=(a+1)(2a^2-3a+3)=0\). The quadratic has no real roots, so \(a=-1\), \(b=3\): eigenvalues \(-1\) (algebraic multiplicity \(2\)) and \(3\).</reveal></td></tr>
+  <tr><td>28. Suppose a \(3\times3\) matrix \(A\) has the real eigenvalue \(2\) and two complex eigenvalues. Also, suppose that \(\det A=50\) and \(\operatorname{tr}A=8\). Find the complex eigenvalues of \(A\).</td><td><reveal>The complex pair is \(p\pm iq\): \(2+2p=8\) gives \(p=3\), and \(2(p^2+q^2)=50\) gives \(q=4\). The eigenvalues are \(3\pm4i\).</reveal></td></tr>
+  <tr><td>30a. If \(2i\) is an eigenvalue of a real \(2\times2\) matrix \(A\), find \(A^2\).</td><td><reveal>The eigenvalues are \(\pm2i\), so \(f_A(\lambda)=\lambda^2+4\) and, by the Cayley-Hamilton theorem, \(A^2+4I_2=0\): \(A^2=-4I_2\)</reveal></td></tr>
+  <tr><td>30b. Give an example of a real \(2\times2\) matrix \(A\) such that all the entries of \(A\) are nonzero and \(2i\) is an eigenvalue of \(A\).</td><td><reveal>We need \(\operatorname{tr}A=0\) and \(\det A=4\): for example \(A=\begin{bmatrix}1&-5\\1&-1\end{bmatrix}\), with \(f_A=\lambda^2+4\)</reveal></td></tr>
+</table>
+<p class="muted small">Source: Otto Bretscher, <i>Linear Algebra with Applications</i>, Section 7.5 (Complex Eigenvalues), the intro, the review of complex numbers, Examples 1 to 9, Theorems 7.5.1 to 7.5.5 and Exercises 1, 8, 9, 11 to 17, 20 to 23, 27, 28, 30 (some in condensed wording). Not covered: the rest of the exercises, and the dynamical-systems use of these eigenvalues (Section 7.6).</p>
+          </div>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="reveal-controls" role="group" aria-label="Slide controls">
+          <button id="btn-prev" type="button" class="btn" title="Previous (←)">◀ Prev</button>
+          <button id="btn-next" type="button" class="btn" title="Next (Space/→)">Next ▶</button>
+          <button id="btn-exit-slide" type="button" class="btn small" title="Exit Slide Mode">Exit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING GEO GEBRA WINDOW -->
+  <div id="ggb-float" class="ggb-float" aria-hidden="true" role="dialog" aria-label="GeoGebra">
+    <div class="ggb-float-header" id="ggb-float-drag">
+      <span class="ggb-float-title">GeoGebra Applet</span>
+      <div class="ggb-actions">
+        <button id="ggb-expand" class="btn small" type="button" aria-expanded="false">↗ Expand</button>
+        <button id="ggb-close" class="btn small" type="button">× Close</button>
+      </div>
+    </div>
+    <div id="ggb-host" class="ggb-float-host">
+      <div class="ggb-placeholder muted small">Open an applet with ▶</div>
+    </div>
+  </div>
+  <div id="ggb-backdrop" class="ggb-backdrop" hidden></div>
+
+  <!-- JS entry (ES modules) -->
+  <script type="module" src="/todopage/js/boot.js"></script>
+
+</body>
+
+</html>

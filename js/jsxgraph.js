@@ -7691,6 +7691,10 @@ function renderJsxExpansion(el) {
 // `dynamics`: the dragged point is the initial state x0 (default `x0`), a slider sets t, and the board shows the
 // discrete trajectory x(t) = A^t x0 for t = 0..tmax, with x(t) split along the eigenlines as c1 lambda1^t v1 +
 // c2 lambda2^t v2 (the closed formula of Theorem 7.1.6) when A has two real eigenvalues. `range` = half-width of the board.
+// Complex eigenvalues (Bretscher 7.5): when A has no real eigenvalue the readout gives lambda = a +- bi, |lambda| and the rotation angle
+// (in `dynamics` also whether the trajectory spirals in, out, or stays on a circle). `t-label` renames the slider (default "t (years)").
+// `rotscale` (not with `dynamics`): for a complex pair a +- ib (b > 0) it draws w (green) and v (blue) from Theorem 7.5.3, where v + iw is an
+// eigenvector for a + ib, the parallelogram they span and its image under A, and shows S = [w v] and S^-1 A S = [[a, -b], [b, a]].
 function renderJsxEigen(el) {
   const TAG = 'jsx-eigen';
   if (typeof JXG === 'undefined') {
@@ -7708,6 +7712,9 @@ function renderJsxEigen(el) {
   } catch (err) { console.error(`<${TAG}>: could not parse an attribute`, err); return; }
   const num = (n, d) => evalNumAttr(el, n, d, TAG);
   const dyn = el.hasAttribute('dynamics');
+  const rotscale = el.hasAttribute('rotscale') && !dyn;
+  const vn = rotscale ? 'x' : 'v'; // name of the draggable vector (v is taken by Theorem 7.5.3's basis vector in rotscale mode)
+  const tLabel = el.getAttribute('t-label') || 't (years)';
   const R = num('range', 4);
   const TMAX = Math.max(1, Math.round(num('tmax', 10)));
   const A0 = A.map((r) => r.slice());
@@ -7771,6 +7778,17 @@ function renderJsxEigen(el) {
   const lab = (f, t, c) => board.create('text', [() => f()[0] + 0.03 * R, () => f()[1] + 0.06 * R, t], { fontSize: READOUT_VALUE_FONT, color: c, fixed: true, cssStyle: 'font-weight:800' });
 
   let tSlider = null; let tVal = 0; let updateVis = () => {};
+  let rsObjs = []; let rsLabs = [];
+  // complex eigenvalue a + ib (b > 0) of a real 2 x 2 matrix, with eigenvector v + i w (Theorem 7.5.3); null if the eigenvalues are real
+  function cplxPair() {
+    const [[p, q], [r, s]] = A;
+    const tr = p + s; const det = p * s - q * r; const disc = (tr * tr) / 4 - det;
+    if (disc >= -1e-9) return null;
+    const a = tr / 2; const b = Math.sqrt(-disc);
+    if (Math.abs(q) > 1e-9) return { a, b, v: [q, a - p], w: [0, b] };
+    if (Math.abs(r) > 1e-9) return { a, b, v: [a - s, r], w: [b, 0] };
+    return null;
+  }
   const f2 = (v) => (Number.isFinite(v) ? fmtNum(v).replace('-', '−') : '?');
   const f1 = (v) => { const r = Math.round(v * 10) / 10; return String(Object.is(r, -0) ? 0 : r).replace('-', '−'); };
   const chip = (html, main) => `<span class="jsx-trace-chip${main ? ' jsx-trace-main' : ''}">${html}</span>`;
@@ -7779,7 +7797,22 @@ function renderJsxEigen(el) {
 
   if (!dyn) {
     ar(O, pv, ink, 5); ar(O, () => mv(A, pv()), orange, 5);
-    lab(pv, 'v', ink); lab(() => mv(A, pv()), 'Av', orange);
+    lab(pv, vn, ink); lab(() => mv(A, pv()), `A${vn}`, orange);
+    if (rotscale) {
+      const zero = [0, 0];
+      const rv = () => { const c = cplxPair(); return c ? c.v : zero; };
+      const rw = () => { const c = cplxPair(); return c ? c.w : zero; };
+      const sum = (x, y) => [x[0] + y[0], x[1] + y[1]];
+      const poly = (pts, color) => board.create('polygon', pts.map((f) => hid(f)), {
+        fillColor: color, fillOpacity: 0.14, borders: { strokeColor: color, strokeWidth: 2, dash: 2, highlight: false }, vertices: { visible: false }, highlight: false, fixed: true,
+      });
+      rsObjs = [
+        poly([() => zero, rw, () => sum(rw(), rv()), rv], green),
+        poly([() => zero, () => mv(A, rw()), () => sum(mv(A, rw()), mv(A, rv())), () => mv(A, rv())], orange),
+        ar(O, rw, green, 5), ar(O, rv, accent, 5),
+      ];
+      rsLabs = [lab(rw, 'w', green), lab(rv, 'v', accent)];
+    }
   } else {
     // trajectory x(0..TMAX)
     const dots = []; const segs = [];
@@ -7809,7 +7842,7 @@ function renderJsxEigen(el) {
     const mk = board.create('point', [() => xt()[0], () => xt()[1]], { name: '', size: POINT_SIZE + 3, fillColor: red, strokeColor: '#fff', strokeWidth: POINT_STROKE, fixed: true, highlight: false });
     lab(xt, 'x(t)', red);
     const row = document.createElement('div'); row.className = 'jsx-slider-row';
-    const nm = document.createElement('span'); nm.className = 'jsx-slider-name'; nm.textContent = 't (years)';
+    const nm = document.createElement('span'); nm.className = 'jsx-slider-name'; nm.textContent = tLabel;
     tSlider = document.createElement('input'); tSlider.type = 'range'; tSlider.min = '0'; tSlider.max = String(TMAX); tSlider.step = '1'; tSlider.value = '0';
     const val = document.createElement('span'); val.className = 'jsx-slider-val'; val.textContent = '0';
     row.append(nm, tSlider, val); controls.appendChild(row);
@@ -7826,20 +7859,33 @@ function renderJsxEigen(el) {
       l.setAttribute({ visible: !!e });
     });
     updateVis();
+    { const on = rotscale && cplxPair() !== null; rsObjs.forEach((o) => o.setAttribute({ visible: on })); rsLabs.forEach((o) => o.setAttribute({ visible: on })); }
     const x = pv();
     let html = chip(`A = ${matHtml(A)}`);
     const tr = A[0][0] + A[1][1]; const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
-    if (E.length === 0) html += chip('no real eigenvalues (complex pair)', true);
+    if (E.length === 0) {
+      const cp = cplxPair();
+      if (cp) {
+        const modl = Math.sqrt(cp.a * cp.a + cp.b * cp.b); const ang = (Math.atan2(cp.b, cp.a) * 180) / Math.PI;
+        html += chip(`no real eigenvalues; complex pair <b>${f2(cp.a)} ± ${f2(cp.b)}i</b>`, true);
+        html += chip(`|λ| = <b>${f2(modl)}</b>, rotation by <b>${f2(ang)}°</b>`);
+        if (dyn) html += chip(modl < 0.9995 ? 'spirals in toward 0' : modl > 1.0005 ? 'spirals out' : 'stays on a circle');
+        if (rotscale) {
+          const Sm = [[cp.w[0], cp.v[0]], [cp.w[1], cp.v[1]]];
+          html += chip(`S = [w v] = ${matHtml(Sm)}`) + chip(`S⁻¹AS = ${matHtml([[cp.a, -cp.b], [cp.b, cp.a]])}`);
+        }
+      } else html += chip('no real eigenvalues (complex pair)', true);
+    }
     else html += chip(`eigenvalues: <b>${E.map((e) => f2(e.lam)).join(', ')}</b>`, false);
     if (!dyn) {
       const Av = mv(A, x); const cr = x[0] * Av[1] - x[1] * Av[0];
       const nx = Math.hypot(x[0], x[1]); const na = Math.hypot(Av[0], Av[1]);
-      html += chip(`v = ${vecHtml(x, f2)}`) + chip(`Av = ${vecHtml(Av, f2)}`);
-      if (nx < 1e-9) html += chip('v = 0 is never an eigenvector');
+      html += chip(`${vn} = ${vecHtml(x, f2)}`) + chip(`A${vn} = ${vecHtml(Av, f2)}`);
+      if (nx < 1e-9) html += chip(`${vn} = 0 is never an eigenvector`);
       else if (na < 1e-6 * nx || Math.abs(cr) < 0.02 * nx * na) {
         const lam = (x[0] * Av[0] + x[1] * Av[1]) / (nx * nx);
-        html += chip(`Av ∥ v: eigenvector, <b>λ = ${f2(lam)}</b>`, true);
-      } else html += chip('Av is not parallel to v: not an eigenvector');
+        html += chip(`A${vn} ∥ ${vn}: eigenvector, <b>λ = ${f2(lam)}</b>`, true);
+      } else html += chip(`A${vn} is not parallel to ${vn}: not an eigenvector`);
     } else {
       const xt = pw(A, x, tVal);
       html += chip(`x₀ = ${vecHtml(x, f1)}`) + chip(`x(${tVal}) = Aᵗx₀ = ${vecHtml(xt, f1)}`, true);
